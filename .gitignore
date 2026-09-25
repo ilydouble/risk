@@ -68,3 +68,26 @@ Thumbs.db
 
 # Misc
 *.zip
+
+# Model development: only the explicitly shared demo bundle is versioned
+.venv/
+__pycache__/
+.pytest_cache/
+*.egg-info/
+backend/data/raw/*
+!backend/data/raw/.gitkeep
+backend/data/processed/*
+!backend/data/processed/smesd/
+backend/data/processed/smesd/*
+!backend/data/processed/smesd/test.json
+backend/artifacts/*
+!backend/artifacts/smesd-v1/
+backend/artifacts/smesd-v1/*
+!backend/artifacts/smesd-v1/summary.json
+!backend/artifacts/smesd-v1/no_hyper-seed42/
+backend/artifacts/smesd-v1/no_hyper-seed42/*
+!backend/artifacts/smesd-v1/no_hyper-seed42/weights.pt
+!backend/artifacts/smesd-v1/no_hyper-seed42/metadata.json
+!backend/artifacts/smesd-v1/no_hyper-seed42/metrics.json
+
+frontend/out/
