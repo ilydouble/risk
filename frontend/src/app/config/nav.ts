@@ -45,6 +45,12 @@ export const NAV_GROUPS: NavGroup[] = [
     labelKey: "nav.modeling",
     items: [
       {
+        key: "benchmark",
+        labelKey: "nav.benchmark",
+        path: "/benchmark",
+        icon: "ri-flask-line",
+      },
+      {
         key: "model",
         labelKey: "nav.model",
         path: "/model-card",

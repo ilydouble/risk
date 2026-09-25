@@ -1,0 +1,16 @@
+export default { benchmark: {
+  title: "Public SMEsD benchmark", home: "Overview", search: "Sample search", model: "Model & evaluation",
+  profile: "Anonymous company", explanation: "Prediction & sensitivity", graph: "One-hop graph",
+  subtitle: "Separate from the eight demo companies; the identifiers have no crosswalk.",
+  disclaimer: "Anonymous SMEsD bankruptcy classification samples. Predictions use a saved model. The score is a linear demonstration, not future default probability, a credit decision, or evidence of Southeast Asian performance.",
+  loading: "Loading benchmark data…", retry: "Retry", errorUnavailable: "Benchmark model is unavailable. Please retry later.", errorMissing: "Benchmark company ID not found.",
+  companies: "Test companies", savedMetric: "Saved test-set evaluation metric", startHere: "Explore the benchmark",
+  intro: "Browse real model predictions for 474 anonymous test companies, occlusion sensitivity for three numerical features, and observed one-hop directed relations.",
+  searchInput: "Anonymous ID or community code, e.g. C00010", results: "Results · {{count}} companies", empty: "No matching anonymous companies", previous: "Previous", next: "Next",
+  probability: "Bankruptcy-class probability", demoScore: "Linear demo score", linearScore: "300 + 550 × (1 − probability)", events: "Court events",
+  features: "Input features", featureNote: "Only three numeric features; no real company names or financial statements.", observed: "Observed label", observedNote: "For offline evaluation only; not an inference input.", bankrupt: "Observed bankrupt", survived: "Observed surviving",
+  threshold: "Validation threshold", predictedClass: "Predicted class: {{value}}", value: "Value", explanationNote: "Probability change when each feature is set to its training mean", explanationLimit: "This is feature occlusion sensitivity, not SHAP, an additive attribution, or causal evidence.",
+  graphNote: "Raw one-hop directed relations and model edge weights; codes are not inferred business meanings.", relationships: "Relations · {{count}}", truncated: "Showing only some relations",
+  target: "Target", mode: "Model variant", bestEpoch: "Best epoch", inputSchema: "Input schema", relations: "Relation codes", hyperedges: "Hyperedge types", evaluation: "Offline evaluation", split: "Split", limitations: "Interpretation limits",
+  limit1: "Training, calibration, and threshold selection use the public benchmark splits; test metrics are not online outcomes.", limit2: "The bankruptcy label has no uniform future horizon; event and relation timing cannot establish strict point-in-time validity.", limit3: "Raw graph edges are not causal risk paths; the linear demo score is not a validated credit scorecard.",
+} };

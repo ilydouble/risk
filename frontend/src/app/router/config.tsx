@@ -16,6 +16,12 @@ const ModelArchivePage = lazy(() => import("@/pages/model/archive/page"));
 const BatchPage = lazy(() => import("@/pages/batch/page"));
 const LoginPage = lazy(() => import("@/pages/login/page"));
 const RegisterPage = lazy(() => import("@/pages/register/page"));
+const BenchmarkOverview = lazy(() => import("@/pages/benchmark/overview"));
+const BenchmarkSearch = lazy(() => import("@/pages/benchmark/search"));
+const BenchmarkCompany = lazy(() => import("@/pages/benchmark/company"));
+const BenchmarkScore = lazy(() => import("@/pages/benchmark/score"));
+const BenchmarkGraph = lazy(() => import("@/pages/benchmark/graph"));
+const BenchmarkModel = lazy(() => import("@/pages/benchmark/model"));
 
 function load(page: ReactNode) {
   return <Suspense fallback={<div className="py-10 text-center text-sm text-foreground-500">正在加载…</div>}>{page}</Suspense>;
@@ -39,6 +45,12 @@ const routes: RouteObject[] = [
         { path: "/model-card", element: load(<ModelArchivePage />) },
         { path: "/model", element: load(<ModelPage />) },
         { path: "/batch", element: load(<BatchPage />) },
+        { path: "/benchmark", element: load(<BenchmarkOverview />) },
+        { path: "/benchmark/search", element: load(<BenchmarkSearch />) },
+        { path: "/benchmark/company/:id", element: load(<BenchmarkCompany />) },
+        { path: "/benchmark/score/:id", element: load(<BenchmarkScore />) },
+        { path: "/benchmark/graph/:id", element: load(<BenchmarkGraph />) },
+        { path: "/benchmark/model", element: load(<BenchmarkModel />) },
         { path: "*", element: <NotFound /> },
       ],
     }],

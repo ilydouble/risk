@@ -1,0 +1,16 @@
+export default { benchmark: {
+  title: "SMEsD 公开基准", home: "基准概览", search: "样本检索", model: "模型与评估",
+  profile: "匿名企业画像", explanation: "评分与敏感性", graph: "一跳关系图",
+  subtitle: "独立于八家演示企业的公开测试快照；编号不可互相映射。",
+  disclaimer: "基准为匿名 SMEsD 破产分类样本。预测来自已保存模型；评分是线性演示映射，不代表未来违约概率、授信结论或东南亚企业表现。",
+  loading: "正在读取基准数据…", retry: "重试", errorUnavailable: "基准模型暂时不可用，请稍后重试", errorMissing: "未找到该基准企业编号",
+  companies: "测试企业", savedMetric: "已保存的测试集评估指标", startHere: "开始探索",
+  intro: "查看 474 家匿名测试企业的真实模型预测、三个数值特征的遮蔽敏感性，以及观测到的一跳有向关系。",
+  searchInput: "输入匿名编号或社区代码，例如 C00010", results: "检索结果 · {{count}} 家", empty: "没有匹配的匿名企业", previous: "上一页", next: "下一页",
+  probability: "破产分类概率", demoScore: "线性演示分数", linearScore: "300 + 550 × (1 − 概率)", events: "司法事件数",
+  features: "输入特征", featureNote: "仅展示三个数值特征；无真实公司名称或财报。", observed: "观测标签", observedNote: "仅用于离线评估，不进入推理输入。", bankrupt: "观测为破产", survived: "观测为存续",
+  threshold: "验证集阈值", predictedClass: "预测类别：{{value}}", value: "原值", explanationNote: "逐项置为训练均值后的概率变化", explanationLimit: "此解释是特征遮蔽敏感性，不是 SHAP、可加贡献或因果证据。",
+  graphNote: "原始一跳有向关系与模型边权；关系代码未推断为业务语义。", relationships: "关系记录 · {{count}} 条", truncated: "仅展示部分关系",
+  target: "预测目标", mode: "模型版本", bestEpoch: "最佳训练轮次", inputSchema: "输入结构", relations: "关系代码", hyperedges: "超边类型", evaluation: "离线评估", split: "数据划分", limitations: "解释边界",
+  limit1: "训练、校准和阈值选择使用公开基准划分；测试指标不是线上效果。", limit2: "破产标签无统一未来窗口；事件时间与关系时间不足以证明严格时点有效性。", limit3: "原始图边不是因果风险传播路径；线性演示分数不是业务评分卡。",
+} };

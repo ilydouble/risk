@@ -12,6 +12,7 @@ export default {
     search: "企业检索",
     company: "企业画像",
     model: "模型档案",
+    benchmark: "SMEsD 基准",
     batch: "批量评估",
   },
   sidebar: {

@@ -72,6 +72,125 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/benchmark/evaluation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Evaluation */
+        post: operations["evaluation_api_v1_benchmark_evaluation_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/benchmark/explain": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Explain */
+        post: operations["explain_api_v1_benchmark_explain_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/benchmark/get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Get */
+        post: operations["get_api_v1_benchmark_get_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/benchmark/graph": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Graph */
+        post: operations["graph_api_v1_benchmark_graph_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/benchmark/model-card": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Model Card */
+        post: operations["model_card_api_v1_benchmark_model_card_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/benchmark/predict": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Predict */
+        post: operations["predict_api_v1_benchmark_predict_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/benchmark/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Search */
+        post: operations["search_api_v1_benchmark_search_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/company/get": {
         parameters: {
             query?: never;
@@ -242,6 +361,36 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ApiEnvelope[ResponseEvaluationBenchmark] */
+        ApiEnvelope_ResponseEvaluationBenchmark_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseEvaluationBenchmark"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseExplainBenchmark] */
+        ApiEnvelope_ResponseExplainBenchmark_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseExplainBenchmark"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseGetBenchmark] */
+        ApiEnvelope_ResponseGetBenchmark_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseGetBenchmark"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
         /** ApiEnvelope[ResponseGetCompany] */
         ApiEnvelope_ResponseGetCompany_: {
             /** Code */
@@ -267,6 +416,16 @@ export interface components {
             /** Code */
             code: number;
             data: components["schemas"]["ResponseGetScore"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseGraphBenchmark] */
+        ApiEnvelope_ResponseGraphBenchmark_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseGraphBenchmark"] | null;
             /** Internal Code */
             internal_code: string;
             /** Message */
@@ -312,11 +471,41 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ApiEnvelope[ResponseModelCardBenchmark] */
+        ApiEnvelope_ResponseModelCardBenchmark_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseModelCardBenchmark"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponsePredictBenchmark] */
+        ApiEnvelope_ResponsePredictBenchmark_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponsePredictBenchmark"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
         /** ApiEnvelope[ResponseRegister] */
         ApiEnvelope_ResponseRegister_: {
             /** Code */
             code: number;
             data: components["schemas"]["ResponseRegister"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseSearchBenchmark] */
+        ApiEnvelope_ResponseSearchBenchmark_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseSearchBenchmark"] | null;
             /** Internal Code */
             internal_code: string;
             /** Message */
@@ -331,6 +520,98 @@ export interface components {
             internal_code: string;
             /** Message */
             message: string;
+        };
+        /** BenchmarkCompany */
+        BenchmarkCompany: {
+            /** Community */
+            community: string;
+            /** Creditscore */
+            creditScore: number;
+            /** Eventcount */
+            eventCount: number;
+            /** Id */
+            id: string;
+            /**
+             * Predictedlabel
+             * @enum {integer}
+             */
+            predictedLabel: 0 | 1;
+            /** Riskprobability */
+            riskProbability: number;
+        };
+        /** BenchmarkEvent */
+        BenchmarkEvent: {
+            /** Age Months */
+            age_months: number;
+            /** Cause */
+            cause: number;
+            /** Company */
+            company: string;
+            /** Court */
+            court: number;
+            /** Result */
+            result: number;
+        };
+        /** BenchmarkFeatureSensitivity */
+        BenchmarkFeatureSensitivity: {
+            /** Feature */
+            feature: string;
+            /** Probability Delta */
+            probability_delta: number;
+            /** Probability Without Feature */
+            probability_without_feature: number;
+            /** Value */
+            value: number | null;
+        };
+        /** BenchmarkGraphEdge */
+        BenchmarkGraphEdge: {
+            /** Relation */
+            relation: string;
+            /** Source */
+            source: string;
+            /** Target */
+            target: string;
+            /** Weight */
+            weight: number;
+        };
+        /** BenchmarkGraphNode */
+        BenchmarkGraphNode: {
+            /** Community */
+            community: string;
+            /** Id */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "company" | "person";
+        };
+        /** BenchmarkMetrics */
+        BenchmarkMetrics: {
+            /** Brier */
+            brier: number;
+            /** Capture At 5Pct */
+            capture_at_5pct: number | null;
+            /** F1 */
+            f1: number;
+            /** Ks */
+            ks: number | null;
+            /** Lift At 10Pct */
+            lift_at_10pct: number | null;
+            /** N */
+            n: number;
+            /** Positives */
+            positives: number;
+            /** Pr Auc */
+            pr_auc: number | null;
+            /** Precision */
+            precision: number;
+            /** Recall */
+            recall: number;
+            /** Roc Auc */
+            roc_auc: number | null;
+            /** Threshold */
+            threshold: number;
         };
         /** CommunityBenchmark */
         CommunityBenchmark: {
@@ -558,6 +839,22 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ErrorEnvelope[Literal[404], Literal['BENCHMARK_COMPANY_NOT_FOUND']] */
+        ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 404;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @constant
+             */
+            internal_code: "BENCHMARK_COMPANY_NOT_FOUND";
+            /** Message */
+            message: string;
+        };
         /** ErrorEnvelope[Literal[404], Literal['COMPANY_NOT_FOUND']] */
         ErrorEnvelope_Literal_404__Literal__COMPANY_NOT_FOUND___: {
             /**
@@ -718,6 +1015,22 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ErrorEnvelope[Literal[503], Literal['BENCHMARK_MODEL_UNAVAILABLE']] */
+        ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 503;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @constant
+             */
+            internal_code: "BENCHMARK_MODEL_UNAVAILABLE";
+            /** Message */
+            message: string;
+        };
         /** ErrorEnvelope[Literal[503], Literal['DOCUMENT_STORAGE_UNAVAILABLE']] */
         ErrorEnvelope_Literal_503__Literal__DOCUMENT_STORAGE_UNAVAILABLE___: {
             /**
@@ -867,6 +1180,18 @@ export interface components {
             /** Size */
             size: number;
         };
+        /** RequestEvaluationBenchmark */
+        RequestEvaluationBenchmark: Record<string, never>;
+        /** RequestExplainBenchmark */
+        RequestExplainBenchmark: {
+            /** Id */
+            id: string;
+        };
+        /** RequestGetBenchmark */
+        RequestGetBenchmark: {
+            /** Id */
+            id: string;
+        };
         /** RequestGetCompany */
         RequestGetCompany: {
             /** Id */
@@ -899,6 +1224,16 @@ export interface components {
              */
             lang: "zh" | "en";
         };
+        /** RequestGraphBenchmark */
+        RequestGraphBenchmark: {
+            /** Id */
+            id: string;
+            /**
+             * Limit
+             * @default 30
+             */
+            limit: number;
+        };
         /** RequestListDocuments */
         RequestListDocuments: {
             /** Companyid */
@@ -915,6 +1250,13 @@ export interface components {
         RequestLogout: Record<string, never>;
         /** RequestMe */
         RequestMe: Record<string, never>;
+        /** RequestModelCardBenchmark */
+        RequestModelCardBenchmark: Record<string, never>;
+        /** RequestPredictBenchmark */
+        RequestPredictBenchmark: {
+            /** Companyids */
+            companyIds: string[];
+        };
         /** RequestRegister */
         RequestRegister: {
             /** Displayname */
@@ -923,6 +1265,15 @@ export interface components {
             password: string;
             /** Username */
             username: string;
+        };
+        /** RequestSearchBenchmark */
+        RequestSearchBenchmark: {
+            /**
+             * Keyword
+             * @default
+             */
+            keyword: string;
+            pagination?: components["schemas"]["PageRequest"];
         };
         /** RequestSearchCompany */
         RequestSearchCompany: {
@@ -981,6 +1332,73 @@ export interface components {
             /** Url */
             url: string;
         };
+        /** ResponseEvaluationBenchmark */
+        ResponseEvaluationBenchmark: {
+            /** Companycount */
+            companyCount: number;
+            /** Dataset */
+            dataset: string;
+            /** Metrics */
+            metrics: {
+                [key: string]: components["schemas"]["BenchmarkMetrics"];
+            };
+            /** Mode */
+            mode: string;
+            /** Model */
+            model: string;
+            /** Notes */
+            notes: string[];
+            /** Relationcount */
+            relationCount: number;
+            /** Threshold */
+            threshold: number;
+        };
+        /** ResponseExplainBenchmark */
+        ResponseExplainBenchmark: {
+            /** Companyid */
+            companyId: string;
+            /** Features */
+            features: components["schemas"]["BenchmarkFeatureSensitivity"][];
+            /** Incomingedgecount */
+            incomingEdgeCount: number;
+            /** Interpretation */
+            interpretation: string;
+            /**
+             * Method
+             * @constant
+             */
+            method: "feature_occlusion_to_training_mean";
+            /** Riskprobability */
+            riskProbability: number;
+        };
+        /** ResponseGetBenchmark */
+        ResponseGetBenchmark: {
+            /** Community */
+            community: string;
+            /** Creditscore */
+            creditScore: number;
+            /** Dataset */
+            dataset: string;
+            /** Eventcount */
+            eventCount: number;
+            /** Events */
+            events: components["schemas"]["BenchmarkEvent"][];
+            /** Features */
+            features: {
+                [key: string]: number | null;
+            };
+            /** Id */
+            id: string;
+            /** Observedlabel */
+            observedLabel: (0 | 1) | null;
+            /**
+             * Predictedlabel
+             * @enum {integer}
+             */
+            predictedLabel: 0 | 1;
+            /** Riskprobability */
+            riskProbability: number;
+        };
         /** ResponseGetCompany */
         ResponseGetCompany: {
             company: components["schemas"]["CompanyDTO"];
@@ -1013,6 +1431,19 @@ export interface components {
             demo: true;
             detail: components["schemas"]["ScoreDetail"];
         };
+        /** ResponseGraphBenchmark */
+        ResponseGraphBenchmark: {
+            /** Center */
+            center: string;
+            /** Edges */
+            edges: components["schemas"]["BenchmarkGraphEdge"][];
+            /** Nodes */
+            nodes: components["schemas"]["BenchmarkGraphNode"][];
+            /** Totaledges */
+            totalEdges: number;
+            /** Truncated */
+            truncated: boolean;
+        };
         /** ResponseListDocuments */
         ResponseListDocuments: {
             /** Items */
@@ -1043,6 +1474,40 @@ export interface components {
             /** Username */
             username: string;
         };
+        /** ResponseModelCardBenchmark */
+        ResponseModelCardBenchmark: {
+            /** Bestepoch */
+            bestEpoch: number;
+            /** Calibrated */
+            calibrated: boolean;
+            /** Companycount */
+            companyCount: number;
+            /** Dataset */
+            dataset: string;
+            /** Featurenames */
+            featureNames: string[];
+            /** Hyperedgetypes */
+            hyperedgeTypes: string[];
+            /** Mode */
+            mode: string;
+            /** Model */
+            model: string;
+            /** Relationnames */
+            relationNames: string[];
+            /** Synthetictraining */
+            syntheticTraining: boolean;
+            /** Targetdescription */
+            targetDescription: string;
+            /** Threshold */
+            threshold: number;
+        };
+        /** ResponsePredictBenchmark */
+        ResponsePredictBenchmark: {
+            /** Predictions */
+            predictions: components["schemas"]["BenchmarkCompany"][];
+            /** Threshold */
+            threshold: number;
+        };
         /** ResponseRegister */
         ResponseRegister: {
             /** Displayname */
@@ -1051,6 +1516,17 @@ export interface components {
             userId: string;
             /** Username */
             username: string;
+        };
+        /** ResponseSearchBenchmark */
+        ResponseSearchBenchmark: {
+            /** Items */
+            items: components["schemas"]["BenchmarkCompany"][];
+            /** Page */
+            page: number;
+            /** Pagesize */
+            pageSize: number;
+            /** Total */
+            total: number;
         };
         /** ResponseSearchCompany */
         ResponseSearchCompany: {
@@ -1425,6 +1901,552 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+        };
+    };
+    evaluation_api_v1_benchmark_evaluation_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestEvaluationBenchmark"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseEvaluationBenchmark_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___"];
+                };
+            };
+        };
+    };
+    explain_api_v1_benchmark_explain_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestExplainBenchmark"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseExplainBenchmark_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___"];
+                };
+            };
+        };
+    };
+    get_api_v1_benchmark_get_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestGetBenchmark"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseGetBenchmark_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___"];
+                };
+            };
+        };
+    };
+    graph_api_v1_benchmark_graph_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestGraphBenchmark"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseGraphBenchmark_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___"];
+                };
+            };
+        };
+    };
+    model_card_api_v1_benchmark_model_card_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestModelCardBenchmark"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseModelCardBenchmark_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___"];
+                };
+            };
+        };
+    };
+    predict_api_v1_benchmark_predict_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestPredictBenchmark"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponsePredictBenchmark_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___"];
+                };
+            };
+        };
+    };
+    search_api_v1_benchmark_search_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestSearchBenchmark"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseSearchBenchmark_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___"];
                 };
             };
         };
@@ -2067,24 +3089,38 @@ export interface operations {
 export type RequestCompleteUpload = components["schemas"]["RequestCompleteUpload"];
 export type RequestCreateDownload = components["schemas"]["RequestCreateDownload"];
 export type RequestCreateUpload = components["schemas"]["RequestCreateUpload"];
+export type RequestEvaluationBenchmark = components["schemas"]["RequestEvaluationBenchmark"];
+export type RequestExplainBenchmark = components["schemas"]["RequestExplainBenchmark"];
+export type RequestGetBenchmark = components["schemas"]["RequestGetBenchmark"];
 export type RequestGetCompany = components["schemas"]["RequestGetCompany"];
 export type RequestGetGraph = components["schemas"]["RequestGetGraph"];
 export type RequestGetScore = components["schemas"]["RequestGetScore"];
+export type RequestGraphBenchmark = components["schemas"]["RequestGraphBenchmark"];
 export type RequestListDocuments = components["schemas"]["RequestListDocuments"];
 export type RequestLogin = components["schemas"]["RequestLogin"];
 export type RequestLogout = components["schemas"]["RequestLogout"];
 export type RequestMe = components["schemas"]["RequestMe"];
+export type RequestModelCardBenchmark = components["schemas"]["RequestModelCardBenchmark"];
+export type RequestPredictBenchmark = components["schemas"]["RequestPredictBenchmark"];
 export type RequestRegister = components["schemas"]["RequestRegister"];
+export type RequestSearchBenchmark = components["schemas"]["RequestSearchBenchmark"];
 export type RequestSearchCompany = components["schemas"]["RequestSearchCompany"];
 export type ResponseCompleteUpload = components["schemas"]["ResponseCompleteUpload"];
 export type ResponseCreateDownload = components["schemas"]["ResponseCreateDownload"];
 export type ResponseCreateUpload = components["schemas"]["ResponseCreateUpload"];
+export type ResponseEvaluationBenchmark = components["schemas"]["ResponseEvaluationBenchmark"];
+export type ResponseExplainBenchmark = components["schemas"]["ResponseExplainBenchmark"];
+export type ResponseGetBenchmark = components["schemas"]["ResponseGetBenchmark"];
 export type ResponseGetCompany = components["schemas"]["ResponseGetCompany"];
 export type ResponseGetGraph = components["schemas"]["ResponseGetGraph"];
 export type ResponseGetScore = components["schemas"]["ResponseGetScore"];
+export type ResponseGraphBenchmark = components["schemas"]["ResponseGraphBenchmark"];
 export type ResponseListDocuments = components["schemas"]["ResponseListDocuments"];
 export type ResponseLogin = components["schemas"]["ResponseLogin"];
 export type ResponseLogout = components["schemas"]["ResponseLogout"];
 export type ResponseMe = components["schemas"]["ResponseMe"];
+export type ResponseModelCardBenchmark = components["schemas"]["ResponseModelCardBenchmark"];
+export type ResponsePredictBenchmark = components["schemas"]["ResponsePredictBenchmark"];
 export type ResponseRegister = components["schemas"]["ResponseRegister"];
+export type ResponseSearchBenchmark = components["schemas"]["ResponseSearchBenchmark"];
 export type ResponseSearchCompany = components["schemas"]["ResponseSearchCompany"];
