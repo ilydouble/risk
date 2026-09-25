@@ -23,6 +23,7 @@ backend/
 ## 数据与生命周期
 
 - PostgreSQL 的 `users`、`companies`、`documents` 保存账号、检索字段与文件状态。画像及中英评分快照存 JSONB，读取时由 Pydantic DTO 校验。
+- 自助注册复用现有 `users` 表，无需迁移；密码由 Argon2 哈希后写入，用户名冲突由唯一约束原子判定。注册不写入 Redis，成功后用户单独登录。
 - Neo4j 保存演示关系节点和边，接口仅返回页面需要的 2–3 跳。图谱不从 PostgreSQL JSON 拷贝响应。
 - `V0001_initial_schema.py` 的 revision 是 `V0001`；后续迁移顺序递增。后端容器启动时先执行 `alembic upgrade head`，成功后启动 HTTP 服务。
 - `demo-seed` 是一次性容器，在迁移与服务就绪后补入缺失账号、企业、快照和图谱。它不重置已有行或关系。演示密码由本地环境给出并以 Argon2 哈希写入。

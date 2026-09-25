@@ -8,7 +8,9 @@
 {"code":200,"internal_code":"SUCCESS","message":"OK","data":{"items":[],"total":0,"page":1,"pageSize":50}}
 ```
 
-已接通 `auth/login|logout|me`、`company/search|get`、`graph/get`、`score/get`、`document/create-upload|complete-upload|list|create-download`。健康检查和 OpenAPI 保留 GET。每个路由在 FastAPI 声明成功响应及错误响应 DTO，`contracts/openapi.json` 由服务端导出并纳入版本控制。
+已接通 `auth/register|login|logout|me`、`company/search|get`、`graph/get`、`score/get`、`document/create-upload|complete-upload|list|create-download`。健康检查和 OpenAPI 保留 GET。每个路由在 FastAPI 声明成功响应及错误响应 DTO，`contracts/openapi.json` 由服务端导出并纳入版本控制。
+
+`auth/register` 是公开演示入口，接收用户名、显示名称和密码；注册只创建账号，不颁发 Session，随后调用登录接口。用户名由数据库唯一约束处理并发冲突，已占用返回 409 `AUTH_USERNAME_TAKEN`；无效字段返回 422 `REQUEST_INVALID`。网关仍检查同源 Origin 并清除伪造身份头。
 
 企业检索请求将页码放在 `pagination: {page, pageSize}`；响应 `data` 使用公共 `Page[CompanyDTO]`，直接包含 `items`、`total`、`page`、`pageSize`。旧的顶层请求分页字段会返回 422，避免被静默忽略。
 

@@ -18,6 +18,8 @@ shared    HTTP、OpenAPI 生成类型、基础 UI、i18n、工具
 
 `contracts/openapi.json` 是服务端导出的权威契约。`npm run api:generate` 通过 `openapi-typescript` 生成 `shared/api/generated/schema.ts`，并在同一文件导出具名 `RequestXxx`、`ResponseXxx` 类型。使用方直接从该文件导入，不手改生成文件或再建 DTO 转发层。
 
+`/login` 与 `/register` 是公开页面；注册表单进行基本输入校验，并将用户名冲突显示在当前表单。注册成功后跳回登录页，不在前端保存密码。
+
 各业务 API 只声明 `http.post<RequestXxx, ResponseXxx>(url)`，页面使用 `XxxApi.requestXxx(body)`。`@stellarmesh/sdk` 0.3.1 负责传输、信封解包和错误码提取。页面或模块先处理已知错误；全局仅处理会话失效和通用提示，拦截层不抢先弹提示。
 
 ## 当前能力边界

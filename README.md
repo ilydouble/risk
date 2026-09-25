@@ -1,6 +1,6 @@
 # 风控工作台
 
-面向海外企业信用评估的内部演示工作台。当前已接通登录、企业检索、企业画像、Neo4j 关系图谱、评分及文件上传/下载。**企业、评分和解释均为种子演示快照，未运行真实模型或接入正式征信数据。** 报告、授信决策、模型看板和批量评估保留前端演示逻辑。界面沿用原视觉并支持中英文切换。
+面向海外企业信用评估的内部演示工作台。当前已接通自助注册、登录、企业检索、企业画像、Neo4j 关系图谱、评分及文件上传/下载。**企业、评分和解释均为种子演示快照，未运行真实模型或接入正式征信数据。** 报告、授信决策、模型看板和批量评估保留前端演示逻辑。界面沿用原视觉并支持中英文切换。
 
 ## 本地启动
 
@@ -12,7 +12,7 @@ docker compose up --build -d
 docker compose ps -a
 ```
 
-打开 `http://localhost:18080`。默认本机演示账号 `demo`，示例密码 `demo-change-me`；可在 `.env` 设置 `DEMO_USER`、`DEMO_PASSWORD`。网关诊断端口为 `18081`，RustFS API/Console 为 `19000/19001`，都只绑定本机。共享环境请先更换所有示例凭据。
+打开 `http://localhost:18080`。登录页可创建演示账号，注册后再登录；默认本机账号 `demo`，示例密码 `demo-change-me`，可在 `.env` 设置 `DEMO_USER`、`DEMO_PASSWORD`。网关诊断端口为 `18081`，RustFS API/Console 为 `19000/19001`，都只绑定本机。共享环境请先更换所有示例凭据，并另行设计开放注册的准入与防滥用策略。
 
 Compose 启动 PostgreSQL 18、Redis、RustFS 1.0.0 GA、Neo4j Community、FastAPI 后端、Go 网关和 Caddy 前端；项目名固定为 `risk`，服务键使用 `postgres`、`backend` 等功能名，容器名如 `risk-rustfs-1`。一次性容器创建对象存储 Bucket/应用凭据、图谱约束和演示种子；后端每次启动先执行 Alembic 迁移。数据存于命名卷，重复启动不清空。可选构建代理通过 `.env` 的 `BUILD_HTTP_PROXY`、`BUILD_HTTPS_PROXY`、`BUILD_NO_PROXY` 配置。
 
