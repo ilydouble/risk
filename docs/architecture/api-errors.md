@@ -10,6 +10,8 @@
 
 已接通 `auth/login|logout|me`、`company/search|get`、`graph/get`、`score/get`、`document/create-upload|complete-upload|list|create-download`。健康检查和 OpenAPI 保留 GET。每个路由在 FastAPI 声明成功响应及错误响应 DTO，`contracts/openapi.json` 由服务端导出并纳入版本控制。
 
+企业检索请求将页码放在 `pagination: {page, pageSize}`；响应 `data` 使用公共 `Page[CompanyDTO]`，直接包含 `items`、`total`、`page`、`pageSize`。旧的顶层请求分页字段会返回 422，避免被静默忽略。
+
 ## 分层错误
 
 1. 后端模块定义稳定的 `AUTH_*`、`COMPANY_*`、`GRAPH_*`、`DOCUMENT_*` 错误；全局 handler 序列化并处理 422 校验、404/405 路由和 500 意外错误。
@@ -22,5 +24,5 @@
 
 1. 修改后端 `RequestXxx`/`ResponseXxx` 与路由响应声明。
 2. 在 `backend/` 执行 `uv run python -m risk_api.export_openapi`。
-3. 在 `frontend/` 执行 `npm run generate:api`，更新使用方并运行类型检查。
+3. 在 `frontend/` 执行 `npm run api:generate`，更新使用方并运行类型检查。
 4. 检查导出结果及生成文件的 Git diff；不可手写相同 DTO。

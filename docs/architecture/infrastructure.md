@@ -1,14 +1,14 @@
 # 基础设施与信任边界
 
-`compose.yaml` 启动固定镜像版本的 PostgreSQL 18、Redis、RustFS、Neo4j Community、FastAPI、Go 网关及 Caddy 前端。数据卷保存 PostgreSQL、RustFS 和 Neo4j；Redis 仅保存 Session，关闭持久化。首版不部署 MQ。
+`compose.yaml` 启动固定镜像版本的 PostgreSQL 18、Redis、RustFS 1.0.0 GA、Neo4j Community、FastAPI、Go 网关及 Caddy 前端。所有服务键以 `risk-` 开头，由 Compose 自动命名容器。数据卷保存 PostgreSQL、RustFS 和 Neo4j；Redis 仅保存 Session，关闭持久化。首版不部署 MQ。
 
 Go 容器构建使用 `gateway/vendor/`，避免容器网络无法连接模块代理时失败。升级依赖时以 `go.mod`/`go.sum` 为准重新运行 `go mod vendor`。
 
 ## 一次性初始化
 
-- `rustfs-init` 在 RustFS 健康后幂等创建专用 Bucket，写入浏览器直传 CORS，并创建仅限该 Bucket 的应用用户/策略。运行时 API 使用应用凭据，Root 凭据只给初始化容器。
-- `neo4j-init` 幂等创建演示节点组合唯一约束。
-- `backend` 每次启动先迁移；`demo-seed` 之后补入缺失演示数据。重复启动不清空数据。
+- `risk-rustfs-init` 在 RustFS 健康后幂等创建专用 Bucket，写入浏览器直传 CORS，并创建仅限该 Bucket 的应用用户/策略。运行时 API 使用应用凭据，Root 凭据只给初始化容器。
+- `risk-neo4j-init` 幂等创建演示节点组合唯一约束。
+- `risk-backend` 每次启动先迁移；`risk-demo-seed` 之后补入缺失演示数据。重复启动不清空数据。
 
 ## Session 与浏览器
 

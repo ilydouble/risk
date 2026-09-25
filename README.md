@@ -14,7 +14,7 @@ docker compose ps -a
 
 打开 `http://localhost:18080`。默认本机演示账号 `demo`，示例密码 `demo-change-me`；可在 `.env` 设置 `DEMO_USER`、`DEMO_PASSWORD`。网关诊断端口为 `18081`，RustFS API/Console 为 `19000/19001`，都只绑定本机。共享环境请先更换所有示例凭据。
 
-Compose 启动 PostgreSQL 18、Redis、RustFS、Neo4j Community、FastAPI 后端、Go 网关和 Caddy 前端。一次性容器创建对象存储 Bucket/应用凭据、图谱约束和演示种子；后端每次启动先执行 Alembic 迁移。数据存于命名卷，重复启动不清空。
+Compose 启动 PostgreSQL 18、Redis、RustFS 1.0.0 GA、Neo4j Community、FastAPI 后端、Go 网关和 Caddy 前端；服务键统一以 `risk-` 开头。一次性容器创建对象存储 Bucket/应用凭据、图谱约束和演示种子；后端每次启动先执行 Alembic 迁移。数据存于命名卷，重复启动不清空。可选构建代理通过 `.env` 的 `BUILD_HTTP_PROXY`、`BUILD_HTTPS_PROXY`、`BUILD_NO_PROXY` 配置。
 
 ## 仓库结构
 
@@ -38,7 +38,7 @@ uv run pytest -q tests
 uv run python -m risk_api.export_openapi
 cd ../gateway && go test ./...
 cd ../frontend && npm ci
-npm run generate:api
+npm run api:generate
 npm run lint && npm run type-check && npm run build
 ```
 

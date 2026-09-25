@@ -9,19 +9,23 @@ backend/
   alembic/versions/V0001_initial_schema.py
   seed/demo.json
   src/risk_api/
-    main.py, config.py, dependencies.py, db.py, models.py, schemas.py
+    main.py, dependencies.py, models.py
+    shared/
+      config.py, db.py
+      api/{envelope,page,response}.py
     modules/{auth,company,graph,score,document}/
-      api.py, service.py, repository.py, errors.py（按需）
+      api/{route,handler,schemas}.py
+      service.py, repository.py, errors.py（按需）
 ```
 
-API 层只处理 HTTP、信封与依赖注入；Service 处理认证、查询、文件流程；Repository 处理数据库/图谱；共享层放配置、会话与对象存储适配。模块错误映射为 `AppError`，由全局 handler 序列化。参数校验、路由错误与未处理错误也走同一信封。
+`route.py` 声明路径与响应模型；`handler.py` 处理 HTTP、依赖注入及 DTO 映射；`schemas.py` 是模块自己的请求/响应 DTO。Service 处理认证、查询、文件流程，Repository 处理数据库/图谱。Service 和 Repository 不引用 HTTP DTO。公共分页请求为 `PageRequest`，列表响应继承 `Page[T]`。模块错误映射为 `AppError`，全局 handler 调用公共响应函数序列化；参数校验、路由错误与未处理错误也走同一信封。
 
 ## 数据与生命周期
 
 - PostgreSQL 的 `users`、`companies`、`documents` 保存账号、检索字段与文件状态。画像及中英评分快照存 JSONB，读取时由 Pydantic DTO 校验。
 - Neo4j 保存演示关系节点和边，接口仅返回页面需要的 2–3 跳。图谱不从 PostgreSQL JSON 拷贝响应。
 - `V0001_initial_schema.py` 的 revision 是 `V0001`；后续迁移顺序递增。后端容器启动时先执行 `alembic upgrade head`，成功后启动 HTTP 服务。
-- `demo-seed` 是一次性容器，在迁移与服务就绪后补入缺失账号、企业、快照和图谱。它不重置已有行或关系。演示密码由本地环境给出并以 Argon2 哈希写入。
+- `risk-demo-seed` 是一次性容器，在迁移与服务就绪后补入缺失账号、企业、快照和图谱。它不重置已有行或关系。演示密码由本地环境给出并以 Argon2 哈希写入。
 
 ## SDK 与验证
 

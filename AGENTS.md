@@ -8,12 +8,14 @@
 ## 分层与契约
 
 - `frontend/src` 遵循 `app → pages → features → entities → shared`，只能依赖同层或更低层；页面专属组件留在对应页面，不建 `widgets`。
-- 后端按 `modules/<name>/{api,service,repository,errors}.py` 拆分。HTTP DTO 属于契约层，业务判断在 Service，数据库与外部系统访问在 Repository/共享适配层。避免为简单流程引入 DDD 抽象。
-- `contracts/openapi.json` 从 FastAPI 导出。修改 DTO 或接口后重新导出，再在 `frontend/` 运行 `npm run generate:api`；不得手改 `schema.ts`、`dto.ts` 或手写相同 DTO。
+- 后端公共配置、数据库和 API 信封/分页/响应放在 `risk_api/shared/`；各模块用 `api/{route,handler,schemas}.py` 管理 HTTP 层，Service 和 Repository 不依赖 HTTP DTO。避免为简单流程引入 DDD 抽象。
+- Python 3.12 泛型使用 `class Page[T]` 等内联语法；公共分页响应直接在 `Page` 中声明 `page`、`pageSize`，不增加仅包装这两个字段的类型。
+- `contracts/openapi.json` 从 FastAPI 导出。修改 DTO 或接口后重新导出，再在 `frontend/` 运行 `npm run api:generate`；不得手改 `shared/api/generated/schema.ts` 或手写相同 DTO。
 - API 请求体使用 `RequestXxx`，响应 DTO 使用 `ResponseXxx`；业务响应始终为四字段信封，`code` 等于 HTTP 状态。模块定义稳定错误码，全局统一序列化；`X-Request-ID` 放响应头。
 - Alembic 文件按 `V0001_xxx.py` 顺序命名，修订号对应版本。修改已发布结构只能新增迁移，不改写旧迁移。
 - `gateway/vendor/` 是 Go 模块的生成快照，用于离线容器构建；升级 `go.mod` 后运行 `go mod tidy` 与 `go mod vendor`，不要手改第三方源码。
 - 演示种子只补缺失记录，不覆盖已有数据。评分、SHAP、报告、决策、模型和批量评估中的演示内容不得描述成真实在线模型结果。
+- Compose 服务键使用 `risk-` 前缀；更改服务名时同步更新容器内地址和初始化脚本。构建代理只由 `BUILD_*_PROXY` 传入构建参数，不写入镜像环境。
 
 ## 代码与验证
 
