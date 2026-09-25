@@ -10,8 +10,8 @@ from argon2.exceptions import VerifyMismatchError
 from redis.asyncio import Redis
 from redis.exceptions import RedisError
 
-from risk_api.models import User
 from risk_api.modules.auth.errors import AuthError
+from risk_api.modules.auth.model import User
 from risk_api.modules.auth.repository import UserRepository
 
 SESSION_SECONDS = 8 * 60 * 60

@@ -8,7 +8,7 @@ from typing import Any
 from neo4j import AsyncGraphDatabase
 from sqlalchemy.dialects.postgresql import insert
 
-from risk_api.models import Company
+from risk_api.modules.company.model import Company
 from risk_api.shared.config import settings
 from risk_api.shared.db import session_factory
 

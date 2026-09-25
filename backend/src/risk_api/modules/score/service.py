@@ -1,6 +1,6 @@
 from typing import Any
 
-from risk_api.models import Company
+from risk_api.modules.company.model import Company
 from risk_api.modules.company.service import CompanyService
 
 

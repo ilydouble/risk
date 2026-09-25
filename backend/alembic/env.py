@@ -5,7 +5,11 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from sqlalchemy.pool import NullPool
 
 from alembic import context
-from risk_api import models  # noqa: F401  Register model metadata.
+
+# Alembic must import every mapping before it reads Base.metadata.
+from risk_api.modules.auth import model as auth_model  # noqa: F401
+from risk_api.modules.company import model as company_model  # noqa: F401
+from risk_api.modules.document import model as document_model  # noqa: F401
 from risk_api.shared.config import settings
 from risk_api.shared.db import Base
 

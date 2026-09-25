@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from risk_api.models import Document
+from risk_api.modules.document.model import Document
 
 
 class DocumentRepository:

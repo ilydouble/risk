@@ -1,7 +1,6 @@
 from dishka.integrations.fastapi import FromDishka
 from fastapi import Request
 
-from risk_api.models import Document
 from risk_api.modules.auth.api.handler import authorize_request
 from risk_api.modules.auth.service import AuthService
 from risk_api.modules.document.api.schemas import (
@@ -15,6 +14,7 @@ from risk_api.modules.document.api.schemas import (
     ResponseCreateUpload,
     ResponseListDocuments,
 )
+from risk_api.modules.document.model import Document
 from risk_api.modules.document.service import DocumentService
 from risk_api.shared.api.envelope import ApiEnvelope
 from risk_api.shared.api.response import success

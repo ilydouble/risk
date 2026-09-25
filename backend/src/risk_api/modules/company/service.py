@@ -1,5 +1,5 @@
-from risk_api.models import Company
 from risk_api.modules.company.errors import CompanyNotFound
+from risk_api.modules.company.model import Company
 from risk_api.modules.company.query import CompanySearchQuery
 from risk_api.modules.company.repository import CompanyRepository
 

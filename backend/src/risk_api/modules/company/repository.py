@@ -4,7 +4,7 @@ from sqlalchemy import Float, cast, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.elements import ColumnElement
 
-from risk_api.models import Company
+from risk_api.modules.company.model import Company
 from risk_api.modules.company.query import CompanySearchQuery
 
 

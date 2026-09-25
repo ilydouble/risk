@@ -4,9 +4,9 @@ from uuid import uuid4
 
 from stellarmesh_objectstorage import AsyncClient, NotFoundError, StorageError
 
-from risk_api.models import Document
 from risk_api.modules.company.service import CompanyService
 from risk_api.modules.document.errors import DocumentError
+from risk_api.modules.document.model import Document
 from risk_api.modules.document.repository import DocumentRepository
 
 

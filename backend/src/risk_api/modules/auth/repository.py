@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from risk_api.models import User
+from risk_api.modules.auth.model import User
 
 
 class UserRepository:

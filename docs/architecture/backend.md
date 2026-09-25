@@ -9,16 +9,16 @@ backend/
   alembic/versions/V0001_initial_schema.py
   seed/demo/C-1001.json … C-1008.json
   src/risk_api/
-    main.py, dependencies.py, models.py
+    main.py, dependencies.py
     shared/
       config.py, db.py
       api/{envelope,page,response}.py
     modules/{auth,company,graph,score,document}/
       api/{route,handler,schemas}.py
-      service.py, repository.py, errors.py（按需）
+      model.py, service.py, repository.py, errors.py（按需）
 ```
 
-`route.py` 声明路径与响应模型；`handler.py` 处理 HTTP、依赖注入及 DTO 映射；`schemas.py` 是模块自己的请求/响应 DTO。Service 处理认证、查询、文件流程，Repository 处理数据库/图谱。Service 和 Repository 不引用 HTTP DTO。公共分页请求为 `PageRequest`，列表响应继承 `Page[T]`。模块错误映射为 `AppError`，全局 handler 调用公共响应函数序列化；参数校验、路由错误与未处理错误也走同一信封。
+`route.py` 声明路径与响应模型；`handler.py` 处理 HTTP、依赖注入及 DTO 映射；`schemas.py` 是模块自己的请求/响应 DTO。`auth`、`company`、`document` 的 `model.py` 保存各自 SQLAlchemy 映射；图谱和评分不为凑目录建立模型文件。Service 处理认证、查询、文件流程，Repository 处理数据库/图谱。Service 和 Repository 不引用 HTTP DTO。公共分页请求为 `PageRequest`，列表响应继承 `Page[T]`。模块错误映射为 `AppError`，全局 handler 调用公共响应函数序列化；参数校验、路由错误与未处理错误也走同一信封。
 
 ## 数据与生命周期
 
