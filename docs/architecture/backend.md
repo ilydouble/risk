@@ -1,0 +1,38 @@
+# 后端
+
+`backend/` 使用 Python 3.12 与 uv。FastAPI 是 HTTP 入口，Dishka 装配依赖；SQLAlchemy AsyncSession + asyncpg、Redis asyncio、Neo4j async driver 和 `stellarmesh-objectstorage` 负责持久化访问。`stellarmesh-logging` 的 JSON formatter 输出结构化日志。
+
+## 目录
+
+```text
+backend/
+  alembic/versions/V0001_initial_schema.py
+  seed/demo.json
+  src/risk_api/
+    main.py, config.py, dependencies.py, db.py, models.py, schemas.py
+    modules/{auth,company,graph,score,document}/
+      api.py, service.py, repository.py, errors.py（按需）
+```
+
+API 层只处理 HTTP、信封与依赖注入；Service 处理认证、查询、文件流程；Repository 处理数据库/图谱；共享层放配置、会话与对象存储适配。模块错误映射为 `AppError`，由全局 handler 序列化。参数校验、路由错误与未处理错误也走同一信封。
+
+## 数据与生命周期
+
+- PostgreSQL 的 `users`、`companies`、`documents` 保存账号、检索字段与文件状态。画像及中英评分快照存 JSONB，读取时由 Pydantic DTO 校验。
+- Neo4j 保存演示关系节点和边，接口仅返回页面需要的 2–3 跳。图谱不从 PostgreSQL JSON 拷贝响应。
+- `V0001_initial_schema.py` 的 revision 是 `V0001`；后续迁移顺序递增。后端容器启动时先执行 `alembic upgrade head`，成功后启动 HTTP 服务。
+- `demo-seed` 是一次性容器，在迁移与服务就绪后补入缺失账号、企业、快照和图谱。它不重置已有行或关系。演示密码由本地环境给出并以 Argon2 哈希写入。
+
+## SDK 与验证
+
+Python 锁文件固定 `stellarmesh-logging` 0.5.1 与 `stellarmesh-objectstorage` 0.1.0。对象上传/下载只由 SDK 生成 60 秒预签名 URL，浏览器随后传输对象字节。
+
+在 `backend/` 执行：
+
+```bash
+uv sync --dev
+uv run ruff check src alembic tests
+uv run mypy src/risk_api
+uv run pytest -q tests
+uv run python -m risk_api.export_openapi
+```
