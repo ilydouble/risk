@@ -84,10 +84,22 @@ async def seed_graph_rows(records: list[dict[str, Any]]) -> None:
         await driver.close()
 
 
+def load_demo_records() -> list[dict[str, Any]]:
+    seed_dir = Path(__file__).resolve().parents[2] / "seed" / "demo"
+    paths = sorted(seed_dir.glob("C-*.json"))
+    if not paths:
+        raise RuntimeError(f"No demo fixtures found in {seed_dir}")
+    records: list[dict[str, Any]] = []
+    for path in paths:
+        record: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
+        if record["company"]["id"] != path.stem:
+            raise ValueError(f"Demo fixture ID does not match filename: {path}")
+        records.append(record)
+    return records
+
+
 async def main() -> None:
-    records: list[dict[str, Any]] = json.loads(
-        (Path(__file__).resolve().parents[2] / "seed" / "demo.json").read_text()
-    )
+    records = load_demo_records()
     await seed_company_rows(records)
     await seed_graph_rows(records)
 

@@ -1,0 +1,1042 @@
+{
+  "company": {
+    "id": "C-1004",
+    "nameCn": "安第斯矿业资源集团",
+    "nameEn": "Andes Mining Resources Group S.A.",
+    "regNo": "CL-RUT-96.184.220-7",
+    "country": "智利 · 圣地亚哥",
+    "countryEn": "Chile · Santiago",
+    "region": "智利",
+    "regionEn": "Chile",
+    "sector": "矿产开采",
+    "sectorEn": "Mining",
+    "countryFlag": "ri-flag-line",
+    "industry": "矿产开采 / 大宗商品",
+    "industryEn": "Mining / Commodities",
+    "creditScore": 654,
+    "riskLevel": "medium",
+    "defaultProb": 6.4,
+    "creditLimit": "$ 12,400,000",
+    "updatedAt": "2026-09-23 16:05",
+    "tags": [
+      "大宗价格波动",
+      "海外资产占比高"
+    ],
+    "tagsEn": [
+      "Commodity price swings",
+      "High overseas assets"
+    ]
+  },
+  "profile": {
+    "facts": {
+      "established": "2014-03-12",
+      "registeredCapital": "美元 1,800 万元",
+      "paidInCapital": "美元 1,260 万元（实缴 70%）",
+      "legalPerson": "李振国",
+      "actualController": "李振国（自然人）",
+      "controllerStake": "持股 58.0%",
+      "employees": "520 人",
+      "listed": "未上市",
+      "ratingAgency": "外部评级 BBB",
+      "mainBanks": "渣打银行 · 中信银行",
+      "settlement": "90 天账期 / T/T",
+      "revenue": "2025 年营收 5.2 亿元",
+      "netMargin": "净利率 4.2%（同比 -0.9pct）"
+    },
+    "factsEn": {
+      "registeredCapital": "USD 18 million",
+      "paidInCapital": "USD 12.6 million (70% paid-in)",
+      "legalPerson": "Li Zhenguo",
+      "actualController": "Li Zhenguo (natural person)",
+      "controllerStake": "58.0%",
+      "employees": "520",
+      "listed": "Not listed",
+      "ratingAgency": "External rating BBB",
+      "mainBanks": "Standard Chartered · CITIC Bank",
+      "settlement": "90-day terms / T/T",
+      "revenue": "2025 revenue CNY 520 million",
+      "netMargin": "Net margin 4.2% (-0.9pct YoY)"
+    },
+    "summary": "企业具备一定经营基础，但存在应收账款周期延长、关联交易与实缴比例偏低等关注事项，被评定为中风险主体，建议缩短账期并追加增信措施。",
+    "summaryEn": "The company has a reasonable operating base but shows watch items such as a longer receivables cycle, related-party transactions and a low paid-in ratio — rated medium risk; recommend shorter terms and additional credit enhancement.",
+    "timeline": [
+      {
+        "id": "T-M-1",
+        "date": "2026-07-23",
+        "type": "risk",
+        "title": "应收账款周期延长",
+        "titleEn": "Longer receivables cycle",
+        "desc": "平均回款周期由 68 天延长至 92 天，需关注下游付款能力。",
+        "descEn": "The average collection period extended from 68 to 92 days; watch downstream payment capacity.",
+        "impact": "negative"
+      },
+      {
+        "id": "T-M-2",
+        "date": "2026-05-14",
+        "type": "finance",
+        "title": "新增关联方担保",
+        "titleEn": "New related-party guarantees",
+        "desc": "为集团内关联主体提供 6,000 万元连带责任保证。",
+        "descEn": "Provided CNY 60m joint liability guarantees for group-related entities.",
+        "impact": "negative"
+      },
+      {
+        "id": "T-M-3",
+        "date": "2026-01-30",
+        "type": "award",
+        "title": "获得行业资质升级",
+        "titleEn": "Industry qualification upgraded",
+        "desc": "主营业务资质升级至二级，扩大可承接项目范围。",
+        "descEn": "The core qualification was upgraded to Grade II, widening the eligible project scope.",
+        "impact": "positive"
+      },
+      {
+        "id": "T-M-4",
+        "date": "2025-09-16",
+        "type": "equity",
+        "title": "股权结构微调",
+        "titleEn": "Minor equity adjustment",
+        "desc": "一名小股东退出，实控人持股比例提升至 58%。",
+        "descEn": "A minority shareholder exited, raising the controller's stake to 58%.",
+        "impact": "neutral"
+      }
+    ],
+    "riskFlags": [
+      {
+        "id": "R-M-1",
+        "label": "应收账款周期延长",
+        "labelEn": "Longer receivables cycle",
+        "level": "medium",
+        "category": "财务风险",
+        "categoryEn": "Financial",
+        "desc": "回款周期由 68 天延长至 92 天，账龄结构走弱。",
+        "descEn": "Collection period extended from 68 to 92 days, weakening the aging structure.",
+        "source": "财务报表分析",
+        "detectedAt": "2026-07-25"
+      },
+      {
+        "id": "R-M-2",
+        "label": "关联方担保",
+        "labelEn": "Related-party guarantees",
+        "level": "medium",
+        "category": "担保风险",
+        "categoryEn": "Guarantee",
+        "desc": "对外担保 6,000 万元，占净资产 24%，被担保方透明度一般。",
+        "descEn": "Guarantees of CNY 60m, 24% of net assets, with moderate counterparty transparency.",
+        "source": "公开披露",
+        "detectedAt": "2026-05-15"
+      },
+      {
+        "id": "R-M-3",
+        "label": "实缴比例偏低",
+        "labelEn": "Low paid-in ratio",
+        "level": "medium",
+        "category": "资本风险",
+        "categoryEn": "Capital",
+        "desc": "注册资本实缴比例 70%，尚未完成全部实缴。",
+        "descEn": "Registered capital is 70% paid-in; full payment is not yet complete.",
+        "source": "工商登记信息",
+        "detectedAt": "2026-09-01"
+      },
+      {
+        "id": "R-M-4",
+        "label": "无重大诉讼记录",
+        "labelEn": "No major litigation",
+        "level": "low",
+        "category": "合规表现",
+        "categoryEn": "Compliance",
+        "desc": "近三年无被执行与重大诉讼记录。",
+        "descEn": "No enforcement or major litigation in the past three years.",
+        "source": "司法信息查询",
+        "detectedAt": "2026-09-20"
+      }
+    ],
+    "fiveC": [
+      {
+        "key": "character",
+        "label": "品格",
+        "en": "Character",
+        "weight": 25,
+        "score": 64,
+        "note": "还款记录基本正常，偶有延后支付情形。",
+        "noteEn": "Repayment record is broadly normal, with occasional late payments."
+      },
+      {
+        "key": "capacity",
+        "label": "能力",
+        "en": "Capacity",
+        "weight": 25,
+        "score": 66,
+        "note": "订单能见度 4 个月，产能利用率 76%。",
+        "noteEn": "Order visibility 4 months, capacity utilization 76%."
+      },
+      {
+        "key": "capital",
+        "label": "资本",
+        "en": "Capital",
+        "weight": 20,
+        "score": 58,
+        "note": "资产负债率 61.4%，实缴比例 70%。",
+        "noteEn": "Debt-to-asset 61.4%, paid-in ratio 70%."
+      },
+      {
+        "key": "collateral",
+        "label": "担保",
+        "en": "Collateral",
+        "weight": 18,
+        "score": 60,
+        "note": "抵押物可覆盖授信额度的 1.4 倍。",
+        "noteEn": "Collateral covers the credit limit by 1.4x."
+      },
+      {
+        "key": "environment",
+        "label": "环境",
+        "en": "Environment",
+        "weight": 12,
+        "score": 62,
+        "note": "行业需求平稳，竞争加剧。",
+        "noteEn": "Industry demand steady, competition intensifying."
+      }
+    ],
+    "relatedParties": [
+      {
+        "id": "P-M-1",
+        "name": "实际控制人",
+        "nameEn": "Actual controller",
+        "relation": "实际控制人",
+        "relationEn": "Actual controller",
+        "exposure": "持股 58.0%",
+        "exposureEn": "Stake 58.0%",
+        "riskLevel": "medium"
+      },
+      {
+        "id": "P-M-2",
+        "name": "集团内关联主体",
+        "nameEn": "Group-related entity",
+        "relation": "被担保方",
+        "relationEn": "Guaranteed party",
+        "exposure": "担保 6,000 万元",
+        "exposureEn": "Guarantee CNY 60m",
+        "riskLevel": "medium"
+      }
+    ]
+  },
+  "scores": {
+    "zh": {
+      "baseValue": 640,
+      "finalScore": 654,
+      "grade": "BB",
+      "gradeNote": "存在一定违约风险，建议追加增信",
+      "riskPercentile": 80,
+      "defaultProb": 6.4,
+      "pdBase": 7.6,
+      "pdDelta": -1.2,
+      "confidence": 88,
+      "modelVersion": "v4.2.0",
+      "evaluatedAt": "2026-09-23 16:05",
+      "positiveCount": 6,
+      "negativeCount": 3,
+      "features": [
+        {
+          "id": "capacity",
+          "label": "经营与订单能力",
+          "category": "经营能力",
+          "value": "能力维度 66 / 100",
+          "desc": "订单能见度、产能利用率与交付准时率共同构成的经营性能力信号。",
+          "contribution": 5.5
+        },
+        {
+          "id": "governance",
+          "label": "治理与股权稳定性",
+          "category": "治理结构",
+          "value": "持股 58.0%",
+          "desc": "股权结构稳定性与控制权集中度。持股 58.0%，实际控制人为 李振国（自然人）。",
+          "contribution": 5
+        },
+        {
+          "id": "operation",
+          "label": "客户与供应链集中度",
+          "category": "客户与供应链",
+          "value": "集中度处于合理区间",
+          "desc": "客户集中度、供应商依赖与供应链稳定性的综合表现。",
+          "contribution": 5
+        },
+        {
+          "id": "compliance",
+          "label": "涉诉与合规表现",
+          "category": "合规与法务",
+          "value": "1 项法务 / 合规信号",
+          "desc": "命中 1 项法务 / 合规信号，已按严重程度折减评分贡献。",
+          "contribution": 4.8
+        },
+        {
+          "id": "credit",
+          "label": "履约与信用记录",
+          "category": "信用与履约",
+          "value": "外部评级 BBB",
+          "desc": "外部信用记录与历史履约表现。信誉维度评分 64/100，外部评级口径：外部评级 BBB。",
+          "contribution": 4.5
+        },
+        {
+          "id": "environment",
+          "label": "行业与国别环境",
+          "category": "行业与国别",
+          "value": "智利 · 圣地亚哥 · 矿产开采",
+          "desc": "所处行业景气度与国别宏观风险。主营 矿产开采 / 大宗商品，注册地 智利 · 圣地亚哥。",
+          "contribution": 2.8
+        },
+        {
+          "id": "scale",
+          "label": "企业规模与经营年限",
+          "category": "规模与年限",
+          "value": "员工 520 人",
+          "desc": "成立于 2014-03-12，已持续经营 12 年，人员规模 520 人，形成规模与存续期稳定性溢价。",
+          "contribution": -0.9
+        },
+        {
+          "id": "guarantee",
+          "label": "关联方与对外担保",
+          "category": "担保与抵押",
+          "value": "1 项担保信号",
+          "desc": "关联方敞口、对外担保规模与抵押物覆盖能力的综合评估。",
+          "contribution": -3.4
+        },
+        {
+          "id": "capital",
+          "label": "资本结构与杠杆",
+          "category": "资本与财务",
+          "value": "净利率 4.2%（同比 -0.9pct）",
+          "desc": "资产负债结构、现金流覆盖与盈利水平。2025 年营收 5.2 亿元；净利率 4.2%（同比 -0.9pct）。",
+          "contribution": -9.3
+        }
+      ],
+      "benchmarks": [
+        {
+          "key": "sector",
+          "label": "同行业",
+          "tag": "矿产开采",
+          "sampleSize": 375,
+          "avgScore": 622,
+          "avgDefaultProb": 8.6,
+          "percentile": 72,
+          "goodRate": 45,
+          "diff": 32
+        },
+        {
+          "key": "country",
+          "label": "同国别 / 地区",
+          "tag": "智利",
+          "sampleSize": 131,
+          "avgScore": 635,
+          "avgDefaultProb": 7.6,
+          "percentile": 62,
+          "goodRate": 49,
+          "diff": 19
+        },
+        {
+          "key": "size",
+          "label": "同规模",
+          "tag": "中型企业",
+          "sampleSize": 359,
+          "avgScore": 614,
+          "avgDefaultProb": 9.2,
+          "percentile": 71,
+          "goodRate": 42,
+          "diff": 40
+        },
+        {
+          "key": "all",
+          "label": "全库基准",
+          "tag": "全体在库样本",
+          "sampleSize": 5009,
+          "avgScore": 610,
+          "avgDefaultProb": 9.5,
+          "percentile": 80,
+          "goodRate": 41,
+          "diff": 44
+        }
+      ]
+    },
+    "en": {
+      "baseValue": 640,
+      "finalScore": 654,
+      "grade": "BB",
+      "gradeNote": "Some default risk, add credit enhancement",
+      "riskPercentile": 80,
+      "defaultProb": 6.4,
+      "pdBase": 7.6,
+      "pdDelta": -1.2,
+      "confidence": 88,
+      "modelVersion": "v4.2.0",
+      "evaluatedAt": "2026-09-23 16:05",
+      "positiveCount": 6,
+      "negativeCount": 3,
+      "features": [
+        {
+          "id": "capacity",
+          "label": "Operating & order capacity",
+          "category": "Operating capacity",
+          "value": "Capacity 66 / 100",
+          "desc": "A signal formed by order visibility, capacity utilization and on-time delivery.",
+          "contribution": 5.5
+        },
+        {
+          "id": "governance",
+          "label": "Governance & equity stability",
+          "category": "Governance",
+          "value": "58.0%",
+          "desc": "Equity stability and control concentration. 58.0%, actual controller Li Zhenguo (natural person).",
+          "contribution": 5
+        },
+        {
+          "id": "operation",
+          "label": "Customer & supply-chain concentration",
+          "category": "Customers & supply chain",
+          "value": "Concentration within a reasonable range",
+          "desc": "A combined view of customer concentration, supplier dependency and supply-chain stability.",
+          "contribution": 5
+        },
+        {
+          "id": "compliance",
+          "label": "Litigation & compliance",
+          "category": "Compliance & legal",
+          "value": "1 legal / compliance signals",
+          "desc": "1 legal / compliance signals hit; the score contribution is reduced by severity.",
+          "contribution": 4.8
+        },
+        {
+          "id": "credit",
+          "label": "Payment & credit records",
+          "category": "Credit & performance",
+          "value": "External rating BBB",
+          "desc": "External credit records and historical performance. Character dimension 64/100, external rating: External rating BBB.",
+          "contribution": 4.5
+        },
+        {
+          "id": "environment",
+          "label": "Industry & country environment",
+          "category": "Industry & country",
+          "value": "Chile · Santiago · 矿产开采",
+          "desc": "Industry cycle and country macro risk. Core business Mining / Commodities, registered in Chile · Santiago.",
+          "contribution": 2.8
+        },
+        {
+          "id": "scale",
+          "label": "Scale & years in business",
+          "category": "Scale & vintage",
+          "value": "Employees 520",
+          "desc": "Founded 2014-03-12, operating 12 years, 520 staff, earning a scale-and-vintage stability premium.",
+          "contribution": -0.9
+        },
+        {
+          "id": "guarantee",
+          "label": "Related parties & guarantees",
+          "category": "Guarantee & collateral",
+          "value": "1 guarantee signals",
+          "desc": "A combined assessment of related-party exposure, external guarantee scale and collateral coverage.",
+          "contribution": -3.4
+        },
+        {
+          "id": "capital",
+          "label": "Capital structure & leverage",
+          "category": "Capital & finance",
+          "value": "Net margin 4.2% (-0.9pct YoY)",
+          "desc": "Balance-sheet structure, cash-flow coverage and profitability. 2025 revenue CNY 520 million; Net margin 4.2% (-0.9pct YoY).",
+          "contribution": -9.3
+        }
+      ],
+      "benchmarks": [
+        {
+          "key": "sector",
+          "label": "Sector peers",
+          "tag": "矿产开采",
+          "sampleSize": 375,
+          "avgScore": 622,
+          "avgDefaultProb": 8.6,
+          "percentile": 72,
+          "goodRate": 45,
+          "diff": 32
+        },
+        {
+          "key": "country",
+          "label": "Same country / region",
+          "tag": "智利",
+          "sampleSize": 131,
+          "avgScore": 635,
+          "avgDefaultProb": 7.6,
+          "percentile": 62,
+          "goodRate": 49,
+          "diff": 19
+        },
+        {
+          "key": "size",
+          "label": "Same size",
+          "tag": "Mid-sized enterprise",
+          "sampleSize": 359,
+          "avgScore": 614,
+          "avgDefaultProb": 9.2,
+          "percentile": 71,
+          "goodRate": 42,
+          "diff": 40
+        },
+        {
+          "key": "all",
+          "label": "Library benchmark",
+          "tag": "All sampled firms",
+          "sampleSize": 5009,
+          "avgScore": 610,
+          "avgDefaultProb": 9.5,
+          "percentile": 80,
+          "goodRate": 41,
+          "diff": 44
+        }
+      ]
+    }
+  },
+  "graphs": {
+    "zh": {
+      "rootId": "C-1004",
+      "nodes": [
+        {
+          "id": "C-1004",
+          "label": "安第斯矿业资源集团",
+          "type": "company",
+          "riskLevel": "medium",
+          "hop": 0,
+          "relation": "评估主体",
+          "exposure": "建议授信 $ 12,400,000",
+          "industry": "矿产开采 / 大宗商品",
+          "country": "智利 · 圣地亚哥",
+          "companyId": "C-1004",
+          "note": "企业具备一定经营基础，但存在应收账款周期延长、关联交易与实缴比例偏低等关注事项，被评定为中风险主体，建议缩短账期并追加增信措施。"
+        },
+        {
+          "id": "P-M-1",
+          "label": "实际控制人",
+          "type": "person",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "实际控制人",
+          "exposure": "持股 58.0%",
+          "industry": "矿产开采 / 大宗商品",
+          "country": "智利 · 圣地亚哥",
+          "note": "与评估主体构成「实际控制人」关系，敞口为 持股 58.0%，风险等级为中风险。"
+        },
+        {
+          "id": "P-M-2",
+          "label": "集团内关联主体",
+          "type": "guarantor",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "被担保方",
+          "exposure": "担保 6,000 万元",
+          "industry": "矿产开采 / 大宗商品",
+          "country": "智利 · 圣地亚哥",
+          "note": "与评估主体构成「被担保方」关系，敞口为 担保 6,000 万元，风险等级为中风险。"
+        },
+        {
+          "id": "N-C-1004-legal",
+          "label": "李振国",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "法定代表人",
+          "exposure": "控制权 持股 58.0%",
+          "industry": "矿产开采 / 大宗商品",
+          "country": "智利 · 圣地亚哥",
+          "note": "工商登记法定代表人，同时为实际控制方核心成员，控制权比例 持股 58.0%。"
+        },
+        {
+          "id": "N-C-1004-bank",
+          "label": "渣打银行",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "主要往来银行",
+          "exposure": "90 天账期 / T/T",
+          "industry": "矿产开采 / 大宗商品",
+          "country": "智利 · 圣地亚哥",
+          "note": "主要结算与授信银行，结算方式为「90 天账期 / T/T」，渠道集中度需持续关注。"
+        },
+        {
+          "id": "N-C-1004-client",
+          "label": "矿产开采核心下游客户",
+          "type": "client",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "主要客户",
+          "exposure": "年订单占比 18.6%",
+          "industry": "矿产开采 / 大宗商品",
+          "country": "智利 · 圣地亚哥",
+          "note": "评估主体的核心下游需求方，收入占比 18.6%，其付款能力直接影响回款周期。"
+        },
+        {
+          "id": "P-M-1-h2-0",
+          "label": "关联自然人",
+          "type": "person",
+          "riskLevel": "medium",
+          "hop": 2,
+          "relation": "关联自然人",
+          "exposure": "往来 33,400 万元",
+          "industry": "矿产开采 / 大宗商品",
+          "country": "智利 · 圣地亚哥",
+          "note": "经股权与交易穿透，识别到「实际控制人」的关联自然人关系，风险等级判定为中风险。"
+        },
+        {
+          "id": "P-M-2-h2-1",
+          "label": "互保关联制造企业",
+          "type": "guarantor",
+          "riskLevel": "medium",
+          "hop": 2,
+          "relation": "被担保主体",
+          "exposure": "担保 35,600 万元",
+          "industry": "矿产开采 / 大宗商品",
+          "country": "智利 · 圣地亚哥",
+          "note": "经股权与交易穿透，识别到「集团内关联主体」的被担保主体关系，风险等级判定为中风险。"
+        },
+        {
+          "id": "N-C-1004-legal-h2-2",
+          "label": "管理层亲属",
+          "type": "person",
+          "riskLevel": "medium",
+          "hop": 2,
+          "relation": "关联自然人",
+          "exposure": "往来 7,000 万元",
+          "industry": "矿产开采 / 大宗商品",
+          "country": "智利 · 圣地亚哥",
+          "note": "经股权与交易穿透，识别到「李振国」的关联自然人关系，风险等级判定为中风险。"
+        },
+        {
+          "id": "N-C-1004-bank-h2-3",
+          "label": "同业授信行",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "银团成员",
+          "exposure": "授信 13,200 万元",
+          "industry": "矿产开采 / 大宗商品",
+          "country": "智利 · 圣地亚哥",
+          "note": "经股权与交易穿透，识别到「渣打银行」的银团成员关系，风险等级判定为低风险。"
+        },
+        {
+          "id": "N-C-1004-client-h2-4",
+          "label": "海外经销平台",
+          "type": "client",
+          "riskLevel": "medium",
+          "hop": 2,
+          "relation": "下游渠道",
+          "exposure": "年订单 29,400 万元",
+          "industry": "矿产开采 / 大宗商品",
+          "country": "智利 · 圣地亚哥",
+          "note": "经股权与交易穿透，识别到「矿产开采核心下游客户」的下游渠道关系，风险等级判定为中风险。"
+        },
+        {
+          "id": "P-M-1-h2-0-h3-10",
+          "label": "管理层亲属",
+          "type": "person",
+          "riskLevel": "medium",
+          "hop": 3,
+          "relation": "关联自然人",
+          "exposure": "往来 5,200 万元",
+          "industry": "矿产开采 / 大宗商品",
+          "country": "智利 · 圣地亚哥",
+          "note": "经股权与交易穿透，识别到「关联自然人」的关联自然人关系，风险等级判定为中风险。"
+        },
+        {
+          "id": "P-M-2-h2-1-h3-11",
+          "label": "关联贸易主体",
+          "type": "guarantor",
+          "riskLevel": "medium",
+          "hop": 3,
+          "relation": "被担保主体",
+          "exposure": "担保 6,500 万元",
+          "industry": "矿产开采 / 大宗商品",
+          "country": "智利 · 圣地亚哥",
+          "note": "经股权与交易穿透，识别到「互保关联制造企业」的被担保主体关系，风险等级判定为中风险。"
+        }
+      ],
+      "edges": [
+        {
+          "id": "E:C-1004->P-M-1",
+          "source": "C-1004",
+          "target": "P-M-1",
+          "type": "equity",
+          "label": "持股关系",
+          "riskFlow": true,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1004->P-M-2",
+          "source": "C-1004",
+          "target": "P-M-2",
+          "type": "guarantee",
+          "label": "连带担保",
+          "riskFlow": true,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1004->N-C-1004-legal",
+          "source": "C-1004",
+          "target": "N-C-1004-legal",
+          "type": "control",
+          "label": "控制关系",
+          "riskFlow": true,
+          "strength": 1.2
+        },
+        {
+          "id": "E:C-1004->N-C-1004-bank",
+          "source": "C-1004",
+          "target": "N-C-1004-bank",
+          "type": "loan",
+          "label": "授信 / 结算",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:C-1004->N-C-1004-client",
+          "source": "C-1004",
+          "target": "N-C-1004-client",
+          "type": "trade",
+          "label": "交易往来",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-M-1->P-M-1-h2-0",
+          "source": "P-M-1",
+          "target": "P-M-1-h2-0",
+          "type": "control",
+          "label": "控制",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-M-2->P-M-2-h2-1",
+          "source": "P-M-2",
+          "target": "P-M-2-h2-1",
+          "type": "guarantee",
+          "label": "担保",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1004-legal->N-C-1004-legal-h2-2",
+          "source": "N-C-1004-legal",
+          "target": "N-C-1004-legal-h2-2",
+          "type": "control",
+          "label": "控制",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1004-bank->N-C-1004-bank-h2-3",
+          "source": "N-C-1004-bank",
+          "target": "N-C-1004-bank-h2-3",
+          "type": "loan",
+          "label": "授信 / 结算",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1004-client->N-C-1004-client-h2-4",
+          "source": "N-C-1004-client",
+          "target": "N-C-1004-client-h2-4",
+          "type": "trade",
+          "label": "交易往来",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-M-1-h2-0->P-M-1-h2-0-h3-10",
+          "source": "P-M-1-h2-0",
+          "target": "P-M-1-h2-0-h3-10",
+          "type": "control",
+          "label": "控制",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-M-2-h2-1->P-M-2-h2-1-h3-11",
+          "source": "P-M-2-h2-1",
+          "target": "P-M-2-h2-1-h3-11",
+          "type": "guarantee",
+          "label": "担保",
+          "riskFlow": true,
+          "strength": 1
+        }
+      ]
+    },
+    "en": {
+      "rootId": "C-1004",
+      "nodes": [
+        {
+          "id": "C-1004",
+          "label": "Andes Mining Resources Group S.A.",
+          "type": "company",
+          "riskLevel": "medium",
+          "hop": 0,
+          "relation": "Assessed entity",
+          "exposure": "Suggested limit $ 12,400,000",
+          "industry": "Mining / Commodities",
+          "country": "Chile · Santiago",
+          "companyId": "C-1004",
+          "note": "The company has a reasonable operating base but shows watch items such as a longer receivables cycle, related-party transactions and a low paid-in ratio — rated medium risk; recommend shorter terms and additional credit enhancement."
+        },
+        {
+          "id": "P-M-1",
+          "label": "Actual controller",
+          "type": "person",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "Actual controller",
+          "exposure": "Stake 58.0%",
+          "industry": "Mining / Commodities",
+          "country": "Chile · Santiago",
+          "note": "Constitutes a \"Actual controller\" relation with the assessed entity, exposure Stake 58.0%, judged Medium risk."
+        },
+        {
+          "id": "P-M-2",
+          "label": "Group-related entity",
+          "type": "guarantor",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "Guaranteed party",
+          "exposure": "Guarantee CNY 60m",
+          "industry": "Mining / Commodities",
+          "country": "Chile · Santiago",
+          "note": "Constitutes a \"Guaranteed party\" relation with the assessed entity, exposure Guarantee CNY 60m, judged Medium risk."
+        },
+        {
+          "id": "N-C-1004-legal",
+          "label": "Li Zhenguo",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "Legal representative",
+          "exposure": "Control 58.0%",
+          "industry": "Mining / Commodities",
+          "country": "Chile · Santiago",
+          "note": "Registered legal representative and a core member of the controlling party, control stake 58.0%."
+        },
+        {
+          "id": "N-C-1004-bank",
+          "label": "Standard Chartered",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "Main bank",
+          "exposure": "90-day terms / T/T",
+          "industry": "Mining / Commodities",
+          "country": "Chile · Santiago",
+          "note": "Primary settlement and credit bank, settlement terms \"90-day terms / T/T\"; channel concentration needs ongoing attention."
+        },
+        {
+          "id": "N-C-1004-client",
+          "label": "Key downstream client · 矿产开采",
+          "type": "client",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "Key client",
+          "exposure": "18.6% of annual orders",
+          "industry": "Mining / Commodities",
+          "country": "Chile · Santiago",
+          "note": "Core downstream demand source of the assessed entity, 18.6% of revenue; its payment capacity directly affects the collection cycle."
+        },
+        {
+          "id": "P-M-1-h2-0",
+          "label": "Related individual",
+          "type": "person",
+          "riskLevel": "medium",
+          "hop": 2,
+          "relation": "related individual",
+          "exposure": "Turnover ¥33,400k",
+          "industry": "Mining / Commodities",
+          "country": "Chile · Santiago",
+          "note": "Through equity and transaction look-through, a \"related individual\" relation to \"Actual controller\" was identified, judged Medium risk."
+        },
+        {
+          "id": "P-M-2-h2-1",
+          "label": "Mutual-guarantee manufacturer",
+          "type": "guarantor",
+          "riskLevel": "medium",
+          "hop": 2,
+          "relation": "guaranteed entity",
+          "exposure": "Guarantee ¥35,600k",
+          "industry": "Mining / Commodities",
+          "country": "Chile · Santiago",
+          "note": "Through equity and transaction look-through, a \"guaranteed entity\" relation to \"Group-related entity\" was identified, judged Medium risk."
+        },
+        {
+          "id": "N-C-1004-legal-h2-2",
+          "label": "Management relative",
+          "type": "person",
+          "riskLevel": "medium",
+          "hop": 2,
+          "relation": "related individual",
+          "exposure": "Turnover ¥7,000k",
+          "industry": "Mining / Commodities",
+          "country": "Chile · Santiago",
+          "note": "Through equity and transaction look-through, a \"related individual\" relation to \"Li Zhenguo\" was identified, judged Medium risk."
+        },
+        {
+          "id": "N-C-1004-bank-h2-3",
+          "label": "Interbank lender",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "syndicate member",
+          "exposure": "Credit line ¥13,200k",
+          "industry": "Mining / Commodities",
+          "country": "Chile · Santiago",
+          "note": "Through equity and transaction look-through, a \"syndicate member\" relation to \"Standard Chartered\" was identified, judged Low risk."
+        },
+        {
+          "id": "N-C-1004-client-h2-4",
+          "label": "Overseas sales platform",
+          "type": "client",
+          "riskLevel": "medium",
+          "hop": 2,
+          "relation": "downstream channel",
+          "exposure": "Annual orders ¥29,400k",
+          "industry": "Mining / Commodities",
+          "country": "Chile · Santiago",
+          "note": "Through equity and transaction look-through, a \"downstream channel\" relation to \"Key downstream client · 矿产开采\" was identified, judged Medium risk."
+        },
+        {
+          "id": "P-M-1-h2-0-h3-10",
+          "label": "Management relative",
+          "type": "person",
+          "riskLevel": "medium",
+          "hop": 3,
+          "relation": "related individual",
+          "exposure": "Turnover ¥5,200k",
+          "industry": "Mining / Commodities",
+          "country": "Chile · Santiago",
+          "note": "Through equity and transaction look-through, a \"related individual\" relation to \"Related individual\" was identified, judged Medium risk."
+        },
+        {
+          "id": "P-M-2-h2-1-h3-11",
+          "label": "Affiliate trading entity",
+          "type": "guarantor",
+          "riskLevel": "medium",
+          "hop": 3,
+          "relation": "guaranteed entity",
+          "exposure": "Guarantee ¥6,500k",
+          "industry": "Mining / Commodities",
+          "country": "Chile · Santiago",
+          "note": "Through equity and transaction look-through, a \"guaranteed entity\" relation to \"Mutual-guarantee manufacturer\" was identified, judged Medium risk."
+        }
+      ],
+      "edges": [
+        {
+          "id": "E:C-1004->P-M-1",
+          "source": "C-1004",
+          "target": "P-M-1",
+          "type": "equity",
+          "label": "Equity stake",
+          "riskFlow": true,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1004->P-M-2",
+          "source": "C-1004",
+          "target": "P-M-2",
+          "type": "guarantee",
+          "label": "Joint guarantee",
+          "riskFlow": true,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1004->N-C-1004-legal",
+          "source": "C-1004",
+          "target": "N-C-1004-legal",
+          "type": "control",
+          "label": "Control",
+          "riskFlow": true,
+          "strength": 1.2
+        },
+        {
+          "id": "E:C-1004->N-C-1004-bank",
+          "source": "C-1004",
+          "target": "N-C-1004-bank",
+          "type": "loan",
+          "label": "Credit / settlement",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:C-1004->N-C-1004-client",
+          "source": "C-1004",
+          "target": "N-C-1004-client",
+          "type": "trade",
+          "label": "Trade",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-M-1->P-M-1-h2-0",
+          "source": "P-M-1",
+          "target": "P-M-1-h2-0",
+          "type": "control",
+          "label": "Control",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-M-2->P-M-2-h2-1",
+          "source": "P-M-2",
+          "target": "P-M-2-h2-1",
+          "type": "guarantee",
+          "label": "Guarantee",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1004-legal->N-C-1004-legal-h2-2",
+          "source": "N-C-1004-legal",
+          "target": "N-C-1004-legal-h2-2",
+          "type": "control",
+          "label": "Control",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1004-bank->N-C-1004-bank-h2-3",
+          "source": "N-C-1004-bank",
+          "target": "N-C-1004-bank-h2-3",
+          "type": "loan",
+          "label": "Credit / settlement",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1004-client->N-C-1004-client-h2-4",
+          "source": "N-C-1004-client",
+          "target": "N-C-1004-client-h2-4",
+          "type": "trade",
+          "label": "Trade",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-M-1-h2-0->P-M-1-h2-0-h3-10",
+          "source": "P-M-1-h2-0",
+          "target": "P-M-1-h2-0-h3-10",
+          "type": "control",
+          "label": "Control",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-M-2-h2-1->P-M-2-h2-1-h3-11",
+          "source": "P-M-2-h2-1",
+          "target": "P-M-2-h2-1-h3-11",
+          "type": "guarantee",
+          "label": "Guarantee",
+          "riskFlow": true,
+          "strength": 1
+        }
+      ]
+    }
+  }
+}

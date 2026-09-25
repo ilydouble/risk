@@ -1,0 +1,1242 @@
+{
+  "company": {
+    "id": "C-1001",
+    "nameCn": "北辰精密制造有限公司",
+    "nameEn": "Polaris Precision Manufacturing Ltd.",
+    "regNo": "91310000MA1FL2X309",
+    "country": "中国 · 上海",
+    "countryEn": "China · Shanghai",
+    "region": "中国",
+    "regionEn": "China",
+    "sector": "精密制造",
+    "sectorEn": "Precision Manufacturing",
+    "countryFlag": "ri-flag-line",
+    "industry": "精密制造 / 汽车零部件",
+    "industryEn": "Precision Manufacturing / Auto Parts",
+    "creditScore": 812,
+    "riskLevel": "low",
+    "defaultProb": 0.8,
+    "creditLimit": "¥ 42,000,000",
+    "updatedAt": "2026-09-24 09:12",
+    "tags": [
+      "连续 6 年盈利",
+      "上市子公司",
+      "供应链核心"
+    ],
+    "tagsEn": [
+      "6-year profitable",
+      "Listed subsidiary",
+      "Core supply chain"
+    ]
+  },
+  "profile": {
+    "facts": {
+      "established": "2006-04-18",
+      "registeredCapital": "人民币 12.8 亿元",
+      "paidInCapital": "人民币 12.8 亿元（实缴 100%）",
+      "legalPerson": "周文彬",
+      "actualController": "北辰控股集团有限公司",
+      "controllerStake": "持股 46.2%（穿透后）",
+      "employees": "4,860 人",
+      "listed": "上交所主板上市（603XXX）",
+      "ratingAgency": "中诚信国际 AA",
+      "mainBanks": "中国银行上海分行 · 汇丰银行（中国）",
+      "settlement": "60 天银行承兑 / T/T 电汇",
+      "revenue": "2025 年营收 68.4 亿元",
+      "netMargin": "净利率 9.6%（同比 +0.8pct）"
+    },
+    "factsEn": {
+      "registeredCapital": "CNY 1.28 billion",
+      "paidInCapital": "CNY 1.28 billion (100% paid-in)",
+      "legalPerson": "Zhou Wenbin",
+      "actualController": "Polaris Holding Group Co., Ltd.",
+      "controllerStake": "46.2% (look-through)",
+      "employees": "4,860",
+      "listed": "SSE Main Board listed (603XXX)",
+      "ratingAgency": "CCXI AA",
+      "mainBanks": "Bank of China Shanghai · HSBC (China)",
+      "settlement": "60-day bank acceptance / T/T",
+      "revenue": "2025 revenue CNY 6.84 billion",
+      "netMargin": "Net margin 9.6% (+0.8pct YoY)"
+    },
+    "summary": "企业成立逾 19 年，主营精密制造与汽车零部件，为国内主流整车厂一级供应商。近三年营收复合增速 11.4%，负债结构以长期银行借款为主，短期偿债压力可控，被评定为低风险主体。",
+    "summaryEn": "Established over 19 years ago, the company focuses on precision manufacturing and auto parts and is a Tier-1 supplier to mainstream domestic OEMs. Its three-year revenue CAGR is 11.4%; debt is mainly long-term bank borrowings and short-term solvency pressure is manageable — rated low risk.",
+    "timeline": [
+      {
+        "id": "T-1001-1",
+        "date": "2026-08-12",
+        "type": "award",
+        "title": "获评「国家级绿色工厂」",
+        "titleEn": "Named a National Green Factory",
+        "desc": "工信部公示第八批绿色制造名单，公司上海临港基地入选。",
+        "descEn": "The Shanghai Lingang base was included in the MIIT's eighth green manufacturing list.",
+        "impact": "positive"
+      },
+      {
+        "id": "T-1001-2",
+        "date": "2026-05-30",
+        "type": "finance",
+        "title": "完成 8 亿元公司债续发",
+        "titleEn": "Completed CNY 800m corporate bond re-issuance",
+        "desc": "票面利率 3.18%，较上次发行下降 42BP，认购倍数 2.7 倍。",
+        "descEn": "Coupon at 3.18%, down 42bp from the previous issue, with 2.7x oversubscription.",
+        "impact": "positive"
+      },
+      {
+        "id": "T-1001-3",
+        "date": "2026-03-04",
+        "type": "equity",
+        "title": "控股股东小幅增持",
+        "titleEn": "Controlling shareholder slightly increased its stake",
+        "desc": "北辰控股集团增持 1,280 万股，持股比例由 44.8% 升至 46.2%。",
+        "descEn": "Polaris Holding added 12.8m shares, raising its stake from 44.8% to 46.2%.",
+        "impact": "positive"
+      },
+      {
+        "id": "T-1001-4",
+        "date": "2025-11-19",
+        "type": "legal",
+        "title": "专利侵权诉讼一审胜诉",
+        "titleEn": "Won first-instance patent infringement suit",
+        "desc": "涉诉标的 2,400 万元，法院判决驳回原告诉讼请求。",
+        "descEn": "With CNY 24m at issue, the court dismissed the plaintiff's claims.",
+        "impact": "positive"
+      },
+      {
+        "id": "T-1001-5",
+        "date": "2025-07-08",
+        "type": "address",
+        "title": "注册地址变更",
+        "titleEn": "Registered address changed",
+        "desc": "由上海市浦东新区迁至临港新片区，生产场地面积扩大 40%。",
+        "descEn": "Moved within Shanghai from Pudong to Lingang, expanding production space by 40%.",
+        "impact": "neutral"
+      }
+    ],
+    "riskFlags": [
+      {
+        "id": "R-1001-1",
+        "label": "客户集中度偏高",
+        "labelEn": "High customer concentration",
+        "level": "medium",
+        "category": "经营风险",
+        "categoryEn": "Operational",
+        "desc": "前五大客户收入占比 61.4%，其中单一最大客户占比 22.8%。",
+        "descEn": "Top-5 customers account for 61.4% of revenue, the largest single customer 22.8%.",
+        "source": "年报披露 / 供应链数据",
+        "detectedAt": "2026-09-12"
+      },
+      {
+        "id": "R-1001-2",
+        "label": "原材料价格波动",
+        "labelEn": "Raw material price volatility",
+        "level": "medium",
+        "category": "市场风险",
+        "categoryEn": "Market",
+        "desc": "铝合金与铜材占主营成本 38%，近一年价格波动区间 ±14%。",
+        "descEn": "Aluminium alloy and copper make up 38% of cost of sales, with ±14% price swings over the past year.",
+        "source": "大宗商品指数",
+        "detectedAt": "2026-09-05"
+      },
+      {
+        "id": "R-1001-3",
+        "label": "无重大失信记录",
+        "labelEn": "No major credit-default records",
+        "level": "low",
+        "category": "合规表现",
+        "categoryEn": "Compliance",
+        "desc": "近五年未列入经营异常名录、未发生严重失信与税务处罚。",
+        "descEn": "No abnormal-operation listing, serious default or tax penalty in the past five years.",
+        "source": "全国企业信用信息公示系统",
+        "detectedAt": "2026-09-24"
+      },
+      {
+        "id": "R-1001-4",
+        "label": "对外担保 2.4 亿元",
+        "labelEn": "External guarantees CNY 240m",
+        "level": "low",
+        "category": "担保风险",
+        "categoryEn": "Guarantee",
+        "desc": "为三家控股子公司提供连带责任担保，占净资产 4.1%。",
+        "descEn": "Joint liability guarantees for three controlled subsidiaries, 4.1% of net assets.",
+        "source": "公司公告",
+        "detectedAt": "2026-08-30"
+      }
+    ],
+    "fiveC": [
+      {
+        "key": "character",
+        "label": "品格",
+        "en": "Character",
+        "weight": 25,
+        "score": 88,
+        "note": "履约记录良好，近五年无逾期与欠息，实控人征信干净。",
+        "noteEn": "Solid performance record with no overdue or unpaid interest in five years; the controller's credit standing is clean."
+      },
+      {
+        "key": "capacity",
+        "label": "能力",
+        "en": "Capacity",
+        "weight": 25,
+        "score": 84,
+        "note": "产能利用率 88%，订单能见度 7 个月，交付准时率 96.4%。",
+        "noteEn": "Capacity utilization 88%, order visibility 7 months, on-time delivery 96.4%."
+      },
+      {
+        "key": "capital",
+        "label": "资本",
+        "en": "Capital",
+        "weight": 20,
+        "score": 81,
+        "note": "资产负债率 46.8%，流动比率 1.62，现金流覆盖倍数 3.4。",
+        "noteEn": "Debt-to-asset 46.8%, current ratio 1.62, cash-flow coverage 3.4x."
+      },
+      {
+        "key": "collateral",
+        "label": "担保",
+        "en": "Collateral",
+        "weight": 18,
+        "score": 79,
+        "note": "可抵押厂房与设备评估值 19.6 亿元，抵押覆盖率充足。",
+        "noteEn": "Mortgageable plants and equipment appraised at CNY 1.96bn, ample collateral coverage."
+      },
+      {
+        "key": "environment",
+        "label": "环境",
+        "en": "Environment",
+        "weight": 12,
+        "score": 76,
+        "note": "行业景气度中性偏上，但受汽车产业周期与关税政策影响。",
+        "noteEn": "Industry sentiment is moderately positive but exposed to auto-cycle and tariff policies."
+      }
+    ],
+    "relatedParties": [
+      {
+        "id": "P-1001-1",
+        "name": "北辰控股集团有限公司",
+        "nameEn": "Polaris Holding Group Co., Ltd.",
+        "relation": "控股股东",
+        "relationEn": "Controlling shareholder",
+        "exposure": "持股 46.2%",
+        "exposureEn": "Stake 46.2%",
+        "riskLevel": "low"
+      },
+      {
+        "id": "P-1001-2",
+        "name": "北辰精工（苏州）有限公司",
+        "nameEn": "Polaris Precision (Suzhou) Co., Ltd.",
+        "relation": "全资子公司",
+        "relationEn": "Wholly-owned subsidiary",
+        "exposure": "担保 1.1 亿元",
+        "exposureEn": "Guarantee CNY 110m",
+        "riskLevel": "low"
+      },
+      {
+        "id": "P-1001-3",
+        "name": "上海临港装备产业基金",
+        "nameEn": "Shanghai Lingang Equipment Industry Fund",
+        "relation": "战略投资人",
+        "relationEn": "Strategic investor",
+        "exposure": "持股 8.4%",
+        "exposureEn": "Stake 8.4%",
+        "riskLevel": "low"
+      },
+      {
+        "id": "P-1001-4",
+        "name": "上海众鑫金属材料有限公司",
+        "nameEn": "Shanghai Zhongxin Metal Materials Co., Ltd.",
+        "relation": "主要供应商",
+        "relationEn": "Key supplier",
+        "exposure": "年采购 4.2 亿元",
+        "exposureEn": "Annual purchase CNY 420m",
+        "riskLevel": "medium"
+      }
+    ]
+  },
+  "scores": {
+    "zh": {
+      "baseValue": 640,
+      "finalScore": 812,
+      "grade": "AAA",
+      "gradeNote": "偿付能力极强，违约风险极低",
+      "riskPercentile": 99,
+      "defaultProb": 0.8,
+      "pdBase": 7.6,
+      "pdDelta": -6.8,
+      "confidence": 94,
+      "modelVersion": "v4.2.0",
+      "evaluatedAt": "2026-09-24 09:12",
+      "positiveCount": 9,
+      "negativeCount": 0,
+      "features": [
+        {
+          "id": "credit",
+          "label": "履约与信用记录",
+          "category": "信用与履约",
+          "value": "中诚信国际 AA",
+          "desc": "外部信用记录与历史履约表现。信誉维度评分 88/100，外部评级口径：中诚信国际 AA。",
+          "contribution": 35.4
+        },
+        {
+          "id": "capacity",
+          "label": "经营与订单能力",
+          "category": "经营能力",
+          "value": "能力维度 84 / 100",
+          "desc": "订单能见度、产能利用率与交付准时率共同构成的经营性能力信号。",
+          "contribution": 31.2
+        },
+        {
+          "id": "capital",
+          "label": "资本结构与杠杆",
+          "category": "资本与财务",
+          "value": "净利率 9.6%（同比 +0.8pct）",
+          "desc": "资产负债结构、现金流覆盖与盈利水平。2025 年营收 68.4 亿元；净利率 9.6%（同比 +0.8pct）。",
+          "contribution": 27.9
+        },
+        {
+          "id": "scale",
+          "label": "企业规模与经营年限",
+          "category": "规模与年限",
+          "value": "员工 4,860 人",
+          "desc": "成立于 2006-04-18，已持续经营 20 年，人员规模 4,860 人，形成规模与存续期稳定性溢价。",
+          "contribution": 25.8
+        },
+        {
+          "id": "guarantee",
+          "label": "关联方与对外担保",
+          "category": "担保与抵押",
+          "value": "1 项担保信号",
+          "desc": "关联方敞口、对外担保规模与抵押物覆盖能力的综合评估。",
+          "contribution": 18.1
+        },
+        {
+          "id": "environment",
+          "label": "行业与国别环境",
+          "category": "行业与国别",
+          "value": "中国 · 上海 · 精密制造",
+          "desc": "所处行业景气度与国别宏观风险。主营 精密制造 / 汽车零部件，注册地 中国 · 上海。",
+          "contribution": 11.1
+        },
+        {
+          "id": "governance",
+          "label": "治理与股权稳定性",
+          "category": "治理结构",
+          "value": "持股 46.2%（穿透后）",
+          "desc": "股权结构稳定性与控制权集中度。持股 46.2%（穿透后），实际控制人为 北辰控股集团有限公司。",
+          "contribution": 10.7
+        },
+        {
+          "id": "compliance",
+          "label": "涉诉与合规表现",
+          "category": "合规与法务",
+          "value": "1 项法务 / 合规信号",
+          "desc": "命中 1 项法务 / 合规信号，已按严重程度折减评分贡献。",
+          "contribution": 10.3
+        },
+        {
+          "id": "operation",
+          "label": "客户与供应链集中度",
+          "category": "客户与供应链",
+          "value": "1 项集中度信号",
+          "desc": "客户集中度、供应商依赖与供应链稳定性的综合表现。",
+          "contribution": 1.5
+        }
+      ],
+      "benchmarks": [
+        {
+          "key": "sector",
+          "label": "同行业",
+          "tag": "精密制造",
+          "sampleSize": 372,
+          "avgScore": 673,
+          "avgDefaultProb": 2.8,
+          "percentile": 99,
+          "goodRate": 60,
+          "diff": 139
+        },
+        {
+          "key": "country",
+          "label": "同国别 / 地区",
+          "tag": "中国",
+          "sampleSize": 128,
+          "avgScore": 686,
+          "avgDefaultProb": 2.5,
+          "percentile": 97,
+          "goodRate": 64,
+          "diff": 126
+        },
+        {
+          "key": "size",
+          "label": "同规模",
+          "tag": "大型企业",
+          "sampleSize": 356,
+          "avgScore": 665,
+          "avgDefaultProb": 3,
+          "percentile": 97,
+          "goodRate": 57,
+          "diff": 147
+        },
+        {
+          "key": "all",
+          "label": "全库基准",
+          "tag": "全体在库样本",
+          "sampleSize": 5006,
+          "avgScore": 636,
+          "avgDefaultProb": 4,
+          "percentile": 99,
+          "goodRate": 49,
+          "diff": 176
+        }
+      ]
+    },
+    "en": {
+      "baseValue": 640,
+      "finalScore": 812,
+      "grade": "AAA",
+      "gradeNote": "Very strong solvency, minimal default risk",
+      "riskPercentile": 99,
+      "defaultProb": 0.8,
+      "pdBase": 7.6,
+      "pdDelta": -6.8,
+      "confidence": 94,
+      "modelVersion": "v4.2.0",
+      "evaluatedAt": "2026-09-24 09:12",
+      "positiveCount": 9,
+      "negativeCount": 0,
+      "features": [
+        {
+          "id": "credit",
+          "label": "Payment & credit records",
+          "category": "Credit & performance",
+          "value": "CCXI AA",
+          "desc": "External credit records and historical performance. Character dimension 88/100, external rating: CCXI AA.",
+          "contribution": 35.4
+        },
+        {
+          "id": "capacity",
+          "label": "Operating & order capacity",
+          "category": "Operating capacity",
+          "value": "Capacity 84 / 100",
+          "desc": "A signal formed by order visibility, capacity utilization and on-time delivery.",
+          "contribution": 31.2
+        },
+        {
+          "id": "capital",
+          "label": "Capital structure & leverage",
+          "category": "Capital & finance",
+          "value": "Net margin 9.6% (+0.8pct YoY)",
+          "desc": "Balance-sheet structure, cash-flow coverage and profitability. 2025 revenue CNY 6.84 billion; Net margin 9.6% (+0.8pct YoY).",
+          "contribution": 27.9
+        },
+        {
+          "id": "scale",
+          "label": "Scale & years in business",
+          "category": "Scale & vintage",
+          "value": "Employees 4,860",
+          "desc": "Founded 2006-04-18, operating 20 years, 4,860 staff, earning a scale-and-vintage stability premium.",
+          "contribution": 25.8
+        },
+        {
+          "id": "guarantee",
+          "label": "Related parties & guarantees",
+          "category": "Guarantee & collateral",
+          "value": "1 guarantee signals",
+          "desc": "A combined assessment of related-party exposure, external guarantee scale and collateral coverage.",
+          "contribution": 18.1
+        },
+        {
+          "id": "environment",
+          "label": "Industry & country environment",
+          "category": "Industry & country",
+          "value": "China · Shanghai · 精密制造",
+          "desc": "Industry cycle and country macro risk. Core business Precision Manufacturing / Auto Parts, registered in China · Shanghai.",
+          "contribution": 11.1
+        },
+        {
+          "id": "governance",
+          "label": "Governance & equity stability",
+          "category": "Governance",
+          "value": "46.2% (look-through)",
+          "desc": "Equity stability and control concentration. 46.2% (look-through), actual controller Polaris Holding Group Co., Ltd..",
+          "contribution": 10.7
+        },
+        {
+          "id": "compliance",
+          "label": "Litigation & compliance",
+          "category": "Compliance & legal",
+          "value": "1 legal / compliance signals",
+          "desc": "1 legal / compliance signals hit; the score contribution is reduced by severity.",
+          "contribution": 10.3
+        },
+        {
+          "id": "operation",
+          "label": "Customer & supply-chain concentration",
+          "category": "Customers & supply chain",
+          "value": "1 concentration signals",
+          "desc": "A combined view of customer concentration, supplier dependency and supply-chain stability.",
+          "contribution": 1.5
+        }
+      ],
+      "benchmarks": [
+        {
+          "key": "sector",
+          "label": "Sector peers",
+          "tag": "精密制造",
+          "sampleSize": 372,
+          "avgScore": 673,
+          "avgDefaultProb": 2.8,
+          "percentile": 99,
+          "goodRate": 60,
+          "diff": 139
+        },
+        {
+          "key": "country",
+          "label": "Same country / region",
+          "tag": "中国",
+          "sampleSize": 128,
+          "avgScore": 686,
+          "avgDefaultProb": 2.5,
+          "percentile": 97,
+          "goodRate": 64,
+          "diff": 126
+        },
+        {
+          "key": "size",
+          "label": "Same size",
+          "tag": "Large enterprise",
+          "sampleSize": 356,
+          "avgScore": 665,
+          "avgDefaultProb": 3,
+          "percentile": 97,
+          "goodRate": 57,
+          "diff": 147
+        },
+        {
+          "key": "all",
+          "label": "Library benchmark",
+          "tag": "All sampled firms",
+          "sampleSize": 5006,
+          "avgScore": 636,
+          "avgDefaultProb": 4,
+          "percentile": 99,
+          "goodRate": 49,
+          "diff": 176
+        }
+      ]
+    }
+  },
+  "graphs": {
+    "zh": {
+      "rootId": "C-1001",
+      "nodes": [
+        {
+          "id": "C-1001",
+          "label": "北辰精密制造有限公司",
+          "type": "company",
+          "riskLevel": "low",
+          "hop": 0,
+          "relation": "评估主体",
+          "exposure": "建议授信 ¥ 42,000,000",
+          "industry": "精密制造 / 汽车零部件",
+          "country": "中国 · 上海",
+          "companyId": "C-1001",
+          "note": "企业成立逾 19 年，主营精密制造与汽车零部件，为国内主流整车厂一级供应商。近三年营收复合增速 11.4%，负债结构以长期银行借款为主，短期偿债压力可控，被评定为低风险主体。"
+        },
+        {
+          "id": "P-1001-1",
+          "label": "北辰控股集团有限公司",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "控股股东",
+          "exposure": "持股 46.2%",
+          "industry": "精密制造 / 汽车零部件",
+          "country": "中国 · 上海",
+          "note": "与评估主体构成「控股股东」关系，敞口为 持股 46.2%，风险等级为低风险。"
+        },
+        {
+          "id": "P-1001-2",
+          "label": "北辰精工（苏州）有限公司",
+          "type": "subsidiary",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "全资子公司",
+          "exposure": "担保 1.1 亿元",
+          "industry": "精密制造 / 汽车零部件",
+          "country": "中国 · 上海",
+          "note": "与评估主体构成「全资子公司」关系，敞口为 担保 1.1 亿元，风险等级为低风险。"
+        },
+        {
+          "id": "P-1001-3",
+          "label": "上海临港装备产业基金",
+          "type": "fund",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "战略投资人",
+          "exposure": "持股 8.4%",
+          "industry": "精密制造 / 汽车零部件",
+          "country": "中国 · 上海",
+          "note": "与评估主体构成「战略投资人」关系，敞口为 持股 8.4%，风险等级为低风险。"
+        },
+        {
+          "id": "P-1001-4",
+          "label": "上海众鑫金属材料有限公司",
+          "type": "supplier",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "主要供应商",
+          "exposure": "年采购 4.2 亿元",
+          "industry": "精密制造 / 汽车零部件",
+          "country": "中国 · 上海",
+          "note": "与评估主体构成「主要供应商」关系，敞口为 年采购 4.2 亿元，风险等级为中风险。"
+        },
+        {
+          "id": "N-C-1001-legal",
+          "label": "周文彬",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "法定代表人",
+          "exposure": "控制权 持股 46.2%（穿透后）",
+          "industry": "精密制造 / 汽车零部件",
+          "country": "中国 · 上海",
+          "note": "工商登记法定代表人，同时为实际控制方核心成员，控制权比例 持股 46.2%（穿透后）。"
+        },
+        {
+          "id": "N-C-1001-bank",
+          "label": "中国银行上海分行",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "主要往来银行",
+          "exposure": "60 天银行承兑 / T/T 电汇",
+          "industry": "精密制造 / 汽车零部件",
+          "country": "中国 · 上海",
+          "note": "主要结算与授信银行，结算方式为「60 天银行承兑 / T/T 电汇」，渠道集中度需持续关注。"
+        },
+        {
+          "id": "N-C-1001-client",
+          "label": "精密制造核心下游客户",
+          "type": "client",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "主要客户",
+          "exposure": "年订单占比 18.6%",
+          "industry": "精密制造 / 汽车零部件",
+          "country": "中国 · 上海",
+          "note": "评估主体的核心下游需求方，收入占比 18.6%，其付款能力直接影响回款周期。"
+        },
+        {
+          "id": "P-1001-1-h2-0",
+          "label": "关联自然人",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "关联自然人",
+          "exposure": "往来 14,100 万元",
+          "industry": "精密制造 / 汽车零部件",
+          "country": "中国 · 上海",
+          "note": "经股权与交易穿透，识别到「北辰控股集团有限公司」的关联自然人关系，风险等级判定为低风险。"
+        },
+        {
+          "id": "P-1001-2-h2-1",
+          "label": "少数股东持股平台",
+          "type": "subsidiary",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "少数股东",
+          "exposure": "持股 16.3%",
+          "industry": "精密制造 / 汽车零部件",
+          "country": "中国 · 上海",
+          "note": "经股权与交易穿透，识别到「北辰精工（苏州）有限公司」的少数股东关系，风险等级判定为低风险。"
+        },
+        {
+          "id": "P-1001-3-h2-2",
+          "label": "二期产业基金",
+          "type": "fund",
+          "riskLevel": "medium",
+          "hop": 2,
+          "relation": "合伙投资人",
+          "exposure": "持股 18.5%",
+          "industry": "精密制造 / 汽车零部件",
+          "country": "中国 · 上海",
+          "note": "经股权与交易穿透，识别到「上海临港装备产业基金」的合伙投资人关系，风险等级判定为中风险。"
+        },
+        {
+          "id": "P-1001-4-h2-3",
+          "label": "基础原料供应商",
+          "type": "supplier",
+          "riskLevel": "medium",
+          "hop": 2,
+          "relation": "二级供应商",
+          "exposure": "年采购 20,700 万元",
+          "industry": "精密制造 / 汽车零部件",
+          "country": "中国 · 上海",
+          "note": "经股权与交易穿透，识别到「上海众鑫金属材料有限公司」的二级供应商关系，风险等级判定为中风险。"
+        },
+        {
+          "id": "N-C-1001-legal-h2-4",
+          "label": "管理层亲属",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "关联自然人",
+          "exposure": "往来 6,700 万元",
+          "industry": "精密制造 / 汽车零部件",
+          "country": "中国 · 上海",
+          "note": "经股权与交易穿透，识别到「周文彬」的关联自然人关系，风险等级判定为低风险。"
+        },
+        {
+          "id": "N-C-1001-bank-h2-5",
+          "label": "政策性银行",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "银团成员",
+          "exposure": "授信 18,900 万元",
+          "industry": "精密制造 / 汽车零部件",
+          "country": "中国 · 上海",
+          "note": "经股权与交易穿透，识别到「中国银行上海分行」的银团成员关系，风险等级判定为低风险。"
+        },
+        {
+          "id": "N-C-1001-client-h2-6",
+          "label": "区域总代理",
+          "type": "client",
+          "riskLevel": "medium",
+          "hop": 2,
+          "relation": "下游渠道",
+          "exposure": "年订单 34,900 万元",
+          "industry": "精密制造 / 汽车零部件",
+          "country": "中国 · 上海",
+          "note": "经股权与交易穿透，识别到「精密制造核心下游客户」的下游渠道关系，风险等级判定为中风险。"
+        },
+        {
+          "id": "P-1001-3-h2-2-h3-10",
+          "label": "战略投资联合体",
+          "type": "fund",
+          "riskLevel": "medium",
+          "hop": 3,
+          "relation": "合伙投资人",
+          "exposure": "持股 18.7%",
+          "industry": "精密制造 / 汽车零部件",
+          "country": "中国 · 上海",
+          "note": "经股权与交易穿透，识别到「二期产业基金」的合伙投资人关系，风险等级判定为中风险。"
+        },
+        {
+          "id": "P-1001-4-h2-3-h3-11",
+          "label": "基础原料供应商",
+          "type": "supplier",
+          "riskLevel": "medium",
+          "hop": 3,
+          "relation": "二级供应商",
+          "exposure": "年采购 19,000 万元",
+          "industry": "精密制造 / 汽车零部件",
+          "country": "中国 · 上海",
+          "note": "经股权与交易穿透，识别到「基础原料供应商」的二级供应商关系，风险等级判定为中风险。"
+        }
+      ],
+      "edges": [
+        {
+          "id": "E:C-1001->P-1001-1",
+          "source": "C-1001",
+          "target": "P-1001-1",
+          "type": "equity",
+          "label": "持股关系",
+          "riskFlow": false,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1001->P-1001-2",
+          "source": "C-1001",
+          "target": "P-1001-2",
+          "type": "guarantee",
+          "label": "子公司",
+          "riskFlow": false,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1001->P-1001-3",
+          "source": "C-1001",
+          "target": "P-1001-3",
+          "type": "equity",
+          "label": "持股关系",
+          "riskFlow": true,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1001->P-1001-4",
+          "source": "C-1001",
+          "target": "P-1001-4",
+          "type": "supply",
+          "label": "采购关系",
+          "riskFlow": true,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1001->N-C-1001-legal",
+          "source": "C-1001",
+          "target": "N-C-1001-legal",
+          "type": "control",
+          "label": "控制关系",
+          "riskFlow": false,
+          "strength": 1.2
+        },
+        {
+          "id": "E:C-1001->N-C-1001-bank",
+          "source": "C-1001",
+          "target": "N-C-1001-bank",
+          "type": "loan",
+          "label": "授信 / 结算",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:C-1001->N-C-1001-client",
+          "source": "C-1001",
+          "target": "N-C-1001-client",
+          "type": "trade",
+          "label": "交易往来",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1001-1->P-1001-1-h2-0",
+          "source": "P-1001-1",
+          "target": "P-1001-1-h2-0",
+          "type": "control",
+          "label": "控制",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1001-2->P-1001-2-h2-1",
+          "source": "P-1001-2",
+          "target": "P-1001-2-h2-1",
+          "type": "equity",
+          "label": "持股",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1001-3->P-1001-3-h2-2",
+          "source": "P-1001-3",
+          "target": "P-1001-3-h2-2",
+          "type": "equity",
+          "label": "持股",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1001-4->P-1001-4-h2-3",
+          "source": "P-1001-4",
+          "target": "P-1001-4-h2-3",
+          "type": "supply",
+          "label": "供应",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1001-legal->N-C-1001-legal-h2-4",
+          "source": "N-C-1001-legal",
+          "target": "N-C-1001-legal-h2-4",
+          "type": "control",
+          "label": "控制",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1001-bank->N-C-1001-bank-h2-5",
+          "source": "N-C-1001-bank",
+          "target": "N-C-1001-bank-h2-5",
+          "type": "loan",
+          "label": "授信 / 结算",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1001-client->N-C-1001-client-h2-6",
+          "source": "N-C-1001-client",
+          "target": "N-C-1001-client-h2-6",
+          "type": "trade",
+          "label": "交易往来",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1001-3-h2-2->P-1001-3-h2-2-h3-10",
+          "source": "P-1001-3-h2-2",
+          "target": "P-1001-3-h2-2-h3-10",
+          "type": "equity",
+          "label": "持股",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1001-4-h2-3->P-1001-4-h2-3-h3-11",
+          "source": "P-1001-4-h2-3",
+          "target": "P-1001-4-h2-3-h3-11",
+          "type": "supply",
+          "label": "供应",
+          "riskFlow": true,
+          "strength": 1
+        }
+      ]
+    },
+    "en": {
+      "rootId": "C-1001",
+      "nodes": [
+        {
+          "id": "C-1001",
+          "label": "Polaris Precision Manufacturing Ltd.",
+          "type": "company",
+          "riskLevel": "low",
+          "hop": 0,
+          "relation": "Assessed entity",
+          "exposure": "Suggested limit ¥ 42,000,000",
+          "industry": "Precision Manufacturing / Auto Parts",
+          "country": "China · Shanghai",
+          "companyId": "C-1001",
+          "note": "Established over 19 years ago, the company focuses on precision manufacturing and auto parts and is a Tier-1 supplier to mainstream domestic OEMs. Its three-year revenue CAGR is 11.4%; debt is mainly long-term bank borrowings and short-term solvency pressure is manageable — rated low risk."
+        },
+        {
+          "id": "P-1001-1",
+          "label": "Polaris Holding Group Co., Ltd.",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "Controlling shareholder",
+          "exposure": "Stake 46.2%",
+          "industry": "Precision Manufacturing / Auto Parts",
+          "country": "China · Shanghai",
+          "note": "Constitutes a \"Controlling shareholder\" relation with the assessed entity, exposure Stake 46.2%, judged Low risk."
+        },
+        {
+          "id": "P-1001-2",
+          "label": "Polaris Precision (Suzhou) Co., Ltd.",
+          "type": "subsidiary",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "Wholly-owned subsidiary",
+          "exposure": "Guarantee CNY 110m",
+          "industry": "Precision Manufacturing / Auto Parts",
+          "country": "China · Shanghai",
+          "note": "Constitutes a \"Wholly-owned subsidiary\" relation with the assessed entity, exposure Guarantee CNY 110m, judged Low risk."
+        },
+        {
+          "id": "P-1001-3",
+          "label": "Shanghai Lingang Equipment Industry Fund",
+          "type": "fund",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "Strategic investor",
+          "exposure": "Stake 8.4%",
+          "industry": "Precision Manufacturing / Auto Parts",
+          "country": "China · Shanghai",
+          "note": "Constitutes a \"Strategic investor\" relation with the assessed entity, exposure Stake 8.4%, judged Low risk."
+        },
+        {
+          "id": "P-1001-4",
+          "label": "Shanghai Zhongxin Metal Materials Co., Ltd.",
+          "type": "supplier",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "Key supplier",
+          "exposure": "Annual purchase CNY 420m",
+          "industry": "Precision Manufacturing / Auto Parts",
+          "country": "China · Shanghai",
+          "note": "Constitutes a \"Key supplier\" relation with the assessed entity, exposure Annual purchase CNY 420m, judged Medium risk."
+        },
+        {
+          "id": "N-C-1001-legal",
+          "label": "Zhou Wenbin",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "Legal representative",
+          "exposure": "Control 46.2% (look-through)",
+          "industry": "Precision Manufacturing / Auto Parts",
+          "country": "China · Shanghai",
+          "note": "Registered legal representative and a core member of the controlling party, control stake 46.2% (look-through)."
+        },
+        {
+          "id": "N-C-1001-bank",
+          "label": "Bank of China Shanghai",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "Main bank",
+          "exposure": "60-day bank acceptance / T/T",
+          "industry": "Precision Manufacturing / Auto Parts",
+          "country": "China · Shanghai",
+          "note": "Primary settlement and credit bank, settlement terms \"60-day bank acceptance / T/T\"; channel concentration needs ongoing attention."
+        },
+        {
+          "id": "N-C-1001-client",
+          "label": "Key downstream client · 精密制造",
+          "type": "client",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "Key client",
+          "exposure": "18.6% of annual orders",
+          "industry": "Precision Manufacturing / Auto Parts",
+          "country": "China · Shanghai",
+          "note": "Core downstream demand source of the assessed entity, 18.6% of revenue; its payment capacity directly affects the collection cycle."
+        },
+        {
+          "id": "P-1001-1-h2-0",
+          "label": "Related individual",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "related individual",
+          "exposure": "Turnover ¥14,100k",
+          "industry": "Precision Manufacturing / Auto Parts",
+          "country": "China · Shanghai",
+          "note": "Through equity and transaction look-through, a \"related individual\" relation to \"Polaris Holding Group Co., Ltd.\" was identified, judged Low risk."
+        },
+        {
+          "id": "P-1001-2-h2-1",
+          "label": "Minority shareholder platform",
+          "type": "subsidiary",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "minority shareholder",
+          "exposure": "Stake 16.3%",
+          "industry": "Precision Manufacturing / Auto Parts",
+          "country": "China · Shanghai",
+          "note": "Through equity and transaction look-through, a \"minority shareholder\" relation to \"Polaris Precision (Suzhou) Co., Ltd.\" was identified, judged Low risk."
+        },
+        {
+          "id": "P-1001-3-h2-2",
+          "label": "Fund II",
+          "type": "fund",
+          "riskLevel": "medium",
+          "hop": 2,
+          "relation": "fund investor",
+          "exposure": "Stake 18.5%",
+          "industry": "Precision Manufacturing / Auto Parts",
+          "country": "China · Shanghai",
+          "note": "Through equity and transaction look-through, a \"fund investor\" relation to \"Shanghai Lingang Equipment Industry Fund\" was identified, judged Medium risk."
+        },
+        {
+          "id": "P-1001-4-h2-3",
+          "label": "Base material supplier",
+          "type": "supplier",
+          "riskLevel": "medium",
+          "hop": 2,
+          "relation": "Tier-2 supplier",
+          "exposure": "Annual purchase ¥20,700k",
+          "industry": "Precision Manufacturing / Auto Parts",
+          "country": "China · Shanghai",
+          "note": "Through equity and transaction look-through, a \"Tier-2 supplier\" relation to \"Shanghai Zhongxin Metal Materials Co., Ltd.\" was identified, judged Medium risk."
+        },
+        {
+          "id": "N-C-1001-legal-h2-4",
+          "label": "Management relative",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "related individual",
+          "exposure": "Turnover ¥6,700k",
+          "industry": "Precision Manufacturing / Auto Parts",
+          "country": "China · Shanghai",
+          "note": "Through equity and transaction look-through, a \"related individual\" relation to \"Zhou Wenbin\" was identified, judged Low risk."
+        },
+        {
+          "id": "N-C-1001-bank-h2-5",
+          "label": "Policy bank",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "syndicate member",
+          "exposure": "Credit line ¥18,900k",
+          "industry": "Precision Manufacturing / Auto Parts",
+          "country": "China · Shanghai",
+          "note": "Through equity and transaction look-through, a \"syndicate member\" relation to \"Bank of China Shanghai\" was identified, judged Low risk."
+        },
+        {
+          "id": "N-C-1001-client-h2-6",
+          "label": "Regional distributor",
+          "type": "client",
+          "riskLevel": "medium",
+          "hop": 2,
+          "relation": "downstream channel",
+          "exposure": "Annual orders ¥34,900k",
+          "industry": "Precision Manufacturing / Auto Parts",
+          "country": "China · Shanghai",
+          "note": "Through equity and transaction look-through, a \"downstream channel\" relation to \"Key downstream client · 精密制造\" was identified, judged Medium risk."
+        },
+        {
+          "id": "P-1001-3-h2-2-h3-10",
+          "label": "Strategic investment vehicle",
+          "type": "fund",
+          "riskLevel": "medium",
+          "hop": 3,
+          "relation": "fund investor",
+          "exposure": "Stake 18.7%",
+          "industry": "Precision Manufacturing / Auto Parts",
+          "country": "China · Shanghai",
+          "note": "Through equity and transaction look-through, a \"fund investor\" relation to \"Fund II\" was identified, judged Medium risk."
+        },
+        {
+          "id": "P-1001-4-h2-3-h3-11",
+          "label": "Base material supplier",
+          "type": "supplier",
+          "riskLevel": "medium",
+          "hop": 3,
+          "relation": "Tier-2 supplier",
+          "exposure": "Annual purchase ¥19,000k",
+          "industry": "Precision Manufacturing / Auto Parts",
+          "country": "China · Shanghai",
+          "note": "Through equity and transaction look-through, a \"Tier-2 supplier\" relation to \"Base material supplier\" was identified, judged Medium risk."
+        }
+      ],
+      "edges": [
+        {
+          "id": "E:C-1001->P-1001-1",
+          "source": "C-1001",
+          "target": "P-1001-1",
+          "type": "equity",
+          "label": "Equity stake",
+          "riskFlow": false,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1001->P-1001-2",
+          "source": "C-1001",
+          "target": "P-1001-2",
+          "type": "guarantee",
+          "label": "Subsidiary",
+          "riskFlow": false,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1001->P-1001-3",
+          "source": "C-1001",
+          "target": "P-1001-3",
+          "type": "equity",
+          "label": "Equity stake",
+          "riskFlow": true,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1001->P-1001-4",
+          "source": "C-1001",
+          "target": "P-1001-4",
+          "type": "supply",
+          "label": "Purchase relation",
+          "riskFlow": true,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1001->N-C-1001-legal",
+          "source": "C-1001",
+          "target": "N-C-1001-legal",
+          "type": "control",
+          "label": "Control",
+          "riskFlow": false,
+          "strength": 1.2
+        },
+        {
+          "id": "E:C-1001->N-C-1001-bank",
+          "source": "C-1001",
+          "target": "N-C-1001-bank",
+          "type": "loan",
+          "label": "Credit / settlement",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:C-1001->N-C-1001-client",
+          "source": "C-1001",
+          "target": "N-C-1001-client",
+          "type": "trade",
+          "label": "Trade",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1001-1->P-1001-1-h2-0",
+          "source": "P-1001-1",
+          "target": "P-1001-1-h2-0",
+          "type": "control",
+          "label": "Control",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1001-2->P-1001-2-h2-1",
+          "source": "P-1001-2",
+          "target": "P-1001-2-h2-1",
+          "type": "equity",
+          "label": "Equity",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1001-3->P-1001-3-h2-2",
+          "source": "P-1001-3",
+          "target": "P-1001-3-h2-2",
+          "type": "equity",
+          "label": "Equity",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1001-4->P-1001-4-h2-3",
+          "source": "P-1001-4",
+          "target": "P-1001-4-h2-3",
+          "type": "supply",
+          "label": "Supply",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1001-legal->N-C-1001-legal-h2-4",
+          "source": "N-C-1001-legal",
+          "target": "N-C-1001-legal-h2-4",
+          "type": "control",
+          "label": "Control",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1001-bank->N-C-1001-bank-h2-5",
+          "source": "N-C-1001-bank",
+          "target": "N-C-1001-bank-h2-5",
+          "type": "loan",
+          "label": "Credit / settlement",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1001-client->N-C-1001-client-h2-6",
+          "source": "N-C-1001-client",
+          "target": "N-C-1001-client-h2-6",
+          "type": "trade",
+          "label": "Trade",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1001-3-h2-2->P-1001-3-h2-2-h3-10",
+          "source": "P-1001-3-h2-2",
+          "target": "P-1001-3-h2-2-h3-10",
+          "type": "equity",
+          "label": "Equity",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1001-4-h2-3->P-1001-4-h2-3-h3-11",
+          "source": "P-1001-4-h2-3",
+          "target": "P-1001-4-h2-3-h3-11",
+          "type": "supply",
+          "label": "Supply",
+          "riskFlow": true,
+          "strength": 1
+        }
+      ]
+    }
+  }
+}

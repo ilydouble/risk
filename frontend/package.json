@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "type-check": "tsc --noEmit --project tsconfig.app.json",
-    "api:generate": "node scripts/generate-api.mjs"
+    "api:generate": "node scripts/generate-api.mjs",
+    "demo:generate": "node scripts/generate-demo-seed.mjs"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "1.1.23",

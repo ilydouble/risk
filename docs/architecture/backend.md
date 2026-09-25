@@ -7,7 +7,7 @@
 ```text
 backend/
   alembic/versions/V0001_initial_schema.py
-  seed/demo.json
+  seed/demo/C-1001.json … C-1008.json
   src/risk_api/
     main.py, dependencies.py, models.py
     shared/
@@ -26,7 +26,8 @@ backend/
 - 自助注册复用现有 `users` 表，无需迁移；密码由 Argon2 哈希后写入，用户名冲突由唯一约束原子判定。注册不写入 Redis，成功后用户单独登录。
 - Neo4j 保存演示关系节点和边，接口仅返回页面需要的 2–3 跳。图谱不从 PostgreSQL JSON 拷贝响应。
 - `V0001_initial_schema.py` 的 revision 是 `V0001`；后续迁移顺序递增。后端容器启动时先执行 `alembic upgrade head`，成功后启动 HTTP 服务。
-- `demo-seed` 是一次性容器，在迁移与服务就绪后补入缺失企业、快照和图谱，不创建账号，也不重置已有行或关系。已有数据卷中的旧演示账号保留。
+- `demo-seed` 是默认启动的一次性容器，在迁移与服务就绪后补入八家精选企业、快照和图谱，不创建账号，也不重置已有行或关系。已有数据卷中的旧演示账号与企业保留。
+- 演示种子由前端案例生成脚本按企业输出到 `seed/demo/`；在 `frontend/` 执行 `npm run demo:generate` 后检查 Git 差异。正式数据导入与演示种子分开处理。
 
 ## SDK 与验证
 

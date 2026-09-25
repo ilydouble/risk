@@ -8,7 +8,7 @@ docker compose up --build -d
 docker compose ps -a
 ```
 
-浏览器默认访问 `http://localhost:18080`；登录页可自助注册，注册后再登录，新环境不预置账号。新环境请先修改 `.env` 中基础设施的示例凭据。项目名 `risk` 负责容器命名空间，服务键不重复加前缀。运行 `docker compose down` 不删除命名卷；服务更名后可加 `--remove-orphans` 清理旧容器，不使用 `-v`。Redis 不持久化，重建时需要重新登录。已有命名卷中的旧演示账号不会自动删除。
+浏览器默认访问 `http://localhost:18080`；登录页可自助注册，注册后再登录，新环境不预置账号。新环境请先修改 `.env` 中基础设施的示例凭据。项目名 `risk` 负责容器命名空间，服务键不重复加前缀。运行 `docker compose down` 不删除命名卷；服务更名后可加 `--remove-orphans` 清理旧容器，不使用 `-v`。Redis 不持久化，重建时需要重新登录。新空卷写入八家演示企业；已有卷中的旧账号和企业不会自动删除。
 
 宿主机端口在 `.env` 中单独设置，所有映射只绑定 `127.0.0.1`；容器内端口和服务间地址保持固定：
 
@@ -33,14 +33,15 @@ uv run pytest -q tests
 cd ../gateway && go test ./...
 cd ../frontend && npm ci
 npm run api:generate
+npm run demo:generate
 npm run lint && npm run type-check && npm run build
 ```
 
-导出契约在 `backend/` 执行 `uv run python -m risk_api.export_openapi`，随后生成前端类型，并检查 Git diff。提交前始终运行后端 Ruff 与 mypy。
+导出契约在 `backend/` 执行 `uv run python -m risk_api.export_openapi`，随后生成前端类型，并检查 Git diff。演示种子生成到 `backend/seed/demo/`，重复生成也应无差异。提交前始终运行后端 Ruff 与 mypy。
 
 ## 最小验收链路
 
-1. 首次启动后 `postgres`、`redis`、`rustfs`、`neo4j`、`backend` 健康；三个 init/seed 容器正常退出。重复运行 init/seed 不覆盖数据。
+1. 空卷首次启动后 `postgres`、`redis`、`rustfs`、`neo4j`、`backend` 健康；三个 init/seed 容器正常退出。演示库有八家企业且无预置用户，重复运行 init/seed 不覆盖数据。
 2. 登录后检索企业，打开画像、2–3 跳图谱及评分；评分与解释必须标记为演示快照。
 3. 在画像上传一个测试文件，经 RustFS 直传、确认登记、下载并核对字节。报告、决策、模型看板和批量评估仍能显示演示标识。
 4. 校验 401 会话过期、503 Redis 故障、伪造身份头、非法 Origin、参数 422 和不存在资源的统一信封。

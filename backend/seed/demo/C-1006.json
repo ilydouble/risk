@@ -1,0 +1,1030 @@
+{
+  "company": {
+    "id": "C-1006",
+    "nameCn": "南十字星物流私人有限公司",
+    "nameEn": "Southern Cross Logistics Pte. Ltd.",
+    "regNo": "SG-201804123K",
+    "country": "新加坡",
+    "countryEn": "Singapore",
+    "region": "新加坡",
+    "regionEn": "Singapore",
+    "sector": "物流仓储",
+    "sectorEn": "Logistics & Warehousing",
+    "countryFlag": "ri-flag-line",
+    "industry": "物流仓储 / 航运",
+    "industryEn": "Logistics / Shipping",
+    "creditScore": 726,
+    "riskLevel": "low",
+    "defaultProb": 2.4,
+    "creditLimit": "S$ 15,800,000",
+    "updatedAt": "2026-09-23 11:58",
+    "tags": [
+      "资产周转稳定",
+      "客户集中度改善"
+    ],
+    "tagsEn": [
+      "Stable asset turnover",
+      "Improving client concentration"
+    ]
+  },
+  "profile": {
+    "facts": {
+      "established": "2011-05-20",
+      "registeredCapital": "美元 2,600 万元",
+      "paidInCapital": "美元 2,340 万元（实缴 90%）",
+      "legalPerson": "陈明远",
+      "actualController": "陈明远（自然人）",
+      "controllerStake": "持股 43.5%",
+      "employees": "860 人",
+      "listed": "未上市",
+      "ratingAgency": "外部评级 A-",
+      "mainBanks": "汇丰银行 · 中国银行",
+      "settlement": "60 天 T/T",
+      "revenue": "2025 年营收 7.4 亿元",
+      "netMargin": "净利率 8.1%（同比 +0.4pct）"
+    },
+    "factsEn": {
+      "registeredCapital": "USD 26 million",
+      "paidInCapital": "USD 23.4 million (90% paid-in)",
+      "legalPerson": "Chen Mingyuan",
+      "actualController": "Chen Mingyuan (natural person)",
+      "controllerStake": "43.5%",
+      "employees": "860",
+      "listed": "Not listed",
+      "ratingAgency": "External rating A-",
+      "mainBanks": "HSBC · Bank of China",
+      "settlement": "60-day T/T",
+      "revenue": "2025 revenue CNY 740 million",
+      "netMargin": "Net margin 8.1% (+0.4pct YoY)"
+    },
+    "summary": "企业经营稳定，履约记录良好，杠杆水平与现金流覆盖处于同业中上水平，被评定为低风险主体，可给予常规授信额度。",
+    "summaryEn": "The company operates steadily with a good performance record, and its leverage and cash-flow coverage sit in the upper-middle range of its peers — rated low risk with a standard credit limit available.",
+    "timeline": [
+      {
+        "id": "T-L-1",
+        "date": "2026-08-05",
+        "type": "finance",
+        "title": "授信额度获银行上调",
+        "titleEn": "Bank raised its credit line",
+        "desc": "主要合作银行将循环授信额度上调 20%，反映外部信用认可。",
+        "descEn": "A main partner bank raised the revolving facility by 20%, reflecting external credit recognition.",
+        "impact": "positive"
+      },
+      {
+        "id": "T-L-2",
+        "date": "2026-04-18",
+        "type": "award",
+        "title": "通过质量管理体系复审",
+        "titleEn": "Passed quality-management re-audit",
+        "desc": "ISO 9001 与 ISO 14001 双双通过复审，无不符合项。",
+        "descEn": "Both ISO 9001 and ISO 14001 re-audits passed with no non-conformities.",
+        "impact": "positive"
+      },
+      {
+        "id": "T-L-3",
+        "date": "2025-12-09",
+        "type": "equity",
+        "title": "完成天使轮后首轮增资",
+        "titleEn": "Completed first post-angel capital increase",
+        "desc": "引入产业投资人增资，注册资本增加 12%。",
+        "descEn": "An industrial investor injected capital, increasing registered capital by 12%.",
+        "impact": "positive"
+      },
+      {
+        "id": "T-L-4",
+        "date": "2025-06-27",
+        "type": "address",
+        "title": "办公地址变更",
+        "titleEn": "Office address changed",
+        "desc": "迁入新办公园区，配套设施与仓储条件改善。",
+        "descEn": "Moved to a new office park with better facilities and warehousing.",
+        "impact": "neutral"
+      }
+    ],
+    "riskFlags": [
+      {
+        "id": "R-L-1",
+        "label": "客户集中度中等",
+        "labelEn": "Moderate customer concentration",
+        "level": "medium",
+        "category": "经营风险",
+        "categoryEn": "Operational",
+        "desc": "前五大客户收入占比 46%，处于行业合理区间。",
+        "descEn": "Top-5 customers account for 46% of revenue, within a reasonable industry range.",
+        "source": "经营数据",
+        "detectedAt": "2026-09-06"
+      },
+      {
+        "id": "R-L-2",
+        "label": "无失信与逾期记录",
+        "labelEn": "No default or overdue records",
+        "level": "low",
+        "category": "合规表现",
+        "categoryEn": "Compliance",
+        "desc": "近五年无经营异常、无严重失信与税务处罚记录。",
+        "descEn": "No abnormal operation, serious default or tax penalty in five years.",
+        "source": "企业信用信息公示系统",
+        "detectedAt": "2026-09-24"
+      },
+      {
+        "id": "R-L-3",
+        "label": "抵押物覆盖充足",
+        "labelEn": "Adequate collateral coverage",
+        "level": "low",
+        "category": "担保风险",
+        "categoryEn": "Guarantee",
+        "desc": "可抵押资产评估值覆盖拟授信额度的 2.6 倍。",
+        "descEn": "Appraised mortgageable assets cover the proposed limit by 2.6x.",
+        "source": "资产评估报告",
+        "detectedAt": "2026-08-19"
+      }
+    ],
+    "fiveC": [
+      {
+        "key": "character",
+        "label": "品格",
+        "en": "Character",
+        "weight": 25,
+        "score": 82,
+        "note": "履约记录良好，无逾期与欠息。",
+        "noteEn": "Solid performance record with no overdue or unpaid interest."
+      },
+      {
+        "key": "capacity",
+        "label": "能力",
+        "en": "Capacity",
+        "weight": 25,
+        "score": 78,
+        "note": "订单能见度 6 个月，产能利用率 85%。",
+        "noteEn": "Order visibility 6 months, capacity utilization 85%."
+      },
+      {
+        "key": "capital",
+        "label": "资本",
+        "en": "Capital",
+        "weight": 20,
+        "score": 74,
+        "note": "资产负债率 48.6%，流动比率 1.5。",
+        "noteEn": "Debt-to-asset 48.6%, current ratio 1.5."
+      },
+      {
+        "key": "collateral",
+        "label": "担保",
+        "en": "Collateral",
+        "weight": 18,
+        "score": 76,
+        "note": "抵押物充足，权属清晰。",
+        "noteEn": "Ample collateral with clear ownership."
+      },
+      {
+        "key": "environment",
+        "label": "环境",
+        "en": "Environment",
+        "weight": 12,
+        "score": 72,
+        "note": "行业景气度平稳，外部风险可控。",
+        "noteEn": "Industry sentiment steady, external risk manageable."
+      }
+    ],
+    "relatedParties": [
+      {
+        "id": "P-L-1",
+        "name": "主要控股股东",
+        "nameEn": "Main controlling shareholder",
+        "relation": "控股股东",
+        "relationEn": "Controlling shareholder",
+        "exposure": "持股 43.5%",
+        "exposureEn": "Stake 43.5%",
+        "riskLevel": "low"
+      },
+      {
+        "id": "P-L-2",
+        "name": "核心子公司",
+        "nameEn": "Core subsidiary",
+        "relation": "全资子公司",
+        "relationEn": "Wholly-owned subsidiary",
+        "exposure": "担保 3,000 万元",
+        "exposureEn": "Guarantee CNY 30m",
+        "riskLevel": "low"
+      }
+    ]
+  },
+  "scores": {
+    "zh": {
+      "baseValue": 640,
+      "finalScore": 726,
+      "grade": "A",
+      "gradeNote": "偿付能力较强，违约风险较低",
+      "riskPercentile": 96,
+      "defaultProb": 2.4,
+      "pdBase": 7.6,
+      "pdDelta": -5.2,
+      "confidence": 90,
+      "modelVersion": "v4.2.0",
+      "evaluatedAt": "2026-09-23 11:58",
+      "positiveCount": 9,
+      "negativeCount": 0,
+      "features": [
+        {
+          "id": "credit",
+          "label": "履约与信用记录",
+          "category": "信用与履约",
+          "value": "外部评级 A-",
+          "desc": "外部信用记录与历史履约表现。信誉维度评分 82/100，外部评级口径：外部评级 A-。",
+          "contribution": 19
+        },
+        {
+          "id": "capacity",
+          "label": "经营与订单能力",
+          "category": "经营能力",
+          "value": "能力维度 78 / 100",
+          "desc": "订单能见度、产能利用率与交付准时率共同构成的经营性能力信号。",
+          "contribution": 16.2
+        },
+        {
+          "id": "capital",
+          "label": "资本结构与杠杆",
+          "category": "资本与财务",
+          "value": "净利率 8.1%（同比 +0.4pct）",
+          "desc": "资产负债结构、现金流覆盖与盈利水平。2025 年营收 7.4 亿元；净利率 8.1%（同比 +0.4pct）。",
+          "contribution": 13.4
+        },
+        {
+          "id": "guarantee",
+          "label": "关联方与对外担保",
+          "category": "担保与抵押",
+          "value": "1 项担保信号",
+          "desc": "关联方敞口、对外担保规模与抵押物覆盖能力的综合评估。",
+          "contribution": 10.1
+        },
+        {
+          "id": "environment",
+          "label": "行业与国别环境",
+          "category": "行业与国别",
+          "value": "新加坡 · 物流仓储",
+          "desc": "所处行业景气度与国别宏观风险。主营 物流仓储 / 航运，注册地 新加坡。",
+          "contribution": 9.6
+        },
+        {
+          "id": "governance",
+          "label": "治理与股权稳定性",
+          "category": "治理结构",
+          "value": "持股 43.5%",
+          "desc": "股权结构稳定性与控制权集中度。持股 43.5%，实际控制人为 陈明远（自然人）。",
+          "contribution": 7
+        },
+        {
+          "id": "compliance",
+          "label": "涉诉与合规表现",
+          "category": "合规与法务",
+          "value": "1 项法务 / 合规信号",
+          "desc": "命中 1 项法务 / 合规信号，已按严重程度折减评分贡献。",
+          "contribution": 6.8
+        },
+        {
+          "id": "scale",
+          "label": "企业规模与经营年限",
+          "category": "规模与年限",
+          "value": "员工 860 人",
+          "desc": "成立于 2011-05-20，已持续经营 15 年，人员规模 860 人，形成规模与存续期稳定性溢价。",
+          "contribution": 2.9
+        },
+        {
+          "id": "operation",
+          "label": "客户与供应链集中度",
+          "category": "客户与供应链",
+          "value": "1 项集中度信号",
+          "desc": "客户集中度、供应商依赖与供应链稳定性的综合表现。",
+          "contribution": 1
+        }
+      ],
+      "benchmarks": [
+        {
+          "key": "sector",
+          "label": "同行业",
+          "tag": "物流仓储",
+          "sampleSize": 377,
+          "avgScore": 646,
+          "avgDefaultProb": 5,
+          "percentile": 91,
+          "goodRate": 52,
+          "diff": 80
+        },
+        {
+          "key": "country",
+          "label": "同国别 / 地区",
+          "tag": "新加坡",
+          "sampleSize": 133,
+          "avgScore": 659,
+          "avgDefaultProb": 4.4,
+          "percentile": 85,
+          "goodRate": 56,
+          "diff": 67
+        },
+        {
+          "key": "size",
+          "label": "同规模",
+          "tag": "中型企业",
+          "sampleSize": 361,
+          "avgScore": 638,
+          "avgDefaultProb": 5.3,
+          "percentile": 88,
+          "goodRate": 49,
+          "diff": 88
+        },
+        {
+          "key": "all",
+          "label": "全库基准",
+          "tag": "全体在库样本",
+          "sampleSize": 5011,
+          "avgScore": 622,
+          "avgDefaultProb": 6.2,
+          "percentile": 96,
+          "goodRate": 45,
+          "diff": 104
+        }
+      ]
+    },
+    "en": {
+      "baseValue": 640,
+      "finalScore": 726,
+      "grade": "A",
+      "gradeNote": "Good solvency, low default risk",
+      "riskPercentile": 96,
+      "defaultProb": 2.4,
+      "pdBase": 7.6,
+      "pdDelta": -5.2,
+      "confidence": 90,
+      "modelVersion": "v4.2.0",
+      "evaluatedAt": "2026-09-23 11:58",
+      "positiveCount": 9,
+      "negativeCount": 0,
+      "features": [
+        {
+          "id": "credit",
+          "label": "Payment & credit records",
+          "category": "Credit & performance",
+          "value": "External rating A-",
+          "desc": "External credit records and historical performance. Character dimension 82/100, external rating: External rating A-.",
+          "contribution": 19
+        },
+        {
+          "id": "capacity",
+          "label": "Operating & order capacity",
+          "category": "Operating capacity",
+          "value": "Capacity 78 / 100",
+          "desc": "A signal formed by order visibility, capacity utilization and on-time delivery.",
+          "contribution": 16.2
+        },
+        {
+          "id": "capital",
+          "label": "Capital structure & leverage",
+          "category": "Capital & finance",
+          "value": "Net margin 8.1% (+0.4pct YoY)",
+          "desc": "Balance-sheet structure, cash-flow coverage and profitability. 2025 revenue CNY 740 million; Net margin 8.1% (+0.4pct YoY).",
+          "contribution": 13.4
+        },
+        {
+          "id": "guarantee",
+          "label": "Related parties & guarantees",
+          "category": "Guarantee & collateral",
+          "value": "1 guarantee signals",
+          "desc": "A combined assessment of related-party exposure, external guarantee scale and collateral coverage.",
+          "contribution": 10.1
+        },
+        {
+          "id": "environment",
+          "label": "Industry & country environment",
+          "category": "Industry & country",
+          "value": "Singapore · 物流仓储",
+          "desc": "Industry cycle and country macro risk. Core business Logistics / Shipping, registered in Singapore.",
+          "contribution": 9.6
+        },
+        {
+          "id": "governance",
+          "label": "Governance & equity stability",
+          "category": "Governance",
+          "value": "43.5%",
+          "desc": "Equity stability and control concentration. 43.5%, actual controller Chen Mingyuan (natural person).",
+          "contribution": 7
+        },
+        {
+          "id": "compliance",
+          "label": "Litigation & compliance",
+          "category": "Compliance & legal",
+          "value": "1 legal / compliance signals",
+          "desc": "1 legal / compliance signals hit; the score contribution is reduced by severity.",
+          "contribution": 6.8
+        },
+        {
+          "id": "scale",
+          "label": "Scale & years in business",
+          "category": "Scale & vintage",
+          "value": "Employees 860",
+          "desc": "Founded 2011-05-20, operating 15 years, 860 staff, earning a scale-and-vintage stability premium.",
+          "contribution": 2.9
+        },
+        {
+          "id": "operation",
+          "label": "Customer & supply-chain concentration",
+          "category": "Customers & supply chain",
+          "value": "1 concentration signals",
+          "desc": "A combined view of customer concentration, supplier dependency and supply-chain stability.",
+          "contribution": 1
+        }
+      ],
+      "benchmarks": [
+        {
+          "key": "sector",
+          "label": "Sector peers",
+          "tag": "物流仓储",
+          "sampleSize": 377,
+          "avgScore": 646,
+          "avgDefaultProb": 5,
+          "percentile": 91,
+          "goodRate": 52,
+          "diff": 80
+        },
+        {
+          "key": "country",
+          "label": "Same country / region",
+          "tag": "新加坡",
+          "sampleSize": 133,
+          "avgScore": 659,
+          "avgDefaultProb": 4.4,
+          "percentile": 85,
+          "goodRate": 56,
+          "diff": 67
+        },
+        {
+          "key": "size",
+          "label": "Same size",
+          "tag": "Mid-sized enterprise",
+          "sampleSize": 361,
+          "avgScore": 638,
+          "avgDefaultProb": 5.3,
+          "percentile": 88,
+          "goodRate": 49,
+          "diff": 88
+        },
+        {
+          "key": "all",
+          "label": "Library benchmark",
+          "tag": "All sampled firms",
+          "sampleSize": 5011,
+          "avgScore": 622,
+          "avgDefaultProb": 6.2,
+          "percentile": 96,
+          "goodRate": 45,
+          "diff": 104
+        }
+      ]
+    }
+  },
+  "graphs": {
+    "zh": {
+      "rootId": "C-1006",
+      "nodes": [
+        {
+          "id": "C-1006",
+          "label": "南十字星物流私人有限公司",
+          "type": "company",
+          "riskLevel": "low",
+          "hop": 0,
+          "relation": "评估主体",
+          "exposure": "建议授信 S$ 15,800,000",
+          "industry": "物流仓储 / 航运",
+          "country": "新加坡",
+          "companyId": "C-1006",
+          "note": "企业经营稳定，履约记录良好，杠杆水平与现金流覆盖处于同业中上水平，被评定为低风险主体，可给予常规授信额度。"
+        },
+        {
+          "id": "P-L-1",
+          "label": "主要控股股东",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "控股股东",
+          "exposure": "持股 43.5%",
+          "industry": "物流仓储 / 航运",
+          "country": "新加坡",
+          "note": "与评估主体构成「控股股东」关系，敞口为 持股 43.5%，风险等级为低风险。"
+        },
+        {
+          "id": "P-L-2",
+          "label": "核心子公司",
+          "type": "subsidiary",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "全资子公司",
+          "exposure": "担保 3,000 万元",
+          "industry": "物流仓储 / 航运",
+          "country": "新加坡",
+          "note": "与评估主体构成「全资子公司」关系，敞口为 担保 3,000 万元，风险等级为低风险。"
+        },
+        {
+          "id": "N-C-1006-legal",
+          "label": "陈明远",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "法定代表人",
+          "exposure": "控制权 持股 43.5%",
+          "industry": "物流仓储 / 航运",
+          "country": "新加坡",
+          "note": "工商登记法定代表人，同时为实际控制方核心成员，控制权比例 持股 43.5%。"
+        },
+        {
+          "id": "N-C-1006-bank",
+          "label": "汇丰银行",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "主要往来银行",
+          "exposure": "60 天 T/T",
+          "industry": "物流仓储 / 航运",
+          "country": "新加坡",
+          "note": "主要结算与授信银行，结算方式为「60 天 T/T」，渠道集中度需持续关注。"
+        },
+        {
+          "id": "N-C-1006-client",
+          "label": "物流仓储核心下游客户",
+          "type": "client",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "主要客户",
+          "exposure": "年订单占比 18.6%",
+          "industry": "物流仓储 / 航运",
+          "country": "新加坡",
+          "note": "评估主体的核心下游需求方，收入占比 18.6%，其付款能力直接影响回款周期。"
+        },
+        {
+          "id": "P-L-1-h2-0",
+          "label": "管理层亲属",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "关联自然人",
+          "exposure": "往来 32,300 万元",
+          "industry": "物流仓储 / 航运",
+          "country": "新加坡",
+          "note": "经股权与交易穿透，识别到「主要控股股东」的关联自然人关系，风险等级判定为低风险。"
+        },
+        {
+          "id": "P-L-2-h2-1",
+          "label": "员工持股平台",
+          "type": "subsidiary",
+          "riskLevel": "medium",
+          "hop": 2,
+          "relation": "少数股东",
+          "exposure": "持股 34.5%",
+          "industry": "物流仓储 / 航运",
+          "country": "新加坡",
+          "note": "经股权与交易穿透，识别到「核心子公司」的少数股东关系，风险等级判定为中风险。"
+        },
+        {
+          "id": "N-C-1006-legal-h2-2",
+          "label": "关联自然人",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "关联自然人",
+          "exposure": "往来 9,200 万元",
+          "industry": "物流仓储 / 航运",
+          "country": "新加坡",
+          "note": "经股权与交易穿透，识别到「陈明远」的关联自然人关系，风险等级判定为低风险。"
+        },
+        {
+          "id": "N-C-1006-bank-h2-3",
+          "label": "政策性银行",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "银团成员",
+          "exposure": "授信 11,200 万元",
+          "industry": "物流仓储 / 航运",
+          "country": "新加坡",
+          "note": "经股权与交易穿透，识别到「汇丰银行」的银团成员关系，风险等级判定为低风险。"
+        },
+        {
+          "id": "N-C-1006-client-h2-4",
+          "label": "海外经销平台",
+          "type": "client",
+          "riskLevel": "medium",
+          "hop": 2,
+          "relation": "下游渠道",
+          "exposure": "年订单 27,200 万元",
+          "industry": "物流仓储 / 航运",
+          "country": "新加坡",
+          "note": "经股权与交易穿透，识别到「物流仓储核心下游客户」的下游渠道关系，风险等级判定为中风险。"
+        },
+        {
+          "id": "P-L-2-h2-1-h3-10",
+          "label": "地方国资平台",
+          "type": "subsidiary",
+          "riskLevel": "medium",
+          "hop": 3,
+          "relation": "少数股东",
+          "exposure": "持股 36.1%",
+          "industry": "物流仓储 / 航运",
+          "country": "新加坡",
+          "note": "经股权与交易穿透，识别到「员工持股平台」的少数股东关系，风险等级判定为中风险。"
+        },
+        {
+          "id": "N-C-1006-client-h2-4-h3-11",
+          "label": "区域总代理",
+          "type": "client",
+          "riskLevel": "medium",
+          "hop": 3,
+          "relation": "下游渠道",
+          "exposure": "年订单 24,700 万元",
+          "industry": "物流仓储 / 航运",
+          "country": "新加坡",
+          "note": "经股权与交易穿透，识别到「海外经销平台」的下游渠道关系，风险等级判定为中风险。"
+        }
+      ],
+      "edges": [
+        {
+          "id": "E:C-1006->P-L-1",
+          "source": "C-1006",
+          "target": "P-L-1",
+          "type": "equity",
+          "label": "持股关系",
+          "riskFlow": false,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1006->P-L-2",
+          "source": "C-1006",
+          "target": "P-L-2",
+          "type": "guarantee",
+          "label": "子公司",
+          "riskFlow": true,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1006->N-C-1006-legal",
+          "source": "C-1006",
+          "target": "N-C-1006-legal",
+          "type": "control",
+          "label": "控制关系",
+          "riskFlow": false,
+          "strength": 1.2
+        },
+        {
+          "id": "E:C-1006->N-C-1006-bank",
+          "source": "C-1006",
+          "target": "N-C-1006-bank",
+          "type": "loan",
+          "label": "授信 / 结算",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:C-1006->N-C-1006-client",
+          "source": "C-1006",
+          "target": "N-C-1006-client",
+          "type": "trade",
+          "label": "交易往来",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-L-1->P-L-1-h2-0",
+          "source": "P-L-1",
+          "target": "P-L-1-h2-0",
+          "type": "control",
+          "label": "控制",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:P-L-2->P-L-2-h2-1",
+          "source": "P-L-2",
+          "target": "P-L-2-h2-1",
+          "type": "equity",
+          "label": "持股",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1006-legal->N-C-1006-legal-h2-2",
+          "source": "N-C-1006-legal",
+          "target": "N-C-1006-legal-h2-2",
+          "type": "control",
+          "label": "控制",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1006-bank->N-C-1006-bank-h2-3",
+          "source": "N-C-1006-bank",
+          "target": "N-C-1006-bank-h2-3",
+          "type": "loan",
+          "label": "授信 / 结算",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1006-client->N-C-1006-client-h2-4",
+          "source": "N-C-1006-client",
+          "target": "N-C-1006-client-h2-4",
+          "type": "trade",
+          "label": "交易往来",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-L-2-h2-1->P-L-2-h2-1-h3-10",
+          "source": "P-L-2-h2-1",
+          "target": "P-L-2-h2-1-h3-10",
+          "type": "equity",
+          "label": "持股",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1006-client-h2-4->N-C-1006-client-h2-4-h3-11",
+          "source": "N-C-1006-client-h2-4",
+          "target": "N-C-1006-client-h2-4-h3-11",
+          "type": "trade",
+          "label": "交易往来",
+          "riskFlow": true,
+          "strength": 1
+        }
+      ]
+    },
+    "en": {
+      "rootId": "C-1006",
+      "nodes": [
+        {
+          "id": "C-1006",
+          "label": "Southern Cross Logistics Pte. Ltd.",
+          "type": "company",
+          "riskLevel": "low",
+          "hop": 0,
+          "relation": "Assessed entity",
+          "exposure": "Suggested limit S$ 15,800,000",
+          "industry": "Logistics / Shipping",
+          "country": "Singapore",
+          "companyId": "C-1006",
+          "note": "The company operates steadily with a good performance record, and its leverage and cash-flow coverage sit in the upper-middle range of its peers — rated low risk with a standard credit limit available."
+        },
+        {
+          "id": "P-L-1",
+          "label": "Main controlling shareholder",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "Controlling shareholder",
+          "exposure": "Stake 43.5%",
+          "industry": "Logistics / Shipping",
+          "country": "Singapore",
+          "note": "Constitutes a \"Controlling shareholder\" relation with the assessed entity, exposure Stake 43.5%, judged Low risk."
+        },
+        {
+          "id": "P-L-2",
+          "label": "Core subsidiary",
+          "type": "subsidiary",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "Wholly-owned subsidiary",
+          "exposure": "Guarantee CNY 30m",
+          "industry": "Logistics / Shipping",
+          "country": "Singapore",
+          "note": "Constitutes a \"Wholly-owned subsidiary\" relation with the assessed entity, exposure Guarantee CNY 30m, judged Low risk."
+        },
+        {
+          "id": "N-C-1006-legal",
+          "label": "Chen Mingyuan",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "Legal representative",
+          "exposure": "Control 43.5%",
+          "industry": "Logistics / Shipping",
+          "country": "Singapore",
+          "note": "Registered legal representative and a core member of the controlling party, control stake 43.5%."
+        },
+        {
+          "id": "N-C-1006-bank",
+          "label": "HSBC",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "Main bank",
+          "exposure": "60-day T/T",
+          "industry": "Logistics / Shipping",
+          "country": "Singapore",
+          "note": "Primary settlement and credit bank, settlement terms \"60-day T/T\"; channel concentration needs ongoing attention."
+        },
+        {
+          "id": "N-C-1006-client",
+          "label": "Key downstream client · 物流仓储",
+          "type": "client",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "Key client",
+          "exposure": "18.6% of annual orders",
+          "industry": "Logistics / Shipping",
+          "country": "Singapore",
+          "note": "Core downstream demand source of the assessed entity, 18.6% of revenue; its payment capacity directly affects the collection cycle."
+        },
+        {
+          "id": "P-L-1-h2-0",
+          "label": "Management relative",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "related individual",
+          "exposure": "Turnover ¥32,300k",
+          "industry": "Logistics / Shipping",
+          "country": "Singapore",
+          "note": "Through equity and transaction look-through, a \"related individual\" relation to \"Main controlling shareholder\" was identified, judged Low risk."
+        },
+        {
+          "id": "P-L-2-h2-1",
+          "label": "ESOP platform",
+          "type": "subsidiary",
+          "riskLevel": "medium",
+          "hop": 2,
+          "relation": "minority shareholder",
+          "exposure": "Stake 34.5%",
+          "industry": "Logistics / Shipping",
+          "country": "Singapore",
+          "note": "Through equity and transaction look-through, a \"minority shareholder\" relation to \"Core subsidiary\" was identified, judged Medium risk."
+        },
+        {
+          "id": "N-C-1006-legal-h2-2",
+          "label": "Related individual",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "related individual",
+          "exposure": "Turnover ¥9,200k",
+          "industry": "Logistics / Shipping",
+          "country": "Singapore",
+          "note": "Through equity and transaction look-through, a \"related individual\" relation to \"Chen Mingyuan\" was identified, judged Low risk."
+        },
+        {
+          "id": "N-C-1006-bank-h2-3",
+          "label": "Policy bank",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "syndicate member",
+          "exposure": "Credit line ¥11,200k",
+          "industry": "Logistics / Shipping",
+          "country": "Singapore",
+          "note": "Through equity and transaction look-through, a \"syndicate member\" relation to \"HSBC\" was identified, judged Low risk."
+        },
+        {
+          "id": "N-C-1006-client-h2-4",
+          "label": "Overseas sales platform",
+          "type": "client",
+          "riskLevel": "medium",
+          "hop": 2,
+          "relation": "downstream channel",
+          "exposure": "Annual orders ¥27,200k",
+          "industry": "Logistics / Shipping",
+          "country": "Singapore",
+          "note": "Through equity and transaction look-through, a \"downstream channel\" relation to \"Key downstream client · 物流仓储\" was identified, judged Medium risk."
+        },
+        {
+          "id": "P-L-2-h2-1-h3-10",
+          "label": "Local SOE platform",
+          "type": "subsidiary",
+          "riskLevel": "medium",
+          "hop": 3,
+          "relation": "minority shareholder",
+          "exposure": "Stake 36.1%",
+          "industry": "Logistics / Shipping",
+          "country": "Singapore",
+          "note": "Through equity and transaction look-through, a \"minority shareholder\" relation to \"ESOP platform\" was identified, judged Medium risk."
+        },
+        {
+          "id": "N-C-1006-client-h2-4-h3-11",
+          "label": "Regional distributor",
+          "type": "client",
+          "riskLevel": "medium",
+          "hop": 3,
+          "relation": "downstream channel",
+          "exposure": "Annual orders ¥24,700k",
+          "industry": "Logistics / Shipping",
+          "country": "Singapore",
+          "note": "Through equity and transaction look-through, a \"downstream channel\" relation to \"Overseas sales platform\" was identified, judged Medium risk."
+        }
+      ],
+      "edges": [
+        {
+          "id": "E:C-1006->P-L-1",
+          "source": "C-1006",
+          "target": "P-L-1",
+          "type": "equity",
+          "label": "Equity stake",
+          "riskFlow": false,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1006->P-L-2",
+          "source": "C-1006",
+          "target": "P-L-2",
+          "type": "guarantee",
+          "label": "Subsidiary",
+          "riskFlow": true,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1006->N-C-1006-legal",
+          "source": "C-1006",
+          "target": "N-C-1006-legal",
+          "type": "control",
+          "label": "Control",
+          "riskFlow": false,
+          "strength": 1.2
+        },
+        {
+          "id": "E:C-1006->N-C-1006-bank",
+          "source": "C-1006",
+          "target": "N-C-1006-bank",
+          "type": "loan",
+          "label": "Credit / settlement",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:C-1006->N-C-1006-client",
+          "source": "C-1006",
+          "target": "N-C-1006-client",
+          "type": "trade",
+          "label": "Trade",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-L-1->P-L-1-h2-0",
+          "source": "P-L-1",
+          "target": "P-L-1-h2-0",
+          "type": "control",
+          "label": "Control",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:P-L-2->P-L-2-h2-1",
+          "source": "P-L-2",
+          "target": "P-L-2-h2-1",
+          "type": "equity",
+          "label": "Equity",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1006-legal->N-C-1006-legal-h2-2",
+          "source": "N-C-1006-legal",
+          "target": "N-C-1006-legal-h2-2",
+          "type": "control",
+          "label": "Control",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1006-bank->N-C-1006-bank-h2-3",
+          "source": "N-C-1006-bank",
+          "target": "N-C-1006-bank-h2-3",
+          "type": "loan",
+          "label": "Credit / settlement",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1006-client->N-C-1006-client-h2-4",
+          "source": "N-C-1006-client",
+          "target": "N-C-1006-client-h2-4",
+          "type": "trade",
+          "label": "Trade",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-L-2-h2-1->P-L-2-h2-1-h3-10",
+          "source": "P-L-2-h2-1",
+          "target": "P-L-2-h2-1-h3-10",
+          "type": "equity",
+          "label": "Equity",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1006-client-h2-4->N-C-1006-client-h2-4-h3-11",
+          "source": "N-C-1006-client-h2-4",
+          "target": "N-C-1006-client-h2-4-h3-11",
+          "type": "trade",
+          "label": "Trade",
+          "riskFlow": true,
+          "strength": 1
+        }
+      ]
+    }
+  }
+}

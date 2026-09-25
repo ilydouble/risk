@@ -1,0 +1,1123 @@
+{
+  "company": {
+    "id": "C-1002",
+    "nameCn": "莱茵新能源科技股份有限公司",
+    "nameEn": "Rhein New Energy Technology AG",
+    "regNo": "DE-HRB-8841209",
+    "country": "德国 · 慕尼黑",
+    "countryEn": "Germany · Munich",
+    "region": "德国",
+    "regionEn": "Germany",
+    "sector": "新能源",
+    "sectorEn": "New Energy",
+    "countryFlag": "ri-flag-line",
+    "industry": "新能源 / 储能系统",
+    "industryEn": "New Energy / Energy Storage",
+    "creditScore": 768,
+    "riskLevel": "low",
+    "defaultProb": 1.6,
+    "creditLimit": "€ 18,600,000",
+    "updatedAt": "2026-09-24 08:47",
+    "tags": [
+      "欧盟补贴项目",
+      "专利 42 项",
+      "订单充足"
+    ],
+    "tagsEn": [
+      "EU subsidy program",
+      "42 patents",
+      "Strong order book"
+    ]
+  },
+  "profile": {
+    "facts": {
+      "established": "2012-09-06",
+      "registeredCapital": "欧元 6,400 万元",
+      "paidInCapital": "欧元 6,400 万元（实缴 100%）",
+      "legalPerson": "Lukas Brandt",
+      "actualController": "Rhein Energie Holding GmbH",
+      "controllerStake": "持股 38.5%",
+      "employees": "1,240 人",
+      "listed": "慕尼黑交易所 SDAX 上市",
+      "ratingAgency": "Scope Ratings BBB+",
+      "mainBanks": "Deutsche Bank · Commerzbank",
+      "settlement": "45 天 T/T / 信用证",
+      "revenue": "2025 年营收 4.86 亿欧元",
+      "netMargin": "净利率 7.2%（同比 +1.1pct）"
+    },
+    "factsEn": {
+      "registeredCapital": "EUR 64 million",
+      "paidInCapital": "EUR 64 million (100% paid-in)",
+      "legalPerson": "Lukas Brandt",
+      "actualController": "Rhein Energie Holding GmbH",
+      "controllerStake": "38.5%",
+      "employees": "1,240",
+      "listed": "Listed on Munich Exchange (SDAX)",
+      "ratingAgency": "Scope Ratings BBB+",
+      "mainBanks": "Deutsche Bank · Commerzbank",
+      "settlement": "45-day T/T / L/C",
+      "revenue": "2025 revenue EUR 486 million",
+      "netMargin": "Net margin 7.2% (+1.1pct YoY)"
+    },
+    "summary": "德国储能系统集成商，受益于欧盟绿色转型补贴，在手订单能见度超过 18 个月。研发投入占营收 9.4%，专利储备扎实，被评定为低风险主体。",
+    "summaryEn": "A German energy-storage system integrator benefiting from EU green-transition subsidies, with order visibility beyond 18 months. R&D spend is 9.4% of revenue and the patent portfolio is solid — rated low risk.",
+    "timeline": [
+      {
+        "id": "T-1002-1",
+        "date": "2026-07-21",
+        "type": "award",
+        "title": "中标 240MWh 储能项目",
+        "titleEn": "Won a 240MWh energy-storage project",
+        "desc": "与荷兰电网运营商签署 2.1 亿欧元供货协议，2027 年起交付。",
+        "descEn": "Signed a EUR 210m supply agreement with a Dutch grid operator, delivering from 2027.",
+        "impact": "positive"
+      },
+      {
+        "id": "T-1002-2",
+        "date": "2026-04-15",
+        "type": "finance",
+        "title": "获得欧洲投资银行绿色贷款",
+        "titleEn": "Obtained a green loan from the EIB",
+        "desc": "3 年期 9,000 万欧元授信，利率挂钩 ESG 绩效。",
+        "descEn": "A three-year EUR 90m facility with interest linked to ESG performance.",
+        "impact": "positive"
+      },
+      {
+        "id": "T-1002-3",
+        "date": "2026-01-27",
+        "type": "equity",
+        "title": "引入战略投资者",
+        "titleEn": "Brought in a strategic investor",
+        "desc": "北欧能源基金入股 6.2%，用于扩产第二工厂。",
+        "descEn": "A Nordic energy fund took a 6.2% stake to fund the second plant's expansion.",
+        "impact": "positive"
+      },
+      {
+        "id": "T-1002-4",
+        "date": "2025-09-11",
+        "type": "finance",
+        "title": "第二工厂投产",
+        "titleEn": "Second plant went into operation",
+        "desc": "年产能由 3.2GWh 提升至 6.0GWh，单位成本下降 12%。",
+        "descEn": "Annual capacity rose from 3.2GWh to 6.0GWh, cutting unit cost by 12%.",
+        "impact": "positive"
+      }
+    ],
+    "riskFlags": [
+      {
+        "id": "R-1002-1",
+        "label": "库存储备偏高",
+        "labelEn": "Elevated inventory",
+        "level": "medium",
+        "category": "经营风险",
+        "categoryEn": "Operational",
+        "desc": "为锁定锂价提前备货，存货周转天数由 62 天升至 84 天。",
+        "descEn": "Stockpiled early to lock in lithium prices, raising inventory days from 62 to 84.",
+        "source": "半年度财报",
+        "detectedAt": "2026-09-08"
+      },
+      {
+        "id": "R-1002-2",
+        "label": "供应链依赖亚洲电芯",
+        "labelEn": "Supply chain reliant on Asian cells",
+        "level": "medium",
+        "category": "供应链风险",
+        "categoryEn": "Supply chain",
+        "desc": "电芯采购 72% 来自亚洲供应商，运输周期与关税敏感。",
+        "descEn": "72% of cells are sourced from Asian suppliers, sensitive to shipping time and tariffs.",
+        "source": "供应商清单分析",
+        "detectedAt": "2026-08-22"
+      },
+      {
+        "id": "R-1002-3",
+        "label": "外汇敞口可对冲",
+        "labelEn": "FX exposure is hedgeable",
+        "level": "low",
+        "category": "市场风险",
+        "categoryEn": "Market",
+        "desc": "美元与人民币敞口已通过远期合约对冲 78%。",
+        "descEn": "78% of USD and CNY exposure is hedged via forward contracts.",
+        "source": "公司披露",
+        "detectedAt": "2026-09-01"
+      }
+    ],
+    "fiveC": [
+      {
+        "key": "character",
+        "label": "品格",
+        "en": "Character",
+        "weight": 25,
+        "score": 82,
+        "note": "欧洲区履约记录良好，无诉讼与欠款纠纷。",
+        "noteEn": "Good performance record in Europe, with no litigation or payment disputes."
+      },
+      {
+        "key": "capacity",
+        "label": "能力",
+        "en": "Capacity",
+        "weight": 25,
+        "score": 86,
+        "note": "订单能见度 18 个月，产能利用率 91%，技术迭代迭代领先。",
+        "noteEn": "Order visibility 18 months, capacity utilization 91%, leading technology iteration."
+      },
+      {
+        "key": "capital",
+        "label": "资本",
+        "en": "Capital",
+        "weight": 20,
+        "score": 74,
+        "note": "资产负债率 58.4%，扩产期资本开支压力较大。",
+        "noteEn": "Debt-to-asset 58.4%, with elevated capex pressure during expansion."
+      },
+      {
+        "key": "collateral",
+        "label": "担保",
+        "en": "Collateral",
+        "weight": 18,
+        "score": 68,
+        "note": "抵押物以新厂房为主，评估周期较长。",
+        "noteEn": "Collateral is mainly the new plant, which takes longer to appraise."
+      },
+      {
+        "key": "environment",
+        "label": "环境",
+        "en": "Environment",
+        "weight": 12,
+        "score": 88,
+        "note": "欧盟补贴与碳关税政策形成长期利好。",
+        "noteEn": "EU subsidies and carbon-border policies are a long-term tailwind."
+      }
+    ],
+    "relatedParties": [
+      {
+        "id": "P-1002-1",
+        "name": "Rhein Energie Holding GmbH",
+        "relation": "控股股东",
+        "relationEn": "Controlling shareholder",
+        "exposure": "持股 38.5%",
+        "exposureEn": "Stake 38.5%",
+        "riskLevel": "low"
+      },
+      {
+        "id": "P-1002-2",
+        "name": "Nordic Green Energy Fund",
+        "relation": "战略投资人",
+        "relationEn": "Strategic investor",
+        "exposure": "持股 6.2%",
+        "exposureEn": "Stake 6.2%",
+        "riskLevel": "low"
+      },
+      {
+        "id": "P-1002-3",
+        "name": "Shenzhen Celltech Co., Ltd.",
+        "relation": "核心供应商",
+        "relationEn": "Key supplier",
+        "exposure": "年采购 1.7 亿欧元",
+        "exposureEn": "Annual purchase EUR 170m",
+        "riskLevel": "medium"
+      }
+    ]
+  },
+  "scores": {
+    "zh": {
+      "baseValue": 640,
+      "finalScore": 768,
+      "grade": "AA",
+      "gradeNote": "偿付能力强，违约风险很低",
+      "riskPercentile": 99,
+      "defaultProb": 1.6,
+      "pdBase": 7.6,
+      "pdDelta": -6,
+      "confidence": 95,
+      "modelVersion": "v4.2.0",
+      "evaluatedAt": "2026-09-24 08:47",
+      "positiveCount": 8,
+      "negativeCount": 1,
+      "features": [
+        {
+          "id": "capacity",
+          "label": "经营与订单能力",
+          "category": "经营能力",
+          "value": "能力维度 86 / 100",
+          "desc": "订单能见度、产能利用率与交付准时率共同构成的经营性能力信号。",
+          "contribution": 30.3
+        },
+        {
+          "id": "credit",
+          "label": "履约与信用记录",
+          "category": "信用与履约",
+          "value": "Scope Ratings BBB+",
+          "desc": "外部信用记录与历史履约表现。信誉维度评分 82/100，外部评级口径：Scope Ratings BBB+。",
+          "contribution": 26.4
+        },
+        {
+          "id": "environment",
+          "label": "行业与国别环境",
+          "category": "行业与国别",
+          "value": "德国 · 慕尼黑 · 新能源",
+          "desc": "所处行业景气度与国别宏观风险。主营 新能源 / 储能系统，注册地 德国 · 慕尼黑。",
+          "contribution": 24.4
+        },
+        {
+          "id": "capital",
+          "label": "资本结构与杠杆",
+          "category": "资本与财务",
+          "value": "净利率 7.2%（同比 +1.1pct）",
+          "desc": "资产负债结构、现金流覆盖与盈利水平。2025 年营收 4.86 亿欧元；净利率 7.2%（同比 +1.1pct）。",
+          "contribution": 18.6
+        },
+        {
+          "id": "compliance",
+          "label": "涉诉与合规表现",
+          "category": "合规与法务",
+          "value": "未命中负面记录",
+          "desc": "近三年未命中被执行、重大诉讼与合规处罚记录，合规维度表现稳定。",
+          "contribution": 11.7
+        },
+        {
+          "id": "guarantee",
+          "label": "关联方与对外担保",
+          "category": "担保与抵押",
+          "value": "无重大对外担保",
+          "desc": "关联方敞口、对外担保规模与抵押物覆盖能力的综合评估。",
+          "contribution": 10.2
+        },
+        {
+          "id": "governance",
+          "label": "治理与股权稳定性",
+          "category": "治理结构",
+          "value": "持股 38.5%",
+          "desc": "股权结构稳定性与控制权集中度。持股 38.5%，实际控制人为 Rhein Energie Holding GmbH。",
+          "contribution": 9.8
+        },
+        {
+          "id": "scale",
+          "label": "企业规模与经营年限",
+          "category": "规模与年限",
+          "value": "员工 1,240 人",
+          "desc": "成立于 2012-09-06，已持续经营 14 年，人员规模 1,240 人，形成规模与存续期稳定性溢价。",
+          "contribution": 3.7
+        },
+        {
+          "id": "operation",
+          "label": "客户与供应链集中度",
+          "category": "客户与供应链",
+          "value": "2 项集中度信号",
+          "desc": "客户集中度、供应商依赖与供应链稳定性的综合表现。",
+          "contribution": -7.1
+        }
+      ],
+      "benchmarks": [
+        {
+          "key": "sector",
+          "label": "同行业",
+          "tag": "新能源",
+          "sampleSize": 373,
+          "avgScore": 659,
+          "avgDefaultProb": 4.3,
+          "percentile": 97,
+          "goodRate": 56,
+          "diff": 109
+        },
+        {
+          "key": "country",
+          "label": "同国别 / 地区",
+          "tag": "德国",
+          "sampleSize": 129,
+          "avgScore": 672,
+          "avgDefaultProb": 3.8,
+          "percentile": 93,
+          "goodRate": 59,
+          "diff": 96
+        },
+        {
+          "key": "size",
+          "label": "同规模",
+          "tag": "中型企业",
+          "sampleSize": 357,
+          "avgScore": 651,
+          "avgDefaultProb": 4.6,
+          "percentile": 94,
+          "goodRate": 53,
+          "diff": 117
+        },
+        {
+          "key": "all",
+          "label": "全库基准",
+          "tag": "全体在库样本",
+          "sampleSize": 5007,
+          "avgScore": 628,
+          "avgDefaultProb": 5.7,
+          "percentile": 99,
+          "goodRate": 46,
+          "diff": 140
+        }
+      ]
+    },
+    "en": {
+      "baseValue": 640,
+      "finalScore": 768,
+      "grade": "AA",
+      "gradeNote": "Strong solvency, very low default risk",
+      "riskPercentile": 99,
+      "defaultProb": 1.6,
+      "pdBase": 7.6,
+      "pdDelta": -6,
+      "confidence": 95,
+      "modelVersion": "v4.2.0",
+      "evaluatedAt": "2026-09-24 08:47",
+      "positiveCount": 8,
+      "negativeCount": 1,
+      "features": [
+        {
+          "id": "capacity",
+          "label": "Operating & order capacity",
+          "category": "Operating capacity",
+          "value": "Capacity 86 / 100",
+          "desc": "A signal formed by order visibility, capacity utilization and on-time delivery.",
+          "contribution": 30.3
+        },
+        {
+          "id": "credit",
+          "label": "Payment & credit records",
+          "category": "Credit & performance",
+          "value": "Scope Ratings BBB+",
+          "desc": "External credit records and historical performance. Character dimension 82/100, external rating: Scope Ratings BBB+.",
+          "contribution": 26.4
+        },
+        {
+          "id": "environment",
+          "label": "Industry & country environment",
+          "category": "Industry & country",
+          "value": "Germany · Munich · 新能源",
+          "desc": "Industry cycle and country macro risk. Core business New Energy / Energy Storage, registered in Germany · Munich.",
+          "contribution": 24.4
+        },
+        {
+          "id": "capital",
+          "label": "Capital structure & leverage",
+          "category": "Capital & finance",
+          "value": "Net margin 7.2% (+1.1pct YoY)",
+          "desc": "Balance-sheet structure, cash-flow coverage and profitability. 2025 revenue EUR 486 million; Net margin 7.2% (+1.1pct YoY).",
+          "contribution": 18.6
+        },
+        {
+          "id": "compliance",
+          "label": "Litigation & compliance",
+          "category": "Compliance & legal",
+          "value": "No negative records hit",
+          "desc": "No enforcement, major litigation or compliance penalties in the past three years; compliance performance is stable.",
+          "contribution": 11.7
+        },
+        {
+          "id": "guarantee",
+          "label": "Related parties & guarantees",
+          "category": "Guarantee & collateral",
+          "value": "No major external guarantees",
+          "desc": "A combined assessment of related-party exposure, external guarantee scale and collateral coverage.",
+          "contribution": 10.2
+        },
+        {
+          "id": "governance",
+          "label": "Governance & equity stability",
+          "category": "Governance",
+          "value": "38.5%",
+          "desc": "Equity stability and control concentration. 38.5%, actual controller Rhein Energie Holding GmbH.",
+          "contribution": 9.8
+        },
+        {
+          "id": "scale",
+          "label": "Scale & years in business",
+          "category": "Scale & vintage",
+          "value": "Employees 1,240",
+          "desc": "Founded 2012-09-06, operating 14 years, 1,240 staff, earning a scale-and-vintage stability premium.",
+          "contribution": 3.7
+        },
+        {
+          "id": "operation",
+          "label": "Customer & supply-chain concentration",
+          "category": "Customers & supply chain",
+          "value": "2 concentration signals",
+          "desc": "A combined view of customer concentration, supplier dependency and supply-chain stability.",
+          "contribution": -7.1
+        }
+      ],
+      "benchmarks": [
+        {
+          "key": "sector",
+          "label": "Sector peers",
+          "tag": "新能源",
+          "sampleSize": 373,
+          "avgScore": 659,
+          "avgDefaultProb": 4.3,
+          "percentile": 97,
+          "goodRate": 56,
+          "diff": 109
+        },
+        {
+          "key": "country",
+          "label": "Same country / region",
+          "tag": "德国",
+          "sampleSize": 129,
+          "avgScore": 672,
+          "avgDefaultProb": 3.8,
+          "percentile": 93,
+          "goodRate": 59,
+          "diff": 96
+        },
+        {
+          "key": "size",
+          "label": "Same size",
+          "tag": "Mid-sized enterprise",
+          "sampleSize": 357,
+          "avgScore": 651,
+          "avgDefaultProb": 4.6,
+          "percentile": 94,
+          "goodRate": 53,
+          "diff": 117
+        },
+        {
+          "key": "all",
+          "label": "Library benchmark",
+          "tag": "All sampled firms",
+          "sampleSize": 5007,
+          "avgScore": 628,
+          "avgDefaultProb": 5.7,
+          "percentile": 99,
+          "goodRate": 46,
+          "diff": 140
+        }
+      ]
+    }
+  },
+  "graphs": {
+    "zh": {
+      "rootId": "C-1002",
+      "nodes": [
+        {
+          "id": "C-1002",
+          "label": "莱茵新能源科技股份有限公司",
+          "type": "company",
+          "riskLevel": "low",
+          "hop": 0,
+          "relation": "评估主体",
+          "exposure": "建议授信 € 18,600,000",
+          "industry": "新能源 / 储能系统",
+          "country": "德国 · 慕尼黑",
+          "companyId": "C-1002",
+          "note": "德国储能系统集成商，受益于欧盟绿色转型补贴，在手订单能见度超过 18 个月。研发投入占营收 9.4%，专利储备扎实，被评定为低风险主体。"
+        },
+        {
+          "id": "P-1002-1",
+          "label": "Rhein Energie Holding GmbH",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "控股股东",
+          "exposure": "持股 38.5%",
+          "industry": "新能源 / 储能系统",
+          "country": "德国 · 慕尼黑",
+          "note": "与评估主体构成「控股股东」关系，敞口为 持股 38.5%，风险等级为低风险。"
+        },
+        {
+          "id": "P-1002-2",
+          "label": "Nordic Green Energy Fund",
+          "type": "fund",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "战略投资人",
+          "exposure": "持股 6.2%",
+          "industry": "新能源 / 储能系统",
+          "country": "德国 · 慕尼黑",
+          "note": "与评估主体构成「战略投资人」关系，敞口为 持股 6.2%，风险等级为低风险。"
+        },
+        {
+          "id": "P-1002-3",
+          "label": "Shenzhen Celltech Co., Ltd.",
+          "type": "supplier",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "核心供应商",
+          "exposure": "年采购 1.7 亿欧元",
+          "industry": "新能源 / 储能系统",
+          "country": "德国 · 慕尼黑",
+          "note": "与评估主体构成「核心供应商」关系，敞口为 年采购 1.7 亿欧元，风险等级为中风险。"
+        },
+        {
+          "id": "N-C-1002-legal",
+          "label": "Lukas Brandt",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "法定代表人",
+          "exposure": "控制权 持股 38.5%",
+          "industry": "新能源 / 储能系统",
+          "country": "德国 · 慕尼黑",
+          "note": "工商登记法定代表人，同时为实际控制方核心成员，控制权比例 持股 38.5%。"
+        },
+        {
+          "id": "N-C-1002-bank",
+          "label": "Deutsche Bank",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "主要往来银行",
+          "exposure": "45 天 T/T / 信用证",
+          "industry": "新能源 / 储能系统",
+          "country": "德国 · 慕尼黑",
+          "note": "主要结算与授信银行，结算方式为「45 天 T/T / 信用证」，渠道集中度需持续关注。"
+        },
+        {
+          "id": "N-C-1002-client",
+          "label": "新能源核心下游客户",
+          "type": "client",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "主要客户",
+          "exposure": "年订单占比 18.6%",
+          "industry": "新能源 / 储能系统",
+          "country": "德国 · 慕尼黑",
+          "note": "评估主体的核心下游需求方，收入占比 18.6%，其付款能力直接影响回款周期。"
+        },
+        {
+          "id": "P-1002-1-h2-0",
+          "label": "一致行动人",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "关联自然人",
+          "exposure": "往来 15,200 万元",
+          "industry": "新能源 / 储能系统",
+          "country": "德国 · 慕尼黑",
+          "note": "经股权与交易穿透，识别到「Rhein Energie Holding GmbH」的关联自然人关系，风险等级判定为低风险。"
+        },
+        {
+          "id": "P-1002-2-h2-1",
+          "label": "并购基金 LP",
+          "type": "fund",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "合伙投资人",
+          "exposure": "持股 17.4%",
+          "industry": "新能源 / 储能系统",
+          "country": "德国 · 慕尼黑",
+          "note": "经股权与交易穿透，识别到「Nordic Green Energy Fund」的合伙投资人关系，风险等级判定为低风险。"
+        },
+        {
+          "id": "P-1002-3-h2-2",
+          "label": "二级零部件供应商",
+          "type": "supplier",
+          "riskLevel": "medium",
+          "hop": 2,
+          "relation": "二级供应商",
+          "exposure": "年采购 19,600 万元",
+          "industry": "新能源 / 储能系统",
+          "country": "德国 · 慕尼黑",
+          "note": "经股权与交易穿透，识别到「Shenzhen Celltech Co., Ltd.」的二级供应商关系，风险等级判定为中风险。"
+        },
+        {
+          "id": "N-C-1002-legal-h2-3",
+          "label": "一致行动人",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "关联自然人",
+          "exposure": "往来 6,300 万元",
+          "industry": "新能源 / 储能系统",
+          "country": "德国 · 慕尼黑",
+          "note": "经股权与交易穿透，识别到「Lukas Brandt」的关联自然人关系，风险等级判定为低风险。"
+        },
+        {
+          "id": "N-C-1002-bank-h2-4",
+          "label": "政策性银行",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "银团成员",
+          "exposure": "授信 16,300 万元",
+          "industry": "新能源 / 储能系统",
+          "country": "德国 · 慕尼黑",
+          "note": "经股权与交易穿透，识别到「Deutsche Bank」的银团成员关系，风险等级判定为低风险。"
+        },
+        {
+          "id": "N-C-1002-client-h2-5",
+          "label": "终端分销渠道",
+          "type": "client",
+          "riskLevel": "high",
+          "hop": 2,
+          "relation": "下游渠道",
+          "exposure": "年订单 32,700 万元",
+          "industry": "新能源 / 储能系统",
+          "country": "德国 · 慕尼黑",
+          "note": "经股权与交易穿透，识别到「新能源核心下游客户」的下游渠道关系，风险等级判定为高风险。"
+        },
+        {
+          "id": "N-C-1002-client-h2-5-h3-10",
+          "label": "终端分销渠道",
+          "type": "client",
+          "riskLevel": "high",
+          "hop": 3,
+          "relation": "下游渠道",
+          "exposure": "年订单 26,300 万元",
+          "industry": "新能源 / 储能系统",
+          "country": "德国 · 慕尼黑",
+          "note": "经股权与交易穿透，识别到「终端分销渠道」的下游渠道关系，风险等级判定为高风险。"
+        },
+        {
+          "id": "P-1002-3-h2-2-h3-11",
+          "label": "二级零部件供应商",
+          "type": "supplier",
+          "riskLevel": "medium",
+          "hop": 3,
+          "relation": "二级供应商",
+          "exposure": "年采购 20,100 万元",
+          "industry": "新能源 / 储能系统",
+          "country": "德国 · 慕尼黑",
+          "note": "经股权与交易穿透，识别到「二级零部件供应商」的二级供应商关系，风险等级判定为中风险。"
+        }
+      ],
+      "edges": [
+        {
+          "id": "E:C-1002->P-1002-1",
+          "source": "C-1002",
+          "target": "P-1002-1",
+          "type": "equity",
+          "label": "持股关系",
+          "riskFlow": false,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1002->P-1002-2",
+          "source": "C-1002",
+          "target": "P-1002-2",
+          "type": "equity",
+          "label": "持股关系",
+          "riskFlow": false,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1002->P-1002-3",
+          "source": "C-1002",
+          "target": "P-1002-3",
+          "type": "supply",
+          "label": "采购关系",
+          "riskFlow": false,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1002->N-C-1002-legal",
+          "source": "C-1002",
+          "target": "N-C-1002-legal",
+          "type": "control",
+          "label": "控制关系",
+          "riskFlow": false,
+          "strength": 1.2
+        },
+        {
+          "id": "E:C-1002->N-C-1002-bank",
+          "source": "C-1002",
+          "target": "N-C-1002-bank",
+          "type": "loan",
+          "label": "授信 / 结算",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:C-1002->N-C-1002-client",
+          "source": "C-1002",
+          "target": "N-C-1002-client",
+          "type": "trade",
+          "label": "交易往来",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1002-1->P-1002-1-h2-0",
+          "source": "P-1002-1",
+          "target": "P-1002-1-h2-0",
+          "type": "control",
+          "label": "控制",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1002-2->P-1002-2-h2-1",
+          "source": "P-1002-2",
+          "target": "P-1002-2-h2-1",
+          "type": "equity",
+          "label": "持股",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1002-3->P-1002-3-h2-2",
+          "source": "P-1002-3",
+          "target": "P-1002-3-h2-2",
+          "type": "supply",
+          "label": "供应",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1002-legal->N-C-1002-legal-h2-3",
+          "source": "N-C-1002-legal",
+          "target": "N-C-1002-legal-h2-3",
+          "type": "control",
+          "label": "控制",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1002-bank->N-C-1002-bank-h2-4",
+          "source": "N-C-1002-bank",
+          "target": "N-C-1002-bank-h2-4",
+          "type": "loan",
+          "label": "授信 / 结算",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1002-client->N-C-1002-client-h2-5",
+          "source": "N-C-1002-client",
+          "target": "N-C-1002-client-h2-5",
+          "type": "trade",
+          "label": "交易往来",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1002-client-h2-5->N-C-1002-client-h2-5-h3-10",
+          "source": "N-C-1002-client-h2-5",
+          "target": "N-C-1002-client-h2-5-h3-10",
+          "type": "trade",
+          "label": "交易往来",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1002-3-h2-2->P-1002-3-h2-2-h3-11",
+          "source": "P-1002-3-h2-2",
+          "target": "P-1002-3-h2-2-h3-11",
+          "type": "supply",
+          "label": "供应",
+          "riskFlow": false,
+          "strength": 1
+        }
+      ]
+    },
+    "en": {
+      "rootId": "C-1002",
+      "nodes": [
+        {
+          "id": "C-1002",
+          "label": "Rhein New Energy Technology AG",
+          "type": "company",
+          "riskLevel": "low",
+          "hop": 0,
+          "relation": "Assessed entity",
+          "exposure": "Suggested limit € 18,600,000",
+          "industry": "New Energy / Energy Storage",
+          "country": "Germany · Munich",
+          "companyId": "C-1002",
+          "note": "A German energy-storage system integrator benefiting from EU green-transition subsidies, with order visibility beyond 18 months. R&D spend is 9.4% of revenue and the patent portfolio is solid — rated low risk."
+        },
+        {
+          "id": "P-1002-1",
+          "label": "Rhein Energie Holding GmbH",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "Controlling shareholder",
+          "exposure": "Stake 38.5%",
+          "industry": "New Energy / Energy Storage",
+          "country": "Germany · Munich",
+          "note": "Constitutes a \"Controlling shareholder\" relation with the assessed entity, exposure Stake 38.5%, judged Low risk."
+        },
+        {
+          "id": "P-1002-2",
+          "label": "Nordic Green Energy Fund",
+          "type": "fund",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "Strategic investor",
+          "exposure": "Stake 6.2%",
+          "industry": "New Energy / Energy Storage",
+          "country": "Germany · Munich",
+          "note": "Constitutes a \"Strategic investor\" relation with the assessed entity, exposure Stake 6.2%, judged Low risk."
+        },
+        {
+          "id": "P-1002-3",
+          "label": "Shenzhen Celltech Co., Ltd.",
+          "type": "supplier",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "Key supplier",
+          "exposure": "Annual purchase EUR 170m",
+          "industry": "New Energy / Energy Storage",
+          "country": "Germany · Munich",
+          "note": "Constitutes a \"Key supplier\" relation with the assessed entity, exposure Annual purchase EUR 170m, judged Medium risk."
+        },
+        {
+          "id": "N-C-1002-legal",
+          "label": "Lukas Brandt",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "Legal representative",
+          "exposure": "Control 38.5%",
+          "industry": "New Energy / Energy Storage",
+          "country": "Germany · Munich",
+          "note": "Registered legal representative and a core member of the controlling party, control stake 38.5%."
+        },
+        {
+          "id": "N-C-1002-bank",
+          "label": "Deutsche Bank",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "Main bank",
+          "exposure": "45-day T/T / L/C",
+          "industry": "New Energy / Energy Storage",
+          "country": "Germany · Munich",
+          "note": "Primary settlement and credit bank, settlement terms \"45-day T/T / L/C\"; channel concentration needs ongoing attention."
+        },
+        {
+          "id": "N-C-1002-client",
+          "label": "Key downstream client · 新能源",
+          "type": "client",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "Key client",
+          "exposure": "18.6% of annual orders",
+          "industry": "New Energy / Energy Storage",
+          "country": "Germany · Munich",
+          "note": "Core downstream demand source of the assessed entity, 18.6% of revenue; its payment capacity directly affects the collection cycle."
+        },
+        {
+          "id": "P-1002-1-h2-0",
+          "label": "Concert party",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "related individual",
+          "exposure": "Turnover ¥15,200k",
+          "industry": "New Energy / Energy Storage",
+          "country": "Germany · Munich",
+          "note": "Through equity and transaction look-through, a \"related individual\" relation to \"Rhein Energie Holding GmbH\" was identified, judged Low risk."
+        },
+        {
+          "id": "P-1002-2-h2-1",
+          "label": "M&A fund LP",
+          "type": "fund",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "fund investor",
+          "exposure": "Stake 17.4%",
+          "industry": "New Energy / Energy Storage",
+          "country": "Germany · Munich",
+          "note": "Through equity and transaction look-through, a \"fund investor\" relation to \"Nordic Green Energy Fund\" was identified, judged Low risk."
+        },
+        {
+          "id": "P-1002-3-h2-2",
+          "label": "Tier-2 component supplier",
+          "type": "supplier",
+          "riskLevel": "medium",
+          "hop": 2,
+          "relation": "Tier-2 supplier",
+          "exposure": "Annual purchase ¥19,600k",
+          "industry": "New Energy / Energy Storage",
+          "country": "Germany · Munich",
+          "note": "Through equity and transaction look-through, a \"Tier-2 supplier\" relation to \"Shenzhen Celltech Co., Ltd.\" was identified, judged Medium risk."
+        },
+        {
+          "id": "N-C-1002-legal-h2-3",
+          "label": "Concert party",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "related individual",
+          "exposure": "Turnover ¥6,300k",
+          "industry": "New Energy / Energy Storage",
+          "country": "Germany · Munich",
+          "note": "Through equity and transaction look-through, a \"related individual\" relation to \"Lukas Brandt\" was identified, judged Low risk."
+        },
+        {
+          "id": "N-C-1002-bank-h2-4",
+          "label": "Policy bank",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "syndicate member",
+          "exposure": "Credit line ¥16,300k",
+          "industry": "New Energy / Energy Storage",
+          "country": "Germany · Munich",
+          "note": "Through equity and transaction look-through, a \"syndicate member\" relation to \"Deutsche Bank\" was identified, judged Low risk."
+        },
+        {
+          "id": "N-C-1002-client-h2-5",
+          "label": "End distribution channel",
+          "type": "client",
+          "riskLevel": "high",
+          "hop": 2,
+          "relation": "downstream channel",
+          "exposure": "Annual orders ¥32,700k",
+          "industry": "New Energy / Energy Storage",
+          "country": "Germany · Munich",
+          "note": "Through equity and transaction look-through, a \"downstream channel\" relation to \"Key downstream client · 新能源\" was identified, judged High risk."
+        },
+        {
+          "id": "N-C-1002-client-h2-5-h3-10",
+          "label": "End distribution channel",
+          "type": "client",
+          "riskLevel": "high",
+          "hop": 3,
+          "relation": "downstream channel",
+          "exposure": "Annual orders ¥26,300k",
+          "industry": "New Energy / Energy Storage",
+          "country": "Germany · Munich",
+          "note": "Through equity and transaction look-through, a \"downstream channel\" relation to \"End distribution channel\" was identified, judged High risk."
+        },
+        {
+          "id": "P-1002-3-h2-2-h3-11",
+          "label": "Tier-2 component supplier",
+          "type": "supplier",
+          "riskLevel": "medium",
+          "hop": 3,
+          "relation": "Tier-2 supplier",
+          "exposure": "Annual purchase ¥20,100k",
+          "industry": "New Energy / Energy Storage",
+          "country": "Germany · Munich",
+          "note": "Through equity and transaction look-through, a \"Tier-2 supplier\" relation to \"Tier-2 component supplier\" was identified, judged Medium risk."
+        }
+      ],
+      "edges": [
+        {
+          "id": "E:C-1002->P-1002-1",
+          "source": "C-1002",
+          "target": "P-1002-1",
+          "type": "equity",
+          "label": "Equity stake",
+          "riskFlow": false,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1002->P-1002-2",
+          "source": "C-1002",
+          "target": "P-1002-2",
+          "type": "equity",
+          "label": "Equity stake",
+          "riskFlow": false,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1002->P-1002-3",
+          "source": "C-1002",
+          "target": "P-1002-3",
+          "type": "supply",
+          "label": "Purchase relation",
+          "riskFlow": false,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1002->N-C-1002-legal",
+          "source": "C-1002",
+          "target": "N-C-1002-legal",
+          "type": "control",
+          "label": "Control",
+          "riskFlow": false,
+          "strength": 1.2
+        },
+        {
+          "id": "E:C-1002->N-C-1002-bank",
+          "source": "C-1002",
+          "target": "N-C-1002-bank",
+          "type": "loan",
+          "label": "Credit / settlement",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:C-1002->N-C-1002-client",
+          "source": "C-1002",
+          "target": "N-C-1002-client",
+          "type": "trade",
+          "label": "Trade",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1002-1->P-1002-1-h2-0",
+          "source": "P-1002-1",
+          "target": "P-1002-1-h2-0",
+          "type": "control",
+          "label": "Control",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1002-2->P-1002-2-h2-1",
+          "source": "P-1002-2",
+          "target": "P-1002-2-h2-1",
+          "type": "equity",
+          "label": "Equity",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1002-3->P-1002-3-h2-2",
+          "source": "P-1002-3",
+          "target": "P-1002-3-h2-2",
+          "type": "supply",
+          "label": "Supply",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1002-legal->N-C-1002-legal-h2-3",
+          "source": "N-C-1002-legal",
+          "target": "N-C-1002-legal-h2-3",
+          "type": "control",
+          "label": "Control",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1002-bank->N-C-1002-bank-h2-4",
+          "source": "N-C-1002-bank",
+          "target": "N-C-1002-bank-h2-4",
+          "type": "loan",
+          "label": "Credit / settlement",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1002-client->N-C-1002-client-h2-5",
+          "source": "N-C-1002-client",
+          "target": "N-C-1002-client-h2-5",
+          "type": "trade",
+          "label": "Trade",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1002-client-h2-5->N-C-1002-client-h2-5-h3-10",
+          "source": "N-C-1002-client-h2-5",
+          "target": "N-C-1002-client-h2-5-h3-10",
+          "type": "trade",
+          "label": "Trade",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1002-3-h2-2->P-1002-3-h2-2-h3-11",
+          "source": "P-1002-3-h2-2",
+          "target": "P-1002-3-h2-2-h3-11",
+          "type": "supply",
+          "label": "Supply",
+          "riskFlow": false,
+          "strength": 1
+        }
+      ]
+    }
+  }
+}

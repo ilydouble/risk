@@ -1,0 +1,1073 @@
+{
+  "company": {
+    "id": "C-1008",
+    "nameCn": "新月工程承包股份有限公司",
+    "nameEn": "Crescent Engineering Contracting JSC",
+    "regNo": "VN-0108347761",
+    "country": "越南 · 河内",
+    "countryEn": "Vietnam · Hanoi",
+    "region": "越南",
+    "regionEn": "Vietnam",
+    "sector": "建筑工程",
+    "sectorEn": "Construction",
+    "countryFlag": "ri-flag-line",
+    "industry": "建筑工程 / 基建",
+    "industryEn": "Construction / Infrastructure",
+    "creditScore": 498,
+    "riskLevel": "high",
+    "defaultProb": 16.8,
+    "creditLimit": "₫ 84,000,000,000",
+    "updatedAt": "2026-09-22 17:26",
+    "tags": [
+      "逾期记录 3 次",
+      "诉讼 2 起",
+      "现金流紧张"
+    ],
+    "tagsEn": [
+      "3 overdue records",
+      "2 lawsuits",
+      "Tight cash flow"
+    ]
+  },
+  "profile": {
+    "facts": {
+      "established": "2009-11-02",
+      "registeredCapital": "越南盾 4,200 亿元",
+      "paidInCapital": "越南盾 2,940 亿元（实缴 70%）",
+      "legalPerson": "Nguyễn Văn Hùng",
+      "actualController": "Nguyễn Văn Hùng（自然人）",
+      "controllerStake": "持股 62.5%",
+      "employees": "2,180 人",
+      "listed": "未上市",
+      "ratingAgency": "FiinCredit 展望负面",
+      "mainBanks": "Vietcombank · BIDV",
+      "settlement": "120 天账期 / 现金",
+      "revenue": "2025 年营收 3.1 万亿越南盾",
+      "netMargin": "净利率 -1.8%（亏损）"
+    },
+    "factsEn": {
+      "registeredCapital": "VND 420 billion",
+      "paidInCapital": "VND 294 billion (70% paid-in)",
+      "legalPerson": "Nguyễn Văn Hùng",
+      "actualController": "Nguyễn Văn Hùng (natural person)",
+      "controllerStake": "62.5%",
+      "employees": "2,180",
+      "listed": "Not listed",
+      "ratingAgency": "FiinCredit, negative outlook",
+      "mainBanks": "Vietcombank · BIDV",
+      "settlement": "120-day terms / cash",
+      "revenue": "2025 revenue VND 3.1 trillion",
+      "netMargin": "Net margin -1.8% (loss-making)"
+    },
+    "summary": "基建工程承包商，客户以地方政府与国企为主。近 12 个月出现 3 次票据逾期、2 起重大诉讼，经营现金流持续为负，被评定为高风险主体，建议拒贷或仅采用信用证结算。",
+    "summaryEn": "An infrastructure contractor serving mainly local governments and SOEs. Over the past 12 months it had three note defaults and two major lawsuits with persistently negative operating cash flow — rated high risk; recommend rejection or L/C-only settlement.",
+    "timeline": [
+      {
+        "id": "T-1008-1",
+        "date": "2026-09-18",
+        "type": "risk",
+        "title": "新增票据逾期记录",
+        "titleEn": "New note default recorded",
+        "desc": "一笔 340 亿越南盾商业承兑票据逾期 21 天，已补付但形成负面记录。",
+        "descEn": "A VND 34bn commercial acceptance note was 21 days overdue; repaid but leaves a negative record.",
+        "impact": "negative"
+      },
+      {
+        "id": "T-1008-2",
+        "date": "2026-07-05",
+        "type": "legal",
+        "title": "被供应商提起诉讼",
+        "titleEn": "Sued by a supplier",
+        "desc": "涉诉标的 620 亿越南盾，涉及材料款拖欠，案件已受理。",
+        "descEn": "With VND 62bn at issue over unpaid materials, the case has been accepted.",
+        "impact": "negative"
+      },
+      {
+        "id": "T-1008-3",
+        "date": "2026-04-22",
+        "type": "finance",
+        "title": "主要银行下调授信额度",
+        "titleEn": "Main bank cut its credit line",
+        "desc": "BIDV 将循环授信额度由 1,800 亿降至 900 亿越南盾。",
+        "descEn": "BIDV reduced the revolving facility from VND 180bn to VND 90bn.",
+        "impact": "negative"
+      },
+      {
+        "id": "T-1008-4",
+        "date": "2026-01-14",
+        "type": "equity",
+        "title": "股东股权质押",
+        "titleEn": "Share pledge by the shareholder",
+        "desc": "实控人质押 38% 股权用于补充流动资金。",
+        "descEn": "The actual controller pledged 38% of shares to supplement working capital.",
+        "impact": "negative"
+      },
+      {
+        "id": "T-1008-5",
+        "date": "2025-08-09",
+        "type": "award",
+        "title": "中标省级公路项目",
+        "titleEn": "Won a provincial highway project",
+        "desc": "合同额 4,800 亿越南盾，工期 30 个月。",
+        "descEn": "Contract value VND 480bn with a 30-month schedule.",
+        "impact": "positive"
+      }
+    ],
+    "riskFlags": [
+      {
+        "id": "R-1008-1",
+        "label": "票据逾期 3 次",
+        "labelEn": "Three note defaults",
+        "level": "high",
+        "category": "信用风险",
+        "categoryEn": "Credit",
+        "desc": "近 12 个月累计 3 次商业承兑票据逾期，最长逾期 21 天。",
+        "descEn": "Three commercial acceptance note defaults in 12 months, the longest 21 days.",
+        "source": "票据交易所记录",
+        "detectedAt": "2026-09-18"
+      },
+      {
+        "id": "R-1008-2",
+        "label": "重大诉讼 2 起",
+        "labelEn": "Two major lawsuits",
+        "level": "high",
+        "category": "法务风险",
+        "categoryEn": "Legal",
+        "desc": "在审案件合计标的人民币 2,100 万元，涉及材料款与工期违约。",
+        "descEn": "Ongoing cases total CNY 21m, involving material payments and schedule breaches.",
+        "source": "法院公告",
+        "detectedAt": "2026-07-08"
+      },
+      {
+        "id": "R-1008-3",
+        "label": "经营现金流为负",
+        "labelEn": "Negative operating cash flow",
+        "level": "high",
+        "category": "财务风险",
+        "categoryEn": "Financial",
+        "desc": "连续 4 个季度经营性现金流为负，货币资金仅覆盖短债 0.4 倍。",
+        "descEn": "Four consecutive quarters of negative operating cash flow; cash covers only 0.4x of short-term debt.",
+        "source": "财务报表分析",
+        "detectedAt": "2026-08-30"
+      },
+      {
+        "id": "R-1008-4",
+        "label": "股东股权高比例质押",
+        "labelEn": "High share pledge by the shareholder",
+        "level": "medium",
+        "category": "治理风险",
+        "categoryEn": "Governance",
+        "desc": "实控人质押 38% 股权，存在平仓与控制权变动风险。",
+        "descEn": "The controller pledged 38% of shares, risking margin calls and control changes.",
+        "source": "工商登记信息",
+        "detectedAt": "2026-01-16"
+      },
+      {
+        "id": "R-1008-5",
+        "label": "客户回款依赖政府预算",
+        "labelEn": "Collections depend on government budgets",
+        "level": "medium",
+        "category": "经营风险",
+        "categoryEn": "Operational",
+        "desc": "78% 应收款来自地方政府项目，回款周期不可控。",
+        "descEn": "78% of receivables come from local government projects, with uncontrollable collection timing.",
+        "source": "合同台账",
+        "detectedAt": "2026-06-11"
+      }
+    ],
+    "fiveC": [
+      {
+        "key": "character",
+        "label": "品格",
+        "en": "Character",
+        "weight": 25,
+        "score": 32,
+        "note": "存在多次逾期与诉讼，履约意愿与记录均较差。",
+        "noteEn": "Multiple defaults and lawsuits indicate poor willingness and record of performance."
+      },
+      {
+        "key": "capacity",
+        "label": "能力",
+        "en": "Capacity",
+        "weight": 25,
+        "score": 46,
+        "note": "在手订单充足但执行能力受限，工期普遍延误。",
+        "noteEn": "Adequate order backlog but constrained execution, with widespread schedule delays."
+      },
+      {
+        "key": "capital",
+        "label": "资本",
+        "en": "Capital",
+        "weight": 20,
+        "score": 28,
+        "note": "资产负债率 79.6%，实缴 70%，净资产持续被侵蚀。",
+        "noteEn": "Debt-to-asset 79.6% with 70% paid-in; net assets keep eroding."
+      },
+      {
+        "key": "collateral",
+        "label": "担保",
+        "en": "Collateral",
+        "weight": 18,
+        "score": 36,
+        "note": "核心资产已抵押，可增信空间很小。",
+        "noteEn": "Core assets are already mortgaged, leaving little room for credit enhancement."
+      },
+      {
+        "key": "environment",
+        "label": "环境",
+        "en": "Environment",
+        "weight": 12,
+        "score": 58,
+        "note": "越南基建投资保持增长，但财政拨付节奏放缓。",
+        "noteEn": "Vietnam infrastructure investment keeps growing, but fiscal disbursement is slowing."
+      }
+    ],
+    "relatedParties": [
+      {
+        "id": "P-1008-1",
+        "name": "Nguyễn Văn Hùng",
+        "relation": "实际控制人",
+        "relationEn": "Actual controller",
+        "exposure": "持股 62.5%（质押 38%）",
+        "exposureEn": "Stake 62.5% (38% pledged)",
+        "riskLevel": "high"
+      },
+      {
+        "id": "P-1008-2",
+        "name": "Crescent Materials JSC",
+        "relation": "关联供应商 / 原告",
+        "relationEn": "Related supplier / plaintiff",
+        "exposure": "涉诉 620 亿越南盾",
+        "exposureEn": "VND 62bn at issue",
+        "riskLevel": "high"
+      },
+      {
+        "id": "P-1008-3",
+        "name": "Hanoi Infrastructure JSC",
+        "relation": "业主方",
+        "relationEn": "Project owner",
+        "exposure": "应收 980 亿越南盾",
+        "exposureEn": "Receivable VND 98bn",
+        "riskLevel": "medium"
+      }
+    ]
+  },
+  "scores": {
+    "zh": {
+      "baseValue": 640,
+      "finalScore": 498,
+      "grade": "CC",
+      "gradeNote": "违约风险极高，建议拒贷或仅信用证",
+      "riskPercentile": 6,
+      "defaultProb": 16.8,
+      "pdBase": 7.6,
+      "pdDelta": 9.2,
+      "confidence": 92,
+      "modelVersion": "v4.2.0",
+      "evaluatedAt": "2026-09-22 17:26",
+      "positiveCount": 3,
+      "negativeCount": 6,
+      "features": [
+        {
+          "id": "scale",
+          "label": "企业规模与经营年限",
+          "category": "规模与年限",
+          "value": "员工 2,180 人",
+          "desc": "成立于 2009-11-02，已持续经营 17 年，人员规模 2,180 人，形成规模与存续期稳定性溢价。",
+          "contribution": 13.9
+        },
+        {
+          "id": "environment",
+          "label": "行业与国别环境",
+          "category": "行业与国别",
+          "value": "越南 · 河内 · 建筑工程",
+          "desc": "所处行业景气度与国别宏观风险。主营 建筑工程 / 基建，注册地 越南 · 河内。",
+          "contribution": 2.9
+        },
+        {
+          "id": "operation",
+          "label": "客户与供应链集中度",
+          "category": "客户与供应链",
+          "value": "1 项集中度信号",
+          "desc": "客户集中度、供应商依赖与供应链稳定性的综合表现。",
+          "contribution": 1.6
+        },
+        {
+          "id": "governance",
+          "label": "治理与股权稳定性",
+          "category": "治理结构",
+          "value": "持股 62.5%",
+          "desc": "股权结构稳定性与控制权集中度。持股 62.5%，实际控制人为 Nguyễn Văn Hùng（自然人）。",
+          "contribution": -1
+        },
+        {
+          "id": "capacity",
+          "label": "经营与订单能力",
+          "category": "经营能力",
+          "value": "能力维度 46 / 100",
+          "desc": "订单能见度、产能利用率与交付准时率共同构成的经营性能力信号。",
+          "contribution": -10.7
+        },
+        {
+          "id": "compliance",
+          "label": "涉诉与合规表现",
+          "category": "合规与法务",
+          "value": "1 项法务 / 合规信号",
+          "desc": "命中 1 项法务 / 合规信号，已按严重程度折减评分贡献。",
+          "contribution": -14.3
+        },
+        {
+          "id": "guarantee",
+          "label": "关联方与对外担保",
+          "category": "担保与抵押",
+          "value": "无重大对外担保",
+          "desc": "关联方敞口、对外担保规模与抵押物覆盖能力的综合评估。",
+          "contribution": -18.1
+        },
+        {
+          "id": "credit",
+          "label": "履约与信用记录",
+          "category": "信用与履约",
+          "value": "FiinCredit 展望负面",
+          "desc": "外部信用记录与历史履约表现。信誉维度评分 32/100，外部评级口径：FiinCredit 展望负面。",
+          "contribution": -55.8
+        },
+        {
+          "id": "capital",
+          "label": "资本结构与杠杆",
+          "category": "资本与财务",
+          "value": "净利率 -1.8%（亏损）",
+          "desc": "资产负债结构、现金流覆盖与盈利水平。2025 年营收 3.1 万亿越南盾；净利率 -1.8%（亏损）。",
+          "contribution": -60.5
+        }
+      ],
+      "benchmarks": [
+        {
+          "key": "sector",
+          "label": "同行业",
+          "tag": "建筑工程",
+          "sampleSize": 379,
+          "avgScore": 574,
+          "avgDefaultProb": 8.4,
+          "percentile": 11,
+          "goodRate": 31,
+          "diff": -76
+        },
+        {
+          "key": "country",
+          "label": "同国别 / 地区",
+          "tag": "越南",
+          "sampleSize": 135,
+          "avgScore": 586,
+          "avgDefaultProb": 7.5,
+          "percentile": 9,
+          "goodRate": 34,
+          "diff": -88
+        },
+        {
+          "key": "size",
+          "label": "同规模",
+          "tag": "大型企业",
+          "sampleSize": 363,
+          "avgScore": 565,
+          "avgDefaultProb": 9.1,
+          "percentile": 18,
+          "goodRate": 28,
+          "diff": -67
+        },
+        {
+          "key": "all",
+          "label": "全库基准",
+          "tag": "全体在库样本",
+          "sampleSize": 5013,
+          "avgScore": 585,
+          "avgDefaultProb": 7.6,
+          "percentile": 6,
+          "goodRate": 34,
+          "diff": -87
+        }
+      ]
+    },
+    "en": {
+      "baseValue": 640,
+      "finalScore": 498,
+      "grade": "CC",
+      "gradeNote": "Very high default risk, decline or LC only",
+      "riskPercentile": 6,
+      "defaultProb": 16.8,
+      "pdBase": 7.6,
+      "pdDelta": 9.2,
+      "confidence": 92,
+      "modelVersion": "v4.2.0",
+      "evaluatedAt": "2026-09-22 17:26",
+      "positiveCount": 3,
+      "negativeCount": 6,
+      "features": [
+        {
+          "id": "scale",
+          "label": "Scale & years in business",
+          "category": "Scale & vintage",
+          "value": "Employees 2,180",
+          "desc": "Founded 2009-11-02, operating 17 years, 2,180 staff, earning a scale-and-vintage stability premium.",
+          "contribution": 13.9
+        },
+        {
+          "id": "environment",
+          "label": "Industry & country environment",
+          "category": "Industry & country",
+          "value": "Vietnam · Hanoi · 建筑工程",
+          "desc": "Industry cycle and country macro risk. Core business Construction / Infrastructure, registered in Vietnam · Hanoi.",
+          "contribution": 2.9
+        },
+        {
+          "id": "operation",
+          "label": "Customer & supply-chain concentration",
+          "category": "Customers & supply chain",
+          "value": "1 concentration signals",
+          "desc": "A combined view of customer concentration, supplier dependency and supply-chain stability.",
+          "contribution": 1.6
+        },
+        {
+          "id": "governance",
+          "label": "Governance & equity stability",
+          "category": "Governance",
+          "value": "62.5%",
+          "desc": "Equity stability and control concentration. 62.5%, actual controller Nguyễn Văn Hùng (natural person).",
+          "contribution": -1
+        },
+        {
+          "id": "capacity",
+          "label": "Operating & order capacity",
+          "category": "Operating capacity",
+          "value": "Capacity 46 / 100",
+          "desc": "A signal formed by order visibility, capacity utilization and on-time delivery.",
+          "contribution": -10.7
+        },
+        {
+          "id": "compliance",
+          "label": "Litigation & compliance",
+          "category": "Compliance & legal",
+          "value": "1 legal / compliance signals",
+          "desc": "1 legal / compliance signals hit; the score contribution is reduced by severity.",
+          "contribution": -14.3
+        },
+        {
+          "id": "guarantee",
+          "label": "Related parties & guarantees",
+          "category": "Guarantee & collateral",
+          "value": "No major external guarantees",
+          "desc": "A combined assessment of related-party exposure, external guarantee scale and collateral coverage.",
+          "contribution": -18.1
+        },
+        {
+          "id": "credit",
+          "label": "Payment & credit records",
+          "category": "Credit & performance",
+          "value": "FiinCredit, negative outlook",
+          "desc": "External credit records and historical performance. Character dimension 32/100, external rating: FiinCredit, negative outlook.",
+          "contribution": -55.8
+        },
+        {
+          "id": "capital",
+          "label": "Capital structure & leverage",
+          "category": "Capital & finance",
+          "value": "Net margin -1.8% (loss-making)",
+          "desc": "Balance-sheet structure, cash-flow coverage and profitability. 2025 revenue VND 3.1 trillion; Net margin -1.8% (loss-making).",
+          "contribution": -60.5
+        }
+      ],
+      "benchmarks": [
+        {
+          "key": "sector",
+          "label": "Sector peers",
+          "tag": "建筑工程",
+          "sampleSize": 379,
+          "avgScore": 574,
+          "avgDefaultProb": 8.4,
+          "percentile": 11,
+          "goodRate": 31,
+          "diff": -76
+        },
+        {
+          "key": "country",
+          "label": "Same country / region",
+          "tag": "越南",
+          "sampleSize": 135,
+          "avgScore": 586,
+          "avgDefaultProb": 7.5,
+          "percentile": 9,
+          "goodRate": 34,
+          "diff": -88
+        },
+        {
+          "key": "size",
+          "label": "Same size",
+          "tag": "Large enterprise",
+          "sampleSize": 363,
+          "avgScore": 565,
+          "avgDefaultProb": 9.1,
+          "percentile": 18,
+          "goodRate": 28,
+          "diff": -67
+        },
+        {
+          "key": "all",
+          "label": "Library benchmark",
+          "tag": "All sampled firms",
+          "sampleSize": 5013,
+          "avgScore": 585,
+          "avgDefaultProb": 7.6,
+          "percentile": 6,
+          "goodRate": 34,
+          "diff": -87
+        }
+      ]
+    }
+  },
+  "graphs": {
+    "zh": {
+      "rootId": "C-1008",
+      "nodes": [
+        {
+          "id": "C-1008",
+          "label": "新月工程承包股份有限公司",
+          "type": "company",
+          "riskLevel": "high",
+          "hop": 0,
+          "relation": "评估主体",
+          "exposure": "建议授信 ₫ 84,000,000,000",
+          "industry": "建筑工程 / 基建",
+          "country": "越南 · 河内",
+          "companyId": "C-1008",
+          "note": "基建工程承包商，客户以地方政府与国企为主。近 12 个月出现 3 次票据逾期、2 起重大诉讼，经营现金流持续为负，被评定为高风险主体，建议拒贷或仅采用信用证结算。"
+        },
+        {
+          "id": "P-1008-1",
+          "label": "Nguyễn Văn Hùng",
+          "type": "person",
+          "riskLevel": "high",
+          "hop": 1,
+          "relation": "实际控制人",
+          "exposure": "持股 62.5%（质押 38%）",
+          "industry": "建筑工程 / 基建",
+          "country": "越南 · 河内",
+          "note": "与评估主体构成「实际控制人」关系，敞口为 持股 62.5%（质押 38%），风险等级为高风险。"
+        },
+        {
+          "id": "P-1008-2",
+          "label": "Crescent Materials JSC",
+          "type": "supplier",
+          "riskLevel": "high",
+          "hop": 1,
+          "relation": "关联供应商 / 原告",
+          "exposure": "涉诉 620 亿越南盾",
+          "industry": "建筑工程 / 基建",
+          "country": "越南 · 河内",
+          "note": "与评估主体构成「关联供应商 / 原告」关系，敞口为 涉诉 620 亿越南盾，风险等级为高风险。"
+        },
+        {
+          "id": "P-1008-3",
+          "label": "Hanoi Infrastructure JSC",
+          "type": "client",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "业主方",
+          "exposure": "应收 980 亿越南盾",
+          "industry": "建筑工程 / 基建",
+          "country": "越南 · 河内",
+          "note": "与评估主体构成「业主方」关系，敞口为 应收 980 亿越南盾，风险等级为中风险。"
+        },
+        {
+          "id": "N-C-1008-bank",
+          "label": "Vietcombank",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "主要往来银行",
+          "exposure": "120 天账期 / 现金",
+          "industry": "建筑工程 / 基建",
+          "country": "越南 · 河内",
+          "note": "主要结算与授信银行，结算方式为「120 天账期 / 现金」，渠道集中度需持续关注。"
+        },
+        {
+          "id": "N-C-1008-client",
+          "label": "建筑工程核心下游客户",
+          "type": "client",
+          "riskLevel": "high",
+          "hop": 1,
+          "relation": "主要客户",
+          "exposure": "年订单占比 18.6%",
+          "industry": "建筑工程 / 基建",
+          "country": "越南 · 河内",
+          "note": "评估主体的核心下游需求方，收入占比 18.6%，其付款能力直接影响回款周期。"
+        },
+        {
+          "id": "P-1008-1-h2-0",
+          "label": "关联自然人",
+          "type": "person",
+          "riskLevel": "high",
+          "hop": 2,
+          "relation": "关联自然人",
+          "exposure": "往来 21,200 万元",
+          "industry": "建筑工程 / 基建",
+          "country": "越南 · 河内",
+          "note": "经股权与交易穿透，识别到「Nguyễn Văn Hùng」的关联自然人关系，风险等级判定为高风险。"
+        },
+        {
+          "id": "P-1008-2-h2-1",
+          "label": "二级零部件供应商",
+          "type": "supplier",
+          "riskLevel": "high",
+          "hop": 2,
+          "relation": "二级供应商",
+          "exposure": "年采购 23,400 万元",
+          "industry": "建筑工程 / 基建",
+          "country": "越南 · 河内",
+          "note": "经股权与交易穿透，识别到「Crescent Materials JSC」的二级供应商关系，风险等级判定为高风险。"
+        },
+        {
+          "id": "P-1008-3-h2-2",
+          "label": "终端分销渠道",
+          "type": "client",
+          "riskLevel": "high",
+          "hop": 2,
+          "relation": "下游渠道",
+          "exposure": "年订单 25,600 万元",
+          "industry": "建筑工程 / 基建",
+          "country": "越南 · 河内",
+          "note": "经股权与交易穿透，识别到「Hanoi Infrastructure JSC」的下游渠道关系，风险等级判定为高风险。"
+        },
+        {
+          "id": "N-C-1008-bank-h2-3",
+          "label": "银团成员行",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "银团成员",
+          "exposure": "授信 9,200 万元",
+          "industry": "建筑工程 / 基建",
+          "country": "越南 · 河内",
+          "note": "经股权与交易穿透，识别到「Vietcombank」的银团成员关系，风险等级判定为低风险。"
+        },
+        {
+          "id": "N-C-1008-client-h2-4",
+          "label": "海外经销平台",
+          "type": "client",
+          "riskLevel": "high",
+          "hop": 2,
+          "relation": "下游渠道",
+          "exposure": "年订单 25,000 万元",
+          "industry": "建筑工程 / 基建",
+          "country": "越南 · 河内",
+          "note": "经股权与交易穿透，识别到「建筑工程核心下游客户」的下游渠道关系，风险等级判定为高风险。"
+        },
+        {
+          "id": "P-1008-1-h2-0-h3-10",
+          "label": "关联自然人",
+          "type": "person",
+          "riskLevel": "high",
+          "hop": 3,
+          "relation": "关联自然人",
+          "exposure": "往来 25,800 万元",
+          "industry": "建筑工程 / 基建",
+          "country": "越南 · 河内",
+          "note": "经股权与交易穿透，识别到「关联自然人」的关联自然人关系，风险等级判定为高风险。"
+        },
+        {
+          "id": "P-1008-2-h2-1-h3-11",
+          "label": "二级零部件供应商",
+          "type": "supplier",
+          "riskLevel": "high",
+          "hop": 3,
+          "relation": "二级供应商",
+          "exposure": "年采购 26,700 万元",
+          "industry": "建筑工程 / 基建",
+          "country": "越南 · 河内",
+          "note": "经股权与交易穿透，识别到「二级零部件供应商」的二级供应商关系，风险等级判定为高风险。"
+        }
+      ],
+      "edges": [
+        {
+          "id": "E:C-1008->P-1008-1",
+          "source": "C-1008",
+          "target": "P-1008-1",
+          "type": "equity",
+          "label": "持股关系",
+          "riskFlow": true,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1008->P-1008-2",
+          "source": "C-1008",
+          "target": "P-1008-2",
+          "type": "trade",
+          "label": "涉诉关联",
+          "riskFlow": true,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1008->P-1008-3",
+          "source": "C-1008",
+          "target": "P-1008-3",
+          "type": "trade",
+          "label": "客户 / 业主",
+          "riskFlow": true,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1008->N-C-1008-bank",
+          "source": "C-1008",
+          "target": "N-C-1008-bank",
+          "type": "loan",
+          "label": "授信 / 结算",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:C-1008->N-C-1008-client",
+          "source": "C-1008",
+          "target": "N-C-1008-client",
+          "type": "trade",
+          "label": "交易往来",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1008-1->P-1008-1-h2-0",
+          "source": "P-1008-1",
+          "target": "P-1008-1-h2-0",
+          "type": "control",
+          "label": "控制",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1008-2->P-1008-2-h2-1",
+          "source": "P-1008-2",
+          "target": "P-1008-2-h2-1",
+          "type": "supply",
+          "label": "供应",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1008-3->P-1008-3-h2-2",
+          "source": "P-1008-3",
+          "target": "P-1008-3-h2-2",
+          "type": "trade",
+          "label": "交易往来",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1008-bank->N-C-1008-bank-h2-3",
+          "source": "N-C-1008-bank",
+          "target": "N-C-1008-bank-h2-3",
+          "type": "loan",
+          "label": "授信 / 结算",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1008-client->N-C-1008-client-h2-4",
+          "source": "N-C-1008-client",
+          "target": "N-C-1008-client-h2-4",
+          "type": "trade",
+          "label": "交易往来",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1008-1-h2-0->P-1008-1-h2-0-h3-10",
+          "source": "P-1008-1-h2-0",
+          "target": "P-1008-1-h2-0-h3-10",
+          "type": "control",
+          "label": "控制",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1008-2-h2-1->P-1008-2-h2-1-h3-11",
+          "source": "P-1008-2-h2-1",
+          "target": "P-1008-2-h2-1-h3-11",
+          "type": "supply",
+          "label": "供应",
+          "riskFlow": true,
+          "strength": 1
+        }
+      ]
+    },
+    "en": {
+      "rootId": "C-1008",
+      "nodes": [
+        {
+          "id": "C-1008",
+          "label": "Crescent Engineering Contracting JSC",
+          "type": "company",
+          "riskLevel": "high",
+          "hop": 0,
+          "relation": "Assessed entity",
+          "exposure": "Suggested limit ₫ 84,000,000,000",
+          "industry": "Construction / Infrastructure",
+          "country": "Vietnam · Hanoi",
+          "companyId": "C-1008",
+          "note": "An infrastructure contractor serving mainly local governments and SOEs. Over the past 12 months it had three note defaults and two major lawsuits with persistently negative operating cash flow — rated high risk; recommend rejection or L/C-only settlement."
+        },
+        {
+          "id": "P-1008-1",
+          "label": "Nguyễn Văn Hùng",
+          "type": "person",
+          "riskLevel": "high",
+          "hop": 1,
+          "relation": "Actual controller",
+          "exposure": "Stake 62.5% (38% pledged)",
+          "industry": "Construction / Infrastructure",
+          "country": "Vietnam · Hanoi",
+          "note": "Constitutes a \"Actual controller\" relation with the assessed entity, exposure Stake 62.5% (38% pledged), judged High risk."
+        },
+        {
+          "id": "P-1008-2",
+          "label": "Crescent Materials JSC",
+          "type": "supplier",
+          "riskLevel": "high",
+          "hop": 1,
+          "relation": "Related supplier / plaintiff",
+          "exposure": "VND 62bn at issue",
+          "industry": "Construction / Infrastructure",
+          "country": "Vietnam · Hanoi",
+          "note": "Constitutes a \"Related supplier / plaintiff\" relation with the assessed entity, exposure VND 62bn at issue, judged High risk."
+        },
+        {
+          "id": "P-1008-3",
+          "label": "Hanoi Infrastructure JSC",
+          "type": "client",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "Project owner",
+          "exposure": "Receivable VND 98bn",
+          "industry": "Construction / Infrastructure",
+          "country": "Vietnam · Hanoi",
+          "note": "Constitutes a \"Project owner\" relation with the assessed entity, exposure Receivable VND 98bn, judged Medium risk."
+        },
+        {
+          "id": "N-C-1008-bank",
+          "label": "Vietcombank",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "Main bank",
+          "exposure": "120-day terms / cash",
+          "industry": "Construction / Infrastructure",
+          "country": "Vietnam · Hanoi",
+          "note": "Primary settlement and credit bank, settlement terms \"120-day terms / cash\"; channel concentration needs ongoing attention."
+        },
+        {
+          "id": "N-C-1008-client",
+          "label": "Key downstream client · 建筑工程",
+          "type": "client",
+          "riskLevel": "high",
+          "hop": 1,
+          "relation": "Key client",
+          "exposure": "18.6% of annual orders",
+          "industry": "Construction / Infrastructure",
+          "country": "Vietnam · Hanoi",
+          "note": "Core downstream demand source of the assessed entity, 18.6% of revenue; its payment capacity directly affects the collection cycle."
+        },
+        {
+          "id": "P-1008-1-h2-0",
+          "label": "Related individual",
+          "type": "person",
+          "riskLevel": "high",
+          "hop": 2,
+          "relation": "related individual",
+          "exposure": "Turnover ¥21,200k",
+          "industry": "Construction / Infrastructure",
+          "country": "Vietnam · Hanoi",
+          "note": "Through equity and transaction look-through, a \"related individual\" relation to \"Nguyễn Văn Hùng\" was identified, judged High risk."
+        },
+        {
+          "id": "P-1008-2-h2-1",
+          "label": "Tier-2 component supplier",
+          "type": "supplier",
+          "riskLevel": "high",
+          "hop": 2,
+          "relation": "Tier-2 supplier",
+          "exposure": "Annual purchase ¥23,400k",
+          "industry": "Construction / Infrastructure",
+          "country": "Vietnam · Hanoi",
+          "note": "Through equity and transaction look-through, a \"Tier-2 supplier\" relation to \"Crescent Materials JSC\" was identified, judged High risk."
+        },
+        {
+          "id": "P-1008-3-h2-2",
+          "label": "End distribution channel",
+          "type": "client",
+          "riskLevel": "high",
+          "hop": 2,
+          "relation": "downstream channel",
+          "exposure": "Annual orders ¥25,600k",
+          "industry": "Construction / Infrastructure",
+          "country": "Vietnam · Hanoi",
+          "note": "Through equity and transaction look-through, a \"downstream channel\" relation to \"Hanoi Infrastructure JSC\" was identified, judged High risk."
+        },
+        {
+          "id": "N-C-1008-bank-h2-3",
+          "label": "Syndicate member bank",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "syndicate member",
+          "exposure": "Credit line ¥9,200k",
+          "industry": "Construction / Infrastructure",
+          "country": "Vietnam · Hanoi",
+          "note": "Through equity and transaction look-through, a \"syndicate member\" relation to \"Vietcombank\" was identified, judged Low risk."
+        },
+        {
+          "id": "N-C-1008-client-h2-4",
+          "label": "Overseas sales platform",
+          "type": "client",
+          "riskLevel": "high",
+          "hop": 2,
+          "relation": "downstream channel",
+          "exposure": "Annual orders ¥25,000k",
+          "industry": "Construction / Infrastructure",
+          "country": "Vietnam · Hanoi",
+          "note": "Through equity and transaction look-through, a \"downstream channel\" relation to \"Key downstream client · 建筑工程\" was identified, judged High risk."
+        },
+        {
+          "id": "P-1008-1-h2-0-h3-10",
+          "label": "Related individual",
+          "type": "person",
+          "riskLevel": "high",
+          "hop": 3,
+          "relation": "related individual",
+          "exposure": "Turnover ¥25,800k",
+          "industry": "Construction / Infrastructure",
+          "country": "Vietnam · Hanoi",
+          "note": "Through equity and transaction look-through, a \"related individual\" relation to \"Related individual\" was identified, judged High risk."
+        },
+        {
+          "id": "P-1008-2-h2-1-h3-11",
+          "label": "Tier-2 component supplier",
+          "type": "supplier",
+          "riskLevel": "high",
+          "hop": 3,
+          "relation": "Tier-2 supplier",
+          "exposure": "Annual purchase ¥26,700k",
+          "industry": "Construction / Infrastructure",
+          "country": "Vietnam · Hanoi",
+          "note": "Through equity and transaction look-through, a \"Tier-2 supplier\" relation to \"Tier-2 component supplier\" was identified, judged High risk."
+        }
+      ],
+      "edges": [
+        {
+          "id": "E:C-1008->P-1008-1",
+          "source": "C-1008",
+          "target": "P-1008-1",
+          "type": "equity",
+          "label": "Equity stake",
+          "riskFlow": true,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1008->P-1008-2",
+          "source": "C-1008",
+          "target": "P-1008-2",
+          "type": "trade",
+          "label": "Litigation relation",
+          "riskFlow": true,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1008->P-1008-3",
+          "source": "C-1008",
+          "target": "P-1008-3",
+          "type": "trade",
+          "label": "Client / owner",
+          "riskFlow": true,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1008->N-C-1008-bank",
+          "source": "C-1008",
+          "target": "N-C-1008-bank",
+          "type": "loan",
+          "label": "Credit / settlement",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:C-1008->N-C-1008-client",
+          "source": "C-1008",
+          "target": "N-C-1008-client",
+          "type": "trade",
+          "label": "Trade",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1008-1->P-1008-1-h2-0",
+          "source": "P-1008-1",
+          "target": "P-1008-1-h2-0",
+          "type": "control",
+          "label": "Control",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1008-2->P-1008-2-h2-1",
+          "source": "P-1008-2",
+          "target": "P-1008-2-h2-1",
+          "type": "supply",
+          "label": "Supply",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1008-3->P-1008-3-h2-2",
+          "source": "P-1008-3",
+          "target": "P-1008-3-h2-2",
+          "type": "trade",
+          "label": "Trade",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1008-bank->N-C-1008-bank-h2-3",
+          "source": "N-C-1008-bank",
+          "target": "N-C-1008-bank-h2-3",
+          "type": "loan",
+          "label": "Credit / settlement",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1008-client->N-C-1008-client-h2-4",
+          "source": "N-C-1008-client",
+          "target": "N-C-1008-client-h2-4",
+          "type": "trade",
+          "label": "Trade",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1008-1-h2-0->P-1008-1-h2-0-h3-10",
+          "source": "P-1008-1-h2-0",
+          "target": "P-1008-1-h2-0-h3-10",
+          "type": "control",
+          "label": "Control",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1008-2-h2-1->P-1008-2-h2-1-h3-11",
+          "source": "P-1008-2-h2-1",
+          "target": "P-1008-2-h2-1-h3-11",
+          "type": "supply",
+          "label": "Supply",
+          "riskFlow": true,
+          "strength": 1
+        }
+      ]
+    }
+  }
+}

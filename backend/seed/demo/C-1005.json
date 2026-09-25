@@ -1,0 +1,1197 @@
+{
+  "company": {
+    "id": "C-1005",
+    "nameCn": "恒信远东供应链有限公司",
+    "nameEn": "Hengxin Far East Supply Chain Ltd.",
+    "regNo": "HK-2278431",
+    "country": "中国香港",
+    "countryEn": "Hong Kong, China",
+    "region": "中国香港",
+    "regionEn": "Hong Kong SAR, China",
+    "sector": "供应链服务",
+    "sectorEn": "Supply Chain Services",
+    "countryFlag": "ri-flag-line",
+    "industry": "供应链服务 / 跨境贸易",
+    "industryEn": "Supply Chain / Cross-border Trade",
+    "creditScore": 587,
+    "riskLevel": "medium",
+    "defaultProb": 9.2,
+    "creditLimit": "HK$ 24,000,000",
+    "updatedAt": "2026-09-23 14:32",
+    "tags": [
+      "实控人变更",
+      "关联方担保"
+    ],
+    "tagsEn": [
+      "Controller change",
+      "Related-party guarantees"
+    ]
+  },
+  "profile": {
+    "facts": {
+      "established": "2013-02-25",
+      "registeredCapital": "港币 2.4 亿元",
+      "paidInCapital": "港币 1.44 亿元（实缴 60%）",
+      "legalPerson": "郑嘉辉",
+      "actualController": "郑嘉辉（自然人）",
+      "controllerStake": "持股 71.0%（2026 年 5 月变更后）",
+      "employees": "316 人",
+      "listed": "未上市",
+      "ratingAgency": "暂无外部评级",
+      "mainBanks": "恒生银行 · 中银香港",
+      "settlement": "90 天账期 / T/T",
+      "revenue": "2025 年营收 11.2 亿港元",
+      "netMargin": "净利率 3.4%（同比 -1.6pct）"
+    },
+    "factsEn": {
+      "registeredCapital": "HKD 240 million",
+      "paidInCapital": "HKD 144 million (60% paid-in)",
+      "legalPerson": "Zheng Jiahui",
+      "actualController": "Zheng Jiahui (natural person)",
+      "controllerStake": "71.0% (after the May 2026 change)",
+      "employees": "316",
+      "listed": "Not listed",
+      "ratingAgency": "No external rating",
+      "mainBanks": "Hang Seng Bank · BOCHK",
+      "settlement": "90-day terms / T/T",
+      "revenue": "2025 revenue HKD 1.12 billion",
+      "netMargin": "Net margin 3.4% (-1.6pct YoY)"
+    },
+    "summary": "跨境供应链服务商，业务覆盖东南亚与中东。2026 年 5 月发生实控人变更，叠加关联方担保规模较大，建议在授信中强化担保与账期约束。",
+    "summaryEn": "A cross-border supply-chain services provider covering Southeast Asia and the Middle East. A change of actual controller in May 2026 plus sizeable related-party guarantees warrant stronger guarantee and payment-term constraints in credit terms.",
+    "timeline": [
+      {
+        "id": "T-1005-1",
+        "date": "2026-05-16",
+        "type": "equity",
+        "title": "实际控制人变更",
+        "titleEn": "Change of actual controller",
+        "desc": "原实控人退出，郑嘉辉受让其持有的 71.0% 股权，估值 4.8 亿港元。",
+        "descEn": "The former controller exited; Zheng Jiahui acquired its 71.0% stake at a HKD 480m valuation.",
+        "impact": "negative"
+      },
+      {
+        "id": "T-1005-2",
+        "date": "2026-04-02",
+        "type": "risk",
+        "title": "被列入关注名单",
+        "titleEn": "Added to a watch list",
+        "desc": "因关联交易披露不完整，被合作银行纳入内部关注名单。",
+        "descEn": "Placed on partner banks' internal watch list for incomplete related-party disclosures.",
+        "impact": "negative"
+      },
+      {
+        "id": "T-1005-3",
+        "date": "2026-02-11",
+        "type": "finance",
+        "title": "关联方担保新增 1.2 亿港元",
+        "titleEn": "New HKD 120m related-party guarantees",
+        "desc": "为同集团两家主体提供连带责任保证，占净资产 38.6%。",
+        "descEn": "Joint liability guarantees for two group entities, 38.6% of net assets.",
+        "impact": "negative"
+      },
+      {
+        "id": "T-1005-4",
+        "date": "2025-10-23",
+        "type": "address",
+        "title": "办公地址迁移",
+        "titleEn": "Office relocated",
+        "desc": "由中环迁至观塘，租金成本下降约 22%。",
+        "descEn": "Moved from Central to Kwun Tong, cutting rent by about 22%.",
+        "impact": "neutral"
+      },
+      {
+        "id": "T-1005-5",
+        "date": "2025-06-30",
+        "type": "award",
+        "title": "获香港海关 AEO 认证",
+        "titleEn": "Obtained Hong Kong Customs AEO certification",
+        "desc": "取得高级认证企业资格，通关时效提升。",
+        "descEn": "Achieved Authorized Economic Operator status, improving customs clearance speed.",
+        "impact": "positive"
+      }
+    ],
+    "riskFlags": [
+      {
+        "id": "R-1005-1",
+        "label": "实际控制人变更",
+        "labelEn": "Change of actual controller",
+        "level": "medium",
+        "category": "治理风险",
+        "categoryEn": "Governance",
+        "desc": "近 12 个月内实控人发生变更，战略连续性存在不确定性。",
+        "descEn": "The actual controller changed within the past 12 months, creating uncertainty over strategic continuity.",
+        "source": "公司注册处变更记录",
+        "detectedAt": "2026-05-18"
+      },
+      {
+        "id": "R-1005-2",
+        "label": "关联方担保占比高",
+        "labelEn": "High related-party guarantee ratio",
+        "level": "high",
+        "category": "担保风险",
+        "categoryEn": "Guarantee",
+        "desc": "对外担保余额 1.2 亿港元，占净资产 38.6%，且被担保方财务不透明。",
+        "descEn": "Guarantees outstanding total HKD 120m, 38.6% of net assets, with opaque counterparties.",
+        "source": "公开披露 / 银行流水",
+        "detectedAt": "2026-05-20"
+      },
+      {
+        "id": "R-1005-3",
+        "label": "应收账款周期延长",
+        "labelEn": "Longer receivables cycle",
+        "level": "medium",
+        "category": "财务风险",
+        "categoryEn": "Financial",
+        "desc": "平均回款周期由 74 天延长至 96 天，账龄 90 天以上占比 21%。",
+        "descEn": "Average collection period extended from 74 to 96 days, with 21% aged over 90 days.",
+        "source": "财务报表分析",
+        "detectedAt": "2026-09-10"
+      },
+      {
+        "id": "R-1005-4",
+        "label": "跨境结算集中",
+        "labelEn": "Concentrated cross-border settlement",
+        "level": "low",
+        "category": "运营风险",
+        "categoryEn": "Operational",
+        "desc": "87% 结算集中于两家银行，渠道替代性一般。",
+        "descEn": "87% of settlements concentrate in two banks, with limited channel substitution.",
+        "source": "银行流水",
+        "detectedAt": "2026-08-15"
+      }
+    ],
+    "fiveC": [
+      {
+        "key": "character",
+        "label": "品格",
+        "en": "Character",
+        "weight": 25,
+        "score": 58,
+        "note": "实控人变更后履约记录尚未建立，信息披露完整性待观察。",
+        "noteEn": "No performance record yet after the controller change; disclosure completeness is under review."
+      },
+      {
+        "key": "capacity",
+        "label": "能力",
+        "en": "Capacity",
+        "weight": 25,
+        "score": 66,
+        "note": "客户结构稳定但毛利率仅 6.1%，议价能力偏弱。",
+        "noteEn": "Client base is stable, but gross margin is only 6.1%, indicating weak pricing power."
+      },
+      {
+        "key": "capital",
+        "label": "资本",
+        "en": "Capital",
+        "weight": 20,
+        "score": 52,
+        "note": "资产负债率 64.2%，实缴比例 60%，权益缓冲偏薄。",
+        "noteEn": "Debt-to-asset 64.2% with 60% paid-in capital; the equity buffer is thin."
+      },
+      {
+        "key": "collateral",
+        "label": "担保",
+        "en": "Collateral",
+        "weight": 18,
+        "score": 48,
+        "note": "可抵押资产有限，且已为关联方提供大额连带担保。",
+        "noteEn": "Mortgageable assets are limited, and large joint guarantees have already been provided to related parties."
+      },
+      {
+        "key": "environment",
+        "label": "环境",
+        "en": "Environment",
+        "weight": 12,
+        "score": 70,
+        "note": "跨境电商与东南亚贸易需求稳中有升。",
+        "noteEn": "Cross-border e-commerce and Southeast Asian trade demand is steady with upside."
+      }
+    ],
+    "relatedParties": [
+      {
+        "id": "P-1005-1",
+        "name": "郑嘉辉",
+        "nameEn": "Zheng Jiahui",
+        "relation": "实际控制人",
+        "relationEn": "Actual controller",
+        "exposure": "持股 71.0%",
+        "exposureEn": "Stake 71.0%",
+        "riskLevel": "medium"
+      },
+      {
+        "id": "P-1005-2",
+        "name": "恒信远东（深圳）供应链有限公司",
+        "nameEn": "Hengxin Far East (Shenzhen) Supply Chain Co., Ltd.",
+        "relation": "关联方 / 被担保方",
+        "relationEn": "Related party / guaranteed party",
+        "exposure": "担保 7,800 万港元",
+        "exposureEn": "Guarantee HKD 78m",
+        "riskLevel": "high"
+      },
+      {
+        "id": "P-1005-3",
+        "name": "远东仓储物流（香港）有限公司",
+        "nameEn": "Far East Warehousing & Logistics (HK) Co., Ltd.",
+        "relation": "关联方 / 被担保方",
+        "relationEn": "Related party / guaranteed party",
+        "exposure": "担保 4,200 万港元",
+        "exposureEn": "Guarantee HKD 42m",
+        "riskLevel": "medium"
+      },
+      {
+        "id": "P-1005-4",
+        "name": "Gulf Supply Chain FZE",
+        "relation": "合资方",
+        "relationEn": "JV partner",
+        "exposure": "持股 20%",
+        "exposureEn": "Stake 20%",
+        "riskLevel": "medium"
+      }
+    ]
+  },
+  "scores": {
+    "zh": {
+      "baseValue": 640,
+      "finalScore": 587,
+      "grade": "CCC",
+      "gradeNote": "违约风险高，建议限制授信额度",
+      "riskPercentile": 40,
+      "defaultProb": 9.2,
+      "pdBase": 7.6,
+      "pdDelta": 1.6,
+      "confidence": 89,
+      "modelVersion": "v4.2.0",
+      "evaluatedAt": "2026-09-23 14:32",
+      "positiveCount": 4,
+      "negativeCount": 5,
+      "features": [
+        {
+          "id": "guarantee",
+          "label": "关联方与对外担保",
+          "category": "担保与抵押",
+          "value": "1 项担保信号",
+          "desc": "关联方敞口、对外担保规模与抵押物覆盖能力的综合评估。",
+          "contribution": 1680.8
+        },
+        {
+          "id": "capital",
+          "label": "资本结构与杠杆",
+          "category": "资本与财务",
+          "value": "净利率 3.4%（同比 -1.6pct）",
+          "desc": "资产负债结构、现金流覆盖与盈利水平。2025 年营收 11.2 亿港元；净利率 3.4%（同比 -1.6pct）。",
+          "contribution": 783.6
+        },
+        {
+          "id": "scale",
+          "label": "企业规模与经营年限",
+          "category": "规模与年限",
+          "value": "员工 316 人",
+          "desc": "成立于 2013-02-25，已持续经营 13 年，人员规模 316 人，形成规模与存续期稳定性溢价。",
+          "contribution": 53.8
+        },
+        {
+          "id": "governance",
+          "label": "治理与股权稳定性",
+          "category": "治理结构",
+          "value": "持股 71.0%（2026 年 5 月变更后）",
+          "desc": "股权结构稳定性与控制权集中度。持股 71.0%（2026 年 5 月变更后），实际控制人为 郑嘉辉（自然人）。",
+          "contribution": 45.4
+        },
+        {
+          "id": "credit",
+          "label": "履约与信用记录",
+          "category": "信用与履约",
+          "value": "暂无外部评级",
+          "desc": "外部信用记录与历史履约表现。信誉维度评分 58/100，外部评级口径：暂无外部评级。",
+          "contribution": -170.4
+        },
+        {
+          "id": "operation",
+          "label": "客户与供应链集中度",
+          "category": "客户与供应链",
+          "value": "1 项集中度信号",
+          "desc": "客户集中度、供应商依赖与供应链稳定性的综合表现。",
+          "contribution": -458.8
+        },
+        {
+          "id": "capacity",
+          "label": "经营与订单能力",
+          "category": "经营能力",
+          "value": "能力维度 66 / 100",
+          "desc": "订单能见度、产能利用率与交付准时率共同构成的经营性能力信号。",
+          "contribution": -624.6
+        },
+        {
+          "id": "compliance",
+          "label": "涉诉与合规表现",
+          "category": "合规与法务",
+          "value": "未命中负面记录",
+          "desc": "近三年未命中被执行、重大诉讼与合规处罚记录，合规维度表现稳定。",
+          "contribution": -681.4
+        },
+        {
+          "id": "environment",
+          "label": "行业与国别环境",
+          "category": "行业与国别",
+          "value": "中国香港 · 供应链服务",
+          "desc": "所处行业景气度与国别宏观风险。主营 供应链服务 / 跨境贸易，注册地 中国香港。",
+          "contribution": -681.4
+        }
+      ],
+      "benchmarks": [
+        {
+          "key": "sector",
+          "label": "同行业",
+          "tag": "供应链服务",
+          "sampleSize": 376,
+          "avgScore": 601,
+          "avgDefaultProb": 8.1,
+          "percentile": 40,
+          "goodRate": 39,
+          "diff": -14
+        },
+        {
+          "key": "country",
+          "label": "同国别 / 地区",
+          "tag": "中国香港",
+          "sampleSize": 132,
+          "avgScore": 614,
+          "avgDefaultProb": 7.2,
+          "percentile": 33,
+          "goodRate": 42,
+          "diff": -27
+        },
+        {
+          "key": "size",
+          "label": "同规模",
+          "tag": "中小型企业",
+          "sampleSize": 360,
+          "avgScore": 593,
+          "avgDefaultProb": 8.7,
+          "percentile": 47,
+          "goodRate": 36,
+          "diff": -6
+        },
+        {
+          "key": "all",
+          "label": "全库基准",
+          "tag": "全体在库样本",
+          "sampleSize": 5010,
+          "avgScore": 600,
+          "avgDefaultProb": 8.2,
+          "percentile": 40,
+          "goodRate": 38,
+          "diff": -13
+        }
+      ]
+    },
+    "en": {
+      "baseValue": 640,
+      "finalScore": 587,
+      "grade": "CCC",
+      "gradeNote": "High default risk, cap the credit limit",
+      "riskPercentile": 40,
+      "defaultProb": 9.2,
+      "pdBase": 7.6,
+      "pdDelta": 1.6,
+      "confidence": 89,
+      "modelVersion": "v4.2.0",
+      "evaluatedAt": "2026-09-23 14:32",
+      "positiveCount": 4,
+      "negativeCount": 5,
+      "features": [
+        {
+          "id": "guarantee",
+          "label": "Related parties & guarantees",
+          "category": "Guarantee & collateral",
+          "value": "1 guarantee signals",
+          "desc": "A combined assessment of related-party exposure, external guarantee scale and collateral coverage.",
+          "contribution": 1680.8
+        },
+        {
+          "id": "capital",
+          "label": "Capital structure & leverage",
+          "category": "Capital & finance",
+          "value": "Net margin 3.4% (-1.6pct YoY)",
+          "desc": "Balance-sheet structure, cash-flow coverage and profitability. 2025 revenue HKD 1.12 billion; Net margin 3.4% (-1.6pct YoY).",
+          "contribution": 783.6
+        },
+        {
+          "id": "scale",
+          "label": "Scale & years in business",
+          "category": "Scale & vintage",
+          "value": "Employees 316",
+          "desc": "Founded 2013-02-25, operating 13 years, 316 staff, earning a scale-and-vintage stability premium.",
+          "contribution": 53.8
+        },
+        {
+          "id": "governance",
+          "label": "Governance & equity stability",
+          "category": "Governance",
+          "value": "71.0% (after the May 2026 change)",
+          "desc": "Equity stability and control concentration. 71.0% (after the May 2026 change), actual controller Zheng Jiahui (natural person).",
+          "contribution": 45.4
+        },
+        {
+          "id": "credit",
+          "label": "Payment & credit records",
+          "category": "Credit & performance",
+          "value": "No external rating",
+          "desc": "External credit records and historical performance. Character dimension 58/100, external rating: No external rating.",
+          "contribution": -170.4
+        },
+        {
+          "id": "operation",
+          "label": "Customer & supply-chain concentration",
+          "category": "Customers & supply chain",
+          "value": "1 concentration signals",
+          "desc": "A combined view of customer concentration, supplier dependency and supply-chain stability.",
+          "contribution": -458.8
+        },
+        {
+          "id": "capacity",
+          "label": "Operating & order capacity",
+          "category": "Operating capacity",
+          "value": "Capacity 66 / 100",
+          "desc": "A signal formed by order visibility, capacity utilization and on-time delivery.",
+          "contribution": -624.6
+        },
+        {
+          "id": "compliance",
+          "label": "Litigation & compliance",
+          "category": "Compliance & legal",
+          "value": "No negative records hit",
+          "desc": "No enforcement, major litigation or compliance penalties in the past three years; compliance performance is stable.",
+          "contribution": -681.4
+        },
+        {
+          "id": "environment",
+          "label": "Industry & country environment",
+          "category": "Industry & country",
+          "value": "Hong Kong, China · 供应链服务",
+          "desc": "Industry cycle and country macro risk. Core business Supply Chain / Cross-border Trade, registered in Hong Kong, China.",
+          "contribution": -681.4
+        }
+      ],
+      "benchmarks": [
+        {
+          "key": "sector",
+          "label": "Sector peers",
+          "tag": "供应链服务",
+          "sampleSize": 376,
+          "avgScore": 601,
+          "avgDefaultProb": 8.1,
+          "percentile": 40,
+          "goodRate": 39,
+          "diff": -14
+        },
+        {
+          "key": "country",
+          "label": "Same country / region",
+          "tag": "中国香港",
+          "sampleSize": 132,
+          "avgScore": 614,
+          "avgDefaultProb": 7.2,
+          "percentile": 33,
+          "goodRate": 42,
+          "diff": -27
+        },
+        {
+          "key": "size",
+          "label": "Same size",
+          "tag": "SME",
+          "sampleSize": 360,
+          "avgScore": 593,
+          "avgDefaultProb": 8.7,
+          "percentile": 47,
+          "goodRate": 36,
+          "diff": -6
+        },
+        {
+          "key": "all",
+          "label": "Library benchmark",
+          "tag": "All sampled firms",
+          "sampleSize": 5010,
+          "avgScore": 600,
+          "avgDefaultProb": 8.2,
+          "percentile": 40,
+          "goodRate": 38,
+          "diff": -13
+        }
+      ]
+    }
+  },
+  "graphs": {
+    "zh": {
+      "rootId": "C-1005",
+      "nodes": [
+        {
+          "id": "C-1005",
+          "label": "恒信远东供应链有限公司",
+          "type": "company",
+          "riskLevel": "medium",
+          "hop": 0,
+          "relation": "评估主体",
+          "exposure": "建议授信 HK$ 24,000,000",
+          "industry": "供应链服务 / 跨境贸易",
+          "country": "中国香港",
+          "companyId": "C-1005",
+          "note": "跨境供应链服务商，业务覆盖东南亚与中东。2026 年 5 月发生实控人变更，叠加关联方担保规模较大，建议在授信中强化担保与账期约束。"
+        },
+        {
+          "id": "P-1005-1",
+          "label": "郑嘉辉",
+          "type": "person",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "实际控制人",
+          "exposure": "持股 71.0%",
+          "industry": "供应链服务 / 跨境贸易",
+          "country": "中国香港",
+          "note": "与评估主体构成「实际控制人」关系，敞口为 持股 71.0%，风险等级为中风险。"
+        },
+        {
+          "id": "P-1005-2",
+          "label": "恒信远东（深圳）供应链有限公司",
+          "type": "guarantor",
+          "riskLevel": "high",
+          "hop": 1,
+          "relation": "关联方 / 被担保方",
+          "exposure": "担保 7,800 万港元",
+          "industry": "供应链服务 / 跨境贸易",
+          "country": "中国香港",
+          "note": "与评估主体构成「关联方 / 被担保方」关系，敞口为 担保 7,800 万港元，风险等级为高风险。"
+        },
+        {
+          "id": "P-1005-3",
+          "label": "远东仓储物流（香港）有限公司",
+          "type": "guarantor",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "关联方 / 被担保方",
+          "exposure": "担保 4,200 万港元",
+          "industry": "供应链服务 / 跨境贸易",
+          "country": "中国香港",
+          "note": "与评估主体构成「关联方 / 被担保方」关系，敞口为 担保 4,200 万港元，风险等级为中风险。"
+        },
+        {
+          "id": "P-1005-4",
+          "label": "Gulf Supply Chain FZE",
+          "type": "fund",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "合资方",
+          "exposure": "持股 20%",
+          "industry": "供应链服务 / 跨境贸易",
+          "country": "中国香港",
+          "note": "与评估主体构成「合资方」关系，敞口为 持股 20%，风险等级为中风险。"
+        },
+        {
+          "id": "N-C-1005-bank",
+          "label": "恒生银行",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "主要往来银行",
+          "exposure": "90 天账期 / T/T",
+          "industry": "供应链服务 / 跨境贸易",
+          "country": "中国香港",
+          "note": "主要结算与授信银行，结算方式为「90 天账期 / T/T」，渠道集中度需持续关注。"
+        },
+        {
+          "id": "N-C-1005-client",
+          "label": "供应链服务核心下游客户",
+          "type": "client",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "主要客户",
+          "exposure": "年订单占比 18.6%",
+          "industry": "供应链服务 / 跨境贸易",
+          "country": "中国香港",
+          "note": "评估主体的核心下游需求方，收入占比 18.6%，其付款能力直接影响回款周期。"
+        },
+        {
+          "id": "P-1005-1-h2-0",
+          "label": "一致行动人",
+          "type": "person",
+          "riskLevel": "high",
+          "hop": 2,
+          "relation": "关联自然人",
+          "exposure": "往来 18,500 万元",
+          "industry": "供应链服务 / 跨境贸易",
+          "country": "中国香港",
+          "note": "经股权与交易穿透，识别到「郑嘉辉」的关联自然人关系，风险等级判定为高风险。"
+        },
+        {
+          "id": "P-1005-2-h2-1",
+          "label": "关联贸易主体",
+          "type": "guarantor",
+          "riskLevel": "high",
+          "hop": 2,
+          "relation": "被担保主体",
+          "exposure": "担保 20,700 万元",
+          "industry": "供应链服务 / 跨境贸易",
+          "country": "中国香港",
+          "note": "经股权与交易穿透，识别到「恒信远东（深圳）供应链有限公司」的被担保主体关系，风险等级判定为高风险。"
+        },
+        {
+          "id": "P-1005-3-h2-2",
+          "label": "互保关联制造企业",
+          "type": "guarantor",
+          "riskLevel": "medium",
+          "hop": 2,
+          "relation": "被担保主体",
+          "exposure": "担保 22,900 万元",
+          "industry": "供应链服务 / 跨境贸易",
+          "country": "中国香港",
+          "note": "经股权与交易穿透，识别到「远东仓储物流（香港）有限公司」的被担保主体关系，风险等级判定为中风险。"
+        },
+        {
+          "id": "P-1005-4-h2-3",
+          "label": "二期产业基金",
+          "type": "fund",
+          "riskLevel": "high",
+          "hop": 2,
+          "relation": "合伙投资人",
+          "exposure": "持股 24.1%",
+          "industry": "供应链服务 / 跨境贸易",
+          "country": "中国香港",
+          "note": "经股权与交易穿透，识别到「Gulf Supply Chain FZE」的合伙投资人关系，风险等级判定为高风险。"
+        },
+        {
+          "id": "N-C-1005-bank-h2-4",
+          "label": "政策性银行",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "银团成员",
+          "exposure": "授信 13,800 万元",
+          "industry": "供应链服务 / 跨境贸易",
+          "country": "中国香港",
+          "note": "经股权与交易穿透，识别到「恒生银行」的银团成员关系，风险等级判定为低风险。"
+        },
+        {
+          "id": "N-C-1005-client-h2-5",
+          "label": "终端分销渠道",
+          "type": "client",
+          "riskLevel": "high",
+          "hop": 2,
+          "relation": "下游渠道",
+          "exposure": "年订单 29,400 万元",
+          "industry": "供应链服务 / 跨境贸易",
+          "country": "中国香港",
+          "note": "经股权与交易穿透，识别到「供应链服务核心下游客户」的下游渠道关系，风险等级判定为高风险。"
+        },
+        {
+          "id": "P-1005-1-h2-0-h3-10",
+          "label": "关联自然人",
+          "type": "person",
+          "riskLevel": "high",
+          "hop": 3,
+          "relation": "关联自然人",
+          "exposure": "往来 22,900 万元",
+          "industry": "供应链服务 / 跨境贸易",
+          "country": "中国香港",
+          "note": "经股权与交易穿透，识别到「一致行动人」的关联自然人关系，风险等级判定为高风险。"
+        },
+        {
+          "id": "P-1005-2-h2-1-h3-11",
+          "label": "互保关联制造企业",
+          "type": "guarantor",
+          "riskLevel": "high",
+          "hop": 3,
+          "relation": "被担保主体",
+          "exposure": "担保 23,800 万元",
+          "industry": "供应链服务 / 跨境贸易",
+          "country": "中国香港",
+          "note": "经股权与交易穿透，识别到「关联贸易主体」的被担保主体关系，风险等级判定为高风险。"
+        }
+      ],
+      "edges": [
+        {
+          "id": "E:C-1005->P-1005-1",
+          "source": "C-1005",
+          "target": "P-1005-1",
+          "type": "equity",
+          "label": "持股关系",
+          "riskFlow": true,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1005->P-1005-2",
+          "source": "C-1005",
+          "target": "P-1005-2",
+          "type": "guarantee",
+          "label": "连带担保",
+          "riskFlow": true,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1005->P-1005-3",
+          "source": "C-1005",
+          "target": "P-1005-3",
+          "type": "guarantee",
+          "label": "连带担保",
+          "riskFlow": false,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1005->P-1005-4",
+          "source": "C-1005",
+          "target": "P-1005-4",
+          "type": "equity",
+          "label": "持股关系",
+          "riskFlow": true,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1005->N-C-1005-bank",
+          "source": "C-1005",
+          "target": "N-C-1005-bank",
+          "type": "loan",
+          "label": "授信 / 结算",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:C-1005->N-C-1005-client",
+          "source": "C-1005",
+          "target": "N-C-1005-client",
+          "type": "trade",
+          "label": "交易往来",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1005-1->P-1005-1-h2-0",
+          "source": "P-1005-1",
+          "target": "P-1005-1-h2-0",
+          "type": "control",
+          "label": "控制",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1005-2->P-1005-2-h2-1",
+          "source": "P-1005-2",
+          "target": "P-1005-2-h2-1",
+          "type": "guarantee",
+          "label": "担保",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1005-3->P-1005-3-h2-2",
+          "source": "P-1005-3",
+          "target": "P-1005-3-h2-2",
+          "type": "guarantee",
+          "label": "担保",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1005-4->P-1005-4-h2-3",
+          "source": "P-1005-4",
+          "target": "P-1005-4-h2-3",
+          "type": "equity",
+          "label": "持股",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1005-bank->N-C-1005-bank-h2-4",
+          "source": "N-C-1005-bank",
+          "target": "N-C-1005-bank-h2-4",
+          "type": "loan",
+          "label": "授信 / 结算",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1005-client->N-C-1005-client-h2-5",
+          "source": "N-C-1005-client",
+          "target": "N-C-1005-client-h2-5",
+          "type": "trade",
+          "label": "交易往来",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1005-1-h2-0->P-1005-1-h2-0-h3-10",
+          "source": "P-1005-1-h2-0",
+          "target": "P-1005-1-h2-0-h3-10",
+          "type": "control",
+          "label": "控制",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1005-2-h2-1->P-1005-2-h2-1-h3-11",
+          "source": "P-1005-2-h2-1",
+          "target": "P-1005-2-h2-1-h3-11",
+          "type": "guarantee",
+          "label": "担保",
+          "riskFlow": true,
+          "strength": 1
+        }
+      ]
+    },
+    "en": {
+      "rootId": "C-1005",
+      "nodes": [
+        {
+          "id": "C-1005",
+          "label": "Hengxin Far East Supply Chain Ltd.",
+          "type": "company",
+          "riskLevel": "medium",
+          "hop": 0,
+          "relation": "Assessed entity",
+          "exposure": "Suggested limit HK$ 24,000,000",
+          "industry": "Supply Chain / Cross-border Trade",
+          "country": "Hong Kong, China",
+          "companyId": "C-1005",
+          "note": "A cross-border supply-chain services provider covering Southeast Asia and the Middle East. A change of actual controller in May 2026 plus sizeable related-party guarantees warrant stronger guarantee and payment-term constraints in credit terms."
+        },
+        {
+          "id": "P-1005-1",
+          "label": "Zheng Jiahui",
+          "type": "person",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "Actual controller",
+          "exposure": "Stake 71.0%",
+          "industry": "Supply Chain / Cross-border Trade",
+          "country": "Hong Kong, China",
+          "note": "Constitutes a \"Actual controller\" relation with the assessed entity, exposure Stake 71.0%, judged Medium risk."
+        },
+        {
+          "id": "P-1005-2",
+          "label": "Hengxin Far East (Shenzhen) Supply Chain Co., Ltd.",
+          "type": "guarantor",
+          "riskLevel": "high",
+          "hop": 1,
+          "relation": "Related party / guaranteed party",
+          "exposure": "Guarantee HKD 78m",
+          "industry": "Supply Chain / Cross-border Trade",
+          "country": "Hong Kong, China",
+          "note": "Constitutes a \"Related party / guaranteed party\" relation with the assessed entity, exposure Guarantee HKD 78m, judged High risk."
+        },
+        {
+          "id": "P-1005-3",
+          "label": "Far East Warehousing & Logistics (HK) Co., Ltd.",
+          "type": "guarantor",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "Related party / guaranteed party",
+          "exposure": "Guarantee HKD 42m",
+          "industry": "Supply Chain / Cross-border Trade",
+          "country": "Hong Kong, China",
+          "note": "Constitutes a \"Related party / guaranteed party\" relation with the assessed entity, exposure Guarantee HKD 42m, judged Medium risk."
+        },
+        {
+          "id": "P-1005-4",
+          "label": "Gulf Supply Chain FZE",
+          "type": "fund",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "JV partner",
+          "exposure": "Stake 20%",
+          "industry": "Supply Chain / Cross-border Trade",
+          "country": "Hong Kong, China",
+          "note": "Constitutes a \"JV partner\" relation with the assessed entity, exposure Stake 20%, judged Medium risk."
+        },
+        {
+          "id": "N-C-1005-legal",
+          "label": "Zheng Jiahui",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "Legal representative",
+          "exposure": "Control 71.0% (after the May 2026 change)",
+          "industry": "Supply Chain / Cross-border Trade",
+          "country": "Hong Kong, China",
+          "note": "Registered legal representative and a core member of the controlling party, control stake 71.0% (after the May 2026 change)."
+        },
+        {
+          "id": "N-C-1005-bank",
+          "label": "Hang Seng Bank",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 1,
+          "relation": "Main bank",
+          "exposure": "90-day terms / T/T",
+          "industry": "Supply Chain / Cross-border Trade",
+          "country": "Hong Kong, China",
+          "note": "Primary settlement and credit bank, settlement terms \"90-day terms / T/T\"; channel concentration needs ongoing attention."
+        },
+        {
+          "id": "N-C-1005-client",
+          "label": "Key downstream client · 供应链服务",
+          "type": "client",
+          "riskLevel": "medium",
+          "hop": 1,
+          "relation": "Key client",
+          "exposure": "18.6% of annual orders",
+          "industry": "Supply Chain / Cross-border Trade",
+          "country": "Hong Kong, China",
+          "note": "Core downstream demand source of the assessed entity, 18.6% of revenue; its payment capacity directly affects the collection cycle."
+        },
+        {
+          "id": "P-1005-1-h2-0",
+          "label": "Concert party",
+          "type": "person",
+          "riskLevel": "high",
+          "hop": 2,
+          "relation": "related individual",
+          "exposure": "Turnover ¥18,500k",
+          "industry": "Supply Chain / Cross-border Trade",
+          "country": "Hong Kong, China",
+          "note": "Through equity and transaction look-through, a \"related individual\" relation to \"Zheng Jiahui\" was identified, judged High risk."
+        },
+        {
+          "id": "P-1005-2-h2-1",
+          "label": "Affiliate trading entity",
+          "type": "guarantor",
+          "riskLevel": "high",
+          "hop": 2,
+          "relation": "guaranteed entity",
+          "exposure": "Guarantee ¥20,700k",
+          "industry": "Supply Chain / Cross-border Trade",
+          "country": "Hong Kong, China",
+          "note": "Through equity and transaction look-through, a \"guaranteed entity\" relation to \"Hengxin Far East (Shenzhen) Supply Chain Co., Ltd.\" was identified, judged High risk."
+        },
+        {
+          "id": "P-1005-3-h2-2",
+          "label": "Mutual-guarantee manufacturer",
+          "type": "guarantor",
+          "riskLevel": "medium",
+          "hop": 2,
+          "relation": "guaranteed entity",
+          "exposure": "Guarantee ¥22,900k",
+          "industry": "Supply Chain / Cross-border Trade",
+          "country": "Hong Kong, China",
+          "note": "Through equity and transaction look-through, a \"guaranteed entity\" relation to \"Far East Warehousing & Logistics (HK) Co., Ltd.\" was identified, judged Medium risk."
+        },
+        {
+          "id": "P-1005-4-h2-3",
+          "label": "Fund II",
+          "type": "fund",
+          "riskLevel": "high",
+          "hop": 2,
+          "relation": "fund investor",
+          "exposure": "Stake 24.1%",
+          "industry": "Supply Chain / Cross-border Trade",
+          "country": "Hong Kong, China",
+          "note": "Through equity and transaction look-through, a \"fund investor\" relation to \"Gulf Supply Chain FZE\" was identified, judged High risk."
+        },
+        {
+          "id": "N-C-1005-legal-h2-4",
+          "label": "Related individual",
+          "type": "person",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "related individual",
+          "exposure": "Turnover ¥10,300k",
+          "industry": "Supply Chain / Cross-border Trade",
+          "country": "Hong Kong, China",
+          "note": "Through equity and transaction look-through, a \"related individual\" relation to \"Zheng Jiahui\" was identified, judged Low risk."
+        },
+        {
+          "id": "N-C-1005-bank-h2-5",
+          "label": "Interbank lender",
+          "type": "bank",
+          "riskLevel": "low",
+          "hop": 2,
+          "relation": "syndicate member",
+          "exposure": "Credit line ¥14,900k",
+          "industry": "Supply Chain / Cross-border Trade",
+          "country": "Hong Kong, China",
+          "note": "Through equity and transaction look-through, a \"syndicate member\" relation to \"Hang Seng Bank\" was identified, judged Low risk."
+        },
+        {
+          "id": "N-C-1005-client-h2-6",
+          "label": "Regional distributor",
+          "type": "client",
+          "riskLevel": "medium",
+          "hop": 2,
+          "relation": "downstream channel",
+          "exposure": "Annual orders ¥30,500k",
+          "industry": "Supply Chain / Cross-border Trade",
+          "country": "Hong Kong, China",
+          "note": "Through equity and transaction look-through, a \"downstream channel\" relation to \"Key downstream client · 供应链服务\" was identified, judged Medium risk."
+        },
+        {
+          "id": "P-1005-1-h2-0-h3-10",
+          "label": "Related individual",
+          "type": "person",
+          "riskLevel": "high",
+          "hop": 3,
+          "relation": "related individual",
+          "exposure": "Turnover ¥22,900k",
+          "industry": "Supply Chain / Cross-border Trade",
+          "country": "Hong Kong, China",
+          "note": "Through equity and transaction look-through, a \"related individual\" relation to \"Concert party\" was identified, judged High risk."
+        },
+        {
+          "id": "P-1005-2-h2-1-h3-11",
+          "label": "Mutual-guarantee manufacturer",
+          "type": "guarantor",
+          "riskLevel": "high",
+          "hop": 3,
+          "relation": "guaranteed entity",
+          "exposure": "Guarantee ¥23,800k",
+          "industry": "Supply Chain / Cross-border Trade",
+          "country": "Hong Kong, China",
+          "note": "Through equity and transaction look-through, a \"guaranteed entity\" relation to \"Affiliate trading entity\" was identified, judged High risk."
+        }
+      ],
+      "edges": [
+        {
+          "id": "E:C-1005->P-1005-1",
+          "source": "C-1005",
+          "target": "P-1005-1",
+          "type": "equity",
+          "label": "Equity stake",
+          "riskFlow": true,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1005->P-1005-2",
+          "source": "C-1005",
+          "target": "P-1005-2",
+          "type": "guarantee",
+          "label": "Joint guarantee",
+          "riskFlow": true,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1005->P-1005-3",
+          "source": "C-1005",
+          "target": "P-1005-3",
+          "type": "guarantee",
+          "label": "Joint guarantee",
+          "riskFlow": false,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1005->P-1005-4",
+          "source": "C-1005",
+          "target": "P-1005-4",
+          "type": "equity",
+          "label": "Equity stake",
+          "riskFlow": true,
+          "strength": 1.4
+        },
+        {
+          "id": "E:C-1005->N-C-1005-legal",
+          "source": "C-1005",
+          "target": "N-C-1005-legal",
+          "type": "control",
+          "label": "Control",
+          "riskFlow": false,
+          "strength": 1.2
+        },
+        {
+          "id": "E:C-1005->N-C-1005-bank",
+          "source": "C-1005",
+          "target": "N-C-1005-bank",
+          "type": "loan",
+          "label": "Credit / settlement",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:C-1005->N-C-1005-client",
+          "source": "C-1005",
+          "target": "N-C-1005-client",
+          "type": "trade",
+          "label": "Trade",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1005-1->P-1005-1-h2-0",
+          "source": "P-1005-1",
+          "target": "P-1005-1-h2-0",
+          "type": "control",
+          "label": "Control",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1005-2->P-1005-2-h2-1",
+          "source": "P-1005-2",
+          "target": "P-1005-2-h2-1",
+          "type": "guarantee",
+          "label": "Guarantee",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1005-3->P-1005-3-h2-2",
+          "source": "P-1005-3",
+          "target": "P-1005-3-h2-2",
+          "type": "guarantee",
+          "label": "Guarantee",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1005-4->P-1005-4-h2-3",
+          "source": "P-1005-4",
+          "target": "P-1005-4-h2-3",
+          "type": "equity",
+          "label": "Equity",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1005-legal->N-C-1005-legal-h2-4",
+          "source": "N-C-1005-legal",
+          "target": "N-C-1005-legal-h2-4",
+          "type": "control",
+          "label": "Control",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1005-bank->N-C-1005-bank-h2-5",
+          "source": "N-C-1005-bank",
+          "target": "N-C-1005-bank-h2-5",
+          "type": "loan",
+          "label": "Credit / settlement",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:N-C-1005-client->N-C-1005-client-h2-6",
+          "source": "N-C-1005-client",
+          "target": "N-C-1005-client-h2-6",
+          "type": "trade",
+          "label": "Trade",
+          "riskFlow": false,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1005-1-h2-0->P-1005-1-h2-0-h3-10",
+          "source": "P-1005-1-h2-0",
+          "target": "P-1005-1-h2-0-h3-10",
+          "type": "control",
+          "label": "Control",
+          "riskFlow": true,
+          "strength": 1
+        },
+        {
+          "id": "E:P-1005-2-h2-1->P-1005-2-h2-1-h3-11",
+          "source": "P-1005-2-h2-1",
+          "target": "P-1005-2-h2-1-h3-11",
+          "type": "guarantee",
+          "label": "Guarantee",
+          "riskFlow": true,
+          "strength": 1
+        }
+      ]
+    }
+  }
+}

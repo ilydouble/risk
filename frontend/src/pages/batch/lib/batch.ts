@@ -1,4 +1,4 @@
-import { companies } from "@/features/demo-scenarios/model/fixtures/companies";
+import { demoSeedCompanies } from "@/features/demo-scenarios/model/fixtures/seedCases";
 import { resolveProfile } from "@/features/demo-scenarios/lib/profile";
 import { buildScoreDetail, MODEL_VERSION } from "@/features/demo-scenarios/lib/score";
 import { riskLabel, riskLabelEn } from "@/features/demo-scenarios/lib/graph";
@@ -119,7 +119,7 @@ export function parseRosterCsv(text: string): string[] {
 export function matchCompany(name: string): Company | undefined {
   const key = normalize(name);
   if (!key) return undefined;
-  return companies.find(
+  return demoSeedCompanies.find(
     (company) =>
       normalize(company.nameCn) === key ||
       normalize(company.nameEn) === key ||
@@ -366,8 +366,8 @@ export function buildBatchRun(
       label: L(lang, "企业库主体匹配", "Entity matching against the library"),
       detail: L(
         lang,
-        `与授信库 ${companies.length} 家主体比对，命中 ${roster.valid} 家`,
-        `Compared against ${companies.length} entities in the credit library, matched ${roster.valid}`,
+        `与授信库 ${demoSeedCompanies.length} 家主体比对，命中 ${roster.valid} 家`,
+        `Compared against ${demoSeedCompanies.length} entities in the credit library, matched ${roster.valid}`,
       ),
       durationMs: 780,
     },

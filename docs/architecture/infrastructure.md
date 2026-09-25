@@ -8,7 +8,7 @@ Go 容器构建使用 `gateway/vendor/`，避免容器网络无法连接模块�
 
 - `rustfs-init` 在 RustFS 健康后幂等创建专用 Bucket，写入浏览器直传 CORS，并创建仅限该 Bucket 的应用用户/策略。运行时 API 使用应用凭据，Root 凭据只给初始化容器。
 - `neo4j-init` 幂等创建演示节点组合唯一约束。
-- `backend` 每次启动先迁移；`demo-seed` 之后补入缺失演示数据。重复启动不清空数据。
+- `backend` 每次启动先迁移；默认启动的 `demo-seed` 之后补入缺失的八家精选演示企业及双语图谱。重复启动不清空已有数据，新旧卷可能保留不同数量的演示企业。
 
 ## Session 与浏览器
 

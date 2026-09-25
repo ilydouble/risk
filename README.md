@@ -14,7 +14,7 @@ docker compose ps -a
 
 默认打开 `http://localhost:18080`。`.env` 可用 `FRONTEND_HOST_PORT`、`GATEWAY_HOST_PORT`、`RUSTFS_API_HOST_PORT`、`RUSTFS_CONSOLE_HOST_PORT` 改变四个宿主机端口；容器内端口固定，映射仍只绑定本机。登录页可自助注册，注册后再登录；新环境不预置账号。共享环境请先更换基础设施的示例凭据，并另行设计开放注册的准入与防滥用策略。
 
-Compose 启动 PostgreSQL 18、Redis、RustFS 1.0.0 GA、Neo4j Community、FastAPI 后端、Go 网关和 Caddy 前端；项目名固定为 `risk`，服务键使用 `postgres`、`backend` 等功能名，容器名如 `risk-rustfs-1`。一次性容器创建对象存储 Bucket/应用凭据、图谱约束和演示种子；后端每次启动先执行 Alembic 迁移。数据存于命名卷，重复启动不清空。可选构建代理通过 `.env` 的 `BUILD_HTTP_PROXY`、`BUILD_HTTPS_PROXY`、`BUILD_NO_PROXY` 配置。
+Compose 启动 PostgreSQL 18、Redis、RustFS 1.0.0 GA、Neo4j Community、FastAPI 后端、Go 网关和 Caddy 前端；项目名固定为 `risk`，服务键使用 `postgres`、`backend` 等功能名，容器名如 `risk-rustfs-1`。一次性容器创建对象存储 Bucket/应用凭据、图谱约束，并为新环境补入八家精选演示企业；后端每次启动先执行 Alembic 迁移。数据存于命名卷，重复启动不清空；现有卷中的旧演示记录仍会保留。可选构建代理通过 `.env` 的 `BUILD_HTTP_PROXY`、`BUILD_HTTPS_PROXY`、`BUILD_NO_PROXY` 配置。
 
 ## 仓库结构
 
@@ -39,7 +39,8 @@ uv run python -m risk_api.export_openapi
 cd ../gateway && go test ./...
 cd ../frontend && npm ci
 npm run api:generate
+npm run demo:generate
 npm run lint && npm run type-check && npm run build
 ```
 
-前端业务请求使用 `@stellarmesh/sdk`，DTO 从 OpenAPI 生成。更改接口时先修改后端并导出契约，再生成前端类型，不手写 DTO。详细边界与操作见 [架构导览](docs/architecture/README.md)，协作规则见 [AGENTS.md](AGENTS.md)。
+前端业务请求使用 `@stellarmesh/sdk`，DTO 从 OpenAPI 生成。更改接口时先修改后端并导出契约，再生成前端类型，不手写 DTO。演示企业种子由前端精选案例生成，输出到 `backend/seed/demo/`；生成后检查 Git 差异。详细边界与操作见 [架构导览](docs/architecture/README.md)，协作规则见 [AGENTS.md](AGENTS.md)。
