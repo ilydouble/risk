@@ -9,7 +9,7 @@ from fastapi.responses import JSONResponse
 from stellarmesh_logging import JSONFormatter
 
 from risk_api.dependencies import InfrastructureProvider
-from risk_api.errors import AppError, register_error_handlers
+from risk_api.errors import AppError, register_error_handlers, respond_app_error
 from risk_api.modules.auth.api.route import router as auth_router
 from risk_api.modules.company.api.route import router as company_router
 from risk_api.modules.document.api.route import router as document_router
@@ -42,10 +42,8 @@ async def request_policy(request: Request, call_next):  # type: ignore[no-untype
     if request.method == "POST" and request.url.path.startswith("/api/"):
         origin = request.headers.get("origin")
         if origin not in settings.allowed_origin.split(","):
-            raise_error = AppError(403, "REQUEST_ORIGIN_INVALID", "Origin is not allowed")
-            from risk_api.errors import error_response
-
-            return error_response(request, raise_error)
+            origin_error = AppError(403, "REQUEST_ORIGIN_INVALID", "Origin is not allowed")
+            return respond_app_error(request, origin_error)
     response = await call_next(request)
     response.headers["X-Request-ID"] = request.state.request_id
     return response
