@@ -1,13 +1,16 @@
+import asyncio
 import hashlib
 import json
 import secrets
 from typing import Any
+from uuid import uuid4
 
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 from redis.asyncio import Redis
 from redis.exceptions import RedisError
 
+from risk_api.models import User
 from risk_api.modules.auth.errors import AuthError
 from risk_api.modules.auth.repository import UserRepository
 
@@ -24,6 +27,17 @@ class AuthService:
         self.users = users
         self.redis = redis
         self.hasher = PasswordHasher()
+
+    async def register(self, username: str, password: str, display_name: str) -> User:
+        user = User(
+            id=str(uuid4()),
+            username=username,
+            password_hash=await asyncio.to_thread(self.hasher.hash, password),
+            display_name=display_name,
+        )
+        if not await self.users.create(user):
+            raise AuthError("USERNAME_TAKEN")
+        return user
 
     async def login(self, username: str, password: str) -> tuple[str, dict[str, Any]]:
         user = await self.users.by_username(username)

@@ -84,6 +84,7 @@ func newHandler(client *redis.Client, upstreamURL, allowedOrigin string) (http.H
 	}
 	return gateway.New(
 		gateway.WithRoutes(
+			gateway.Route{Name: "register", Match: gateway.RouteMatch{ExactPath: "/api/v1/auth/register", Methods: []string{"POST"}}, Upstream: "api", Access: gateway.AccessPublic},
 			gateway.Route{Name: "login", Match: gateway.RouteMatch{ExactPath: "/api/v1/auth/login", Methods: []string{"POST"}}, Upstream: "api", Access: gateway.AccessPublic},
 			gateway.Route{Name: "logout", Match: gateway.RouteMatch{ExactPath: "/api/v1/auth/logout", Methods: []string{"POST"}}, Upstream: "api", Access: gateway.AccessPublic},
 			gateway.Route{Name: "business", Match: gateway.RouteMatch{PathPrefix: "/api/v1/", Methods: []string{"POST"}}, Upstream: "api"},

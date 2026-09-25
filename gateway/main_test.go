@@ -66,3 +66,36 @@ func TestGatewaySessionAndEnvelope(t *testing.T) {
 		t.Fatalf("Redis failure: %d %s", status, code)
 	}
 }
+
+func TestRegisterIsPublicAndOriginChecked(t *testing.T) {
+	store := miniredis.RunT(t)
+	client := redis.NewClient(&redis.Options{Addr: store.Addr()})
+	defer client.Close()
+	upstream := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/api/v1/auth/register" || r.Header.Get("X-User-ID") != "" {
+			t.Errorf("unexpected registration request: path=%s identity=%q", r.URL.Path, r.Header.Get("X-User-ID"))
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"code":200,"internal_code":"SUCCESS","message":"Account created","data":{}}`))
+	}))
+	defer upstream.Close()
+	handler, err := newHandler(client, upstream.URL, "http://localhost:18080")
+	if err != nil {
+		t.Fatal(err)
+	}
+	call := func(origin string) *httptest.ResponseRecorder {
+		t.Helper()
+		request := httptest.NewRequest(http.MethodPost, "/api/v1/auth/register", nil)
+		request.Header.Set("Origin", origin)
+		request.Header.Set("X-User-ID", "forged")
+		response := httptest.NewRecorder()
+		handler.ServeHTTP(response, request)
+		return response
+	}
+	if response := call("http://localhost:18080"); response.Code != 200 {
+		t.Fatalf("public registration: %d %s", response.Code, response.Body.String())
+	}
+	if response := call("http://evil.example"); response.Code != 403 {
+		t.Fatalf("invalid origin: %d %s", response.Code, response.Body.String())
+	}
+}

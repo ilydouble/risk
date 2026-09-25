@@ -7,6 +7,7 @@ from risk_api.shared.api.envelope import ErrorEnvelope
 class AuthError(AppError):
     _cases = {
         "INVALID_CREDENTIALS": (401, "Invalid credentials"),
+        "USERNAME_TAKEN": (409, "Username already exists"),
         "SESSION_EXPIRED": (401, "Session expired"),
         "STORE_UNAVAILABLE": (503, "Session store unavailable"),
         "STORE_INVALID": (503, "Session store invalid"),
@@ -28,6 +29,10 @@ SESSION_ERRORS: dict[int | str, dict[str, Any]] = {
 LOGIN_ERRORS: dict[int | str, dict[str, Any]] = {
     401: {"model": ErrorEnvelope[Literal[401], Literal["AUTH_INVALID_CREDENTIALS"]]},
     503: {"model": ErrorEnvelope[Literal[503], Literal["AUTH_STORE_UNAVAILABLE"]]},
+}
+
+REGISTER_ERRORS: dict[int | str, dict[str, Any]] = {
+    409: {"model": ErrorEnvelope[Literal[409], Literal["AUTH_USERNAME_TAKEN"]]},
 }
 
 LOGOUT_ERRORS: dict[int | str, dict[str, Any]] = {

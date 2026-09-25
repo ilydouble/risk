@@ -8,6 +8,7 @@ def test_error_envelope_and_openapi_contract() -> None:
     schema = app.openapi()
     routes = schema["paths"]
     for path in (
+        "/api/v1/auth/register",
         "/api/v1/auth/login",
         "/api/v1/auth/logout",
         "/api/v1/auth/me",
@@ -30,6 +31,16 @@ def test_error_envelope_and_openapi_contract() -> None:
         schema["components"]["schemas"][login_schema_name]["properties"]["internal_code"]["const"]
         == "AUTH_INVALID_CREDENTIALS"
     )
+    register_409 = routes["/api/v1/auth/register"]["post"]["responses"]["409"]
+    register_schema_name = register_409["content"]["application/json"]["schema"]["$ref"].split("/")[
+        -1
+    ]
+    assert (
+        schema["components"]["schemas"][register_schema_name]["properties"]["internal_code"][
+            "const"
+        ]
+        == "AUTH_USERNAME_TAKEN"
+    )
     upload_409 = routes["/api/v1/document/complete-upload"]["post"]["responses"]["409"]
     assert len(upload_409["content"]["application/json"]["schema"]["anyOf"]) == 2
 
@@ -41,6 +52,14 @@ def test_error_envelope_and_openapi_contract() -> None:
         assert invalid.json()["code"] == 422
         assert invalid.json()["internal_code"] == "REQUEST_INVALID"
         assert invalid.headers["X-Request-ID"]
+
+        invalid_registration = client.post(
+            "/api/v1/auth/register",
+            json={"username": "bad space", "displayName": "Test", "password": "short"},
+            headers={"Origin": "http://localhost:18080"},
+        )
+        assert invalid_registration.status_code == 422
+        assert invalid_registration.json()["internal_code"] == "REQUEST_INVALID"
 
         rejected = client.post(
             "/api/v1/auth/login", json={}, headers={"Origin": "http://evil.example"}

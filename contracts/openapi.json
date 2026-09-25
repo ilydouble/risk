@@ -341,6 +341,40 @@
         "title": "ApiEnvelope[ResponseMe]",
         "type": "object"
       },
+      "ApiEnvelope_ResponseRegister_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseRegister"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseRegister]",
+        "type": "object"
+      },
       "ApiEnvelope_ResponseSearchCompany_": {
         "properties": {
           "code": {
@@ -1123,6 +1157,35 @@
         "title": "ErrorEnvelope[Literal[404], Literal['GRAPH_NOT_FOUND']]",
         "type": "object"
       },
+      "ErrorEnvelope_Literal_409__Literal__AUTH_USERNAME_TAKEN___": {
+        "properties": {
+          "code": {
+            "const": 409,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "AUTH_USERNAME_TAKEN",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[409], Literal['AUTH_USERNAME_TAKEN']]",
+        "type": "object"
+      },
       "ErrorEnvelope_Literal_409__Literal__DOCUMENT_SIZE_MISMATCH___": {
         "properties": {
           "code": {
@@ -1815,6 +1878,37 @@
         "title": "RequestMe",
         "type": "object"
       },
+      "RequestRegister": {
+        "additionalProperties": false,
+        "properties": {
+          "displayName": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Displayname",
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 128,
+            "minLength": 8,
+            "title": "Password",
+            "type": "string"
+          },
+          "username": {
+            "maxLength": 32,
+            "minLength": 3,
+            "pattern": "^[A-Za-z0-9._-]+$",
+            "title": "Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "username",
+          "displayName",
+          "password"
+        ],
+        "title": "RequestRegister",
+        "type": "object"
+      },
       "RequestSearchCompany": {
         "additionalProperties": false,
         "properties": {
@@ -2065,6 +2159,29 @@
           "displayName"
         ],
         "title": "ResponseMe",
+        "type": "object"
+      },
+      "ResponseRegister": {
+        "properties": {
+          "displayName": {
+            "title": "Displayname",
+            "type": "string"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          },
+          "username": {
+            "title": "Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId",
+          "username",
+          "displayName"
+        ],
+        "title": "ResponseRegister",
         "type": "object"
       },
       "ResponseSearchCompany": {
@@ -2627,6 +2744,77 @@
           }
         },
         "summary": "Me",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/register": {
+      "post": {
+        "operationId": "register_api_v1_auth_register_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestRegister"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseRegister_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__AUTH_USERNAME_TAKEN___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Register",
         "tags": [
           "auth"
         ]

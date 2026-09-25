@@ -15,6 +15,7 @@ const ModelPage = lazy(() => import("@/pages/model/page"));
 const ModelArchivePage = lazy(() => import("@/pages/model/archive/page"));
 const BatchPage = lazy(() => import("@/pages/batch/page"));
 const LoginPage = lazy(() => import("@/pages/login/page"));
+const RegisterPage = lazy(() => import("@/pages/register/page"));
 
 function load(page: ReactNode) {
   return <Suspense fallback={<div className="py-10 text-center text-sm text-foreground-500">正在加载…</div>}>{page}</Suspense>;
@@ -22,6 +23,7 @@ function load(page: ReactNode) {
 
 const routes: RouteObject[] = [
   { path: "/login", element: load(<LoginPage />) },
+  { path: "/register", element: load(<RegisterPage />) },
   {
     element: <AuthGate />,
     children: [{

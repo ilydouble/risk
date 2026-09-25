@@ -229,7 +229,7 @@ export default function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
               {displayName}
             </span>
             <span className="block text-[10px] text-foreground-500">
-              {authUser?.username === "demo" ? t("topbar.demoRole") : t("topbar.userRole")}
+              {t("topbar.demoRole")}
             </span>
           </span>
         </div>

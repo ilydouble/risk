@@ -7,9 +7,11 @@ from risk_api.modules.auth.api.schemas import (
     RequestLogin,
     RequestLogout,
     RequestMe,
+    RequestRegister,
     ResponseLogin,
     ResponseLogout,
     ResponseMe,
+    ResponseRegister,
 )
 from risk_api.modules.auth.service import COOKIE_NAME, SESSION_SECONDS, AuthService
 from risk_api.shared.api.envelope import ApiEnvelope
@@ -19,6 +21,16 @@ from risk_api.shared.config import settings
 
 async def authorize_request(request: Request, auth: AuthService) -> dict[str, Any]:
     return await auth.authorize(request.cookies.get(COOKIE_NAME), request.headers.get("X-User-ID"))
+
+
+async def register(
+    body: RequestRegister, service: FromDishka[AuthService]
+) -> ApiEnvelope[ResponseRegister]:
+    user = await service.register(body.username, body.password, body.displayName)
+    return success(
+        ResponseRegister(userId=user.id, username=user.username, displayName=user.display_name),
+        message="Account created",
+    )
 
 
 async def login(

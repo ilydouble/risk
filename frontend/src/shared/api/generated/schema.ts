@@ -55,6 +55,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Register */
+        post: operations["register_api_v1_auth_register_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/company/get": {
         parameters: {
             query?: never;
@@ -290,6 +307,16 @@ export interface components {
             /** Code */
             code: number;
             data: components["schemas"]["ResponseMe"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseRegister] */
+        ApiEnvelope_ResponseRegister_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseRegister"] | null;
             /** Internal Code */
             internal_code: string;
             /** Message */
@@ -576,6 +603,22 @@ export interface components {
              * @constant
              */
             internal_code: "GRAPH_NOT_FOUND";
+            /** Message */
+            message: string;
+        };
+        /** ErrorEnvelope[Literal[409], Literal['AUTH_USERNAME_TAKEN']] */
+        ErrorEnvelope_Literal_409__Literal__AUTH_USERNAME_TAKEN___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 409;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @constant
+             */
+            internal_code: "AUTH_USERNAME_TAKEN";
             /** Message */
             message: string;
         };
@@ -872,6 +915,15 @@ export interface components {
         RequestLogout: Record<string, never>;
         /** RequestMe */
         RequestMe: Record<string, never>;
+        /** RequestRegister */
+        RequestRegister: {
+            /** Displayname */
+            displayName: string;
+            /** Password */
+            password: string;
+            /** Username */
+            username: string;
+        };
         /** RequestSearchCompany */
         RequestSearchCompany: {
             /**
@@ -984,6 +1036,15 @@ export interface components {
         };
         /** ResponseMe */
         ResponseMe: {
+            /** Displayname */
+            displayName: string;
+            /** Userid */
+            userId: string;
+            /** Username */
+            username: string;
+        };
+        /** ResponseRegister */
+        ResponseRegister: {
             /** Displayname */
             displayName: string;
             /** Userid */
@@ -1304,6 +1365,66 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"] | components["schemas"]["ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"];
+                };
+            };
+        };
+    };
+    register_api_v1_auth_register_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestRegister"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseRegister_"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__AUTH_USERNAME_TAKEN___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
                 };
             };
         };
@@ -1953,6 +2074,7 @@ export type RequestListDocuments = components["schemas"]["RequestListDocuments"]
 export type RequestLogin = components["schemas"]["RequestLogin"];
 export type RequestLogout = components["schemas"]["RequestLogout"];
 export type RequestMe = components["schemas"]["RequestMe"];
+export type RequestRegister = components["schemas"]["RequestRegister"];
 export type RequestSearchCompany = components["schemas"]["RequestSearchCompany"];
 export type ResponseCompleteUpload = components["schemas"]["ResponseCompleteUpload"];
 export type ResponseCreateDownload = components["schemas"]["ResponseCreateDownload"];
@@ -1964,4 +2086,5 @@ export type ResponseListDocuments = components["schemas"]["ResponseListDocuments
 export type ResponseLogin = components["schemas"]["ResponseLogin"];
 export type ResponseLogout = components["schemas"]["ResponseLogout"];
 export type ResponseMe = components["schemas"]["ResponseMe"];
+export type ResponseRegister = components["schemas"]["ResponseRegister"];
 export type ResponseSearchCompany = components["schemas"]["ResponseSearchCompany"];
