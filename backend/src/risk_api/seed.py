@@ -2,6 +2,7 @@
 
 import asyncio
 import json
+import logging
 from pathlib import Path
 from typing import Any
 
@@ -11,6 +12,10 @@ from sqlalchemy.dialects.postgresql import insert
 from risk_api.modules.company.model import Company
 from risk_api.shared.config import settings
 from risk_api.shared.db import session_factory
+from risk_api.shared.logging import configure_logging
+
+# `python -m risk_api.seed` executes this file as __main__; keep its logger in the app namespace.
+logger = logging.getLogger("risk_api.seed")
 
 
 async def seed_company_rows(records: list[dict[str, Any]]) -> None:
@@ -100,9 +105,16 @@ def load_demo_records() -> list[dict[str, Any]]:
 
 async def main() -> None:
     records = load_demo_records()
+    logger.info("demo_seed.started", extra={"fixture_count": len(records)})
     await seed_company_rows(records)
     await seed_graph_rows(records)
+    logger.info("demo_seed.completed", extra={"fixture_count": len(records)})
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    configure_logging(settings.log_level, output_format=settings.log_format)
+    try:
+        asyncio.run(main())
+    except Exception:
+        logger.exception("demo_seed.failed")
+        raise SystemExit(1) from None

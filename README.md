@@ -16,6 +16,8 @@ docker compose ps -a
 
 Compose 启动 PostgreSQL 18、Redis、RustFS 1.0.0 GA、Neo4j Community、FastAPI 后端、Go 网关和 Caddy 前端；项目名固定为 `risk`，服务键使用 `postgres`、`backend` 等功能名，容器名如 `risk-rustfs-1`。一次性容器创建对象存储 Bucket/应用凭据、图谱约束，并为新环境补入八家精选演示企业；后端每次启动先执行 Alembic 迁移。数据存于命名卷，重复启动不清空；现有卷中的旧演示记录仍会保留。可选构建代理通过 `.env` 的 `BUILD_HTTP_PROXY`、`BUILD_HTTPS_PROXY`、`BUILD_NO_PROXY` 配置。
 
+后端业务请求及关键写入输出到容器日志，可用 `docker compose logs -f backend demo-seed` 查看，并按响应头的 `X-Request-ID` 关联请求。本地默认 `RISK_LOG_FORMAT=pretty`；服务器采集日志时设为 `json`。`RISK_LOG_LEVEL` 可调整应用日志级别；日志字段与保留边界见[后端架构文档](docs/architecture/backend.md)。
+
 ## 仓库结构
 
 | 路径 | 用途 |

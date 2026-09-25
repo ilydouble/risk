@@ -20,6 +20,7 @@ def success[T](data: T, *, message: str = "OK") -> ApiEnvelope[T]:
 def error_response(
     request: Request, *, status: int, internal_code: str, message: str, field: str | None = None
 ) -> JSONResponse:
+    request.state.internal_code = internal_code
     payload = ApiEnvelope[ErrorDetail](
         code=status,
         internal_code=internal_code,

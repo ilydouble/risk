@@ -1,6 +1,7 @@
 import asyncio
 import hashlib
 import json
+import logging
 import secrets
 from typing import Any
 from uuid import uuid4
@@ -13,6 +14,8 @@ from redis.exceptions import RedisError
 from risk_api.modules.auth.errors import AuthError
 from risk_api.modules.auth.model import User
 from risk_api.modules.auth.repository import UserRepository
+
+logger = logging.getLogger(__name__)
 
 SESSION_SECONDS = 8 * 60 * 60
 COOKIE_NAME = "risk_sid"
@@ -37,6 +40,7 @@ class AuthService:
         )
         if not await self.users.create(user):
             raise AuthError("USERNAME_TAKEN")
+        logger.info("auth.user_registered", extra={"user_id": user.id})
         return user
 
     async def login(self, username: str, password: str) -> tuple[str, dict[str, Any]]:
@@ -59,6 +63,7 @@ class AuthService:
             await self.redis.set(session_key(token), json.dumps(identity), ex=SESSION_SECONDS)
         except RedisError as error:
             raise AuthError("STORE_UNAVAILABLE") from error
+        logger.info("auth.login_succeeded", extra={"user_id": user.id})
         return token, identity
 
     async def identity(self, token: str | None) -> dict[str, Any]:

@@ -12,11 +12,13 @@ from risk_api.modules.company import model as company_model  # noqa: F401
 from risk_api.modules.document import model as document_model  # noqa: F401
 from risk_api.shared.config import settings
 from risk_api.shared.db import Base
+from risk_api.shared.logging import configure_logging
 
 config = context.config
 config.set_main_option("sqlalchemy.url", settings.database_url)
 if config.config_file_name:
     fileConfig(config.config_file_name)
+configure_logging(settings.log_level, output_format=settings.log_format, capture_root=True)
 
 
 def run_migrations_sync(connection):  # type: ignore[no-untyped-def]

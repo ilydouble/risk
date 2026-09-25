@@ -7,4 +7,4 @@ COPY alembic ./alembic
 COPY src ./src
 COPY seed ./seed
 ENV PATH="/app/.venv/bin:${PATH}" PYTHONPATH=/app/src
-CMD ["sh", "-c", "alembic upgrade head && uvicorn risk_api.main:app --host 0.0.0.0 --port 8000"]
+CMD ["sh", "-c", "alembic upgrade head && python -m risk_api"]

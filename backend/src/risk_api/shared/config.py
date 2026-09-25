@@ -15,6 +15,8 @@ class Settings:
     storage_region: str = getenv("STORAGE_REGION", "us-east-1")
     cookie_secure: bool = getenv("COOKIE_SECURE", "false").lower() == "true"
     allowed_origin: str = getenv("ALLOWED_ORIGIN", "http://localhost:18080,http://localhost:3000")
+    log_level: str = getenv("RISK_LOG_LEVEL", "INFO")
+    log_format: str = getenv("RISK_LOG_FORMAT", "json")
 
 
 settings = Settings()

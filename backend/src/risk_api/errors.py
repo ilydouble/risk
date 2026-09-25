@@ -31,6 +31,15 @@ def respond_app_error(request: Request, error: AppError) -> JSONResponse:
 def register_error_handlers(app: FastAPI) -> None:
     @app.exception_handler(AppError)
     async def handle_app_error(request: Request, error: AppError) -> JSONResponse:
+        if error.status >= 500:
+            logger.error(
+                "http.handled_error",
+                extra={
+                    "request_id": getattr(request.state, "request_id", None),
+                    "internal_code": error.code,
+                    "cause_type": type(error.__cause__).__name__ if error.__cause__ else None,
+                },
+            )
         return respond_app_error(request, error)
 
     @app.exception_handler(RequestValidationError)
@@ -52,5 +61,9 @@ def register_error_handlers(app: FastAPI) -> None:
 
     @app.exception_handler(Exception)
     async def handle_unexpected(request: Request, error: Exception) -> JSONResponse:
-        logger.exception("Unhandled request error", exc_info=error)
+        logger.error(
+            "http.unhandled_error",
+            exc_info=(type(error), error, error.__traceback__),
+            extra={"request_id": getattr(request.state, "request_id", None)},
+        )
         return respond_app_error(request, AppError(500, "INTERNAL_ERROR", "Internal server error"))

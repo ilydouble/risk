@@ -11,7 +11,7 @@ backend/
   src/risk_api/
     main.py, dependencies.py
     shared/
-      config.py, db.py
+      config.py, db.py, logging.py
       api/{envelope,page,response}.py
     modules/{auth,company,graph,score,document}/
       api/{route,handler,schemas}.py
@@ -32,6 +32,14 @@ backend/
 ## SDK 与验证
 
 Python 锁文件固定 `stellarmesh-logging` 0.5.1 与 `stellarmesh-objectstorage` 0.1.0。对象上传/下载只由 SDK 生成 60 秒预签名 URL，浏览器随后传输对象字节。
+
+## 日志边界
+
+`shared/logging.py` 统一配置应用与 Uvicorn 的 stdout handler，并用 request context 将 `X-Request-ID` 加到模块日志；HTTP、Alembic 和一次性种子进程分别调用该配置。HTTP 进程不修改根 logger，独立运行的 Alembic CLI 则接管其文本根 handler，以便迁移日志也遵循所选格式。导出 OpenAPI 时不会因导入 `main.py` 而安装 handler。重复配置不会叠加 handler。`RISK_LOG_LEVEL` 控制应用日志级别，默认 `INFO`；`RISK_LOG_FORMAT=pretty|json` 选择同一 SDK 的可读输出或单行 JSON。Compose 本地默认 `pretty`，部署日志采集器时设为 `json`。
+
+业务请求各输出一条完成日志，包含方法、路由模板、HTTP 状态、`internal_code` 和耗时；正常健康检查不逐次记录。注册、登录成功和文档预签名/确认等关键写入另记事件，仅记录内部 ID 与尺寸，不记录密码、Cookie、请求体、文件名、对象密钥或预签名 URL。已处理的 5xx 记录稳定错误码与底层异常类型；未处理异常记录堆栈及请求 ID。SDK formatter 负责字段脱敏与有界 JSON 编码，但不会扫描自由文本中的秘密，因此新增日志也须避免拼接敏感值。
+
+日志写入容器 stdout，排障可按请求 ID 关联前后端链路；本仓库尚未配置集中采集与长期留存，不能将容器日志当作审计记录。
 
 在 `backend/` 执行：
 

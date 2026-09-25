@@ -1,3 +1,4 @@
+import logging
 from dataclasses import dataclass
 from pathlib import PurePath
 from uuid import uuid4
@@ -8,6 +9,8 @@ from risk_api.modules.company.service import CompanyService
 from risk_api.modules.document.errors import DocumentError
 from risk_api.modules.document.model import Document
 from risk_api.modules.document.repository import DocumentRepository
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -50,6 +53,10 @@ class DocumentService:
             status="pending",
         )
         await self.repository.add(document)
+        logger.info(
+            "document.upload_requested",
+            extra={"company_id": company_id, "document_id": document_id, "size_bytes": size},
+        )
         return UploadTicket(document_id=document_id, url=signed.url, headers=dict(signed.headers))
 
     async def complete(self, document_id: str) -> Document:
@@ -66,6 +73,10 @@ class DocumentService:
             raise DocumentError("SIZE_MISMATCH")
         if document.status != "ready":
             await self.repository.complete(document)
+            logger.info(
+                "document.upload_completed",
+                extra={"company_id": document.company_id, "document_id": document.id},
+            )
         return document
 
     async def list(self, company_id: str) -> list[Document]:
@@ -80,4 +91,5 @@ class DocumentService:
             signed = await self.storage.presign_get(document.object_key, expires_in=60)
         except StorageError as error:
             raise DocumentError("STORAGE_UNAVAILABLE") from error
+        logger.info("document.download_link_issued", extra={"document_id": document.id})
         return signed.url
