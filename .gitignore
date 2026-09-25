@@ -26,6 +26,7 @@ __pycache__/
 # Vite / TypeScript cache
 .vite/
 *.tsbuildinfo
+frontend/auto-imports.d.ts
 
 # Logs
 logs/
