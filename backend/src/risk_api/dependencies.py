@@ -8,6 +8,7 @@ from stellarmesh_objectstorage import AsyncClient, ClientConfig
 
 from risk_api.modules.auth.repository import UserRepository
 from risk_api.modules.auth.service import AuthService
+from risk_api.modules.benchmark.service import BenchmarkService
 from risk_api.modules.company.repository import CompanyRepository
 from risk_api.modules.company.service import CompanyService
 from risk_api.modules.document.repository import DocumentRepository
@@ -20,6 +21,14 @@ from risk_api.shared.db import session_factory
 
 
 class InfrastructureProvider(Provider):
+    @provide(scope=Scope.APP)
+    async def benchmark(self) -> AsyncIterator[BenchmarkService]:
+        service = BenchmarkService()
+        try:
+            yield service
+        finally:
+            service.close()
+
     @provide(scope=Scope.APP)
     async def redis(self) -> AsyncIterator[Redis]:
         client: Redis = Redis.from_url(settings.redis_url, decode_responses=True)

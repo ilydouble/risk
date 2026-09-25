@@ -1,14 +1,18 @@
 import numpy as np
 import pytest
 import torch
-from fastapi.testclient import TestClient
 from pydantic import ValidationError
 
-from comrisk.data import Dataset, fit_preprocessor, tensorize
-from comrisk.demo import generate
-from comrisk.model import ComRisk, RelationLayer, hyper_laplacian, segment_softmax
-from comrisk.pipeline import Predictor, metrics, train
-from comrisk.prior import add_prior, fit_prior
+from risk_api.modules.benchmark.engine.data import Dataset, fit_preprocessor, tensorize
+from risk_api.modules.benchmark.engine.demo import generate
+from risk_api.modules.benchmark.engine.model import (
+    ComRisk,
+    RelationLayer,
+    hyper_laplacian,
+    segment_softmax,
+)
+from risk_api.modules.benchmark.engine.pipeline import Predictor, metrics, train
+from risk_api.modules.benchmark.engine.prior import add_prior, fit_prior
 
 
 def test_hyper_laplacian_matches_dense_and_gradient():
@@ -123,23 +127,8 @@ def test_reload_inference_and_new_company(trained):
         predictor.predict(d, ["missing"])
 
 
-def test_api(trained, monkeypatch, tmp_path):
-    from comrisk.api import app
-
-    path, d, _ = trained
-    data = tmp_path / "input.json"
-    d.write(data)
-    monkeypatch.setenv("COMRISK_MODEL_DIR", str(path))
-    monkeypatch.setenv("COMRISK_DATA_PATH", str(data))
-    with TestClient(app) as client:
-        assert client.get("/health").status_code == 200
-        assert client.post("/v1/predict", json={"company_ids": ["C00000"]}).status_code == 200
-        assert client.post("/v1/predict", json={"company_ids": ["nope"]}).status_code == 422
-        assert client.post("/v1/predict", json={"company_ids": []}).status_code == 422
-
-
 def test_explanation_is_honest_sensitivity(trained):
-    from comrisk.explain import explain
+    from risk_api.modules.benchmark.engine.explain import explain
 
     path, d, _ = trained
     result = explain(Predictor(path), d, "C00000")
@@ -163,52 +152,12 @@ def test_isolated_snapshot_overlap_rejected(tmp_path):
 def test_public_data_splits_disjoint_when_available():
     from pathlib import Path
 
-    from comrisk.pipeline import load_data
+    from risk_api.modules.benchmark.engine.pipeline import load_data
 
     path = Path("data/processed/smesd")
-    if not path.exists():
+    if not (path / "train.json").exists() or not (path / "valid.json").exists():
         pytest.skip("public dataset not fetched")
     ds = load_data(path)
     ids = [{n.id for n in ds[s].nodes if n.kind == "company"} for s in ("train", "valid", "test")]
     assert [len(i) for i in ids] == [2816, 686, 474]
     assert not (ids[0] & ids[1] or ids[0] & ids[2] or ids[1] & ids[2])
-
-
-def test_demo_api_contract_and_error_states(trained, monkeypatch, tmp_path):
-    from comrisk.api import app
-
-    path, data, report = trained
-    data_path = tmp_path / "snapshot.json"
-    data.write(data_path)
-    monkeypatch.setenv("COMRISK_MODEL_DIR", str(path))
-    monkeypatch.setenv("COMRISK_DATA_PATH", str(data_path))
-    with TestClient(app) as client:
-        listing = client.get("/v1/companies", params={"limit": 2}).json()
-        assert listing["total"] == sum(n.kind == "company" for n in data.nodes)
-        assert len(listing["items"]) == 2
-        company_id = listing["items"][0]["id"]
-        detail = client.get(f"/v1/companies/{company_id}").json()
-        prediction = client.post("/v1/predict", json={"company_ids": [company_id]}).json()[
-            "predictions"
-        ][0]
-        assert detail["risk_probability"] == prediction["risk_probability"]
-        features = zip(data.feature_names, data.nodes[0].features, strict=True)
-        assert detail["features"] == dict(features)
-        explanation = client.get(f"/v1/explain/{company_id}").json()
-        assert explanation["risk_probability"] == prediction["risk_probability"]
-        graph = client.get(f"/v1/companies/{company_id}/graph", params={"limit": 1}).json()
-        expected = [e.model_dump() for e in data.edges if company_id in (e.source, e.target)]
-        assert graph["edges"] == expected[:1]
-        assert graph["total_edges"] == len(expected)
-        assert graph["truncated"] == (len(expected) > 1)
-        assert all(
-            e[k] in {n["id"] for n in graph["nodes"]}
-            for e in graph["edges"]
-            for k in ("source", "target")
-        )
-        assert client.get("/v1/evaluation").json()["metrics"]["test"] == report["model"]["test"]
-        assert client.get("/v1/companies?q=not-a-company").json()["items"] == []
-        assert client.get("/v1/companies?offset=-1").status_code == 422
-        assert client.get("/v1/companies?limit=101").status_code == 422
-        assert client.get("/v1/companies/unknown").status_code == 404
-        assert client.get("/v1/companies/unknown/graph").status_code == 404

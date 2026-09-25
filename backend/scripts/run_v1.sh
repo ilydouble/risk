@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "$0")/.."
-PYTHON="${COMRISK_PYTHON:-.venv/bin/python}"
-"$PYTHON" scripts/fetch_smesd.py
-"$PYTHON" -m comrisk.smesd
-"$PYTHON" -m pytest -q
-"$PYTHON" -m comrisk.benchmark --epochs 80 --seeds 42 43 44
+uv run python scripts/fetch_smesd.py
+uv run python -m risk_api.modules.benchmark.engine.smesd
+uv run pytest -q tests/test_model.py tests/test_benchmark_api.py
+uv run python -m risk_api.modules.benchmark.engine.benchmark --epochs 80 --seeds 42 43 44

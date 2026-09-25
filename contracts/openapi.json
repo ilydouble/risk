@@ -103,6 +103,108 @@
         "title": "ApiEnvelope[ResponseCreateUpload]",
         "type": "object"
       },
+      "ApiEnvelope_ResponseEvaluationBenchmark_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseEvaluationBenchmark"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseEvaluationBenchmark]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseExplainBenchmark_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseExplainBenchmark"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseExplainBenchmark]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseGetBenchmark_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseGetBenchmark"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseGetBenchmark]",
+        "type": "object"
+      },
       "ApiEnvelope_ResponseGetCompany_": {
         "properties": {
           "code": {
@@ -203,6 +305,40 @@
           "data"
         ],
         "title": "ApiEnvelope[ResponseGetScore]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseGraphBenchmark_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseGraphBenchmark"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseGraphBenchmark]",
         "type": "object"
       },
       "ApiEnvelope_ResponseListDocuments_": {
@@ -341,6 +477,74 @@
         "title": "ApiEnvelope[ResponseMe]",
         "type": "object"
       },
+      "ApiEnvelope_ResponseModelCardBenchmark_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseModelCardBenchmark"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseModelCardBenchmark]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponsePredictBenchmark_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponsePredictBenchmark"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponsePredictBenchmark]",
+        "type": "object"
+      },
       "ApiEnvelope_ResponseRegister_": {
         "properties": {
           "code": {
@@ -375,6 +579,40 @@
         "title": "ApiEnvelope[ResponseRegister]",
         "type": "object"
       },
+      "ApiEnvelope_ResponseSearchBenchmark_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseSearchBenchmark"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseSearchBenchmark]",
+        "type": "object"
+      },
       "ApiEnvelope_ResponseSearchCompany_": {
         "properties": {
           "code": {
@@ -407,6 +645,274 @@
           "data"
         ],
         "title": "ApiEnvelope[ResponseSearchCompany]",
+        "type": "object"
+      },
+      "BenchmarkCompany": {
+        "properties": {
+          "community": {
+            "title": "Community",
+            "type": "string"
+          },
+          "creditScore": {
+            "title": "Creditscore",
+            "type": "integer"
+          },
+          "eventCount": {
+            "title": "Eventcount",
+            "type": "integer"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "predictedLabel": {
+            "enum": [
+              0,
+              1
+            ],
+            "title": "Predictedlabel",
+            "type": "integer"
+          },
+          "riskProbability": {
+            "title": "Riskprobability",
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "community",
+          "eventCount",
+          "riskProbability",
+          "creditScore",
+          "predictedLabel"
+        ],
+        "title": "BenchmarkCompany",
+        "type": "object"
+      },
+      "BenchmarkEvent": {
+        "properties": {
+          "age_months": {
+            "title": "Age Months",
+            "type": "number"
+          },
+          "cause": {
+            "title": "Cause",
+            "type": "integer"
+          },
+          "company": {
+            "title": "Company",
+            "type": "string"
+          },
+          "court": {
+            "title": "Court",
+            "type": "integer"
+          },
+          "result": {
+            "title": "Result",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "company",
+          "cause",
+          "court",
+          "result",
+          "age_months"
+        ],
+        "title": "BenchmarkEvent",
+        "type": "object"
+      },
+      "BenchmarkFeatureSensitivity": {
+        "properties": {
+          "feature": {
+            "title": "Feature",
+            "type": "string"
+          },
+          "probability_delta": {
+            "title": "Probability Delta",
+            "type": "number"
+          },
+          "probability_without_feature": {
+            "title": "Probability Without Feature",
+            "type": "number"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "required": [
+          "feature",
+          "value",
+          "probability_without_feature",
+          "probability_delta"
+        ],
+        "title": "BenchmarkFeatureSensitivity",
+        "type": "object"
+      },
+      "BenchmarkGraphEdge": {
+        "properties": {
+          "relation": {
+            "title": "Relation",
+            "type": "string"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "target": {
+            "title": "Target",
+            "type": "string"
+          },
+          "weight": {
+            "title": "Weight",
+            "type": "number"
+          }
+        },
+        "required": [
+          "source",
+          "target",
+          "relation",
+          "weight"
+        ],
+        "title": "BenchmarkGraphEdge",
+        "type": "object"
+      },
+      "BenchmarkGraphNode": {
+        "properties": {
+          "community": {
+            "title": "Community",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "company",
+              "person"
+            ],
+            "title": "Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "community"
+        ],
+        "title": "BenchmarkGraphNode",
+        "type": "object"
+      },
+      "BenchmarkMetrics": {
+        "properties": {
+          "brier": {
+            "title": "Brier",
+            "type": "number"
+          },
+          "capture_at_5pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Capture At 5Pct"
+          },
+          "f1": {
+            "title": "F1",
+            "type": "number"
+          },
+          "ks": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ks"
+          },
+          "lift_at_10pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lift At 10Pct"
+          },
+          "n": {
+            "title": "N",
+            "type": "integer"
+          },
+          "positives": {
+            "title": "Positives",
+            "type": "integer"
+          },
+          "pr_auc": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pr Auc"
+          },
+          "precision": {
+            "title": "Precision",
+            "type": "number"
+          },
+          "recall": {
+            "title": "Recall",
+            "type": "number"
+          },
+          "roc_auc": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Roc Auc"
+          },
+          "threshold": {
+            "title": "Threshold",
+            "type": "number"
+          }
+        },
+        "required": [
+          "n",
+          "positives",
+          "threshold",
+          "roc_auc",
+          "pr_auc",
+          "ks",
+          "brier",
+          "lift_at_10pct",
+          "capture_at_5pct",
+          "f1",
+          "precision",
+          "recall"
+        ],
+        "title": "BenchmarkMetrics",
         "type": "object"
       },
       "CommunityBenchmark": {
@@ -1070,6 +1576,35 @@
         "title": "ErrorEnvelope[Literal[403], Literal['REQUEST_ORIGIN_INVALID']]",
         "type": "object"
       },
+      "ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___": {
+        "properties": {
+          "code": {
+            "const": 404,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "BENCHMARK_COMPANY_NOT_FOUND",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[404], Literal['BENCHMARK_COMPANY_NOT_FOUND']]",
+        "type": "object"
+      },
       "ErrorEnvelope_Literal_404__Literal__COMPANY_NOT_FOUND___": {
         "properties": {
           "code": {
@@ -1358,6 +1893,35 @@
           "data"
         ],
         "title": "ErrorEnvelope[Literal[503], Literal['AUTH_STORE_UNAVAILABLE']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___": {
+        "properties": {
+          "code": {
+            "const": 503,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "BENCHMARK_MODEL_UNAVAILABLE",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[503], Literal['BENCHMARK_MODEL_UNAVAILABLE']]",
         "type": "object"
       },
       "ErrorEnvelope_Literal_503__Literal__DOCUMENT_STORAGE_UNAVAILABLE___": {
@@ -1773,6 +2337,42 @@
         "title": "RequestCreateUpload",
         "type": "object"
       },
+      "RequestEvaluationBenchmark": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "RequestEvaluationBenchmark",
+        "type": "object"
+      },
+      "RequestExplainBenchmark": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "minLength": 1,
+            "title": "Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "RequestExplainBenchmark",
+        "type": "object"
+      },
+      "RequestGetBenchmark": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "minLength": 1,
+            "title": "Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "RequestGetBenchmark",
+        "type": "object"
+      },
       "RequestGetCompany": {
         "properties": {
           "id": {
@@ -1837,6 +2437,28 @@
         "title": "RequestGetScore",
         "type": "object"
       },
+      "RequestGraphBenchmark": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "minLength": 1,
+            "title": "Id",
+            "type": "string"
+          },
+          "limit": {
+            "default": 30,
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "RequestGraphBenchmark",
+        "type": "object"
+      },
       "RequestListDocuments": {
         "properties": {
           "companyId": {
@@ -1878,6 +2500,31 @@
         "title": "RequestMe",
         "type": "object"
       },
+      "RequestModelCardBenchmark": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "RequestModelCardBenchmark",
+        "type": "object"
+      },
+      "RequestPredictBenchmark": {
+        "additionalProperties": false,
+        "properties": {
+          "companyIds": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 1000,
+            "minItems": 1,
+            "title": "Companyids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "companyIds"
+        ],
+        "title": "RequestPredictBenchmark",
+        "type": "object"
+      },
       "RequestRegister": {
         "additionalProperties": false,
         "properties": {
@@ -1907,6 +2554,22 @@
           "password"
         ],
         "title": "RequestRegister",
+        "type": "object"
+      },
+      "RequestSearchBenchmark": {
+        "additionalProperties": false,
+        "properties": {
+          "keyword": {
+            "default": "",
+            "maxLength": 100,
+            "title": "Keyword",
+            "type": "string"
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PageRequest"
+          }
+        },
+        "title": "RequestSearchBenchmark",
         "type": "object"
       },
       "RequestSearchCompany": {
@@ -2019,6 +2682,188 @@
         "title": "ResponseCreateUpload",
         "type": "object"
       },
+      "ResponseEvaluationBenchmark": {
+        "properties": {
+          "companyCount": {
+            "title": "Companycount",
+            "type": "integer"
+          },
+          "dataset": {
+            "title": "Dataset",
+            "type": "string"
+          },
+          "metrics": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/BenchmarkMetrics"
+            },
+            "title": "Metrics",
+            "type": "object"
+          },
+          "mode": {
+            "title": "Mode",
+            "type": "string"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "notes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Notes",
+            "type": "array"
+          },
+          "relationCount": {
+            "title": "Relationcount",
+            "type": "integer"
+          },
+          "threshold": {
+            "title": "Threshold",
+            "type": "number"
+          }
+        },
+        "required": [
+          "model",
+          "mode",
+          "dataset",
+          "threshold",
+          "metrics",
+          "notes",
+          "companyCount",
+          "relationCount"
+        ],
+        "title": "ResponseEvaluationBenchmark",
+        "type": "object"
+      },
+      "ResponseExplainBenchmark": {
+        "properties": {
+          "companyId": {
+            "title": "Companyid",
+            "type": "string"
+          },
+          "features": {
+            "items": {
+              "$ref": "#/components/schemas/BenchmarkFeatureSensitivity"
+            },
+            "title": "Features",
+            "type": "array"
+          },
+          "incomingEdgeCount": {
+            "title": "Incomingedgecount",
+            "type": "integer"
+          },
+          "interpretation": {
+            "title": "Interpretation",
+            "type": "string"
+          },
+          "method": {
+            "const": "feature_occlusion_to_training_mean",
+            "title": "Method",
+            "type": "string"
+          },
+          "riskProbability": {
+            "title": "Riskprobability",
+            "type": "number"
+          }
+        },
+        "required": [
+          "companyId",
+          "riskProbability",
+          "method",
+          "interpretation",
+          "features",
+          "incomingEdgeCount"
+        ],
+        "title": "ResponseExplainBenchmark",
+        "type": "object"
+      },
+      "ResponseGetBenchmark": {
+        "properties": {
+          "community": {
+            "title": "Community",
+            "type": "string"
+          },
+          "creditScore": {
+            "title": "Creditscore",
+            "type": "integer"
+          },
+          "dataset": {
+            "title": "Dataset",
+            "type": "string"
+          },
+          "eventCount": {
+            "title": "Eventcount",
+            "type": "integer"
+          },
+          "events": {
+            "items": {
+              "$ref": "#/components/schemas/BenchmarkEvent"
+            },
+            "title": "Events",
+            "type": "array"
+          },
+          "features": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "title": "Features",
+            "type": "object"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "observedLabel": {
+            "anyOf": [
+              {
+                "enum": [
+                  0,
+                  1
+                ],
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Observedlabel"
+          },
+          "predictedLabel": {
+            "enum": [
+              0,
+              1
+            ],
+            "title": "Predictedlabel",
+            "type": "integer"
+          },
+          "riskProbability": {
+            "title": "Riskprobability",
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "community",
+          "eventCount",
+          "riskProbability",
+          "creditScore",
+          "predictedLabel",
+          "dataset",
+          "features",
+          "observedLabel",
+          "events"
+        ],
+        "title": "ResponseGetBenchmark",
+        "type": "object"
+      },
       "ResponseGetCompany": {
         "properties": {
           "company": {
@@ -2079,6 +2924,45 @@
           "detail"
         ],
         "title": "ResponseGetScore",
+        "type": "object"
+      },
+      "ResponseGraphBenchmark": {
+        "properties": {
+          "center": {
+            "title": "Center",
+            "type": "string"
+          },
+          "edges": {
+            "items": {
+              "$ref": "#/components/schemas/BenchmarkGraphEdge"
+            },
+            "title": "Edges",
+            "type": "array"
+          },
+          "nodes": {
+            "items": {
+              "$ref": "#/components/schemas/BenchmarkGraphNode"
+            },
+            "title": "Nodes",
+            "type": "array"
+          },
+          "totalEdges": {
+            "title": "Totaledges",
+            "type": "integer"
+          },
+          "truncated": {
+            "title": "Truncated",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "center",
+          "totalEdges",
+          "truncated",
+          "nodes",
+          "edges"
+        ],
+        "title": "ResponseGraphBenchmark",
         "type": "object"
       },
       "ResponseListDocuments": {
@@ -2161,6 +3045,104 @@
         "title": "ResponseMe",
         "type": "object"
       },
+      "ResponseModelCardBenchmark": {
+        "properties": {
+          "bestEpoch": {
+            "title": "Bestepoch",
+            "type": "integer"
+          },
+          "calibrated": {
+            "title": "Calibrated",
+            "type": "boolean"
+          },
+          "companyCount": {
+            "title": "Companycount",
+            "type": "integer"
+          },
+          "dataset": {
+            "title": "Dataset",
+            "type": "string"
+          },
+          "featureNames": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Featurenames",
+            "type": "array"
+          },
+          "hyperedgeTypes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Hyperedgetypes",
+            "type": "array"
+          },
+          "mode": {
+            "title": "Mode",
+            "type": "string"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "relationNames": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Relationnames",
+            "type": "array"
+          },
+          "syntheticTraining": {
+            "title": "Synthetictraining",
+            "type": "boolean"
+          },
+          "targetDescription": {
+            "title": "Targetdescription",
+            "type": "string"
+          },
+          "threshold": {
+            "title": "Threshold",
+            "type": "number"
+          }
+        },
+        "required": [
+          "model",
+          "dataset",
+          "targetDescription",
+          "featureNames",
+          "relationNames",
+          "hyperedgeTypes",
+          "mode",
+          "threshold",
+          "calibrated",
+          "bestEpoch",
+          "syntheticTraining",
+          "companyCount"
+        ],
+        "title": "ResponseModelCardBenchmark",
+        "type": "object"
+      },
+      "ResponsePredictBenchmark": {
+        "properties": {
+          "predictions": {
+            "items": {
+              "$ref": "#/components/schemas/BenchmarkCompany"
+            },
+            "title": "Predictions",
+            "type": "array"
+          },
+          "threshold": {
+            "title": "Threshold",
+            "type": "number"
+          }
+        },
+        "required": [
+          "predictions",
+          "threshold"
+        ],
+        "title": "ResponsePredictBenchmark",
+        "type": "object"
+      },
       "ResponseRegister": {
         "properties": {
           "displayName": {
@@ -2182,6 +3164,41 @@
           "displayName"
         ],
         "title": "ResponseRegister",
+        "type": "object"
+      },
+      "ResponseSearchBenchmark": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/BenchmarkCompany"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "page": {
+            "minimum": 1.0,
+            "title": "Page",
+            "type": "integer"
+          },
+          "pageSize": {
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Pagesize",
+            "type": "integer"
+          },
+          "total": {
+            "minimum": 0.0,
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "page",
+          "pageSize"
+        ],
+        "title": "ResponseSearchBenchmark",
         "type": "object"
       },
       "ResponseSearchCompany": {
@@ -2817,6 +3834,643 @@
         "summary": "Register",
         "tags": [
           "auth"
+        ]
+      }
+    },
+    "/api/v1/benchmark/evaluation": {
+      "post": {
+        "operationId": "evaluation_api_v1_benchmark_evaluation_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestEvaluationBenchmark"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseEvaluationBenchmark_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Evaluation",
+        "tags": [
+          "benchmark"
+        ]
+      }
+    },
+    "/api/v1/benchmark/explain": {
+      "post": {
+        "operationId": "explain_api_v1_benchmark_explain_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestExplainBenchmark"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseExplainBenchmark_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Explain",
+        "tags": [
+          "benchmark"
+        ]
+      }
+    },
+    "/api/v1/benchmark/get": {
+      "post": {
+        "operationId": "get_api_v1_benchmark_get_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestGetBenchmark"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseGetBenchmark_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Get",
+        "tags": [
+          "benchmark"
+        ]
+      }
+    },
+    "/api/v1/benchmark/graph": {
+      "post": {
+        "operationId": "graph_api_v1_benchmark_graph_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestGraphBenchmark"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseGraphBenchmark_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Graph",
+        "tags": [
+          "benchmark"
+        ]
+      }
+    },
+    "/api/v1/benchmark/model-card": {
+      "post": {
+        "operationId": "model_card_api_v1_benchmark_model_card_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestModelCardBenchmark"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseModelCardBenchmark_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Model Card",
+        "tags": [
+          "benchmark"
+        ]
+      }
+    },
+    "/api/v1/benchmark/predict": {
+      "post": {
+        "operationId": "predict_api_v1_benchmark_predict_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestPredictBenchmark"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponsePredictBenchmark_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Predict",
+        "tags": [
+          "benchmark"
+        ]
+      }
+    },
+    "/api/v1/benchmark/search": {
+      "post": {
+        "operationId": "search_api_v1_benchmark_search_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestSearchBenchmark"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseSearchBenchmark_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Search",
+        "tags": [
+          "benchmark"
         ]
       }
     },

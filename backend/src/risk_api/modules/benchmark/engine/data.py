@@ -1,4 +1,5 @@
 """Validated interchange format. Raw MSGraphFin parsing awaits its data dictionary."""
+
 from __future__ import annotations
 
 import json
@@ -90,8 +91,8 @@ class Dataset(Record):
                 raise ValueError("duplicate hyperedge member")
             if any(i not in lookup or lookup[i].kind != "company" for i in h.members):
                 raise ValueError("hyperedges must reference known companies")
-        for e in self.events:
-            if e.company not in lookup or lookup[e.company].kind != "company":
+        for event in self.events:
+            if event.company not in lookup or lookup[event.company].kind != "company":
                 raise ValueError("event must reference known company")
         return self
 
@@ -110,12 +111,16 @@ def fit_preprocessor(data: Dataset) -> dict:
     raw = np.array([n.features for n in data.nodes if n.split == "train"], dtype=float)
     if not len(raw):
         raise ValueError("no training rows")
-    median = np.array([np.median(col[np.isfinite(col)]) if np.isfinite(col).any() else 0
-                       for col in raw.T])
+    median = np.array(
+        [np.median(col[np.isfinite(col)]) if np.isfinite(col).any() else 0 for col in raw.T]
+    )
     clean = np.where(np.isnan(raw), median, raw)
     std = clean.std(0)
-    return {"median": median.tolist(), "mean": clean.mean(0).tolist(),
-            "std": np.where(std < 1e-8, 1, std).tolist()}
+    return {
+        "median": median.tolist(),
+        "mean": clean.mean(0).tolist(),
+        "std": np.where(std < 1e-8, 1, std).tolist(),
+    }
 
 
 def tensorize(data: Dataset, preprocessor: dict) -> dict:
@@ -128,22 +133,44 @@ def tensorize(data: Dataset, preprocessor: dict) -> dict:
     relations = []
     for name in data.relation_names:
         edges = [e for e in data.edges if e.relation == name]
-        relations.append((torch.tensor([index[e.source] for e in edges], dtype=torch.long),
-                          torch.tensor([index[e.target] for e in edges], dtype=torch.long),
-                          torch.tensor([e.weight for e in edges], dtype=torch.float32)))
+        relations.append(
+            (
+                torch.tensor([index[e.source] for e in edges], dtype=torch.long),
+                torch.tensor([index[e.target] for e in edges], dtype=torch.long),
+                torch.tensor([e.weight for e in edges], dtype=torch.float32),
+            )
+        )
     incidence = []
     for name in data.hyperedge_types:
         groups = [h for h in data.hyperedges if h.kind == name]
         pairs = [(index[n], j) for j, h in enumerate(groups) for n in h.members]
-        incidence.append((torch.tensor([p[0] for p in pairs], dtype=torch.long),
-                          torch.tensor([p[1] for p in pairs], dtype=torch.long), len(groups)))
-    events = torch.tensor([[index[e.company], e.cause, e.court, e.result, e.age_months]
-                           for e in data.events], dtype=torch.float32).reshape(-1, 5)
-    return {"x": x, "kinds": torch.tensor([n.kind == "person" for n in data.nodes], dtype=torch.long),
-            "relations": relations, "incidence": incidence, "events": events,
-            "y": torch.tensor([n.label if n.label is not None else -1 for n in data.nodes], dtype=torch.float32),
-            "masks": {s: torch.tensor([n.split == s for n in data.nodes]) for s in ("train", "valid", "test")}}
+        incidence.append(
+            (
+                torch.tensor([p[0] for p in pairs], dtype=torch.long),
+                torch.tensor([p[1] for p in pairs], dtype=torch.long),
+                len(groups),
+            )
+        )
+    events = torch.tensor(
+        [[index[e.company], e.cause, e.court, e.result, e.age_months] for e in data.events],
+        dtype=torch.float32,
+    ).reshape(-1, 5)
+    return {
+        "x": x,
+        "kinds": torch.tensor([n.kind == "person" for n in data.nodes], dtype=torch.long),
+        "relations": relations,
+        "incidence": incidence,
+        "events": events,
+        "y": torch.tensor(
+            [n.label if n.label is not None else -1 for n in data.nodes], dtype=torch.float32
+        ),
+        "masks": {
+            s: torch.tensor([n.split == s for n in data.nodes]) for s in ("train", "valid", "test")
+        },
+    }
 
 
 def dump_json(path: str | Path, value):
-    Path(path).write_text(json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False), encoding="utf-8")
+    Path(path).write_text(
+        json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False), encoding="utf-8"
+    )

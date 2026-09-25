@@ -2,9 +2,9 @@ import argparse
 import json
 from pathlib import Path
 
-from .data import Dataset, dump_json
-from .demo import generate
-from .pipeline import Predictor, train, load_data
+from .engine.data import Dataset, dump_json
+from .engine.demo import generate
+from .engine.pipeline import Predictor, load_data, train
 
 
 def main():
@@ -24,7 +24,9 @@ def main():
     fit.add_argument("--hidden", type=int, default=32)
     fit.add_argument("--layers", type=int, default=2)
     fit.add_argument("--seed", type=int, default=42)
-    fit.add_argument("--mode", choices=["full", "no_graph", "no_hyper", "self_only"], default="full")
+    fit.add_argument(
+        "--mode", choices=["full", "no_graph", "no_hyper", "self_only"], default="full"
+    )
     fit.add_argument("--no-prior", action="store_true")
     fit.add_argument("--pretrain-epochs", type=int, default=0)
     predict = commands.add_parser("predict")
@@ -38,12 +40,40 @@ def main():
         print(f"Synthetic demo written to {args.output}")
     elif args.command == "validate":
         d = Dataset.read(args.data)
-        print(json.dumps({"name": d.name, "nodes": len(d.nodes), "edges": len(d.edges),
-                          "hyperedges": len(d.hyperedges), "synthetic": d.synthetic}, ensure_ascii=False))
+        print(
+            json.dumps(
+                {
+                    "name": d.name,
+                    "nodes": len(d.nodes),
+                    "edges": len(d.edges),
+                    "hyperedges": len(d.hyperedges),
+                    "synthetic": d.synthetic,
+                },
+                ensure_ascii=False,
+            )
+        )
     elif args.command == "train":
-        report = train(load_data(args.data), args.output, args.epochs, args.patience,
-                       args.seed, args.hidden, args.layers, args.mode, not args.no_prior, args.pretrain_epochs)
-        print(json.dumps({"model_test": report["model"]["test"], "baseline_test": report["baselines"]["logistic"]["test"]}, indent=2))
+        report = train(
+            load_data(args.data),
+            args.output,
+            args.epochs,
+            args.patience,
+            args.seed,
+            args.hidden,
+            args.layers,
+            args.mode,
+            not args.no_prior,
+            args.pretrain_epochs,
+        )
+        print(
+            json.dumps(
+                {
+                    "model_test": report["model"]["test"],
+                    "baseline_test": report["baselines"]["logistic"]["test"],
+                },
+                indent=2,
+            )
+        )
     else:
         result = Predictor(args.model).predict(Dataset.read(args.data), args.ids)
         Path(args.output).parent.mkdir(parents=True, exist_ok=True)
