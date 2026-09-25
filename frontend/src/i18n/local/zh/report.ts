@@ -1,0 +1,55 @@
+export default {
+  report: {
+    title: "报告页",
+    subtitle: "流式逐句生成授信评估报告正文，句末引用角标可悬浮查看证据卡",
+    notFound: {
+      shellSubtitle: "未匹配到对应的企业主体",
+      title: "该企业不存在，暂无报告可生成",
+      desc: "编号「{{id}}」未匹配到任何主体记录，请返回企业检索页重新选择目标企业。",
+      back: "返回企业检索",
+    },
+    copyConclusion: "复制结论",
+    exportPdf: "导出 PDF",
+    copyOk: "关键结论已复制到剪贴板",
+    copyFail: "复制失败，请手动选取正文内容",
+    actionRestart: "重新生成",
+    actionPause: "暂停",
+    actionResume: "继续",
+    actionSkip: "跳过动画",
+    header: {
+      reportNo: "报告编号",
+      model: "生成模型",
+      generatedAt: "生成时间",
+      wordCount: "正文字数",
+      done: "已生成 {{total}} 句 · 引用 {{ev}} 条证据",
+      generating: "正在生成第 {{current}} / {{total}} 句…",
+      paused: "已暂停 · 已完成 {{done}} / {{total}} 句",
+    },
+    body: {
+      generating: "正在调用模型、聚合证据并生成报告正文…",
+      generatingBadge: "生成中",
+      done: "报告生成完成 · 共 {{sent}} 句 · 引用 {{ev}} 条证据",
+      modelAt: "模型 {{version}} · 生成于 {{time}}",
+    },
+    sidebar: {
+      progressTitle: "生成进度",
+      progressSub: "已生成 {{done}} / {{total}} 句",
+      current: "当前章节",
+      tocTitle: "报告目录",
+      tocSub: "点击跳转至对应章节",
+      evidenceTitle: "证据来源",
+      evidenceSub: "正文共引用 {{count}} 条证据",
+      evidenceNote:
+        "正文句末的角标对应上述证据编号，鼠标悬停或点击角标即可查看证据卡，卡片中的「查看来源」可跳转至企业画像、评分详情或图谱关系原始页面。",
+    },
+    citation: {
+      aria: "查看 {{count}} 条证据",
+      source: "证据来源 · {{count}} 条",
+      pinned: "已固定",
+    },
+    evidence: {
+      confidence: "可信度 {{pct}}%",
+      viewSource: "查看来源",
+    },
+  },
+};

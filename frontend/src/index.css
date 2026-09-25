@@ -1,0 +1,182 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-heading: "Space Grotesk", "Noto Sans SC", "Inter", system-ui, sans-serif;
+  --font-body: "Inter", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+  --font-label: "Inter", "Noto Sans SC", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* background scale — porcelain white canvas with a whisper of blue (50 = page base/lightest, higher = deeper layer) */
+  --background-50: 0.985 0.003 250;
+  --background-100: 0.955 0.006 250;
+  --background-200: 0.91 0.009 250;
+  --background-300: 0.855 0.011 250;
+  --background-400: 0.735 0.013 250;
+  --background-500: 0.62 0.014 250;
+  --background-600: 0.52 0.014 250;
+  --background-700: 0.43 0.013 250;
+  --background-800: 0.34 0.012 250;
+  --background-900: 0.26 0.01 250;
+  --background-950: 0.19 0.008 250;
+
+  /* foreground scale — ink blue-black text (950 = strongest/darkest, lower = dimmer) */
+  --foreground-50: 0.86 0.012 258;
+  --foreground-100: 0.8 0.014 258;
+  --foreground-200: 0.71 0.016 258;
+  --foreground-300: 0.62 0.018 258;
+  --foreground-400: 0.53 0.02 258;
+  --foreground-500: 0.45 0.022 258;
+  --foreground-600: 0.38 0.022 258;
+  --foreground-700: 0.31 0.021 258;
+  --foreground-800: 0.25 0.02 258;
+  --foreground-900: 0.2 0.018 258;
+  --foreground-950: 0.15 0.016 258;
+
+  /* primary — porcelain cobalt blue (brand / conversion, bright & clear) */
+  --primary-50: 0.972 0.02 258;
+  --primary-100: 0.94 0.04 258;
+  --primary-200: 0.885 0.065 258;
+  --primary-300: 0.655 0.105 258;
+  --primary-400: 0.58 0.135 258;
+  --primary-500: 0.515 0.15 258;
+  --primary-600: 0.45 0.135 258;
+  --primary-700: 0.385 0.115 258;
+  --primary-800: 0.32 0.095 258;
+  --primary-900: 0.265 0.08 258;
+  --primary-950: 0.205 0.062 258;
+
+  /* accent — porcelain gold / ochre (second theme direction) */
+  --accent-50: 0.975 0.022 72;
+  --accent-100: 0.95 0.045 72;
+  --accent-200: 0.89 0.078 72;
+  --accent-300: 0.55 0.108 72;
+  --accent-400: 0.515 0.115 72;
+  --accent-500: 0.665 0.125 72;
+  --accent-600: 0.575 0.115 72;
+  --accent-700: 0.49 0.1 72;
+  --accent-800: 0.41 0.085 72;
+  --accent-900: 0.34 0.07 72;
+  --accent-950: 0.28 0.055 72;
+
+  /* secondary — porcelain ink slate (supporting UI) */
+  --secondary-50: 0.975 0.004 250;
+  --secondary-100: 0.945 0.007 250;
+  --secondary-200: 0.88 0.011 250;
+  --secondary-300: 0.56 0.02 250;
+  --secondary-400: 0.48 0.022 250;
+  --secondary-500: 0.55 0.025 250;
+  --secondary-600: 0.46 0.023 250;
+  --secondary-700: 0.39 0.02 250;
+  --secondary-800: 0.32 0.017 250;
+  --secondary-900: 0.26 0.014 250;
+  --secondary-950: 0.2 0.011 250;
+
+  /* semantic risk scale — the single source of truth for ALL status colors
+     (connection status / system services / risk levels / 存续与上线状态): low=blue, medium=gold, high=red.
+     Rendered through StatusDot (dot) and StatusPill (dot + label) — never hard-code status colors per component.
+     Hover hint copy is defined once in src/constants/status.ts (RISK_HINT) and surfaced via the shared Tooltip. */
+  --risk-low: 0.485 0.13 258;
+  --risk-medium: 0.62 0.13 72;
+  --risk-high: 0.55 0.19 27;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-body);
+    background-color: oklch(var(--background-50));
+    color: oklch(var(--foreground-900));
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    background-color: oklch(var(--primary-500) / 0.28);
+    color: oklch(var(--foreground-950));
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: oklch(var(--background-300)) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: oklch(var(--background-100));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: oklch(var(--background-300));
+    border-radius: 9999px;
+    border: 2px solid oklch(var(--background-100));
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(var(--background-400));
+  }
+}
+
+@layer components {
+  .risk-text-low {
+    color: oklch(var(--risk-low));
+  }
+  .risk-text-medium {
+    color: oklch(var(--risk-medium));
+  }
+  .risk-text-high {
+    color: oklch(var(--risk-high));
+  }
+  .risk-soft-low {
+    background-color: oklch(var(--risk-low) / 0.14);
+  }
+  .risk-soft-medium {
+    background-color: oklch(var(--risk-medium) / 0.14);
+  }
+  .risk-soft-high {
+    background-color: oklch(var(--risk-high) / 0.14);
+  }
+  .risk-border-low {
+    border-color: oklch(var(--risk-low) / 0.36);
+  }
+  .risk-border-medium {
+    border-color: oklch(var(--risk-medium) / 0.36);
+  }
+  .risk-border-high {
+    border-color: oklch(var(--risk-high) / 0.36);
+  }
+  .risk-bg-low {
+    background-color: oklch(var(--risk-low));
+  }
+  .risk-bg-medium {
+    background-color: oklch(var(--risk-medium));
+  }
+  .risk-bg-high {
+    background-color: oklch(var(--risk-high));
+  }
+
+  .tech-grid {
+    background-image:
+      linear-gradient(oklch(var(--background-200) / 0.55) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(var(--background-200) / 0.55) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+}
