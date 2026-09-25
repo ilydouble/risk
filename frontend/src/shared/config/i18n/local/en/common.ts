@@ -30,10 +30,7 @@ export default {
     demoMode: "Demo mode",
     toggleDemo: "Toggle demo mode",
     notifications: "Notifications",
-    userName: "Chen Li",
-    userRole: "Senior Risk Analyst",
-    demoUser: "Demo User",
-    demoRole: "Demo account",
+    demoEnvironment: "Demo environment",
   },
   tabs: {
     companyAria: "Company profile sections",

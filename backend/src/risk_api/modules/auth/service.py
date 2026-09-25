@@ -53,7 +53,7 @@ class AuthService:
             "user_id": user.id,
             "username": user.username,
             "display_name": user.display_name,
-            "roles": ["demo"],
+            "roles": [],
         }
         try:
             await self.redis.set(session_key(token), json.dumps(identity), ex=SESSION_SECONDS)

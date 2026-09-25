@@ -15,7 +15,7 @@ func TestGatewaySessionAndEnvelope(t *testing.T) {
 	client := redis.NewClient(&redis.Options{Addr: store.Addr()})
 	defer client.Close()
 	upstream := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.Header.Get("X-User-ID") != "demo-user" {
+		if r.Header.Get("X-User-ID") != "test-user" {
 			t.Errorf("untrusted identity reached upstream: %q", r.Header.Get("X-User-ID"))
 		}
 		w.Header().Set("Content-Type", "application/json")
@@ -54,9 +54,13 @@ func TestGatewaySessionAndEnvelope(t *testing.T) {
 	if status, code := call("http://localhost:18080", ""); status != 401 || code != "AUTH_SESSION_EXPIRED" {
 		t.Fatalf("missing session: %d %s", status, code)
 	}
-	store.Set(sessionKey("valid"), `{"version":1,"user_id":"demo-user","username":"demo","display_name":"Demo","roles":["demo"]}`)
+	store.Set(sessionKey("valid"), `{"version":1,"user_id":"test-user","username":"tester","display_name":"Tester","roles":[]}`)
 	if status, code := call("http://localhost:18080", "valid"); status != 200 || code != "SUCCESS" {
 		t.Fatalf("valid session: %d %s", status, code)
+	}
+	store.Set(sessionKey("legacy"), `{"version":1,"user_id":"test-user","username":"tester","display_name":"Tester","roles":["demo"]}`)
+	if status, code := call("http://localhost:18080", "legacy"); status != 200 || code != "SUCCESS" {
+		t.Fatalf("legacy session: %d %s", status, code)
 	}
 	if status, code := call("http://evil.example", "valid"); status != 403 || code != "REQUEST_ORIGIN_INVALID" {
 		t.Fatalf("invalid origin: %d %s", status, code)

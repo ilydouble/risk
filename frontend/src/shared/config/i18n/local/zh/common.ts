@@ -30,10 +30,7 @@ export default {
     demoMode: "演示模式",
     toggleDemo: "切换演示模式",
     notifications: "通知",
-    userName: "陈立",
-    userRole: "高级风控分析师",
-    demoUser: "演示用户",
-    demoRole: "演示账号",
+    demoEnvironment: "演示环境",
   },
   tabs: {
     companyAria: "企业画像子页面",

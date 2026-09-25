@@ -15,8 +15,6 @@ class Settings:
     storage_region: str = getenv("STORAGE_REGION", "us-east-1")
     cookie_secure: bool = getenv("COOKIE_SECURE", "false").lower() == "true"
     allowed_origin: str = getenv("ALLOWED_ORIGIN", "http://localhost:18080,http://localhost:3000")
-    demo_user: str = getenv("DEMO_USER", "demo")
-    demo_password: str = getenv("DEMO_PASSWORD", "demo-change-me")
 
 
 settings = Settings()

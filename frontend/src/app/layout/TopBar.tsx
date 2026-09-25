@@ -18,7 +18,7 @@ export default function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
   const { t } = useTranslation();
   const { pick } = useLang();
   const authUser = useAuthUser();
-  const displayName = authUser?.username === "demo" ? t("topbar.demoUser") : authUser?.displayName ?? t("topbar.userName");
+  const displayName = authUser?.displayName ?? authUser?.username ?? "";
   const navigate = useNavigate();
   const { demoMode, initialized, initialize, toggleDemoMode } = useDemoMode();
   const [query, setQuery] = useState("");
@@ -229,7 +229,7 @@ export default function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
               {displayName}
             </span>
             <span className="block text-[10px] text-foreground-500">
-              {t("topbar.demoRole")}
+              {t("topbar.demoEnvironment")}
             </span>
           </span>
         </div>

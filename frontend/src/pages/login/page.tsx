@@ -10,7 +10,7 @@ export default function LoginPage() {
   const location = useLocation();
   const navigationState = location.state as { from?: string; registeredUsername?: string } | null;
   const { isEn } = useLang();
-  const [username, setUsername] = useState(navigationState?.registeredUsername ?? "demo");
+  const [username, setUsername] = useState(navigationState?.registeredUsername ?? "");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);

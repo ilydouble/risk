@@ -8,7 +8,7 @@ docker compose up --build -d
 docker compose ps -a
 ```
 
-浏览器默认访问 `http://localhost:18080`；登录页可自助创建演示账号，默认账号 `demo` 的密码取 `.env` 的 `DEMO_PASSWORD`（示例值 `demo-change-me`）。新环境请先修改 `.env` 中的凭据。项目名 `risk` 负责容器命名空间，服务键不重复加前缀。运行 `docker compose down` 不删除命名卷；服务更名后可加 `--remove-orphans` 清理旧容器，不使用 `-v`。Redis 不持久化，重建时需要重新登录。
+浏览器默认访问 `http://localhost:18080`；登录页可自助注册，注册后再登录，新环境不预置账号。新环境请先修改 `.env` 中基础设施的示例凭据。项目名 `risk` 负责容器命名空间，服务键不重复加前缀。运行 `docker compose down` 不删除命名卷；服务更名后可加 `--remove-orphans` 清理旧容器，不使用 `-v`。Redis 不持久化，重建时需要重新登录。已有命名卷中的旧演示账号不会自动删除。
 
 宿主机端口在 `.env` 中单独设置，所有映射只绑定 `127.0.0.1`；容器内端口和服务间地址保持固定：
 

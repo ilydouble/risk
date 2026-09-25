@@ -5,28 +5,16 @@ import json
 from pathlib import Path
 from typing import Any
 
-from argon2 import PasswordHasher
 from neo4j import AsyncGraphDatabase
 from sqlalchemy.dialects.postgresql import insert
 
-from risk_api.models import Company, User
+from risk_api.models import Company
 from risk_api.shared.config import settings
 from risk_api.shared.db import session_factory
 
 
 async def seed_company_rows(records: list[dict[str, Any]]) -> None:
-    hasher = PasswordHasher()
     async with session_factory() as session:
-        await session.execute(
-            insert(User)
-            .values(
-                id="demo-user",
-                username=settings.demo_user,
-                password_hash=hasher.hash(settings.demo_password),
-                display_name="演示用户",
-            )
-            .on_conflict_do_nothing(index_elements=["id"])
-        )
         for record in records:
             company = record["company"]
             await session.execute(
