@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-rc alias set local http://risk-rustfs:9000 "$RUSTFS_ROOT_ACCESS_KEY" "$RUSTFS_ROOT_SECRET_KEY" --region us-east-1 --bucket-lookup path
+rc alias set local http://rustfs:9000 "$RUSTFS_ROOT_ACCESS_KEY" "$RUSTFS_ROOT_SECRET_KEY" --region us-east-1 --bucket-lookup path
 rc bucket create "local/$STORAGE_BUCKET" --ignore-existing
 
 printf '<CORSConfiguration><CORSRule>' > /tmp/cors.xml

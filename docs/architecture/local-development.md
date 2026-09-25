@@ -8,7 +8,7 @@ docker compose up --build -d
 docker compose ps -a
 ```
 
-浏览器访问 `http://localhost:18080`；默认本地演示账号 `demo`，密码取 `.env` 的 `DEMO_PASSWORD`（示例值 `demo-change-me`）。Vite 开发端口为 3000，API 网关诊断端口 18081，RustFS API/Console 为 19000/19001，均绑定本机。新环境请先修改 `.env` 中的凭据。运行 `docker compose down` 不删除命名卷；服务更名后可加 `--remove-orphans` 清理旧容器，不使用 `-v`。
+浏览器访问 `http://localhost:18080`；默认本地演示账号 `demo`，密码取 `.env` 的 `DEMO_PASSWORD`（示例值 `demo-change-me`）。Vite 开发端口为 3000，API 网关诊断端口 18081，RustFS API/Console 为 19000/19001，均绑定本机。新环境请先修改 `.env` 中的凭据。项目名 `risk` 负责容器命名空间，服务键不重复加前缀。运行 `docker compose down` 不删除命名卷；服务更名后可加 `--remove-orphans` 清理旧容器，不使用 `-v`。Redis 不持久化，重建时需要重新登录。
 
 镜像构建如需经过宿主机代理，在 `.env` 设置 `BUILD_HTTP_PROXY`、`BUILD_HTTPS_PROXY`，地址可使用 `host.docker.internal`；`BUILD_NO_PROXY` 用于排除直连地址。这些变量只用于源码镜像的构建步骤，不传给运行中的应用。RustFS 服务固定为 `rustfs/rustfs:1.0.0`，切换镜像前保留现有数据卷。
 
@@ -29,7 +29,7 @@ npm run lint && npm run type-check && npm run build
 
 ## 最小验收链路
 
-1. 首次启动后 `risk-postgres`、`risk-redis`、`risk-rustfs`、`risk-neo4j`、`risk-backend` 健康；三个 init/seed 容器正常退出。重复运行 init/seed 不覆盖数据。
+1. 首次启动后 `postgres`、`redis`、`rustfs`、`neo4j`、`backend` 健康；三个 init/seed 容器正常退出。重复运行 init/seed 不覆盖数据。
 2. 登录后检索企业，打开画像、2–3 跳图谱及评分；评分与解释必须标记为演示快照。
 3. 在画像上传一个测试文件，经 RustFS 直传、确认登记、下载并核对字节。报告、决策、模型看板和批量评估仍能显示演示标识。
 4. 校验 401 会话过期、503 Redis 故障、伪造身份头、非法 Origin、参数 422 和不存在资源的统一信封。

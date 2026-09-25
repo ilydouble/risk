@@ -1,7 +1,7 @@
 :80 {
   encode gzip zstd
   handle /api/* {
-    reverse_proxy risk-gateway:8081
+    reverse_proxy gateway:8081
   }
   handle {
     root * /srv
