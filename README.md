@@ -1,6 +1,6 @@
 # 风控工作台
 
-面向海外企业信用评估的内部演示工作台。当前已接通自助注册、登录、企业检索、企业画像、Neo4j 关系图谱、评分及文件上传/下载。**企业、评分和解释均为种子演示快照，未运行真实模型或接入正式征信数据。** 报告、授信决策、模型看板和批量评估保留前端演示逻辑。界面沿用原视觉并支持中英文切换。
+面向海外企业信用评估的内部演示工作台。当前已接通自助注册、登录、企业检索、企业画像、Neo4j 关系图谱、评分及文件上传/下载。原工作台的八家企业、评分和解释仍为种子演示快照；报告、授信决策、模型看板和批量评估仍为前端演示。另有独立 `/benchmark` 专区，使用 SMEsD 匿名测试快照与已保存的模型权重展示真实预测和离线评估。两套企业编号互不映射，基准结果不代表正式征信数据或未来违约概率。界面沿用原视觉并支持中英文切换。
 
 ## 本地启动
 
@@ -15,6 +15,8 @@ docker compose ps -a
 默认打开 `http://localhost:18080`。`.env` 可用 `FRONTEND_HOST_PORT`、`GATEWAY_HOST_PORT`、`RUSTFS_API_HOST_PORT`、`RUSTFS_CONSOLE_HOST_PORT` 改变四个宿主机端口；容器内端口固定，映射仍只绑定本机。登录页可自助注册，注册后再登录；新环境不预置账号。共享环境请先更换基础设施的示例凭据，并另行设计开放注册的准入与防滥用策略。
 
 Compose 启动 PostgreSQL 18、Redis、RustFS 1.0.0 GA、Neo4j Community、FastAPI 后端、Go 网关和 Caddy 前端；项目名固定为 `risk`，服务键使用 `postgres`、`backend` 等功能名，容器名如 `risk-rustfs-1`。一次性容器创建对象存储 Bucket/应用凭据、图谱约束，并为新环境补入八家精选演示企业；后端每次启动先执行 Alembic 迁移。数据存于命名卷，重复启动不清空；现有卷中的旧演示记录仍会保留。可选构建代理通过 `.env` 的 `BUILD_HTTP_PROXY`、`BUILD_HTTPS_PROXY`、`BUILD_NO_PROXY` 配置。
+
+登录后从侧栏进入 **SMEsD 基准**，或直接访问 `/benchmark`；可按匿名编号检索，查看画像、预测与特征遮蔽敏感性、一跳有向关系及保存的评估指标。随仓库提供 474 家测试样本及所选权重，首次启动无需下载训练集；完整重训仍需另外取得训练/验证数据。[基准说明](docs/architecture/benchmark.md)列出数据来源、验证命令与展示边界。
 
 后端业务请求及关键写入输出到容器日志，可用 `docker compose logs -f backend demo-seed` 查看，并按响应头的 `X-Request-ID` 关联请求。本地默认 `RISK_LOG_FORMAT=pretty`；服务器采集日志时设为 `json`。`RISK_LOG_LEVEL` 可调整应用日志级别；日志字段与保留边界见[后端架构文档](docs/architecture/backend.md)。
 

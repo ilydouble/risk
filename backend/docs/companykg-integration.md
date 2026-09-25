@@ -39,7 +39,7 @@
 
 ## 代码落点（尚未实现）
 
-- `backend/comrisk/model.py`：提取可复用 encode 接口，保留 self/graph/hyper 三分支；可选语义分支需显式缺失 mask。
+- `backend/src/risk_api/modules/benchmark/engine/model.py`：提取可复用 encode 接口，保留 self/graph/hyper 三分支；可选语义分支需显式缺失 mask。
 - 新增预训练模块：train-only 属性 mask 或 typed link prediction，正确排除正边/反向边以避免负采样与链路泄漏。
 - 数据适配器：保留多维关系权重，不能简单 argmax 成单关系；为图采样创建专门张量数据路径，避免百万节点 JSON/全图训练。
 - 预训练与风险指标分开记录，不使用 CompanyKG 的相似标签训练 bankruptcy head。
