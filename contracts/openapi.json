@@ -1,0 +1,3448 @@
+{
+  "components": {
+    "schemas": {
+      "ApiEnvelope_ResponseCompleteUpload_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseCompleteUpload"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseCompleteUpload]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseCreateDownload_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseCreateDownload"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseCreateDownload]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseCreateUpload_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseCreateUpload"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseCreateUpload]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseGetCompany_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseGetCompany"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseGetCompany]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseGetGraph_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseGetGraph"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseGetGraph]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseGetScore_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseGetScore"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseGetScore]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseListDocuments_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseListDocuments"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseListDocuments]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseLogin_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseLogin"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseLogin]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseLogout_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseLogout"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseLogout]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseMe_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseMe"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseMe]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseSearchCompany_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseSearchCompany"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseSearchCompany]",
+        "type": "object"
+      },
+      "CommunityBenchmark": {
+        "properties": {
+          "avgDefaultProb": {
+            "title": "Avgdefaultprob",
+            "type": "number"
+          },
+          "avgScore": {
+            "title": "Avgscore",
+            "type": "number"
+          },
+          "diff": {
+            "title": "Diff",
+            "type": "number"
+          },
+          "goodRate": {
+            "title": "Goodrate",
+            "type": "number"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "percentile": {
+            "title": "Percentile",
+            "type": "number"
+          },
+          "sampleSize": {
+            "title": "Samplesize",
+            "type": "integer"
+          },
+          "tag": {
+            "title": "Tag",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "tag",
+          "sampleSize",
+          "avgScore",
+          "avgDefaultProb",
+          "percentile",
+          "goodRate",
+          "diff"
+        ],
+        "title": "CommunityBenchmark",
+        "type": "object"
+      },
+      "CompanyDTO": {
+        "properties": {
+          "country": {
+            "title": "Country",
+            "type": "string"
+          },
+          "countryEn": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Countryen"
+          },
+          "countryFlag": {
+            "title": "Countryflag",
+            "type": "string"
+          },
+          "creditLimit": {
+            "title": "Creditlimit",
+            "type": "string"
+          },
+          "creditScore": {
+            "title": "Creditscore",
+            "type": "integer"
+          },
+          "defaultProb": {
+            "title": "Defaultprob",
+            "type": "number"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "industry": {
+            "title": "Industry",
+            "type": "string"
+          },
+          "industryEn": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Industryen"
+          },
+          "nameCn": {
+            "title": "Namecn",
+            "type": "string"
+          },
+          "nameEn": {
+            "title": "Nameen",
+            "type": "string"
+          },
+          "regNo": {
+            "title": "Regno",
+            "type": "string"
+          },
+          "region": {
+            "title": "Region",
+            "type": "string"
+          },
+          "regionEn": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Regionen"
+          },
+          "riskLevel": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Risklevel",
+            "type": "string"
+          },
+          "sector": {
+            "title": "Sector",
+            "type": "string"
+          },
+          "sectorEn": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sectoren"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Tags",
+            "type": "array"
+          },
+          "tagsEn": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tagsen"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "nameCn",
+          "nameEn",
+          "regNo",
+          "country",
+          "region",
+          "sector",
+          "countryFlag",
+          "industry",
+          "creditScore",
+          "riskLevel",
+          "defaultProb",
+          "creditLimit",
+          "updatedAt",
+          "tags"
+        ],
+        "title": "CompanyDTO",
+        "type": "object"
+      },
+      "CompanyFacts": {
+        "properties": {
+          "actualController": {
+            "title": "Actualcontroller",
+            "type": "string"
+          },
+          "controllerStake": {
+            "title": "Controllerstake",
+            "type": "string"
+          },
+          "employees": {
+            "title": "Employees",
+            "type": "string"
+          },
+          "established": {
+            "title": "Established",
+            "type": "string"
+          },
+          "legalPerson": {
+            "title": "Legalperson",
+            "type": "string"
+          },
+          "listed": {
+            "title": "Listed",
+            "type": "string"
+          },
+          "mainBanks": {
+            "title": "Mainbanks",
+            "type": "string"
+          },
+          "netMargin": {
+            "title": "Netmargin",
+            "type": "string"
+          },
+          "paidInCapital": {
+            "title": "Paidincapital",
+            "type": "string"
+          },
+          "ratingAgency": {
+            "title": "Ratingagency",
+            "type": "string"
+          },
+          "registeredCapital": {
+            "title": "Registeredcapital",
+            "type": "string"
+          },
+          "revenue": {
+            "title": "Revenue",
+            "type": "string"
+          },
+          "settlement": {
+            "title": "Settlement",
+            "type": "string"
+          }
+        },
+        "required": [
+          "established",
+          "registeredCapital",
+          "paidInCapital",
+          "legalPerson",
+          "actualController",
+          "controllerStake",
+          "employees",
+          "listed",
+          "ratingAgency",
+          "mainBanks",
+          "settlement",
+          "revenue",
+          "netMargin"
+        ],
+        "title": "CompanyFacts",
+        "type": "object"
+      },
+      "CompanyFactsEn": {
+        "properties": {
+          "actualController": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actualcontroller"
+          },
+          "controllerStake": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Controllerstake"
+          },
+          "employees": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Employees"
+          },
+          "legalPerson": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Legalperson"
+          },
+          "listed": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Listed"
+          },
+          "mainBanks": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mainbanks"
+          },
+          "netMargin": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Netmargin"
+          },
+          "paidInCapital": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Paidincapital"
+          },
+          "ratingAgency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ratingagency"
+          },
+          "registeredCapital": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Registeredcapital"
+          },
+          "revenue": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Revenue"
+          },
+          "settlement": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Settlement"
+          }
+        },
+        "title": "CompanyFactsEn",
+        "type": "object"
+      },
+      "CompanyProfile": {
+        "properties": {
+          "facts": {
+            "$ref": "#/components/schemas/CompanyFacts"
+          },
+          "factsEn": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CompanyFactsEn"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fiveC": {
+            "items": {
+              "$ref": "#/components/schemas/FiveCDimension"
+            },
+            "title": "Fivec",
+            "type": "array"
+          },
+          "relatedParties": {
+            "items": {
+              "$ref": "#/components/schemas/RelatedParty"
+            },
+            "title": "Relatedparties",
+            "type": "array"
+          },
+          "riskFlags": {
+            "items": {
+              "$ref": "#/components/schemas/RiskFlag"
+            },
+            "title": "Riskflags",
+            "type": "array"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "summaryEn": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summaryen"
+          },
+          "timeline": {
+            "items": {
+              "$ref": "#/components/schemas/TimelineEvent"
+            },
+            "title": "Timeline",
+            "type": "array"
+          }
+        },
+        "required": [
+          "facts",
+          "summary",
+          "timeline",
+          "riskFlags",
+          "fiveC",
+          "relatedParties"
+        ],
+        "title": "CompanyProfile",
+        "type": "object"
+      },
+      "DocumentDTO": {
+        "properties": {
+          "companyId": {
+            "title": "Companyid",
+            "type": "string"
+          },
+          "contentType": {
+            "title": "Contenttype",
+            "type": "string"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "filename": {
+            "title": "Filename",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "size": {
+            "title": "Size",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "companyId",
+          "filename",
+          "contentType",
+          "size",
+          "createdAt"
+        ],
+        "title": "DocumentDTO",
+        "type": "object"
+      },
+      "ErrorDetail": {
+        "properties": {
+          "field": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Field"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "reason"
+        ],
+        "title": "ErrorDetail",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_400__Literal__DOCUMENT_FILENAME_INVALID___": {
+        "properties": {
+          "code": {
+            "const": 400,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "DOCUMENT_FILENAME_INVALID",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[400], Literal['DOCUMENT_FILENAME_INVALID']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_401__Literal__AUTH_INVALID_CREDENTIALS___": {
+        "properties": {
+          "code": {
+            "const": 401,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "AUTH_INVALID_CREDENTIALS",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[401], Literal['AUTH_INVALID_CREDENTIALS']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___": {
+        "properties": {
+          "code": {
+            "const": 401,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "AUTH_SESSION_EXPIRED",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[401], Literal['AUTH_SESSION_EXPIRED']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___": {
+        "properties": {
+          "code": {
+            "const": 403,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "REQUEST_ORIGIN_INVALID",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[403], Literal['REQUEST_ORIGIN_INVALID']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_404__Literal__COMPANY_NOT_FOUND___": {
+        "properties": {
+          "code": {
+            "const": 404,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "COMPANY_NOT_FOUND",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[404], Literal['COMPANY_NOT_FOUND']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_404__Literal__DOCUMENT_NOT_FOUND___": {
+        "properties": {
+          "code": {
+            "const": 404,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "DOCUMENT_NOT_FOUND",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[404], Literal['DOCUMENT_NOT_FOUND']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_404__Literal__GRAPH_NOT_FOUND___": {
+        "properties": {
+          "code": {
+            "const": 404,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "GRAPH_NOT_FOUND",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[404], Literal['GRAPH_NOT_FOUND']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_409__Literal__DOCUMENT_SIZE_MISMATCH___": {
+        "properties": {
+          "code": {
+            "const": 409,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "DOCUMENT_SIZE_MISMATCH",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[409], Literal['DOCUMENT_SIZE_MISMATCH']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_409__Literal__DOCUMENT_UPLOAD_INCOMPLETE___": {
+        "properties": {
+          "code": {
+            "const": 409,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "DOCUMENT_UPLOAD_INCOMPLETE",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[409], Literal['DOCUMENT_UPLOAD_INCOMPLETE']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___": {
+        "properties": {
+          "code": {
+            "const": 422,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "REQUEST_INVALID",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[422], Literal['REQUEST_INVALID']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___": {
+        "properties": {
+          "code": {
+            "const": 500,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "INTERNAL_ERROR",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[500], Literal['INTERNAL_ERROR']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___": {
+        "properties": {
+          "code": {
+            "const": 503,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "AUTH_STORE_INVALID",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[503], Literal['AUTH_STORE_INVALID']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___": {
+        "properties": {
+          "code": {
+            "const": 503,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "AUTH_STORE_UNAVAILABLE",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[503], Literal['AUTH_STORE_UNAVAILABLE']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_503__Literal__DOCUMENT_STORAGE_UNAVAILABLE___": {
+        "properties": {
+          "code": {
+            "const": 503,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "DOCUMENT_STORAGE_UNAVAILABLE",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[503], Literal['DOCUMENT_STORAGE_UNAVAILABLE']]",
+        "type": "object"
+      },
+      "FiveCDimension": {
+        "properties": {
+          "en": {
+            "title": "En",
+            "type": "string"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "note": {
+            "title": "Note",
+            "type": "string"
+          },
+          "noteEn": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Noteen"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          },
+          "weight": {
+            "title": "Weight",
+            "type": "number"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "en",
+          "weight",
+          "score",
+          "note"
+        ],
+        "title": "FiveCDimension",
+        "type": "object"
+      },
+      "GraphData": {
+        "properties": {
+          "edges": {
+            "items": {
+              "$ref": "#/components/schemas/GraphEdge"
+            },
+            "title": "Edges",
+            "type": "array"
+          },
+          "nodes": {
+            "items": {
+              "$ref": "#/components/schemas/GraphNode"
+            },
+            "title": "Nodes",
+            "type": "array"
+          },
+          "rootId": {
+            "title": "Rootid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "rootId",
+          "nodes",
+          "edges"
+        ],
+        "title": "GraphData",
+        "type": "object"
+      },
+      "GraphEdge": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "riskFlow": {
+            "title": "Riskflow",
+            "type": "boolean"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "strength": {
+            "title": "Strength",
+            "type": "number"
+          },
+          "target": {
+            "title": "Target",
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "equity",
+              "control",
+              "guarantee",
+              "supply",
+              "trade",
+              "loan"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "source",
+          "target",
+          "type",
+          "label",
+          "riskFlow",
+          "strength"
+        ],
+        "title": "GraphEdge",
+        "type": "object"
+      },
+      "GraphNode": {
+        "properties": {
+          "companyId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Companyid"
+          },
+          "country": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Country"
+          },
+          "exposure": {
+            "title": "Exposure",
+            "type": "string"
+          },
+          "hop": {
+            "title": "Hop",
+            "type": "integer"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "industry": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Industry"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "relation": {
+            "title": "Relation",
+            "type": "string"
+          },
+          "riskLevel": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Risklevel",
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "company",
+              "owner",
+              "subsidiary",
+              "supplier",
+              "guarantor",
+              "client",
+              "counterparty",
+              "person",
+              "bank",
+              "fund"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "type",
+          "riskLevel",
+          "hop",
+          "relation",
+          "exposure"
+        ],
+        "title": "GraphNode",
+        "type": "object"
+      },
+      "RelatedParty": {
+        "properties": {
+          "exposure": {
+            "title": "Exposure",
+            "type": "string"
+          },
+          "exposureEn": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Exposureen"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "nameEn": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nameen"
+          },
+          "relation": {
+            "title": "Relation",
+            "type": "string"
+          },
+          "relationEn": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Relationen"
+          },
+          "riskLevel": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Risklevel",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "relation",
+          "exposure",
+          "riskLevel"
+        ],
+        "title": "RelatedParty",
+        "type": "object"
+      },
+      "RequestCompleteUpload": {
+        "properties": {
+          "documentId": {
+            "title": "Documentid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "documentId"
+        ],
+        "title": "RequestCompleteUpload",
+        "type": "object"
+      },
+      "RequestCreateDownload": {
+        "properties": {
+          "documentId": {
+            "title": "Documentid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "documentId"
+        ],
+        "title": "RequestCreateDownload",
+        "type": "object"
+      },
+      "RequestCreateUpload": {
+        "properties": {
+          "companyId": {
+            "title": "Companyid",
+            "type": "string"
+          },
+          "contentType": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Contenttype",
+            "type": "string"
+          },
+          "filename": {
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Filename",
+            "type": "string"
+          },
+          "size": {
+            "exclusiveMinimum": 0.0,
+            "maximum": 10000000.0,
+            "title": "Size",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "companyId",
+          "filename",
+          "contentType",
+          "size"
+        ],
+        "title": "RequestCreateUpload",
+        "type": "object"
+      },
+      "RequestGetCompany": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "RequestGetCompany",
+        "type": "object"
+      },
+      "RequestGetGraph": {
+        "properties": {
+          "companyId": {
+            "title": "Companyid",
+            "type": "string"
+          },
+          "depth": {
+            "default": 3,
+            "maximum": 3.0,
+            "minimum": 2.0,
+            "title": "Depth",
+            "type": "integer"
+          },
+          "lang": {
+            "default": "zh",
+            "enum": [
+              "zh",
+              "en"
+            ],
+            "title": "Lang",
+            "type": "string"
+          }
+        },
+        "required": [
+          "companyId"
+        ],
+        "title": "RequestGetGraph",
+        "type": "object"
+      },
+      "RequestGetScore": {
+        "properties": {
+          "companyId": {
+            "title": "Companyid",
+            "type": "string"
+          },
+          "lang": {
+            "default": "zh",
+            "enum": [
+              "zh",
+              "en"
+            ],
+            "title": "Lang",
+            "type": "string"
+          }
+        },
+        "required": [
+          "companyId"
+        ],
+        "title": "RequestGetScore",
+        "type": "object"
+      },
+      "RequestListDocuments": {
+        "properties": {
+          "companyId": {
+            "title": "Companyid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "companyId"
+        ],
+        "title": "RequestListDocuments",
+        "type": "object"
+      },
+      "RequestLogin": {
+        "properties": {
+          "password": {
+            "title": "Password",
+            "type": "string"
+          },
+          "username": {
+            "title": "Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ],
+        "title": "RequestLogin",
+        "type": "object"
+      },
+      "RequestLogout": {
+        "properties": {},
+        "title": "RequestLogout",
+        "type": "object"
+      },
+      "RequestMe": {
+        "properties": {},
+        "title": "RequestMe",
+        "type": "object"
+      },
+      "RequestSearchCompany": {
+        "properties": {
+          "keyword": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Keyword",
+            "type": "string"
+          },
+          "page": {
+            "default": 1,
+            "minimum": 1.0,
+            "title": "Page",
+            "type": "integer"
+          },
+          "pageSize": {
+            "default": 50,
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Pagesize",
+            "type": "integer"
+          },
+          "region": {
+            "default": "all",
+            "title": "Region",
+            "type": "string"
+          },
+          "risks": {
+            "items": {
+              "enum": [
+                "low",
+                "medium",
+                "high"
+              ],
+              "type": "string"
+            },
+            "title": "Risks",
+            "type": "array"
+          },
+          "sector": {
+            "default": "all",
+            "title": "Sector",
+            "type": "string"
+          },
+          "sort": {
+            "default": "score_desc",
+            "enum": [
+              "score_desc",
+              "score_asc",
+              "dp_desc",
+              "recent"
+            ],
+            "title": "Sort",
+            "type": "string"
+          }
+        },
+        "title": "RequestSearchCompany",
+        "type": "object"
+      },
+      "ResponseCompleteUpload": {
+        "properties": {
+          "document": {
+            "$ref": "#/components/schemas/DocumentDTO"
+          }
+        },
+        "required": [
+          "document"
+        ],
+        "title": "ResponseCompleteUpload",
+        "type": "object"
+      },
+      "ResponseCreateDownload": {
+        "properties": {
+          "expiresIn": {
+            "default": 60,
+            "title": "Expiresin",
+            "type": "integer"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "title": "ResponseCreateDownload",
+        "type": "object"
+      },
+      "ResponseCreateUpload": {
+        "properties": {
+          "documentId": {
+            "title": "Documentid",
+            "type": "string"
+          },
+          "expiresIn": {
+            "default": 60,
+            "title": "Expiresin",
+            "type": "integer"
+          },
+          "headers": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Headers",
+            "type": "object"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "documentId",
+          "url",
+          "headers"
+        ],
+        "title": "ResponseCreateUpload",
+        "type": "object"
+      },
+      "ResponseGetCompany": {
+        "properties": {
+          "company": {
+            "$ref": "#/components/schemas/CompanyDTO"
+          },
+          "demo": {
+            "const": true,
+            "default": true,
+            "title": "Demo",
+            "type": "boolean"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/CompanyProfile"
+          }
+        },
+        "required": [
+          "company",
+          "profile"
+        ],
+        "title": "ResponseGetCompany",
+        "type": "object"
+      },
+      "ResponseGetGraph": {
+        "properties": {
+          "demo": {
+            "const": true,
+            "default": true,
+            "title": "Demo",
+            "type": "boolean"
+          },
+          "graph": {
+            "$ref": "#/components/schemas/GraphData"
+          }
+        },
+        "required": [
+          "graph"
+        ],
+        "title": "ResponseGetGraph",
+        "type": "object"
+      },
+      "ResponseGetScore": {
+        "properties": {
+          "company": {
+            "$ref": "#/components/schemas/CompanyDTO"
+          },
+          "demo": {
+            "const": true,
+            "default": true,
+            "title": "Demo",
+            "type": "boolean"
+          },
+          "detail": {
+            "$ref": "#/components/schemas/ScoreDetail"
+          }
+        },
+        "required": [
+          "company",
+          "detail"
+        ],
+        "title": "ResponseGetScore",
+        "type": "object"
+      },
+      "ResponseListDocuments": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/DocumentDTO"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "ResponseListDocuments",
+        "type": "object"
+      },
+      "ResponseLogin": {
+        "properties": {
+          "displayName": {
+            "title": "Displayname",
+            "type": "string"
+          },
+          "expiresIn": {
+            "title": "Expiresin",
+            "type": "integer"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          },
+          "username": {
+            "title": "Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId",
+          "username",
+          "displayName",
+          "expiresIn"
+        ],
+        "title": "ResponseLogin",
+        "type": "object"
+      },
+      "ResponseLogout": {
+        "properties": {
+          "loggedOut": {
+            "title": "Loggedout",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "loggedOut"
+        ],
+        "title": "ResponseLogout",
+        "type": "object"
+      },
+      "ResponseMe": {
+        "properties": {
+          "displayName": {
+            "title": "Displayname",
+            "type": "string"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          },
+          "username": {
+            "title": "Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId",
+          "username",
+          "displayName"
+        ],
+        "title": "ResponseMe",
+        "type": "object"
+      },
+      "ResponseSearchCompany": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CompanyDTO"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "page": {
+            "title": "Page",
+            "type": "integer"
+          },
+          "pageSize": {
+            "title": "Pagesize",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "page",
+          "pageSize"
+        ],
+        "title": "ResponseSearchCompany",
+        "type": "object"
+      },
+      "RiskFlag": {
+        "properties": {
+          "category": {
+            "title": "Category",
+            "type": "string"
+          },
+          "categoryEn": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Categoryen"
+          },
+          "desc": {
+            "title": "Desc",
+            "type": "string"
+          },
+          "descEn": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Descen"
+          },
+          "detectedAt": {
+            "title": "Detectedat",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "labelEn": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Labelen"
+          },
+          "level": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Level",
+            "type": "string"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "level",
+          "category",
+          "desc",
+          "source",
+          "detectedAt"
+        ],
+        "title": "RiskFlag",
+        "type": "object"
+      },
+      "ScoreDetail": {
+        "properties": {
+          "baseValue": {
+            "title": "Basevalue",
+            "type": "integer"
+          },
+          "benchmarks": {
+            "items": {
+              "$ref": "#/components/schemas/CommunityBenchmark"
+            },
+            "title": "Benchmarks",
+            "type": "array"
+          },
+          "confidence": {
+            "title": "Confidence",
+            "type": "number"
+          },
+          "defaultProb": {
+            "title": "Defaultprob",
+            "type": "number"
+          },
+          "evaluatedAt": {
+            "title": "Evaluatedat",
+            "type": "string"
+          },
+          "features": {
+            "items": {
+              "$ref": "#/components/schemas/ShapFeature"
+            },
+            "title": "Features",
+            "type": "array"
+          },
+          "finalScore": {
+            "title": "Finalscore",
+            "type": "integer"
+          },
+          "grade": {
+            "title": "Grade",
+            "type": "string"
+          },
+          "gradeNote": {
+            "title": "Gradenote",
+            "type": "string"
+          },
+          "modelVersion": {
+            "title": "Modelversion",
+            "type": "string"
+          },
+          "negativeCount": {
+            "title": "Negativecount",
+            "type": "integer"
+          },
+          "pdBase": {
+            "title": "Pdbase",
+            "type": "number"
+          },
+          "pdDelta": {
+            "title": "Pddelta",
+            "type": "number"
+          },
+          "positiveCount": {
+            "title": "Positivecount",
+            "type": "integer"
+          },
+          "riskPercentile": {
+            "title": "Riskpercentile",
+            "type": "number"
+          }
+        },
+        "required": [
+          "baseValue",
+          "finalScore",
+          "grade",
+          "gradeNote",
+          "riskPercentile",
+          "defaultProb",
+          "pdBase",
+          "pdDelta",
+          "confidence",
+          "modelVersion",
+          "evaluatedAt",
+          "positiveCount",
+          "negativeCount",
+          "features",
+          "benchmarks"
+        ],
+        "title": "ScoreDetail",
+        "type": "object"
+      },
+      "ShapFeature": {
+        "properties": {
+          "category": {
+            "title": "Category",
+            "type": "string"
+          },
+          "contribution": {
+            "title": "Contribution",
+            "type": "number"
+          },
+          "desc": {
+            "title": "Desc",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "category",
+          "value",
+          "contribution",
+          "desc"
+        ],
+        "title": "ShapFeature",
+        "type": "object"
+      },
+      "TimelineEvent": {
+        "properties": {
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "desc": {
+            "title": "Desc",
+            "type": "string"
+          },
+          "descEn": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Descen"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "impact": {
+            "enum": [
+              "positive",
+              "neutral",
+              "negative"
+            ],
+            "title": "Impact",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "titleEn": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Titleen"
+          },
+          "type": {
+            "enum": [
+              "equity",
+              "legal",
+              "address",
+              "finance",
+              "risk",
+              "award"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "date",
+          "type",
+          "title",
+          "desc",
+          "impact"
+        ],
+        "title": "TimelineEvent",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "Risk Workbench API",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/auth/login": {
+      "post": {
+        "operationId": "login_api_v1_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestLogin"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseLogin_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_INVALID_CREDENTIALS___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Login",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/logout": {
+      "post": {
+        "operationId": "logout_api_v1_auth_logout_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestLogout"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseLogout_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Logout",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/me": {
+      "post": {
+        "operationId": "me_api_v1_auth_me_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestMe"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseMe_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"
+                    }
+                  ],
+                  "title": "Response 503 Me Api V1 Auth Me Post"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Me",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/company/get": {
+      "post": {
+        "operationId": "get_api_v1_company_get_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestGetCompany"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseGetCompany_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__COMPANY_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"
+                    }
+                  ],
+                  "title": "Response 503 Get Api V1 Company Get Post"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Get",
+        "tags": [
+          "company"
+        ]
+      }
+    },
+    "/api/v1/company/search": {
+      "post": {
+        "operationId": "search_api_v1_company_search_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestSearchCompany"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseSearchCompany_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"
+                    }
+                  ],
+                  "title": "Response 503 Search Api V1 Company Search Post"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Search",
+        "tags": [
+          "company"
+        ]
+      }
+    },
+    "/api/v1/document/complete-upload": {
+      "post": {
+        "operationId": "complete_upload_api_v1_document_complete_upload_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestCompleteUpload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseCompleteUpload_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__DOCUMENT_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DOCUMENT_UPLOAD_INCOMPLETE___"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DOCUMENT_SIZE_MISMATCH___"
+                    }
+                  ],
+                  "title": "Response 409 Complete Upload Api V1 Document Complete Upload Post"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__DOCUMENT_STORAGE_UNAVAILABLE___"
+                    }
+                  ],
+                  "title": "Response 503 Complete Upload Api V1 Document Complete Upload Post"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Complete Upload",
+        "tags": [
+          "document"
+        ]
+      }
+    },
+    "/api/v1/document/create-download": {
+      "post": {
+        "operationId": "create_download_api_v1_document_create_download_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestCreateDownload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseCreateDownload_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__DOCUMENT_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__DOCUMENT_STORAGE_UNAVAILABLE___"
+                    }
+                  ],
+                  "title": "Response 503 Create Download Api V1 Document Create Download Post"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Create Download",
+        "tags": [
+          "document"
+        ]
+      }
+    },
+    "/api/v1/document/create-upload": {
+      "post": {
+        "operationId": "create_upload_api_v1_document_create_upload_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestCreateUpload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseCreateUpload_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_400__Literal__DOCUMENT_FILENAME_INVALID___"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__COMPANY_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__DOCUMENT_STORAGE_UNAVAILABLE___"
+                    }
+                  ],
+                  "title": "Response 503 Create Upload Api V1 Document Create Upload Post"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Create Upload",
+        "tags": [
+          "document"
+        ]
+      }
+    },
+    "/api/v1/document/list": {
+      "post": {
+        "operationId": "list_documents_api_v1_document_list_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestListDocuments"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseListDocuments_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__COMPANY_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"
+                    }
+                  ],
+                  "title": "Response 503 List Documents Api V1 Document List Post"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "List Documents",
+        "tags": [
+          "document"
+        ]
+      }
+    },
+    "/api/v1/graph/get": {
+      "post": {
+        "operationId": "get_api_v1_graph_get_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestGetGraph"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseGetGraph_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__COMPANY_NOT_FOUND___"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__GRAPH_NOT_FOUND___"
+                    }
+                  ],
+                  "title": "Response 404 Get Api V1 Graph Get Post"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"
+                    }
+                  ],
+                  "title": "Response 503 Get Api V1 Graph Get Post"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Get",
+        "tags": [
+          "graph"
+        ]
+      }
+    },
+    "/api/v1/score/get": {
+      "post": {
+        "operationId": "get_api_v1_score_get_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestGetScore"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseGetScore_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__COMPANY_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"
+                    }
+                  ],
+                  "title": "Response 503 Get Api V1 Score Get Post"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Get",
+        "tags": [
+          "score"
+        ]
+      }
+    }
+  }
+}

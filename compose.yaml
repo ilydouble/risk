@@ -1,0 +1,152 @@
+services:
+  postgres:
+    image: postgres:18.0
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-risk}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-risk-db-password}
+      POSTGRES_DB: ${POSTGRES_DB:-risk}
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      retries: 12
+
+  redis:
+    image: redis:8.2.2-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 12
+
+  rustfs:
+    image: rustfs/rustfs:1.0.0-rc.6
+    environment:
+      RUSTFS_ACCESS_KEY: ${RUSTFS_ROOT_ACCESS_KEY:-RISKROOTADMIN2026}
+      RUSTFS_SECRET_KEY: ${RUSTFS_ROOT_SECRET_KEY:-local-rustfs-root-change-me-2026}
+      RUSTFS_CORS_ALLOWED_ORIGINS: ${PUBLIC_ORIGINS:-http://localhost:18080,http://localhost:3000}
+      RUSTFS_REGION: us-east-1
+    command: ["/data"]
+    volumes:
+      - rustfs-data:/data
+    ports:
+      - "127.0.0.1:19000:9000"
+      - "127.0.0.1:19001:9001"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:9000/health >/dev/null"]
+      interval: 5s
+      retries: 18
+
+  rustfs-init:
+    image: rustfs/rc:v0.1.36
+    entrypoint: ["/bin/sh", "/init.sh"]
+    volumes:
+      - ./infra/rustfs/init.sh:/init.sh:ro
+    environment:
+      RUSTFS_ROOT_ACCESS_KEY: ${RUSTFS_ROOT_ACCESS_KEY:-RISKROOTADMIN2026}
+      RUSTFS_ROOT_SECRET_KEY: ${RUSTFS_ROOT_SECRET_KEY:-local-rustfs-root-change-me-2026}
+      STORAGE_ACCESS_KEY: ${STORAGE_ACCESS_KEY:-RISKDOCUMENTSAPP2026}
+      STORAGE_SECRET_KEY: ${STORAGE_SECRET_KEY:-local-rustfs-app-change-me-2026}
+      STORAGE_BUCKET: ${STORAGE_BUCKET:-risk-documents}
+      PUBLIC_ORIGINS: ${PUBLIC_ORIGINS:-http://localhost:18080,http://localhost:3000}
+    depends_on:
+      rustfs:
+        condition: service_healthy
+    restart: "no"
+
+  neo4j:
+    image: neo4j:5.26.0-community
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:-local-risk-graph-password}
+    volumes:
+      - neo4j-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p \"$${NEO4J_AUTH#neo4j/}\" 'RETURN 1' >/dev/null"]
+      interval: 10s
+      retries: 18
+
+  neo4j-init:
+    image: neo4j:5.26.0-community
+    entrypoint: ["/bin/sh", "/init.sh"]
+    volumes:
+      - ./infra/neo4j/init.sh:/init.sh:ro
+    environment:
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD:-local-risk-graph-password}
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    restart: "no"
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-risk}:${POSTGRES_PASSWORD:-local-risk-db-password}@postgres:5432/${POSTGRES_DB:-risk}
+      REDIS_URL: redis://redis:6379/0
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD:-local-risk-graph-password}
+      STORAGE_BUCKET: ${STORAGE_BUCKET:-risk-documents}
+      STORAGE_ENDPOINT: http://rustfs:9000
+      STORAGE_PUBLIC_ENDPOINT: ${STORAGE_PUBLIC_ENDPOINT:-http://localhost:19000}
+      AWS_ACCESS_KEY_ID: ${STORAGE_ACCESS_KEY:-RISKDOCUMENTSAPP2026}
+      AWS_SECRET_ACCESS_KEY: ${STORAGE_SECRET_KEY:-local-rustfs-app-change-me-2026}
+      ALLOWED_ORIGIN: ${PUBLIC_ORIGINS:-http://localhost:18080,http://localhost:3000}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      DEMO_USER: ${DEMO_USER:-demo}
+      DEMO_PASSWORD: ${DEMO_PASSWORD:-demo-change-me}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rustfs-init:
+        condition: service_completed_successfully
+      neo4j-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/health/live\")'"]
+      interval: 5s
+      retries: 12
+
+  demo-seed:
+    build: ./backend
+    command: ["python", "-m", "risk_api.seed"]
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-risk}:${POSTGRES_PASSWORD:-local-risk-db-password}@postgres:5432/${POSTGRES_DB:-risk}
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD:-local-risk-graph-password}
+      DEMO_USER: ${DEMO_USER:-demo}
+      DEMO_PASSWORD: ${DEMO_PASSWORD:-demo-change-me}
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: "no"
+
+  gateway:
+    build: ./gateway
+    ports:
+      - "127.0.0.1:18081:8081"
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      BACKEND_URL: http://backend:8000
+      ALLOWED_ORIGIN: ${PUBLIC_ORIGINS:-http://localhost:18080,http://localhost:3000}
+    depends_on:
+      backend:
+        condition: service_healthy
+      demo-seed:
+        condition: service_completed_successfully
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "127.0.0.1:18080:80"
+    depends_on:
+      gateway:
+        condition: service_started
+
+volumes:
+  postgres-data:
+  rustfs-data:
+  neo4j-data:

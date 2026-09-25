@@ -1,0 +1,1 @@
+"""Seeded scoring snapshots."""

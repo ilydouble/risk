@@ -12,7 +12,16 @@ node_modules/
 dist/
 dist-ssr/
 build/
+frontend/out/
 *.local
+
+# Python / uv
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
 # Vite / TypeScript cache
 .vite/
