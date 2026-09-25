@@ -2,7 +2,7 @@ import { http } from "@/shared/api/http";
 import type {
   RequestCompleteUpload, RequestCreateDownload, RequestCreateUpload, RequestListDocuments,
   ResponseCompleteUpload, ResponseCreateDownload, ResponseCreateUpload, ResponseListDocuments,
-} from "@/shared/api/dto";
+} from "@/shared/api/generated/schema";
 
 export const requestCreateUpload = http.post<RequestCreateUpload, ResponseCreateUpload>("/document/create-upload");
 export const requestCompleteUpload = http.post<RequestCompleteUpload, ResponseCompleteUpload>("/document/complete-upload");

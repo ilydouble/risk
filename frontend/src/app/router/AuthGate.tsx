@@ -3,7 +3,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { isHttpClientError } from "@stellarmesh/sdk";
 import * as AuthApi from "@/features/auth/api/authApi";
 import { AuthUserContext } from "@/features/auth/model/AuthContext";
-import type { ResponseMe } from "@/shared/api/dto";
+import type { ResponseMe } from "@/shared/api/generated/schema";
 
 export default function AuthGate() {
   const navigate = useNavigate();

@@ -3,7 +3,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { motion } from "motion/react";
 import Card from "@/shared/ui/Card";
 import * as DocumentApi from "@/entities/document/api/documentApi";
-import type { ResponseListDocuments } from "@/shared/api/dto";
+import type { ResponseListDocuments } from "@/shared/api/generated/schema";
 import { handleApiError } from "@/shared/api/http";
 import { useLang } from "@/shared/lib/useLang";
 

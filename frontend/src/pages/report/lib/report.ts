@@ -929,8 +929,8 @@ export function buildReport(
     ),
     subtitle: L(
       lang,
-      "基于企业画像、图谱关系与评分归因自动生成",
-      "Auto-generated from the company profile, graph relations and score attribution",
+      "基于演示企业画像、图谱关系与评分归因模拟生成",
+      "Simulated from demo company profile, graph relations and score attribution",
     ),
     generatedAt: detail.evaluatedAt,
     modelVersion: detail.modelVersion,

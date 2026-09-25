@@ -32,7 +32,7 @@ export default function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
     if (!query.trim()) { setResults([]); return; }
     let active = true;
     const timer = window.setTimeout(() => {
-      CompanyApi.requestSearchCompany({ keyword: query.trim(), region: "all", sector: "all", risks: [], sort: "score_desc", page: 1, pageSize: 6 })
+      CompanyApi.requestSearchCompany({ keyword: query.trim(), region: "all", sector: "all", risks: [], sort: "score_desc", pagination: { page: 1, pageSize: 6 } })
         .then((data) => { if (active) setResults(data.items); })
         .catch((failure) => { if (active) handleApiError(failure); });
     }, 180);

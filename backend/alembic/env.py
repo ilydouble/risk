@@ -6,8 +6,8 @@ from sqlalchemy.pool import NullPool
 
 from alembic import context
 from risk_api import models  # noqa: F401  Register model metadata.
-from risk_api.config import settings
-from risk_api.db import Base
+from risk_api.shared.config import settings
+from risk_api.shared.db import Base
 
 config = context.config
 config.set_main_option("sqlalchemy.url", settings.database_url)

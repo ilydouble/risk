@@ -6,8 +6,6 @@ from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
 from stellarmesh_objectstorage import AsyncClient, ClientConfig
 
-from risk_api.config import settings
-from risk_api.db import session_factory
 from risk_api.modules.auth.repository import UserRepository
 from risk_api.modules.auth.service import AuthService
 from risk_api.modules.company.repository import CompanyRepository
@@ -17,6 +15,8 @@ from risk_api.modules.document.service import DocumentService
 from risk_api.modules.graph.repository import GraphRepository
 from risk_api.modules.graph.service import GraphService
 from risk_api.modules.score.service import ScoreService
+from risk_api.shared.config import settings
+from risk_api.shared.db import session_factory
 
 
 class InfrastructureProvider(Provider):

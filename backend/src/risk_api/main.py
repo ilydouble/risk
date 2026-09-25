@@ -8,14 +8,14 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from stellarmesh_logging import JSONFormatter
 
-from risk_api.config import settings
 from risk_api.dependencies import InfrastructureProvider
 from risk_api.errors import AppError, register_error_handlers
-from risk_api.modules.auth.api import router as auth_router
-from risk_api.modules.company.api import router as company_router
-from risk_api.modules.document.api import router as document_router
-from risk_api.modules.graph.api import router as graph_router
-from risk_api.modules.score.api import router as score_router
+from risk_api.modules.auth.api.route import router as auth_router
+from risk_api.modules.company.api.route import router as company_router
+from risk_api.modules.document.api.route import router as document_router
+from risk_api.modules.graph.api.route import router as graph_router
+from risk_api.modules.score.api.route import router as score_router
+from risk_api.shared.config import settings
 
 handler = logging.StreamHandler()
 handler.setFormatter(JSONFormatter())

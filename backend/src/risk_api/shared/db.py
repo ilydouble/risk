@@ -3,7 +3,7 @@ from collections.abc import AsyncIterator
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 
-from risk_api.config import settings
+from risk_api.shared.config import settings
 
 
 class Base(DeclarativeBase):

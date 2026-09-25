@@ -5,7 +5,6 @@ from typing import Any
 
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
-from fastapi import Request
 from redis.asyncio import Redis
 from redis.exceptions import RedisError
 
@@ -73,8 +72,8 @@ class AuthService:
         except RedisError as error:
             raise AuthError("STORE_UNAVAILABLE") from error
 
-    async def authorize(self, request: Request) -> dict[str, Any]:
-        identity = await self.identity(request.cookies.get(COOKIE_NAME))
-        if request.headers.get("X-User-ID") != identity["user_id"]:
+    async def authorize(self, token: str | None, user_id: str | None) -> dict[str, Any]:
+        identity = await self.identity(token)
+        if user_id != identity["user_id"]:
             raise AuthError("SESSION_EXPIRED")
         return identity

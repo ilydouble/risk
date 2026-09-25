@@ -5,7 +5,7 @@ from sqlalchemy import DateTime, ForeignKey, Integer, String, func
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
-from risk_api.db import Base
+from risk_api.shared.db import Base
 
 
 class User(Base):

@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "type-check": "tsc --noEmit --project tsconfig.app.json",
-    "generate:api": "openapi-typescript ../contracts/openapi.json -o src/shared/api/schema.ts && node scripts/generate-dto-aliases.mjs"
+    "api:generate": "node scripts/generate-api.mjs"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "1.1.23",

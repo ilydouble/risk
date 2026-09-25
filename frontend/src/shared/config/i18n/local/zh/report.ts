@@ -26,7 +26,7 @@ export default {
       paused: "已暂停 · 已完成 {{done}} / {{total}} 句",
     },
     body: {
-      generating: "正在调用模型、聚合证据并生成报告正文…",
+      generating: "正在根据演示证据模拟生成报告正文…",
       generatingBadge: "生成中",
       done: "报告生成完成 · 共 {{sent}} 句 · 引用 {{ev}} 条证据",
       modelAt: "模型 {{version}} · 生成于 {{time}}",

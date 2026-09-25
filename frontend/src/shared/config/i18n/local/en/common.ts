@@ -17,8 +17,8 @@ export default {
   sidebar: {
     closeNav: "Close navigation",
     demoRunning: "Demo mode running",
-    connected: "Connected to production",
-    versionLine: "v4.2.0 · Snapshot 09-24",
+    connected: "Demo data loaded",
+    versionLine: "Seed snapshot · not live data",
   },
   topbar: {
     openNav: "Open navigation",

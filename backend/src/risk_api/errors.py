@@ -1,12 +1,11 @@
 import logging
-from uuid import uuid4
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from risk_api.schemas import ApiEnvelope, ErrorDetail
+from risk_api.shared.api.response import error_response as serialize_error_response
 
 logger = logging.getLogger(__name__)
 
@@ -20,17 +19,12 @@ class AppError(Exception):
 
 
 def error_response(request: Request, error: AppError) -> JSONResponse:
-    request_id = getattr(request.state, "request_id", str(uuid4()))
-    payload = ApiEnvelope[ErrorDetail](
-        code=error.status,
+    return serialize_error_response(
+        request,
+        status=error.status,
         internal_code=error.code,
         message=error.message,
-        data=ErrorDetail(field=error.field, reason=error.message),
-    )
-    return JSONResponse(
-        status_code=error.status,
-        headers={"X-Request-ID": request_id},
-        content=payload.model_dump(),
+        field=error.field,
     )
 
 

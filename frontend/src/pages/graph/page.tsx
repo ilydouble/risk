@@ -30,7 +30,7 @@ export default function GraphPage() {
 
   useEffect(() => {
     let active = true;
-    CompanyApi.requestSearchCompany({ keyword: "", region: "all", sector: "all", risks: [], sort: "score_desc", page: 1, pageSize: 100 })
+    CompanyApi.requestSearchCompany({ keyword: "", region: "all", sector: "all", risks: [], sort: "score_desc", pagination: { page: 1, pageSize: 100 } })
       .then((data) => { if (active) setCompanies(data.items); })
       .catch((failure) => { if (active) setError(handleApiError(failure)); });
     return () => { active = false; };

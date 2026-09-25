@@ -20,7 +20,7 @@ export default {
     },
     ready: {
       title: "名单已就绪，共 {{count}} 条记录",
-      desc: "将逐条匹配企业库并调用模型批量输出信用分、等级、违约概率与建议结论，随后按信用分排序。",
+      desc: "将逐条匹配演示企业名单，使用样例数据展示信用分、等级、违约概率与建议结论，随后按信用分排序。",
       start: "开始批量评分",
     },
     run: {
@@ -131,7 +131,7 @@ export default {
       matchLabel: "企业库主体匹配",
       matchDetail: "与授信库 {{total}} 家主体比对，命中 {{valid}} 家",
       scoreLabel: "批量评分与风险分级",
-      scoreDetail: "调用模型 {{version}} 逐条输出信用分、等级与违约概率",
+      scoreDetail: "使用样例数据模拟 {{version}} 信用分、等级与违约概率",
       rankLabel: "排序与结果汇总",
       rankDetail: "按信用分降序排名，标记异常与重复记录并生成结果表",
     },

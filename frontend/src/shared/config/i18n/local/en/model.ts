@@ -6,7 +6,7 @@ export default {
         "Offline validation and stability monitoring · AUC / KS / Lift / Brier, calibration, ablation and extrapolation decay are all one-click reproducible",
       backToOverview: "Back to overview",
       historyBanner:
-        "Viewing historical version {{version}} (archived {{date}}) · This version's metrics are a read-only snapshot; the model definition differs from the current production version and is for retrospective comparison only",
+        "Viewing historical demo version {{version}} (archived {{date}}) · These illustrative metrics are a read-only snapshot for comparison only",
       archived: "archived {{date}}",
       backToCurrent: "Back to current version",
     },
@@ -164,11 +164,11 @@ export default {
     version: {
       title: "Version history",
       subtitle: "Newest to oldest · click any version to view its metrics in the evaluation dashboard",
-      current: "Current production version",
+      current: "Current demo version",
       viewInDashboard: "View this version's metrics in the dashboard",
     },
     drift: {
-      title: "Live drift monitoring",
+      title: "Demo drift monitoring",
       subtitle: "Monthly PSI inspection · above 0.1 enters watch, 0.25 triggers a retraining review",
       chartLabel: "Score distribution PSI, last 6 months",
       threshold: "Thresholds 0.10 / 0.25",
@@ -190,7 +190,7 @@ export default {
       sampleSize: "Samples",
       engine: "Inference engine",
       startedAt: "Started at",
-      complete: "Reproduction complete · results verified",
+      complete: "Demo replay complete · sample results shown",
       running: "Reproducing…",
       matchBaseline: "Matches baseline",
       logs: "Run logs",

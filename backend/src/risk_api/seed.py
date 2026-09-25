@@ -9,9 +9,9 @@ from argon2 import PasswordHasher
 from neo4j import AsyncGraphDatabase
 from sqlalchemy.dialects.postgresql import insert
 
-from risk_api.config import settings
-from risk_api.db import session_factory
 from risk_api.models import Company, User
+from risk_api.shared.config import settings
+from risk_api.shared.db import session_factory
 
 
 async def seed_company_rows(records: list[dict[str, Any]]) -> None:

@@ -20,7 +20,7 @@ export default {
     },
     ready: {
       title: "List ready · {{count}} records",
-      desc: "Each row will be matched against the company library and the model will output credit score, grade, default probability and recommendation, then rank by credit score.",
+      desc: "Each row will be matched against the demo company list and scored with sample data, then ranked by credit score.",
       start: "Start batch scoring",
     },
     run: {
@@ -138,7 +138,7 @@ export default {
         "Compared against {{total}} entities in the credit library, matched {{valid}}",
       scoreLabel: "Batch scoring & risk grading",
       scoreDetail:
-        "Invoke model {{version}} to output credit score, grade and default probability row by row",
+        "Simulate {{version}} scores, grades and default probabilities from sample data",
       rankLabel: "Ranking & result summary",
       rankDetail:
         "Rank by credit score desc, flag anomalies and duplicates, and build the result table",

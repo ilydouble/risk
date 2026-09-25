@@ -1,7 +1,7 @@
 from typing import Any, Literal
 
 from risk_api.errors import AppError
-from risk_api.schemas import ErrorEnvelope
+from risk_api.shared.api.envelope import ErrorEnvelope
 
 
 class GraphNotFound(AppError):

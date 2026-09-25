@@ -685,8 +685,8 @@ export function buildEvalDashboard(
 /* Reproduce runs                                                      */
 /* ------------------------------------------------------------------ */
 
-const SNAPSHOT = "snap-4.2.0-prod";
-const ENGINE = "xgboost@4.2.0 + eval-kit@1.4";
+const SNAPSHOT = "snap-4.2.0-demo";
+const ENGINE = "demo-simulator@1.0";
 
 function seedFrom(text: string): string {
   let hash = 0;
@@ -717,15 +717,15 @@ function describeTarget(
       title: L(lang, "复现全部指标", "Reproduce all metrics"),
       subtitle: L(
         lang,
-        "对四项主指标、校准曲线、消融实验与跨国外推衰减执行端到端复现",
-        "End-to-end reproduction of the four main metrics, calibration curve, ablation study and cross-country extrapolation decay",
+        "回放四项主指标、校准曲线、消融实验与跨国外推衰减的演示快照",
+        "Replay demo snapshots of the four main metrics, calibration curve, ablation and cross-country extrapolation decay",
       ),
       focusLabel: L(lang, "复现结论", "Result"),
-      focusValue: L(lang, "全部指标与基线一致", "All metrics match the baseline"),
+      focusValue: L(lang, "演示指标已展示", "Demo metrics displayed"),
       focusNote: L(
         lang,
-        "逐项比对偏差均小于 1e-4，复现记录已写入验证台账",
-        "Item-by-item deviation is below 1e-4; the reproduction record was written to the validation log",
+        "展示预设快照，未执行真实模型计算或验证",
+        "Preset snapshots are shown; no live model computation or validation ran",
       ),
       metricLabel: L(lang, "全部指标", "All metrics"),
     };

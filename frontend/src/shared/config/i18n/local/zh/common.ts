@@ -17,8 +17,8 @@ export default {
   sidebar: {
     closeNav: "关闭导航",
     demoRunning: "演示模式运行中",
-    connected: "连接正式数据源",
-    versionLine: "v4.2.0 · 数据快照 09-24",
+    connected: "演示数据已加载",
+    versionLine: "种子快照 · 非实时数据",
   },
   topbar: {
     openNav: "打开导航",

@@ -1559,6 +1559,26 @@
         "title": "GraphNode",
         "type": "object"
       },
+      "PageRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "page": {
+            "default": 1,
+            "minimum": 1.0,
+            "title": "Page",
+            "type": "integer"
+          },
+          "pageSize": {
+            "default": 50,
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Pagesize",
+            "type": "integer"
+          }
+        },
+        "title": "PageRequest",
+        "type": "object"
+      },
       "RelatedParty": {
         "properties": {
           "exposure": {
@@ -1796,6 +1816,7 @@
         "type": "object"
       },
       "RequestSearchCompany": {
+        "additionalProperties": false,
         "properties": {
           "keyword": {
             "default": "",
@@ -1803,18 +1824,8 @@
             "title": "Keyword",
             "type": "string"
           },
-          "page": {
-            "default": 1,
-            "minimum": 1.0,
-            "title": "Page",
-            "type": "integer"
-          },
-          "pageSize": {
-            "default": 50,
-            "maximum": 100.0,
-            "minimum": 1.0,
-            "title": "Pagesize",
-            "type": "integer"
+          "pagination": {
+            "$ref": "#/components/schemas/PageRequest"
           },
           "region": {
             "default": "all",
@@ -2066,14 +2077,18 @@
             "type": "array"
           },
           "page": {
+            "minimum": 1.0,
             "title": "Page",
             "type": "integer"
           },
           "pageSize": {
+            "maximum": 100.0,
+            "minimum": 1.0,
             "title": "Pagesize",
             "type": "integer"
           },
           "total": {
+            "minimum": 0.0,
             "title": "Total",
             "type": "integer"
           }

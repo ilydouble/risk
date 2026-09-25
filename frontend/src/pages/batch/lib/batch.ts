@@ -375,8 +375,8 @@ export function buildBatchRun(
       label: L(lang, "批量评分与风险分级", "Batch scoring & risk grading"),
       detail: L(
         lang,
-        `调用模型 ${MODEL_VERSION} 逐条输出信用分、等级与违约概率`,
-        `Invoke model ${MODEL_VERSION} to output credit score, grade and default probability row by row`,
+        `使用样例数据模拟 ${MODEL_VERSION} 信用分、等级与违约概率`,
+        `Simulate ${MODEL_VERSION} scores, grades and default probabilities from sample data`,
       ),
       durationMs: 940,
     },

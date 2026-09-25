@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.elements import ColumnElement
 
 from risk_api.models import Company
-from risk_api.schemas import RequestSearchCompany
+from risk_api.modules.company.query import CompanySearchQuery
 
 
 class CompanyRepository:
@@ -15,7 +15,7 @@ class CompanyRepository:
     async def by_id(self, company_id: str) -> Company | None:
         return await self.session.get(Company, company_id)
 
-    async def search(self, query: RequestSearchCompany) -> tuple[list[Company], int]:
+    async def search(self, query: CompanySearchQuery) -> tuple[list[Company], int]:
         statement = select(Company)
         if query.keyword:
             pattern = f"%{query.keyword.strip()}%"
@@ -44,7 +44,7 @@ class CompanyRepository:
             order = Company.credit_score.desc()
         rows = await self.session.scalars(
             statement.order_by(order, Company.id)
-            .offset((query.page - 1) * query.pageSize)
-            .limit(query.pageSize)
+            .offset((query.page - 1) * query.page_size)
+            .limit(query.page_size)
         )
         return list(rows), total or 0

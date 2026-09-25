@@ -1,12 +1,9 @@
-from dishka.integrations.fastapi import DishkaRoute, FromDishka
-from fastapi import APIRouter, Request, Response
+from typing import Any
 
-from risk_api.config import settings
-from risk_api.modules.auth.errors import LOGIN_ERRORS, LOGOUT_ERRORS, SESSION_ERRORS
-from risk_api.modules.auth.service import COOKIE_NAME, SESSION_SECONDS, AuthService
-from risk_api.schemas import (
-    COMMON_ERROR_RESPONSES,
-    ApiEnvelope,
+from dishka.integrations.fastapi import FromDishka
+from fastapi import Request, Response
+
+from risk_api.modules.auth.api.schemas import (
     RequestLogin,
     RequestLogout,
     RequestMe,
@@ -14,14 +11,16 @@ from risk_api.schemas import (
     ResponseLogout,
     ResponseMe,
 )
+from risk_api.modules.auth.service import COOKIE_NAME, SESSION_SECONDS, AuthService
+from risk_api.shared.api.envelope import ApiEnvelope
+from risk_api.shared.api.response import success
+from risk_api.shared.config import settings
 
-router = APIRouter(route_class=DishkaRoute)
+
+async def authorize_request(request: Request, auth: AuthService) -> dict[str, Any]:
+    return await auth.authorize(request.cookies.get(COOKIE_NAME), request.headers.get("X-User-ID"))
 
 
-@router.post(
-    "/login", response_model=ApiEnvelope[ResponseLogin],
-    responses=COMMON_ERROR_RESPONSES | LOGIN_ERRORS,
-)
 async def login(
     body: RequestLogin, response: Response, service: FromDishka[AuthService]
 ) -> ApiEnvelope[ResponseLogin]:
@@ -35,48 +34,33 @@ async def login(
         samesite="strict",
         path="/",
     )
-    return ApiEnvelope(
-        code=200,
-        internal_code="SUCCESS",
-        message="Login successful",
-        data=ResponseLogin(
+    return success(
+        ResponseLogin(
             userId=identity["user_id"],
             username=identity["username"],
             displayName=identity["display_name"],
             expiresIn=SESSION_SECONDS,
         ),
+        message="Login successful",
     )
 
 
-@router.post(
-    "/logout", response_model=ApiEnvelope[ResponseLogout],
-    responses=COMMON_ERROR_RESPONSES | LOGOUT_ERRORS,
-)
 async def logout(
     _: RequestLogout, request: Request, response: Response, service: FromDishka[AuthService]
 ) -> ApiEnvelope[ResponseLogout]:
     await service.logout(request.cookies.get(COOKIE_NAME))
     response.delete_cookie(COOKIE_NAME, path="/", secure=settings.cookie_secure, samesite="strict")
-    return ApiEnvelope(
-        code=200, internal_code="SUCCESS", message="Logged out", data=ResponseLogout(loggedOut=True)
-    )
+    return success(ResponseLogout(loggedOut=True), message="Logged out")
 
 
-@router.post(
-    "/me", response_model=ApiEnvelope[ResponseMe],
-    responses=COMMON_ERROR_RESPONSES | SESSION_ERRORS,
-)
 async def me(
     _: RequestMe, request: Request, service: FromDishka[AuthService]
 ) -> ApiEnvelope[ResponseMe]:
     identity = await service.identity(request.cookies.get(COOKIE_NAME))
-    return ApiEnvelope(
-        code=200,
-        internal_code="SUCCESS",
-        message="OK",
-        data=ResponseMe(
+    return success(
+        ResponseMe(
             userId=identity["user_id"],
             username=identity["username"],
             displayName=identity["display_name"],
-        ),
+        )
     )
