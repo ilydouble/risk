@@ -16,6 +16,6 @@ Go 容器构建使用 `gateway/vendor/`，避免容器网络无法连接模块�
 
 ## 对象存储
 
-浏览器先调用业务 API 获取 60 秒预签名 PUT，直传 RustFS 后调用完成接口。完成接口核对对象存在与大小，再将 PostgreSQL 元数据置为可见；下载经业务 API 获取 60 秒 GET URL。`STORAGE_PUBLIC_ENDPOINT` 必须是浏览器可访问的地址，`STORAGE_ENDPOINT` 是容器内地址；修改 `PUBLIC_ORIGINS` 时同时更新 Bucket CORS。
+浏览器先调用业务 API 获取 60 秒预签名 PUT，直传 RustFS 后调用完成接口。完成接口核对对象存在与大小，再将 PostgreSQL 元数据置为可见；下载经业务 API 获取 60 秒 GET URL。浏览器地址默认由 `RUSTFS_API_HOST_PORT` 生成，容器内 `STORAGE_ENDPOINT` 固定；自定义 `STORAGE_PUBLIC_ENDPOINT` 必须可由浏览器访问。Origin 默认由 `FRONTEND_HOST_PORT` 生成并用于 Bucket CORS；自定义 `PUBLIC_ORIGINS` 会同时传给网关、后端和 RustFS 初始化容器。
 
 Compose 默认凭据仅适合本机演示；共享或外网环境须换密码、配置 HTTPS 与 Cookie Secure，重新审视对外端口和 CORS。

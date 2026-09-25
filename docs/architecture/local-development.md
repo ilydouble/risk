@@ -8,7 +8,18 @@ docker compose up --build -d
 docker compose ps -a
 ```
 
-浏览器访问 `http://localhost:18080`；登录页可自助创建演示账号，默认账号 `demo` 的密码取 `.env` 的 `DEMO_PASSWORD`（示例值 `demo-change-me`）。Vite 开发端口为 3000，API 网关诊断端口 18081，RustFS API/Console 为 19000/19001，均绑定本机。新环境请先修改 `.env` 中的凭据。项目名 `risk` 负责容器命名空间，服务键不重复加前缀。运行 `docker compose down` 不删除命名卷；服务更名后可加 `--remove-orphans` 清理旧容器，不使用 `-v`。Redis 不持久化，重建时需要重新登录。
+浏览器默认访问 `http://localhost:18080`；登录页可自助创建演示账号，默认账号 `demo` 的密码取 `.env` 的 `DEMO_PASSWORD`（示例值 `demo-change-me`）。新环境请先修改 `.env` 中的凭据。项目名 `risk` 负责容器命名空间，服务键不重复加前缀。运行 `docker compose down` 不删除命名卷；服务更名后可加 `--remove-orphans` 清理旧容器，不使用 `-v`。Redis 不持久化，重建时需要重新登录。
+
+宿主机端口在 `.env` 中单独设置，所有映射只绑定 `127.0.0.1`；容器内端口和服务间地址保持固定：
+
+| 变量 | 默认宿主机端口 | 容器端口 |
+| --- | ---: | ---: |
+| `FRONTEND_HOST_PORT` | 18080 | 80 |
+| `GATEWAY_HOST_PORT` | 18081 | 8081 |
+| `RUSTFS_API_HOST_PORT` | 19000 | 9000 |
+| `RUSTFS_CONSOLE_HOST_PORT` | 19001 | 9001 |
+
+本机默认的 Origin 白名单随前端端口变化，浏览器预签名地址随 RustFS API 端口变化；独立运行的 Vite 仍监听 3000，其 API 代理会读取仓库根目录 `.env` 的网关端口。自定义域名可显式设置 `PUBLIC_ORIGINS`、`STORAGE_PUBLIC_ENDPOINT`，`VITE_API_PROXY` 仍可覆盖开发代理。旧 `.env` 如保留固定的 `PUBLIC_ORIGINS` 或 `STORAGE_PUBLIC_ENDPOINT`，需删除这两项旧默认值才能让端口自动联动；自定义值会继续覆盖默认值。
 
 镜像构建如需经过宿主机代理，在 `.env` 设置 `BUILD_HTTP_PROXY`、`BUILD_HTTPS_PROXY`，地址可使用 `host.docker.internal`；`BUILD_NO_PROXY` 用于排除直连地址。这些变量只用于源码镜像的构建步骤，不传给运行中的应用。RustFS 服务固定为 `rustfs/rustfs:1.0.0`，切换镜像前保留现有数据卷。
 
