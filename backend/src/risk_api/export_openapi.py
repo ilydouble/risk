@@ -4,7 +4,7 @@ import json
 from asyncio import run
 from pathlib import Path
 
-from risk_api.main import create_app
+from risk_api.app import create_app
 
 
 def main() -> None:

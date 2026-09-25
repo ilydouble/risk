@@ -1,5 +1,5 @@
 import logging
-from collections.abc import AsyncIterator
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
 from dishka import make_async_container
@@ -21,7 +21,7 @@ from risk_api.shared.logging import configure_logging
 logger = logging.getLogger("risk_api.http")
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     try:
         configure_logging(settings.log_level, output_format=settings.log_format)
         logger.info("backend.started")

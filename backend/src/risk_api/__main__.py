@@ -9,7 +9,7 @@ from risk_api.shared.logging import configure_logging
 def main() -> None:
     configure_logging(settings.log_level, output_format=settings.log_format)
     uvicorn.run(
-        "risk_api.main:create_app",
+        "risk_api.app:create_app",
         factory=True,
         host="0.0.0.0",
         port=8000,

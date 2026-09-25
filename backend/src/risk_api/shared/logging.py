@@ -2,7 +2,7 @@
 
 import logging
 import sys
-from collections.abc import Iterator
+from collections.abc import Generator
 from contextlib import contextmanager
 from contextvars import ContextVar
 from typing import TextIO
@@ -26,8 +26,7 @@ class _ApplicationHandler(logging.StreamHandler):
 class _RuntimeRecordFilter(logging.Filter):
     def filter(self, record: logging.LogRecord) -> bool:
         # Uvicorn supplies a terminal-formatted duplicate that is not useful in JSON output.
-        if hasattr(record, "color_message"):
-            del record.color_message
+        record.__dict__.pop("color_message", None)
         request_id = _request_id.get()
         if request_id is not None and not hasattr(record, "request_id"):
             record.request_id = request_id
@@ -73,7 +72,7 @@ def configure_logging(
     uvicorn_logger.addHandler(handler)
     uvicorn_logger.setLevel(logging.INFO)
     uvicorn_logger.propagate = False
-    # Direct `uvicorn risk_api.main:create_app --factory` installs child handlers before lifespan.
+    # Direct `uvicorn risk_api.app:create_app --factory` installs child handlers before lifespan.
     uvicorn_error = logging.getLogger("uvicorn.error")
     for existing in tuple(uvicorn_error.handlers):
         uvicorn_error.removeHandler(existing)
@@ -93,7 +92,7 @@ def configure_logging(
 
 
 @contextmanager
-def request_log_context(request_id: str) -> Iterator[None]:
+def request_log_context(request_id: str) -> Generator[None, None, None]:
     token = _request_id.set(request_id)
     try:
         yield

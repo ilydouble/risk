@@ -9,7 +9,7 @@ backend/
   alembic/versions/V0001_initial_schema.py
   seed/demo/C-1001.json … C-1008.json
   src/risk_api/
-    main.py, dependencies.py
+    app.py, __main__.py, dependencies.py
     shared/
       config.py, db.py, logging.py
       api/{envelope,page,response,middleware}.py
@@ -20,7 +20,7 @@ backend/
 
 `route.py` 声明路径与响应模型；`handler.py` 处理 HTTP、依赖注入及 DTO 映射；`schemas.py` 是模块自己的请求/响应 DTO。`auth`、`company`、`document` 的 `model.py` 保存各自 SQLAlchemy 映射；图谱和评分不为凑目录建立模型文件。Service 处理认证、查询、文件流程，Repository 处理数据库/图谱。Service 和 Repository 不引用 HTTP DTO。公共分页请求为 `PageRequest`，列表响应继承 `Page[T]`。模块错误映射为 `AppError`，全局 handler 调用公共响应函数序列化；参数校验、路由错误与未处理错误也走同一信封。
 
-`create_app()` 为每个 FastAPI 实例创建并装配自己的 Dishka 容器；lifespan 从 `app.state.dishka_container` 关闭它。Uvicorn 使用 `risk_api.main:create_app` factory，OpenAPI 导出也创建并关闭独立应用。请求 ID、Origin 校验与完成日志集中在 `shared/api/middleware.py`。
+`app.py` 中的 `create_app()` 为每个 FastAPI 实例创建并装配自己的 Dishka 容器；lifespan 从 `app.state.dishka_container` 关闭它。`__main__.py` 在 `python -m risk_api` 启动 Uvicorn 前配置日志；Uvicorn 使用 `risk_api.app:create_app` factory。OpenAPI 导出也创建并关闭独立应用。请求 ID、Origin 校验与完成日志集中在 `shared/api/middleware.py`。
 
 ## 数据与生命周期
 
@@ -37,7 +37,7 @@ Python 锁文件固定 `stellarmesh-logging` 0.5.1 与 `stellarmesh-objectstorag
 
 ## 日志边界
 
-`shared/logging.py` 统一配置应用与 Uvicorn 的 stdout handler，并用 request context 将 `X-Request-ID` 加到模块日志；HTTP、Alembic 和一次性种子进程分别调用该配置。HTTP 进程不修改根 logger，独立运行的 Alembic CLI 则接管其文本根 handler，以便迁移日志也遵循所选格式。导出 OpenAPI 时不会因导入 `main.py` 而安装 handler。重复配置不会叠加 handler。`RISK_LOG_LEVEL` 控制应用日志级别，默认 `INFO`；`RISK_LOG_FORMAT=pretty|json` 选择同一 SDK 的可读输出或单行 JSON。Compose 本地默认 `pretty`，部署日志采集器时设为 `json`。
+`shared/logging.py` 统一配置应用与 Uvicorn 的 stdout handler，并用 request context 将 `X-Request-ID` 加到模块日志；HTTP、Alembic 和一次性种子进程分别调用该配置。HTTP 进程不修改根 logger，独立运行的 Alembic CLI 则接管其文本根 handler，以便迁移日志也遵循所选格式。导出 OpenAPI 时不会因导入 `app.py` 而安装 handler。重复配置不会叠加 handler。`RISK_LOG_LEVEL` 控制应用日志级别，默认 `INFO`；`RISK_LOG_FORMAT=pretty|json` 选择同一 SDK 的可读输出或单行 JSON。Compose 本地默认 `pretty`，部署日志采集器时设为 `json`。
 
 业务请求各输出一条完成日志，包含方法、路由模板、HTTP 状态、`internal_code` 和耗时；正常健康检查不逐次记录。注册、登录成功和文档预签名/确认等关键写入另记事件，仅记录内部 ID 与尺寸，不记录密码、Cookie、请求体、文件名、对象密钥或预签名 URL。已处理的 5xx 记录稳定错误码与底层异常类型；未处理异常记录堆栈及请求 ID。SDK formatter 负责字段脱敏与有界 JSON 编码，但不会扫描自由文本中的秘密，因此新增日志也须避免拼接敏感值。
 

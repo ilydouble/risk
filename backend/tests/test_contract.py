@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 
-from risk_api.main import create_app
+from risk_api.app import create_app
 from risk_api.modules.company.api.schemas import ResponseSearchCompany
 
 

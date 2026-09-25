@@ -5,8 +5,8 @@ from io import StringIO
 from fastapi import APIRouter, FastAPI
 from fastapi.testclient import TestClient
 
+from risk_api.app import create_app
 from risk_api.errors import AppError, register_error_handlers
-from risk_api.main import create_app
 from risk_api.shared.api.middleware import request_policy
 from risk_api.shared.logging import configure_logging, request_log_context
 
