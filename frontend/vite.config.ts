@@ -76,11 +76,13 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": resolve(__dirname, "./src"),
+      "@": resolve(import.meta.dirname, "./src"),
     },
   },
   server: {
+    proxy: { "/api": { target: process.env.COMRISK_API_TARGET || "http://127.0.0.1:8000", changeOrigin: true, rewrite: path => path.replace(/^\/api/, "") } },
     port: 3000,
-    host: "0.0.0.0",
+    host: "127.0.0.1",
+    strictPort: true,
   },
 });

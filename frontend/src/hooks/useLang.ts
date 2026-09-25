@@ -12,5 +12,6 @@ export function useLang() {
   const pick = (zh?: string, en?: string): string =>
     isEn && en ? en : (zh ?? "");
 
-  return { isEn, lang: isEn ? "en" : "zh", pick };
+  const lang: "en" | "zh" = isEn ? "en" : "zh";
+  return { isEn, lang, pick };
 }

@@ -58,3 +58,15 @@ Thumbs.db
 
 # Misc
 *.zip
+
+# Model development: keep datasets and trained artifacts local
+.venv/
+__pycache__/
+.pytest_cache/
+*.egg-info/
+backend/data/raw/*
+!backend/data/raw/.gitkeep
+backend/data/processed/
+backend/artifacts/
+
+frontend/out/

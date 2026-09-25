@@ -37,7 +37,7 @@ export const NAV_GROUPS: NavGroup[] = [
       {
         key: "company",
         labelKey: "nav.company",
-        path: `/company/${DEFAULT_COMPANY_ID}`,
+        path: "/search",
         icon: "ri-building-2-line",
       },
     ],
