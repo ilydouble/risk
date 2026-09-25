@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
-import Card from "@/components/base/Card";
-import { useLang } from "@/hooks/useLang";
-import type { Company, CompanyFactsEn, CompanyFacts } from "@/types";
+import Card from "@/shared/ui/Card";
+import { useLang } from "@/shared/lib/useLang";
+import type { Company, CompanyFactsEn, CompanyFacts } from "@/entities/demo/model/types";
 
 interface BusinessInfoCardProps {
   company: Company;

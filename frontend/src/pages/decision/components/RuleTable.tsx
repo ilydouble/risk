@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import Card from "@/components/base/Card";
+import Card from "@/shared/ui/Card";
 import { ruleSeverityMeta } from "@/pages/decision/lib/decision";
-import { useLang } from "@/hooks/useLang";
-import type { DecisionDoc, DecisionRule } from "@/types";
+import { useLang } from "@/shared/lib/useLang";
+import type { DecisionDoc, DecisionRule } from "@/entities/demo/model/types";
 
 interface RuleTableProps {
   decision: DecisionDoc;

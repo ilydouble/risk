@@ -1,21 +1,21 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
-import AppShell from "@/components/feature/AppShell";
-import StatusPill from "@/components/base/StatusPill";
+import PageFrame from "@/features/workbench-layout/ui/PageFrame";
+import StatusPill from "@/entities/risk/ui/StatusPill";
 import SearchFilterBar from "@/pages/search/components/SearchFilterBar";
 import CompanyResultItem from "@/pages/search/components/CompanyResultItem";
 import GroupedResults from "@/pages/search/components/GroupedResults";
 import {
   exportCompaniesCsv,
-  filterCompanies,
   groupCompanies,
   riskLabel,
   type GroupKey,
   type SortKey,
 } from "@/pages/search/lib/query";
-import { companies } from "@/mocks/companies";
-import type { RiskLevel } from "@/types";
+import * as CompanyApi from "@/entities/company/api/companyApi";
+import { handleApiError } from "@/shared/api/http";
+import type { Company, RiskLevel } from "@/entities/demo/model/types";
 
 export default function SearchPage() {
   const { t } = useTranslation();
@@ -39,6 +39,11 @@ export default function SearchPage() {
   const [view, setView] = useState<"list" | "grouped">("list");
   const [groupKey, setGroupKey] = useState<GroupKey>("region");
   const [toast, setToast] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [results, setResults] = useState<Company[]>([]);
+  const [allCompanies, setAllCompanies] = useState<Company[]>([]);
+  const [total, setTotal] = useState(0);
   const lastUrlQ = useRef(urlQ);
 
   useEffect(() => {
@@ -55,10 +60,28 @@ export default function SearchPage() {
     return () => window.clearTimeout(timer);
   }, [toast]);
 
-  const results = useMemo(
-    () => filterCompanies({ keyword: applied, region, sector, risks, sort }),
-    [applied, region, sector, risks, sort],
-  );
+  useEffect(() => {
+    let active = true;
+    CompanyApi.requestSearchCompany({ keyword: "", region: "all", sector: "all", risks: [], sort: "score_desc", page: 1, pageSize: 100 })
+      .then((data) => { if (active) setAllCompanies(data.items); })
+      .catch((failure) => { if (active) setError(handleApiError(failure)); });
+    return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    setLoading(true);
+    CompanyApi.requestSearchCompany({ keyword: applied, region, sector, risks, sort, page: 1, pageSize: 100 })
+      .then((data) => {
+        if (!active) return;
+        setResults(data.items);
+        setTotal(data.total);
+        setError("");
+      })
+      .catch((failure) => { if (active) setError(handleApiError(failure)); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [applied, region, sector, risks, sort]);
 
   const groups = useMemo(
     () => (view === "grouped" ? groupCompanies(results, groupKey) : []),
@@ -124,7 +147,7 @@ export default function SearchPage() {
   };
 
   return (
-    <AppShell
+    <PageFrame
       title={t("search.title")}
       subtitle={t("search.subtitle")}
       actions={
@@ -208,6 +231,7 @@ export default function SearchPage() {
           </div>
 
           <SearchFilterBar
+            companies={allCompanies}
             region={region}
             onRegionChange={setRegion}
             sector={sector}
@@ -227,11 +251,11 @@ export default function SearchPage() {
           <p className="text-sm text-foreground-800">
             {t("search.hitPrefix")}{" "}
             <span className="font-mono text-base font-semibold text-primary-400">
-              {results.length}
+              {total}
             </span>{" "}
             {t("search.hitSuffix")}
             <span className="ml-1 text-xs text-foreground-500">
-              {t("search.inLibrary", { count: companies.length })}
+              {t("search.inLibrary", { count: allCompanies.length })}
             </span>
           </p>
           <div className="flex flex-wrap items-center gap-2">
@@ -327,6 +351,8 @@ export default function SearchPage() {
         </div>
       </div>
 
+      {error && <p role="alert" className="mb-3 text-xs text-accent-400">{error}</p>}
+      {loading && <p className="mb-3 text-xs text-foreground-500">{t("search.searchBtn")}…</p>}
       {results.length > 0 ? (
         view === "grouped" ? (
           <GroupedResults
@@ -391,6 +417,6 @@ export default function SearchPage() {
           </span>
         </div>
       )}
-    </AppShell>
+    </PageFrame>
   );
 }

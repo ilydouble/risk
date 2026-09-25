@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import type { EvalMetric } from "@/types";
+import type { EvalMetric } from "@/entities/demo/model/types";
 
 interface MetricCardsProps {
   metrics: EvalMetric[];

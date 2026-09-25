@@ -1,37 +1,50 @@
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import AppShell from "@/components/feature/AppShell";
+import PageFrame from "@/features/workbench-layout/ui/PageFrame";
 import ScoreOverviewHero from "@/pages/score/components/ScoreOverviewHero";
 import ShapWaterfall from "@/pages/score/components/ShapWaterfall";
 import ShapFeatureTable from "@/pages/score/components/ShapFeatureTable";
 import ModelExplainCard from "@/pages/score/components/ModelExplainCard";
 import CommunityComparison from "@/pages/score/components/CommunityComparison";
-import { findCompany, resolveProfile } from "@/pages/company/lib/profile";
-import { buildScoreDetail } from "@/pages/score/lib/score";
-import { useLang } from "@/hooks/useLang";
+import * as ScoreApi from "@/entities/score/api/scoreApi";
+import { handleApiError } from "@/shared/api/http";
+import type { Company, ScoreDetail } from "@/entities/demo/model/types";
+import { useLang } from "@/shared/lib/useLang";
 
 export default function ScorePage() {
   const { t } = useTranslation();
   const { lang } = useLang();
   const { id } = useParams();
-  const company = useMemo(() => findCompany(id), [id]);
+  const [company, setCompany] = useState<Company | null>(null);
+  const [detail, setDetail] = useState<ScoreDetail | null>(null);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  const detail = useMemo(
-    () =>
-      company ? buildScoreDetail(company, resolveProfile(company), lang) : null,
-    [company, lang],
-  );
+  useEffect(() => {
+    let active = true;
+    setLoading(true);
+    ScoreApi.requestGetScore({ companyId: id ?? "", lang })
+      .then((data) => {
+        if (!active) return;
+        setCompany(data.company);
+        setDetail(data.detail);
+        setError("");
+      })
+      .catch((failure) => { if (active) setError(handleApiError(failure, { COMPANY_NOT_FOUND: t("score.notFound.title") })); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [id, lang, t]);
 
   if (!company || !detail) {
     return (
-      <AppShell title={t("score.title")} subtitle={t("score.notFound.shellSubtitle")}>
+      <PageFrame title={t("score.title")} subtitle={t("score.notFound.shellSubtitle")}>
         <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-background-300 bg-background-100 px-6 py-20 text-center">
           <span className="flex h-14 w-14 items-center justify-center rounded-full bg-background-200 text-foreground-500">
             <i className="ri-bar-chart-box-line text-2xl"></i>
           </span>
           <h3 className="mt-4 text-[15px] font-semibold text-foreground-950">
-            {t("score.notFound.title")}
+            {loading ? "…" : error || t("score.notFound.title")}
           </h3>
           <p className="mt-1.5 max-w-md text-sm text-foreground-500">
             {t("score.notFound.desc", { id })}
@@ -44,12 +57,12 @@ export default function ScorePage() {
             {t("score.notFound.back")}
           </Link>
         </div>
-      </AppShell>
+      </PageFrame>
     );
   }
 
   return (
-    <AppShell
+    <PageFrame
       title={t("score.title")}
       subtitle={t("score.subtitle")}
       companyId={company.id}
@@ -78,6 +91,6 @@ export default function ScorePage() {
           <CommunityComparison company={company} benchmarks={detail.benchmarks} />
         </div>
       </div>
-    </AppShell>
+    </PageFrame>
   );
 }

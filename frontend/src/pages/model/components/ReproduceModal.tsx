@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import type { ReproduceRun } from "@/types";
+import type { ReproduceRun } from "@/entities/demo/model/types";
 
 interface ReproduceModalProps {
   run: ReproduceRun | null;

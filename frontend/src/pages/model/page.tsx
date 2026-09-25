@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import AppShell from "@/components/feature/AppShell";
+import PageFrame from "@/features/workbench-layout/ui/PageFrame";
 import ModelHeader from "@/pages/model/components/ModelHeader";
 import EvalVersionSwitcher from "@/pages/model/components/EvalVersionSwitcher";
 import MetricCards from "@/pages/model/components/MetricCards";
@@ -15,8 +15,8 @@ import {
   isEvalVersion,
 } from "@/pages/model/lib/eval";
 import { useReproduce } from "@/pages/model/hooks/useReproduce";
-import { useLang } from "@/hooks/useLang";
-import { modelVersionHistory } from "@/mocks/modelCard";
+import { useLang } from "@/shared/lib/useLang";
+import { modelVersionHistory } from "@/features/demo-scenarios/model/fixtures/modelCard";
 
 export default function ModelPage() {
   const { t } = useTranslation();
@@ -37,7 +37,7 @@ export default function ModelPage() {
   const activeEntry = modelVersionHistory.find((entry) => entry.version === version);
 
   return (
-    <AppShell
+    <PageFrame
       title={t("model.dashboard.title")}
       subtitle={t("model.dashboard.subtitle")}
       modelTabs
@@ -102,6 +102,6 @@ export default function ModelPage() {
         onClose={repro.close}
         onRestart={repro.restart}
       />
-    </AppShell>
+    </PageFrame>
   );
 }

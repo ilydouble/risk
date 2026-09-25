@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
-import Card from "@/components/base/Card";
-import { chartPalette } from "@/theme/palette";
-import type { DecisionDoc } from "@/types";
+import Card from "@/shared/ui/Card";
+import { chartPalette } from "@/shared/config/theme/palette";
+import type { DecisionDoc } from "@/entities/demo/model/types";
 
 interface CreditLimitPanelProps {
   decision: DecisionDoc;

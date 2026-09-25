@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import Card from "@/components/base/Card";
-import { formatContribution } from "@/pages/score/lib/score";
-import { chartPalette } from "@/theme/palette";
-import type { ShapFeature } from "@/types";
+import Card from "@/shared/ui/Card";
+import { formatContribution } from "@/features/demo-scenarios/lib/score";
+import { chartPalette } from "@/shared/config/theme/palette";
+import type { ShapFeature } from "@/entities/demo/model/types";
 
 interface ShapFeatureTableProps {
   features: ShapFeature[];

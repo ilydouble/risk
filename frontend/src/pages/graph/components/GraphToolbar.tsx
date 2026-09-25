@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import SelectMenu from "@/components/base/SelectMenu";
+import SelectMenu from "@/shared/ui/SelectMenu";
 
 interface GraphToolbarProps {
   companyOptions: { value: string; label: string }[];

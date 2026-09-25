@@ -9,9 +9,9 @@ import {
   YAxis,
 } from "recharts";
 import { useTranslation } from "react-i18next";
-import Card from "@/components/base/Card";
-import { chartPalette } from "@/theme/palette";
-import type { CalibrationBin, CalibrationCurve } from "@/types";
+import Card from "@/shared/ui/Card";
+import { chartPalette } from "@/shared/config/theme/palette";
+import type { CalibrationBin, CalibrationCurve } from "@/entities/demo/model/types";
 
 interface CalibrationCardProps {
   curve: CalibrationCurve;

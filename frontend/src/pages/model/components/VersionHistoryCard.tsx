@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Card from "@/components/base/Card";
-import StatusPill from "@/components/base/StatusPill";
-import { modelVersionHistory } from "@/mocks/modelCard";
-import { useLang } from "@/hooks/useLang";
+import Card from "@/shared/ui/Card";
+import StatusPill from "@/entities/risk/ui/StatusPill";
+import { modelVersionHistory } from "@/features/demo-scenarios/model/fixtures/modelCard";
+import { useLang } from "@/shared/lib/useLang";
 
 export default function VersionHistoryCard() {
   const { t } = useTranslation();

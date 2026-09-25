@@ -1,11 +1,11 @@
-import { companies } from "@/mocks/companies";
-import { buildScoreDetail, formatContribution } from "@/pages/score/lib/score";
+import { companies } from "@/features/demo-scenarios/model/fixtures/companies";
+import { buildScoreDetail, formatContribution } from "@/features/demo-scenarios/lib/score";
 import {
   applyRiskTransmission,
   buildGraphData,
   riskLabel,
   riskLabelEn,
-} from "@/pages/graph/lib/graph";
+} from "@/features/demo-scenarios/lib/graph";
 import type {
   Company,
   CompanyProfile,
@@ -16,7 +16,7 @@ import type {
   ReportSection,
   ReportSentence,
   RiskLevel,
-} from "@/types";
+} from "@/entities/demo/model/types";
 
 export type Lang = "zh" | "en";
 

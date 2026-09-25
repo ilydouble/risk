@@ -1,9 +1,9 @@
 import { useTranslation } from "react-i18next";
-import Card from "@/components/base/Card";
-import { GRADE_BANDS, formatContribution } from "@/pages/score/lib/score";
-import { chartPalette } from "@/theme/palette";
-import { useLang } from "@/hooks/useLang";
-import type { ScoreDetail } from "@/types";
+import Card from "@/shared/ui/Card";
+import { GRADE_BANDS, formatContribution } from "@/features/demo-scenarios/lib/score";
+import { chartPalette } from "@/shared/config/theme/palette";
+import { useLang } from "@/shared/lib/useLang";
+import type { ScoreDetail } from "@/entities/demo/model/types";
 
 interface ModelExplainCardProps {
   detail: ScoreDetail;

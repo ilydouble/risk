@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
-import Card from "@/components/base/Card";
-import { modelPipeline, modelSpecs } from "@/mocks/modelCard";
-import { useLang } from "@/hooks/useLang";
+import Card from "@/shared/ui/Card";
+import { modelPipeline, modelSpecs } from "@/features/demo-scenarios/model/fixtures/modelCard";
+import { useLang } from "@/shared/lib/useLang";
 
 export default function ModelArchitectureCard() {
   const { t } = useTranslation();

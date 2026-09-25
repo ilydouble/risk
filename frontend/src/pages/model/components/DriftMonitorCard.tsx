@@ -1,11 +1,11 @@
 import { useTranslation } from "react-i18next";
-import Card from "@/components/base/Card";
-import StatusPill from "@/components/base/StatusPill";
-import Tooltip from "@/components/base/Tooltip";
-import { RISK_HINT } from "@/constants/status";
-import { driftMetrics, driftTrend } from "@/mocks/modelCard";
-import { useLang } from "@/hooks/useLang";
-import type { RiskLevel } from "@/types";
+import Card from "@/shared/ui/Card";
+import StatusPill from "@/entities/risk/ui/StatusPill";
+import Tooltip from "@/shared/ui/Tooltip";
+import { RISK_HINT } from "@/entities/risk/model/status";
+import { driftMetrics, driftTrend } from "@/features/demo-scenarios/model/fixtures/modelCard";
+import { useLang } from "@/shared/lib/useLang";
+import type { RiskLevel } from "@/entities/demo/model/types";
 
 const PSI_MAX = 0.35;
 

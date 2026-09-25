@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import AppShell from "@/components/feature/AppShell";
+import PageFrame from "@/features/workbench-layout/ui/PageFrame";
 import BatchUploadPanel from "@/pages/batch/components/BatchUploadPanel";
 import BatchRunPanel from "@/pages/batch/components/BatchRunPanel";
 import BatchSummary from "@/pages/batch/components/BatchSummary";
@@ -12,9 +12,9 @@ import {
   createSampleRoster,
   makeRosterFromText,
 } from "@/pages/batch/lib/batch";
-import { sampleRosterCsv, sampleRosterCsvEn } from "@/mocks/batchRoster";
-import { useLang } from "@/hooks/useLang";
-import type { BatchRoster } from "@/types";
+import { sampleRosterCsv, sampleRosterCsvEn } from "@/features/demo-scenarios/model/fixtures/batchRoster";
+import { useLang } from "@/shared/lib/useLang";
+import type { BatchRoster } from "@/entities/demo/model/types";
 
 export default function BatchPage() {
   const { t } = useTranslation();
@@ -74,7 +74,7 @@ export default function BatchPage() {
   const exporting = batch.done && batch.rows.length > 0;
 
   return (
-    <AppShell
+    <PageFrame
       title={t("batch.page.title")}
       subtitle={t("batch.page.subtitle")}
       actions={
@@ -223,6 +223,6 @@ export default function BatchPage() {
           </span>
         </div>
       )}
-    </AppShell>
+    </PageFrame>
   );
 }

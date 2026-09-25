@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { presetCases } from "@/mocks/overview";
-import { useDemoMode } from "@/context/DemoModeContext";
+import { presetCases } from "@/features/demo-scenarios/model/fixtures/overview";
+import { useDemoMode } from "@/features/demo-scenarios/model/DemoModeContext";
 
 export default function DemoBanner() {
   const navigate = useNavigate();

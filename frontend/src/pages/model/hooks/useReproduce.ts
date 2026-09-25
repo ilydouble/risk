@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   buildReproduceRun,
-  type EvalDashboard,
   type Lang,
-  type ReproduceRun,
 } from "@/pages/model/lib/eval";
+import type { EvalDashboard, ReproduceRun } from "@/entities/demo/model/types";
 
 export interface ReproduceController {
   run: ReproduceRun | null;

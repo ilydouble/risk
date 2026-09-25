@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
-import StatusPill from "@/components/base/StatusPill";
-import { systemServices } from "@/mocks/overview";
-import type { RiskLevel, ServiceStatus } from "@/types";
+import StatusPill from "@/entities/risk/ui/StatusPill";
+import { systemServices } from "@/features/demo-scenarios/model/fixtures/overview";
+import type { RiskLevel, ServiceStatus } from "@/entities/demo/model/types";
 
 const STATUS_MAP: Record<ServiceStatus, { labelKey: string; level: RiskLevel }> = {
   operational: { labelKey: "status.operational", level: "low" },

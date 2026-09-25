@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import CitationMarker from "@/pages/report/components/CitationMarker";
-import type { Evidence, ReportDoc } from "@/types";
+import type { Evidence, ReportDoc } from "@/entities/demo/model/types";
 
 interface ReportBodyProps {
   doc: ReportDoc;

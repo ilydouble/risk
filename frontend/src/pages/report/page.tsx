@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import AppShell from "@/components/feature/AppShell";
+import PageFrame from "@/features/workbench-layout/ui/PageFrame";
 import ReportHeader from "@/pages/report/components/ReportHeader";
 import ReportBody from "@/pages/report/components/ReportBody";
 import ReportSidebar, {
@@ -9,10 +9,10 @@ import ReportSidebar, {
 } from "@/pages/report/components/ReportSidebar";
 import { useReportStream } from "@/pages/report/hooks/useReportStream";
 import { buildReport, flattenSentences } from "@/pages/report/lib/report";
-import { buildScoreDetail } from "@/pages/score/lib/score";
-import { findCompany, resolveProfile } from "@/pages/company/lib/profile";
-import { useLang } from "@/hooks/useLang";
-import type { Evidence } from "@/types";
+import { buildScoreDetail } from "@/features/demo-scenarios/lib/score";
+import { findCompany, resolveProfile } from "@/features/demo-scenarios/lib/profile";
+import { useLang } from "@/shared/lib/useLang";
+import type { Evidence } from "@/entities/demo/model/types";
 
 export default function ReportPage() {
   const { t } = useTranslation();
@@ -64,7 +64,7 @@ export default function ReportPage() {
 
   if (!company || !bundle) {
     return (
-      <AppShell title={t("report.title")} subtitle={t("report.notFound.shellSubtitle")}>
+      <PageFrame title={t("report.title")} subtitle={t("report.notFound.shellSubtitle")}>
         <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-background-300 bg-background-100 px-6 py-20 text-center">
           <span className="flex h-14 w-14 items-center justify-center rounded-full bg-background-200 text-foreground-500">
             <i className="ri-file-text-line text-2xl"></i>
@@ -83,7 +83,7 @@ export default function ReportPage() {
             {t("report.notFound.back")}
           </Link>
         </div>
-      </AppShell>
+      </PageFrame>
     );
   }
 
@@ -111,7 +111,7 @@ export default function ReportPage() {
   };
 
   return (
-    <AppShell
+    <PageFrame
       title={t("report.title")}
       subtitle={t("report.subtitle")}
       companyId={company.id}
@@ -180,6 +180,6 @@ export default function ReportPage() {
           </span>
         </div>
       )}
-    </AppShell>
+    </PageFrame>
   );
 }

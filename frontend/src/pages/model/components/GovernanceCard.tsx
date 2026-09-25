@@ -1,13 +1,13 @@
 import { useTranslation } from "react-i18next";
-import Card from "@/components/base/Card";
+import Card from "@/shared/ui/Card";
 import {
   modelBoundaries,
   modelCompliance,
   modelLimitations,
   modelMonitoring,
-} from "@/mocks/modelCard";
-import { useLang } from "@/hooks/useLang";
-import type { ModelGovernanceItem } from "@/types";
+} from "@/features/demo-scenarios/model/fixtures/modelCard";
+import { useLang } from "@/shared/lib/useLang";
+import type { ModelGovernanceItem } from "@/entities/demo/model/types";
 
 interface Section {
   key: string;

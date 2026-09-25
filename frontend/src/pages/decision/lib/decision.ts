@@ -1,4 +1,4 @@
-import { riskLabel, riskLabelEn } from "@/pages/graph/lib/graph";
+import { riskLabel, riskLabelEn } from "@/features/demo-scenarios/lib/graph";
 import type {
   Company,
   CompanyProfile,
@@ -12,7 +12,7 @@ import type {
   MitigationMeasure,
   RiskLevel,
   ScoreDetail,
-} from "@/types";
+} from "@/entities/demo/model/types";
 
 export type Lang = "zh" | "en";
 

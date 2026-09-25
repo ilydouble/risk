@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
-import StatusPill from "@/components/base/StatusPill";
+import StatusPill from "@/entities/risk/ui/StatusPill";
 import { EVAL_MODEL_VERSION } from "@/pages/model/lib/eval";
-import type { EvalDashboard } from "@/types";
+import type { EvalDashboard } from "@/entities/demo/model/types";
 
 interface ModelHeaderProps {
   dashboard: EvalDashboard;

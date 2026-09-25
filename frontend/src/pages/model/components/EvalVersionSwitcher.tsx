@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { modelVersionHistory } from "@/mocks/modelCard";
+import { modelVersionHistory } from "@/features/demo-scenarios/model/fixtures/modelCard";
 
 interface EvalVersionSwitcherProps {
   activeVersion: string;

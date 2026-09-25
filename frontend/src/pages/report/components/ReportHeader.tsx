@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
-import RiskBadge from "@/components/base/RiskBadge";
-import { useLang } from "@/hooks/useLang";
-import type { Company, ReportDoc } from "@/types";
+import RiskBadge from "@/entities/risk/ui/RiskBadge";
+import { useLang } from "@/shared/lib/useLang";
+import type { Company, ReportDoc } from "@/entities/demo/model/types";
 
 interface ReportHeaderProps {
   company: Company;

@@ -1,16 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import AppShell from "@/components/feature/AppShell";
+import PageFrame from "@/features/workbench-layout/ui/PageFrame";
 import DecisionHeader from "@/pages/decision/components/DecisionHeader";
 import CreditLimitPanel from "@/pages/decision/components/CreditLimitPanel";
 import TermsPanel from "@/pages/decision/components/TermsPanel";
 import MitigationPanel from "@/pages/decision/components/MitigationPanel";
 import RuleTable from "@/pages/decision/components/RuleTable";
 import { buildDecision } from "@/pages/decision/lib/decision";
-import { buildScoreDetail } from "@/pages/score/lib/score";
-import { findCompany, resolveProfile } from "@/pages/company/lib/profile";
-import { useLang } from "@/hooks/useLang";
+import { buildScoreDetail } from "@/features/demo-scenarios/lib/score";
+import { findCompany, resolveProfile } from "@/features/demo-scenarios/lib/profile";
+import { useLang } from "@/shared/lib/useLang";
 
 export default function DecisionPage() {
   const { t } = useTranslation();
@@ -34,7 +34,7 @@ export default function DecisionPage() {
 
   if (!company || !decision) {
     return (
-      <AppShell title={t("decision.title")} subtitle={t("decision.notFound.shellSubtitle")}>
+      <PageFrame title={t("decision.title")} subtitle={t("decision.notFound.shellSubtitle")}>
         <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-background-300 bg-background-100 px-6 py-20 text-center">
           <span className="flex h-14 w-14 items-center justify-center rounded-full bg-background-200 text-foreground-500">
             <i className="ri-shield-check-line text-2xl"></i>
@@ -53,7 +53,7 @@ export default function DecisionPage() {
             {t("decision.notFound.back")}
           </Link>
         </div>
-      </AppShell>
+      </PageFrame>
     );
   }
 
@@ -83,7 +83,7 @@ export default function DecisionPage() {
   };
 
   return (
-    <AppShell
+    <PageFrame
       title={t("decision.title")}
       subtitle={t("decision.subtitle")}
       companyId={company.id}
@@ -137,6 +137,6 @@ export default function DecisionPage() {
           </span>
         </div>
       )}
-    </AppShell>
+    </PageFrame>
   );
 }

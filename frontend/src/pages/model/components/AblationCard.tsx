@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
-import Card from "@/components/base/Card";
-import type { AblationStudy } from "@/types";
+import Card from "@/shared/ui/Card";
+import type { AblationStudy } from "@/entities/demo/model/types";
 
 interface AblationCardProps {
   study: AblationStudy;

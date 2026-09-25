@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
-import Card from "@/components/base/Card";
-import RiskBadge from "@/components/base/RiskBadge";
-import { useLang } from "@/hooks/useLang";
-import type { RelatedParty } from "@/types";
+import Card from "@/shared/ui/Card";
+import RiskBadge from "@/entities/risk/ui/RiskBadge";
+import { useLang } from "@/shared/lib/useLang";
+import type { RelatedParty } from "@/entities/demo/model/types";
 
 interface RelatedPartiesPanelProps {
   parties: RelatedParty[];

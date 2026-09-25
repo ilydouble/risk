@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Card from "@/components/base/Card";
-import RiskBadge from "@/components/base/RiskBadge";
-import { useLang } from "@/hooks/useLang";
-import { nodeTypeMeta, riskColor } from "@/pages/graph/lib/graph";
-import type { GraphEdge, GraphNode } from "@/types";
+import Card from "@/shared/ui/Card";
+import RiskBadge from "@/entities/risk/ui/RiskBadge";
+import { useLang } from "@/shared/lib/useLang";
+import { nodeTypeMeta, riskColor } from "@/features/demo-scenarios/lib/graph";
+import type { GraphEdge, GraphNode } from "@/entities/demo/model/types";
 
 interface NodeInspectorProps {
   node: GraphNode | null;

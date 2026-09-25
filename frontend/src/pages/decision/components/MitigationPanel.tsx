@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
-import Card from "@/components/base/Card";
-import type { DecisionDoc, MitigationMeasure } from "@/types";
+import Card from "@/shared/ui/Card";
+import type { DecisionDoc, MitigationMeasure } from "@/entities/demo/model/types";
 
 interface MitigationPanelProps {
   decision: DecisionDoc;

@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { edgeTypeMeta, nodeTypeMeta, riskColor } from "@/pages/graph/lib/graph";
+import { edgeTypeMeta, nodeTypeMeta, riskColor } from "@/features/demo-scenarios/lib/graph";
 import { useForceLayout } from "@/pages/graph/hooks/useForceLayout";
-import type { GraphEdge, GraphNode } from "@/types";
+import type { GraphEdge, GraphNode } from "@/entities/demo/model/types";
 
 interface GraphCanvasProps {
   nodes: GraphNode[];

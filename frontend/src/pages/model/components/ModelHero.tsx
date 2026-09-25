@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import StatusPill from "@/components/base/StatusPill";
-import { modelIdentity } from "@/mocks/modelCard";
-import { modelMetrics } from "@/mocks/overview";
-import { useLang } from "@/hooks/useLang";
+import StatusPill from "@/entities/risk/ui/StatusPill";
+import { modelIdentity } from "@/features/demo-scenarios/model/fixtures/modelCard";
+import { modelMetrics } from "@/features/demo-scenarios/model/fixtures/overview";
+import { useLang } from "@/shared/lib/useLang";
 
 export default function ModelHero() {
   const { t } = useTranslation();

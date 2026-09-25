@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { useLang } from "@/hooks/useLang";
-import RiskBadge from "@/components/base/RiskBadge";
-import StatusPill from "@/components/base/StatusPill";
-import Tooltip from "@/components/base/Tooltip";
-import { RISK_HINT } from "@/constants/status";
+import { useLang } from "@/shared/lib/useLang";
+import RiskBadge from "@/entities/risk/ui/RiskBadge";
+import StatusPill from "@/entities/risk/ui/StatusPill";
+import Tooltip from "@/shared/ui/Tooltip";
+import { RISK_HINT } from "@/entities/risk/model/status";
 import Highlight from "@/pages/search/components/Highlight";
-import type { Company, RiskLevel } from "@/types";
+import type { Company, RiskLevel } from "@/entities/demo/model/types";
 import type { CompanyGroup, GroupKey } from "@/pages/search/lib/query";
 
 const RISK_SEGMENTS: { key: RiskLevel; label: string; bg: string }[] = [

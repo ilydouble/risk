@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
-import { useLang } from "@/hooks/useLang";
-import { edgeTypeMeta, nodeTypeMeta, riskColor } from "@/pages/graph/lib/graph";
-import type { GraphEdgeType, GraphNodeType, RiskLevel } from "@/types";
+import { useLang } from "@/shared/lib/useLang";
+import { edgeTypeMeta, nodeTypeMeta, riskColor } from "@/features/demo-scenarios/lib/graph";
+import type { GraphEdgeType, GraphNodeType, RiskLevel } from "@/entities/demo/model/types";
 
 interface GraphLegendProps {
   nodeTypes: GraphNodeType[];

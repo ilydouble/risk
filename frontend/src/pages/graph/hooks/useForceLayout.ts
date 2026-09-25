@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { GraphEdge, GraphNode } from "@/types";
+import type { GraphEdge, GraphNode } from "@/entities/demo/model/types";
 
 export interface Point {
   x: number;

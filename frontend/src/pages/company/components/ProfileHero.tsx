@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import RiskBadge from "@/components/base/RiskBadge";
-import StatusPill from "@/components/base/StatusPill";
-import { useLang } from "@/hooks/useLang";
-import type { Company } from "@/types";
+import RiskBadge from "@/entities/risk/ui/RiskBadge";
+import StatusPill from "@/entities/risk/ui/StatusPill";
+import { useLang } from "@/shared/lib/useLang";
+import type { Company } from "@/entities/demo/model/types";
 
 interface ProfileHeroProps {
   company: Company;

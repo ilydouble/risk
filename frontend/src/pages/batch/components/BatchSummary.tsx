@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
-import StatCard from "@/components/base/StatCard";
-import { useLang } from "@/hooks/useLang";
-import type { BatchSummary as BatchSummaryData, RiskLevel } from "@/types";
+import StatCard from "@/shared/ui/StatCard";
+import { useLang } from "@/shared/lib/useLang";
+import type { BatchSummary as BatchSummaryData, RiskLevel } from "@/entities/demo/model/types";
 
 interface BatchSummaryProps {
   summary: BatchSummaryData;

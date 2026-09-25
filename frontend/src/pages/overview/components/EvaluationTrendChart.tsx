@@ -7,8 +7,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { evaluationTrend } from "@/mocks/overview";
-import { chartPalette } from "@/theme/palette";
+import { evaluationTrend } from "@/features/demo-scenarios/model/fixtures/overview";
+import { chartPalette } from "@/shared/config/theme/palette";
 import { useTranslation } from "react-i18next";
 
 interface TooltipItem {

@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import Card from "@/components/base/Card";
-import { useLang } from "@/hooks/useLang";
+import Card from "@/shared/ui/Card";
+import { useLang } from "@/shared/lib/useLang";
 import {
   impactColorClass,
   timelineFilterOrder,
   timelineTypeIcon,
-} from "@/pages/company/lib/profile";
-import type { TimelineEvent, TimelineType } from "@/types";
+} from "@/features/demo-scenarios/lib/profile";
+import type { TimelineEvent, TimelineType } from "@/entities/demo/model/types";
 
 interface ChangeTimelineProps {
   events: TimelineEvent[];

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import AppShell from "@/components/feature/AppShell";
+import PageFrame from "@/features/workbench-layout/ui/PageFrame";
 import ModelHero from "@/pages/model/components/ModelHero";
 import ModelArchitectureCard from "@/pages/model/components/ModelArchitectureCard";
 import TrainingDataCard from "@/pages/model/components/TrainingDataCard";
@@ -11,7 +11,7 @@ import DriftMonitorCard from "@/pages/model/components/DriftMonitorCard";
 import GovernanceCard from "@/pages/model/components/GovernanceCard";
 import ModelResourceLinks from "@/pages/model/components/ModelResourceLinks";
 import { buildEvalDashboard } from "@/pages/model/lib/eval";
-import { useLang } from "@/hooks/useLang";
+import { useLang } from "@/shared/lib/useLang";
 
 export default function ModelArchivePage() {
   const { t } = useTranslation();
@@ -19,7 +19,7 @@ export default function ModelArchivePage() {
   const dashboard = useMemo(() => buildEvalDashboard(undefined, lang), [lang]);
 
   return (
-    <AppShell
+    <PageFrame
       title={t("model.archive.title")}
       subtitle={t("model.archive.subtitle")}
       modelTabs
@@ -68,6 +68,6 @@ export default function ModelArchivePage() {
           <ModelResourceLinks />
         </div>
       </div>
-    </AppShell>
+    </PageFrame>
   );
 }

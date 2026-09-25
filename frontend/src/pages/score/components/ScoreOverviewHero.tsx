@@ -1,10 +1,10 @@
 import { useTranslation } from "react-i18next";
-import RiskBadge from "@/components/base/RiskBadge";
+import RiskBadge from "@/entities/risk/ui/RiskBadge";
 import ScoreGauge from "@/pages/score/components/ScoreGauge";
-import { chartPalette } from "@/theme/palette";
-import { useLang } from "@/hooks/useLang";
-import { formatContribution } from "@/pages/score/lib/score";
-import type { Company, ScoreDetail } from "@/types";
+import { chartPalette } from "@/shared/config/theme/palette";
+import { useLang } from "@/shared/lib/useLang";
+import { formatContribution } from "@/features/demo-scenarios/lib/score";
+import type { Company, ScoreDetail } from "@/entities/demo/model/types";
 
 interface ScoreOverviewHeroProps {
   company: Company;

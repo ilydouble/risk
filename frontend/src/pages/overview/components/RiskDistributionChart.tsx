@@ -1,8 +1,8 @@
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { useTranslation } from "react-i18next";
-import { TooltipBubble } from "@/components/base/Tooltip";
-import { riskDistribution } from "@/mocks/overview";
-import { chartPalette } from "@/theme/palette";
+import { TooltipBubble } from "@/shared/ui/Tooltip";
+import { riskDistribution } from "@/features/demo-scenarios/model/fixtures/overview";
+import { chartPalette } from "@/shared/config/theme/palette";
 
 const COLOR_MAP: Record<string, string> = {
   low: chartPalette.riskLow,

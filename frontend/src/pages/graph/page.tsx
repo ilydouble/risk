@@ -1,26 +1,40 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import AppShell from "@/components/feature/AppShell";
-import Card from "@/components/base/Card";
-import RiskBadge from "@/components/base/RiskBadge";
+import PageFrame from "@/features/workbench-layout/ui/PageFrame";
+import Card from "@/shared/ui/Card";
+import RiskBadge from "@/entities/risk/ui/RiskBadge";
 import GraphToolbar from "@/pages/graph/components/GraphToolbar";
 import GraphCanvas from "@/pages/graph/components/GraphCanvas";
 import GraphLegend from "@/pages/graph/components/GraphLegend";
 import NodeInspector from "@/pages/graph/components/NodeInspector";
 import RiskPathPanel from "@/pages/graph/components/RiskPathPanel";
-import { applyRiskTransmission, buildGraphData } from "@/pages/graph/lib/graph";
-import { resolveProfile } from "@/pages/company/lib/profile";
-import { useLang } from "@/hooks/useLang";
-import { companies } from "@/mocks/companies";
-import { DEFAULT_GRAPH_COMPANY_ID } from "@/constants/nav";
-import type { GraphEdgeType, GraphNodeType } from "@/types";
+import { applyRiskTransmission } from "@/features/demo-scenarios/lib/graph";
+import { useLang } from "@/shared/lib/useLang";
+import * as CompanyApi from "@/entities/company/api/companyApi";
+import * as GraphApi from "@/entities/graph/api/graphApi";
+import { handleApiError } from "@/shared/api/http";
+import { DEFAULT_GRAPH_COMPANY_ID } from "@/entities/company/model/defaults";
+import type { Company, GraphData, GraphEdgeType, GraphNodeType } from "@/entities/demo/model/types";
 
 export default function GraphPage() {
   const { t } = useTranslation();
   const { isEn, lang } = useLang();
   const [searchParams, setSearchParams] = useSearchParams();
   const companyId = searchParams.get("company") ?? DEFAULT_GRAPH_COMPANY_ID;
+  const [companies, setCompanies] = useState<Company[]>([]);
+  const [company, setCompany] = useState<Company | null>(null);
+  const [graphResponse, setGraphResponse] = useState<GraphData | null>(null);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    CompanyApi.requestSearchCompany({ keyword: "", region: "all", sector: "all", risks: [], sort: "score_desc", page: 1, pageSize: 100 })
+      .then((data) => { if (active) setCompanies(data.items); })
+      .catch((failure) => { if (active) setError(handleApiError(failure)); });
+    return () => { active = false; };
+  }, []);
 
   const companyOptions = useMemo(
     () =>
@@ -28,31 +42,40 @@ export default function GraphPage() {
         value: company.id,
         label: isEn ? company.nameEn : company.nameCn,
       })),
-    [isEn],
+    [isEn, companies],
   );
 
-  const company = useMemo(
-    () =>
-      companies.find((item) => item.id === companyId) ??
-      companies.find((item) => item.id === DEFAULT_GRAPH_COMPANY_ID)!,
-    [companyId],
-  );
+  const [depth, setDepth] = useState(3);
+  useEffect(() => {
+    let active = true;
+    setLoading(true);
+    Promise.all([
+      CompanyApi.requestGetCompany({ id: companyId }),
+      GraphApi.requestGetGraph({ companyId, lang, depth }),
+    ]).then(([companyData, graphData]) => {
+      if (!active) return;
+      setCompany(companyData.company);
+      setGraphResponse(graphData.graph);
+      setError("");
+    }).catch((failure) => { if (active) setError(handleApiError(failure, { GRAPH_NOT_FOUND: t("graph.title") })); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [companyId, lang, depth, t]);
 
-  const graph = useMemo(
-    () => buildGraphData(companies, company, resolveProfile(company), lang),
-    [company, lang],
+  const graph = useMemo<GraphData>(
+    () => graphResponse ?? { rootId: companyId, nodes: [], edges: [] },
+    [graphResponse, companyId],
   );
 
   const paths = useMemo(() => applyRiskTransmission(graph), [graph]);
 
-  const [depth, setDepth] = useState(3);
   const [focusRisk, setFocusRisk] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   useEffect(() => {
     setSelectedId(null);
     setFocusRisk(false);
-  }, [company.id]);
+  }, [companyId]);
 
   const visibleNodes = useMemo(
     () => graph.nodes.filter((node) => node.hop <= depth),
@@ -164,8 +187,12 @@ export default function GraphPage() {
     setDepth(3);
   };
 
+  if (!company || !graphResponse) {
+    return <PageFrame title={t("graph.title")} subtitle={t("graph.subtitle")}><p role="status" className="rounded-lg border border-background-200 bg-background-100 p-8 text-sm text-foreground-600">{loading ? "…" : error}</p></PageFrame>;
+  }
+
   return (
-    <AppShell
+    <PageFrame
       title={t("graph.title")}
       subtitle={t("graph.subtitle")}
       companyId={company.id}
@@ -325,6 +352,6 @@ export default function GraphPage() {
           </div>
         </div>
       </div>
-    </AppShell>
+    </PageFrame>
   );
 }

@@ -10,8 +10,8 @@ import type {
   ExtrapolationStudy,
   ReproduceRun,
   ReproduceStep,
-} from "@/types";
-import { modelVersionHistory } from "@/mocks/modelCard";
+} from "@/entities/demo/model/types";
+import { modelVersionHistory } from "@/features/demo-scenarios/model/fixtures/modelCard";
 
 export const EVAL_MODEL_VERSION = "v4.2.0";
 

@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
-import Card from "@/components/base/Card";
+import Card from "@/shared/ui/Card";
 import { evidenceTypeMeta } from "@/pages/report/lib/report";
-import { useLang } from "@/hooks/useLang";
-import type { Evidence, EvidenceType, ReportDoc } from "@/types";
+import { useLang } from "@/shared/lib/useLang";
+import type { Evidence, EvidenceType, ReportDoc } from "@/entities/demo/model/types";
 
 export interface SectionStatus {
   id: string;

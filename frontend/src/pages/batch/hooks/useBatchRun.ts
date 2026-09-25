@@ -10,7 +10,7 @@ import type {
   BatchRow,
   BatchRun,
   BatchSummary,
-} from "@/types";
+} from "@/entities/demo/model/types";
 
 export interface BatchController {
   run: BatchRun | null;

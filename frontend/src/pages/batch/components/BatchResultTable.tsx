@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import RiskBadge from "@/components/base/RiskBadge";
-import { useLang } from "@/hooks/useLang";
+import RiskBadge from "@/entities/risk/ui/RiskBadge";
+import { useLang } from "@/shared/lib/useLang";
 import { getStatusMeta } from "@/pages/batch/lib/batch";
-import type { BatchRow, BatchRowStatus, RiskLevel } from "@/types";
+import type { BatchRow, BatchRowStatus, RiskLevel } from "@/entities/demo/model/types";
 
 interface BatchResultTableProps {
   rows: BatchRow[];

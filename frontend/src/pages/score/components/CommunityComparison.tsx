@@ -10,10 +10,10 @@ import {
   YAxis,
 } from "recharts";
 import { useTranslation } from "react-i18next";
-import Card from "@/components/base/Card";
-import { chartPalette } from "@/theme/palette";
-import { useLang } from "@/hooks/useLang";
-import type { Company, CommunityBenchmark } from "@/types";
+import Card from "@/shared/ui/Card";
+import { chartPalette } from "@/shared/config/theme/palette";
+import { useLang } from "@/shared/lib/useLang";
+import type { Company, CommunityBenchmark } from "@/entities/demo/model/types";
 
 interface CommunityComparisonProps {
   company: Company;

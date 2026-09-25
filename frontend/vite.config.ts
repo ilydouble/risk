@@ -76,11 +76,17 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": resolve(__dirname, "./src"),
+      "@": resolve(import.meta.dirname, "./src"),
     },
   },
   server: {
     port: 3000,
     host: "0.0.0.0",
+    proxy: {
+      "/api": {
+        target: process.env.VITE_API_PROXY || "http://localhost:18081",
+        changeOrigin: false,
+      },
+    },
   },
 });

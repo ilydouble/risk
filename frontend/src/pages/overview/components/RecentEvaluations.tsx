@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { companies } from "@/mocks/companies";
-import RiskBadge from "@/components/base/RiskBadge";
-import { useLang } from "@/hooks/useLang";
+import { companies } from "@/features/demo-scenarios/model/fixtures/companies";
+import RiskBadge from "@/entities/risk/ui/RiskBadge";
+import { useLang } from "@/shared/lib/useLang";
 
 const recent = companies.slice(0, 6);
 

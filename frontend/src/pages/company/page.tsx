@@ -1,22 +1,43 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import AppShell from "@/components/feature/AppShell";
+import PageFrame from "@/features/workbench-layout/ui/PageFrame";
 import ProfileHero from "@/pages/company/components/ProfileHero";
 import BusinessInfoCard from "@/pages/company/components/BusinessInfoCard";
 import RiskTagCloud from "@/pages/company/components/RiskTagCloud";
 import FiveCPanel from "@/pages/company/components/FiveCPanel";
 import ChangeTimeline from "@/pages/company/components/ChangeTimeline";
 import RelatedPartiesPanel from "@/pages/company/components/RelatedPartiesPanel";
-import { useLang } from "@/hooks/useLang";
-import { findCompany, resolveProfile } from "@/pages/company/lib/profile";
+import { useLang } from "@/shared/lib/useLang";
+import * as CompanyApi from "@/entities/company/api/companyApi";
+import { handleApiError } from "@/shared/api/http";
+import type { Company, CompanyProfile } from "@/entities/demo/model/types";
+import DocumentPanel from "@/pages/company/components/DocumentPanel";
 
 export default function CompanyPage() {
   const { t } = useTranslation();
   const { pick } = useLang();
   const { id } = useParams();
-  const company = useMemo(() => findCompany(id), [id]);
+  const [company, setCompany] = useState<Company | null>(null);
+  const [profile, setProfile] = useState<CompanyProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [toast, setToast] = useState("");
+
+  useEffect(() => {
+    let active = true;
+    setLoading(true);
+    CompanyApi.requestGetCompany({ id: id ?? "" })
+      .then((data) => {
+        if (!active) return;
+        setCompany(data.company);
+        setProfile(data.profile);
+        setError("");
+      })
+      .catch((failure) => { if (active) setError(handleApiError(failure, { COMPANY_NOT_FOUND: t("company.notFound.title") })); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [id, t]);
 
   useEffect(() => {
     if (!toast) return;
@@ -24,9 +45,9 @@ export default function CompanyPage() {
     return () => window.clearTimeout(timer);
   }, [toast]);
 
-  if (!company) {
+  if (!company || !profile) {
     return (
-      <AppShell
+      <PageFrame
         title={t("company.title")}
         subtitle={t("company.notFound.shellSubtitle")}
       >
@@ -35,7 +56,7 @@ export default function CompanyPage() {
             <i className="ri-building-4-line text-2xl"></i>
           </span>
           <h3 className="mt-4 text-[15px] font-semibold text-foreground-950">
-            {t("company.notFound.title")}
+            {loading ? "…" : error || t("company.notFound.title")}
           </h3>
           <p className="mt-1.5 max-w-md text-sm text-foreground-500">
             {t("company.notFound.desc", { id })}
@@ -48,15 +69,14 @@ export default function CompanyPage() {
             {t("company.notFound.back")}
           </Link>
         </div>
-      </AppShell>
+      </PageFrame>
     );
   }
 
-  const profile = resolveProfile(company);
   const headCount = profile.riskFlags.filter((f) => f.level === "high").length;
 
   return (
-    <AppShell
+    <PageFrame
       title={t("company.title")}
       subtitle={t("company.subtitle")}
       companyId={company.id}
@@ -135,6 +155,8 @@ export default function CompanyPage() {
             <RelatedPartiesPanel parties={profile.relatedParties} />
           </div>
         </div>
+
+        <DocumentPanel companyId={company.id} />
       </div>
 
       {toast && (
@@ -145,6 +167,6 @@ export default function CompanyPage() {
           </span>
         </div>
       )}
-    </AppShell>
+    </PageFrame>
   );
 }

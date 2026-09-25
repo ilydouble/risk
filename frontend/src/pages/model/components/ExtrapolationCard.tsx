@@ -9,11 +9,11 @@ import {
   YAxis,
 } from "recharts";
 import { useTranslation } from "react-i18next";
-import Card from "@/components/base/Card";
-import { chartPalette } from "@/theme/palette";
+import Card from "@/shared/ui/Card";
+import { chartPalette } from "@/shared/config/theme/palette";
 import { cohortLabel } from "@/pages/model/lib/eval";
-import { useLang } from "@/hooks/useLang";
-import type { ExtrapolationCohort, ExtrapolationRow, ExtrapolationStudy } from "@/types";
+import { useLang } from "@/shared/lib/useLang";
+import type { ExtrapolationCohort, ExtrapolationRow, ExtrapolationStudy } from "@/entities/demo/model/types";
 
 interface ExtrapolationCardProps {
   study: ExtrapolationStudy;

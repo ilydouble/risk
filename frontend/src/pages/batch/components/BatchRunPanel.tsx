@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import type { BatchRun } from "@/types";
+import type { BatchRun } from "@/entities/demo/model/types";
 
 interface BatchRunPanelProps {
   run: BatchRun;

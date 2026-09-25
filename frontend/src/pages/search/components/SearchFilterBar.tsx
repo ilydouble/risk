@@ -1,7 +1,7 @@
-import SelectMenu from "@/components/base/SelectMenu";
-import StatusDot from "@/components/base/StatusDot";
+import SelectMenu from "@/shared/ui/SelectMenu";
+import StatusDot from "@/entities/risk/ui/StatusDot";
 import { useTranslation } from "react-i18next";
-import { useLang } from "@/hooks/useLang";
+import { useLang } from "@/shared/lib/useLang";
 import {
   regionOptions,
   riskOptions,
@@ -9,7 +9,7 @@ import {
   sortOptions,
   type SortKey,
 } from "@/pages/search/lib/query";
-import type { RiskLevel } from "@/types";
+import type { Company, RiskLevel } from "@/entities/demo/model/types";
 
 interface SearchFilterBarProps {
   region: string;
@@ -22,6 +22,7 @@ interface SearchFilterBarProps {
   onSortChange: (value: SortKey) => void;
   activeCount: number;
   onReset: () => void;
+  companies: Company[];
 }
 
 export default function SearchFilterBar({
@@ -35,6 +36,7 @@ export default function SearchFilterBar({
   onSortChange,
   activeCount,
   onReset,
+  companies,
 }: SearchFilterBarProps) {
   const { t } = useTranslation();
   const { pick } = useLang();
@@ -45,7 +47,7 @@ export default function SearchFilterBar({
           label={t("search.filterRegion")}
           icon="ri-earth-line"
           value={region}
-          options={regionOptions.map((o) => ({
+          options={regionOptions(companies).map((o) => ({
             value: o.value,
             label: o.labelEn ? pick(o.label, o.labelEn) : t(o.label),
           }))}
@@ -56,7 +58,7 @@ export default function SearchFilterBar({
           label={t("search.filterSector")}
           icon="ri-stack-line"
           value={sector}
-          options={sectorOptions.map((o) => ({
+          options={sectorOptions(companies).map((o) => ({
             value: o.value,
             label: o.labelEn ? pick(o.label, o.labelEn) : t(o.label),
           }))}

@@ -1,7 +1,7 @@
-import { companies } from "@/mocks/companies";
-import { resolveProfile } from "@/pages/company/lib/profile";
-import { buildScoreDetail, MODEL_VERSION } from "@/pages/score/lib/score";
-import { riskLabel, riskLabelEn } from "@/pages/graph/lib/graph";
+import { companies } from "@/features/demo-scenarios/model/fixtures/companies";
+import { resolveProfile } from "@/features/demo-scenarios/lib/profile";
+import { buildScoreDetail, MODEL_VERSION } from "@/features/demo-scenarios/lib/score";
+import { riskLabel, riskLabelEn } from "@/features/demo-scenarios/lib/graph";
 import type {
   BatchRiskCount,
   BatchRow,
@@ -11,7 +11,7 @@ import type {
   BatchSummary,
   Company,
   ReproduceStep,
-} from "@/types";
+} from "@/entities/demo/model/types";
 
 export type Lang = "zh" | "en";
 

@@ -1,6 +1,5 @@
-import i18n from "@/i18n";
-import { companies } from "@/mocks/companies";
-import type { Company, RiskLevel } from "@/types";
+import i18n from "@/shared/config/i18n";
+import type { Company, RiskLevel } from "@/entities/demo/model/types";
 
 export type SortKey = "score_desc" | "score_asc" | "dp_desc" | "recent";
 
@@ -25,23 +24,25 @@ export interface FilterOption {
   labelEn?: string;
 }
 
-export const regionOptions: FilterOption[] = [
-  { value: "all", label: "search.allCountries" },
-  ...uniqueSorted(companies.map((c) => c.region)).map((region) => ({
-    value: region,
-    label: region,
-    labelEn: companies.find((c) => c.region === region)?.regionEn,
-  })),
-];
+export function regionOptions(companies: Company[]): FilterOption[] {
+  return [
+    { value: "all", label: "search.allCountries" },
+    ...uniqueSorted(companies.map((c) => c.region)).map((region) => ({
+      value: region, label: region,
+      labelEn: companies.find((c) => c.region === region)?.regionEn,
+    })),
+  ];
+}
 
-export const sectorOptions: FilterOption[] = [
-  { value: "all", label: "search.allSectors" },
-  ...uniqueSorted(companies.map((c) => c.sector)).map((sector) => ({
-    value: sector,
-    label: sector,
-    labelEn: companies.find((c) => c.sector === sector)?.sectorEn,
-  })),
-];
+export function sectorOptions(companies: Company[]): FilterOption[] {
+  return [
+    { value: "all", label: "search.allSectors" },
+    ...uniqueSorted(companies.map((c) => c.sector)).map((sector) => ({
+      value: sector, label: sector,
+      labelEn: companies.find((c) => c.sector === sector)?.sectorEn,
+    })),
+  ];
+}
 
 export const sortOptions: SortOption[] = [
   { value: "score_desc", label: "search.sortScoreDesc" },
@@ -121,41 +122,6 @@ export function groupCompanies(
   return groups.sort(
     (a, b) => b.count - a.count || a.label.localeCompare(b.label, "zh-CN"),
   );
-}
-
-export function filterCompanies(state: FilterState): Company[] {
-  const keyword = state.keyword.trim().toLowerCase();
-
-  const matched = companies.filter((company) => {
-    const hitKeyword =
-      keyword.length === 0 ||
-      company.nameCn.toLowerCase().includes(keyword) ||
-      company.nameEn.toLowerCase().includes(keyword) ||
-      company.regNo.toLowerCase().includes(keyword);
-
-    const hitRegion = state.region === "all" || company.region === state.region;
-    const hitSector = state.sector === "all" || company.sector === state.sector;
-    const hitRisk =
-      state.risks.length === 0 || state.risks.includes(company.riskLevel);
-
-    return hitKeyword && hitRegion && hitSector && hitRisk;
-  });
-
-  const sorted = [...matched];
-  switch (state.sort) {
-    case "score_asc":
-      sorted.sort((a, b) => a.creditScore - b.creditScore);
-      break;
-    case "dp_desc":
-      sorted.sort((a, b) => b.defaultProb - a.defaultProb);
-      break;
-    case "recent":
-      sorted.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
-      break;
-    default:
-      sorted.sort((a, b) => b.creditScore - a.creditScore);
-  }
-  return sorted;
 }
 
 export function riskLabel(level: RiskLevel): string {

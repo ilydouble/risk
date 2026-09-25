@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useLang } from "@/hooks/useLang";
-import RiskBadge from "@/components/base/RiskBadge";
+import { useLang } from "@/shared/lib/useLang";
+import RiskBadge from "@/entities/risk/ui/RiskBadge";
 import Highlight from "@/pages/search/components/Highlight";
-import type { Company } from "@/types";
+import type { Company } from "@/entities/demo/model/types";
 
 interface CompanyResultItemProps {
   company: Company;

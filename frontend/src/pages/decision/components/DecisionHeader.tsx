@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
-import RiskBadge from "@/components/base/RiskBadge";
+import RiskBadge from "@/entities/risk/ui/RiskBadge";
 import { decisionOutcomeMeta } from "@/pages/decision/lib/decision";
-import { useLang } from "@/hooks/useLang";
-import type { Company, DecisionDoc } from "@/types";
+import { useLang } from "@/shared/lib/useLang";
+import type { Company, DecisionDoc } from "@/entities/demo/model/types";
 
 interface DecisionHeaderProps {
   company: Company;

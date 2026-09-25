@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import AppShell from "@/components/feature/AppShell";
-import Card from "@/components/base/Card";
-import StatCard from "@/components/base/StatCard";
+import PageFrame from "@/features/workbench-layout/ui/PageFrame";
+import Card from "@/shared/ui/Card";
+import StatCard from "@/shared/ui/StatCard";
 import DemoBanner from "@/pages/overview/components/DemoBanner";
 import EvaluationTrendChart from "@/pages/overview/components/EvaluationTrendChart";
 import RiskDistributionChart from "@/pages/overview/components/RiskDistributionChart";
 import SystemStatusPanel from "@/pages/overview/components/SystemStatusPanel";
 import RecentEvaluations from "@/pages/overview/components/RecentEvaluations";
-import { modelMetrics, overviewStats } from "@/mocks/overview";
+import { modelMetrics, overviewStats } from "@/features/demo-scenarios/model/fixtures/overview";
 
 const RANGES = [
   { key: 7, labelKey: "overview.ranges.d7" },
@@ -22,7 +22,7 @@ export default function Overview() {
   const [range, setRange] = useState(14);
 
   return (
-    <AppShell
+    <PageFrame
       title={t("overview.title")}
       subtitle={t("overview.subtitle")}
       actions={
@@ -189,6 +189,6 @@ export default function Overview() {
           ))}
         </div>
       </Card>
-    </AppShell>
+    </PageFrame>
   );
 }

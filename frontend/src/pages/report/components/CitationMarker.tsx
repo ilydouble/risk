@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import EvidenceCard from "@/pages/report/components/EvidenceCard";
-import type { Evidence } from "@/types";
+import type { Evidence } from "@/entities/demo/model/types";
 
 interface CitationMarkerProps {
   numbers: number[];

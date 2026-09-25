@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
-import Card from "@/components/base/Card";
-import { riskColor } from "@/pages/graph/lib/graph";
-import type { RiskPath } from "@/types";
+import Card from "@/shared/ui/Card";
+import { riskColor } from "@/features/demo-scenarios/lib/graph";
+import type { RiskPath } from "@/entities/demo/model/types";
 
 interface RiskPathPanelProps {
   paths: RiskPath[];

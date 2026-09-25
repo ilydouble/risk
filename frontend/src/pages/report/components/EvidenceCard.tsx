@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { evidenceTypeMeta } from "@/pages/report/lib/report";
-import { useLang } from "@/hooks/useLang";
-import type { Evidence } from "@/types";
+import { useLang } from "@/shared/lib/useLang";
+import type { Evidence } from "@/entities/demo/model/types";
 
 interface EvidenceCardProps {
   evidence: Evidence;

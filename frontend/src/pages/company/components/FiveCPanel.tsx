@@ -8,10 +8,10 @@ import {
   Tooltip,
 } from "recharts";
 import { useTranslation } from "react-i18next";
-import Card from "@/components/base/Card";
-import { useLang } from "@/hooks/useLang";
-import { chartPalette } from "@/theme/palette";
-import type { FiveCDimension } from "@/types";
+import Card from "@/shared/ui/Card";
+import { useLang } from "@/shared/lib/useLang";
+import { chartPalette } from "@/shared/config/theme/palette";
+import type { FiveCDimension } from "@/entities/demo/model/types";
 
 interface FiveCPanelProps {
   dimensions: FiveCDimension[];

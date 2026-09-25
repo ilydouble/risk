@@ -1,7 +1,7 @@
 import { useRef, useState, type DragEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { useLang } from "@/hooks/useLang";
-import type { BatchRoster } from "@/types";
+import { useLang } from "@/shared/lib/useLang";
+import type { BatchRoster } from "@/entities/demo/model/types";
 
 interface BatchUploadPanelProps {
   roster: BatchRoster | null;

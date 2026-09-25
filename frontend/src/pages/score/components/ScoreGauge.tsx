@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { SCORE_MAX, SCORE_MIN } from "@/pages/score/lib/score";
+import { SCORE_MAX, SCORE_MIN } from "@/features/demo-scenarios/lib/score";
 
 interface ScoreGaugeProps {
   score: number;

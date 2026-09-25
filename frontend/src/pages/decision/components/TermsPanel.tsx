@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
-import Card from "@/components/base/Card";
-import type { DecisionDoc, DecisionTerm } from "@/types";
+import Card from "@/shared/ui/Card";
+import type { DecisionDoc, DecisionTerm } from "@/entities/demo/model/types";
 
 interface TermsPanelProps {
   decision: DecisionDoc;
