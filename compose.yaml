@@ -1,5 +1,15 @@
+name: risk
+
+x-build-proxy: &build-proxy
+  args:
+    HTTP_PROXY: ${BUILD_HTTP_PROXY:-}
+    HTTPS_PROXY: ${BUILD_HTTPS_PROXY:-}
+    NO_PROXY: ${BUILD_NO_PROXY:-}
+  extra_hosts:
+    - host.docker.internal=host-gateway
+
 services:
-  postgres:
+  risk-postgres:
     image: postgres:18.0
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-risk}
@@ -12,7 +22,7 @@ services:
       interval: 5s
       retries: 12
 
-  redis:
+  risk-redis:
     image: redis:8.2.2-alpine
     command: ["redis-server", "--save", "", "--appendonly", "no"]
     healthcheck:
@@ -20,8 +30,8 @@ services:
       interval: 5s
       retries: 12
 
-  rustfs:
-    image: rustfs/rustfs:1.0.0-rc.6
+  risk-rustfs:
+    image: rustfs/rustfs:1.0.0
     environment:
       RUSTFS_ACCESS_KEY: ${RUSTFS_ROOT_ACCESS_KEY:-RISKROOTADMIN2026}
       RUSTFS_SECRET_KEY: ${RUSTFS_ROOT_SECRET_KEY:-local-rustfs-root-change-me-2026}
@@ -38,7 +48,7 @@ services:
       interval: 5s
       retries: 18
 
-  rustfs-init:
+  risk-rustfs-init:
     image: rustfs/rc:v0.1.36
     entrypoint: ["/bin/sh", "/init.sh"]
     volumes:
@@ -51,11 +61,11 @@ services:
       STORAGE_BUCKET: ${STORAGE_BUCKET:-risk-documents}
       PUBLIC_ORIGINS: ${PUBLIC_ORIGINS:-http://localhost:18080,http://localhost:3000}
     depends_on:
-      rustfs:
+      risk-rustfs:
         condition: service_healthy
     restart: "no"
 
-  neo4j:
+  risk-neo4j:
     image: neo4j:5.26.0-community
     environment:
       NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:-local-risk-graph-password}
@@ -66,7 +76,7 @@ services:
       interval: 10s
       retries: 18
 
-  neo4j-init:
+  risk-neo4j-init:
     image: neo4j:5.26.0-community
     entrypoint: ["/bin/sh", "/init.sh"]
     volumes:
@@ -74,20 +84,22 @@ services:
     environment:
       NEO4J_PASSWORD: ${NEO4J_PASSWORD:-local-risk-graph-password}
     depends_on:
-      neo4j:
+      risk-neo4j:
         condition: service_healthy
     restart: "no"
 
-  backend:
-    build: ./backend
+  risk-backend:
+    build:
+      <<: *build-proxy
+      context: ./backend
     environment:
-      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-risk}:${POSTGRES_PASSWORD:-local-risk-db-password}@postgres:5432/${POSTGRES_DB:-risk}
-      REDIS_URL: redis://redis:6379/0
-      NEO4J_URI: bolt://neo4j:7687
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-risk}:${POSTGRES_PASSWORD:-local-risk-db-password}@risk-postgres:5432/${POSTGRES_DB:-risk}
+      REDIS_URL: redis://risk-redis:6379/0
+      NEO4J_URI: bolt://risk-neo4j:7687
       NEO4J_USER: neo4j
       NEO4J_PASSWORD: ${NEO4J_PASSWORD:-local-risk-graph-password}
       STORAGE_BUCKET: ${STORAGE_BUCKET:-risk-documents}
-      STORAGE_ENDPOINT: http://rustfs:9000
+      STORAGE_ENDPOINT: http://risk-rustfs:9000
       STORAGE_PUBLIC_ENDPOINT: ${STORAGE_PUBLIC_ENDPOINT:-http://localhost:19000}
       AWS_ACCESS_KEY_ID: ${STORAGE_ACCESS_KEY:-RISKDOCUMENTSAPP2026}
       AWS_SECRET_ACCESS_KEY: ${STORAGE_SECRET_KEY:-local-rustfs-app-change-me-2026}
@@ -96,54 +108,60 @@ services:
       DEMO_USER: ${DEMO_USER:-demo}
       DEMO_PASSWORD: ${DEMO_PASSWORD:-demo-change-me}
     depends_on:
-      postgres:
+      risk-postgres:
         condition: service_healthy
-      redis:
+      risk-redis:
         condition: service_healthy
-      rustfs-init:
+      risk-rustfs-init:
         condition: service_completed_successfully
-      neo4j-init:
+      risk-neo4j-init:
         condition: service_completed_successfully
     healthcheck:
       test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/health/live\")'"]
       interval: 5s
       retries: 12
 
-  demo-seed:
-    build: ./backend
+  risk-demo-seed:
+    build:
+      <<: *build-proxy
+      context: ./backend
     command: ["python", "-m", "risk_api.seed"]
     environment:
-      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-risk}:${POSTGRES_PASSWORD:-local-risk-db-password}@postgres:5432/${POSTGRES_DB:-risk}
-      NEO4J_URI: bolt://neo4j:7687
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-risk}:${POSTGRES_PASSWORD:-local-risk-db-password}@risk-postgres:5432/${POSTGRES_DB:-risk}
+      NEO4J_URI: bolt://risk-neo4j:7687
       NEO4J_USER: neo4j
       NEO4J_PASSWORD: ${NEO4J_PASSWORD:-local-risk-graph-password}
       DEMO_USER: ${DEMO_USER:-demo}
       DEMO_PASSWORD: ${DEMO_PASSWORD:-demo-change-me}
     depends_on:
-      backend:
+      risk-backend:
         condition: service_healthy
     restart: "no"
 
-  gateway:
-    build: ./gateway
+  risk-gateway:
+    build:
+      <<: *build-proxy
+      context: ./gateway
     ports:
       - "127.0.0.1:18081:8081"
     environment:
-      REDIS_URL: redis://redis:6379/0
-      BACKEND_URL: http://backend:8000
+      REDIS_URL: redis://risk-redis:6379/0
+      BACKEND_URL: http://risk-backend:8000
       ALLOWED_ORIGIN: ${PUBLIC_ORIGINS:-http://localhost:18080,http://localhost:3000}
     depends_on:
-      backend:
+      risk-backend:
         condition: service_healthy
-      demo-seed:
+      risk-demo-seed:
         condition: service_completed_successfully
 
-  frontend:
-    build: ./frontend
+  risk-frontend:
+    build:
+      <<: *build-proxy
+      context: ./frontend
     ports:
       - "127.0.0.1:18080:80"
     depends_on:
-      gateway:
+      risk-gateway:
         condition: service_started
 
 volumes:
