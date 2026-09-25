@@ -4,7 +4,7 @@
 
 ## 快速运行
 
-本次验证环境为 Python 3.13、CPU。虚拟环境、数据与模型不随 Git 提交；新机器需先安装、获取数据并训练。所有下列命令从 `backend/` 执行。
+本次验证环境为 Python 3.13、CPU。仓库已附带最小演示测试快照与选定模型，安装依赖后可直接启动服务；完整训练数据和其他模型需自行获取、训练。虚拟环境不随 Git 提交。所有下列命令从 `backend/` 执行。
 
 ```bash
 # 首次在新机器安装
@@ -100,7 +100,7 @@ curl http://127.0.0.1:8000/v1/explain/C00010
 
 ## 引用与许可
 
-- ComRisk / SMEsD: Wei et al., Information Sciences, 2024, DOI 10.1016/j.ins.2023.120081；https://github.com/shaopengw/ComRisk 。本次固定提交 a80524b3b67436cd2f74755f6ffa08a554ff2d02；上游未见明确 LICENSE，不随代码再分发其数据。
+- ComRisk / SMEsD: Wei et al., Information Sciences, 2024, DOI 10.1016/j.ins.2023.120081；https://github.com/shaopengw/ComRisk 。本次固定提交 a80524b3b67436cd2f74755f6ffa08a554ff2d02；上游未见明确 LICENSE；当前仓库附带经过转换的最小演示子集，来源及范围见 [演示包说明](docs/demo-bundle.md)，不主张对上游数据重新授权。
 - CompanyKG: https://github.com/EQTPartners/CompanyKG ，代码 MIT；数据独立条款尚未核实，本版本未导入该数据。
 - 自监督方法是借鉴思路的独立实现，未复制上游模型文件，不声称原创基础算法。
 - 第三方依赖版本见 requirements-lock.txt，各自许可随发行包。公开模型与竞赛数据用途应分别管理。

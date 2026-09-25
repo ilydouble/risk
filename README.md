@@ -40,7 +40,7 @@ SMEsD 去除跨划分重复企业后，训练/验证/测试企业数为 **2,816 
 
 以下命令面向 macOS/Linux，需 Git、Node.js 和 Python；本次验证环境为 **Node.js 24、Python 3.13、CPU**。首次获取数据和安装依赖需要网络。
 
-仓库只包含代码、依赖锁文件及说明，**不包含原始数据、转换后的数据、模型权重或虚拟环境**。新机器必须先完成数据准备和训练。
+仓库已包含约 **1.3 MB 的最小演示包**：474 家测试企业的转换快照、选定模型的权重/配置/指标和实验汇总。新机器安装依赖后即可启动，**无需重新下载数据或训练**。完整训练数据、其他模型与虚拟环境不随 Git 提交。文件清单与 SHA-256 见 [演示包清单](backend/docs/demo-bundle-manifest.json)，来源及范围见 [演示包说明](backend/docs/demo-bundle.md)。
 
 ### 1. 获取项目与安装依赖
 
@@ -53,7 +53,9 @@ python3.13 -m venv backend/.venv
 backend/.venv/bin/python -m pip install -r backend/requirements-lock.txt
 ```
 
-### 2. 首次准备数据和模型
+### 2. 可选：从上游重新准备数据和训练
+
+只体验演示时跳过本节，直接执行第 3 步。需要复现实验时执行：
 
 ```bash
 cd backend
@@ -68,7 +70,7 @@ OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 .venv/bin/python -m comrisk.benchmark --epoc
 cd ..
 ```
 
-如果本机已有 `backend/data/processed/smesd/` 和完整的 `backend/artifacts/smesd-v1/`，可以跳过这一步。数据来自上游公开仓库，使用前请核对其适用条款；本项目不再分发该数据。
+如果本机已有 `backend/data/processed/smesd/` 和完整的 `backend/artifacts/smesd-v1/`，可以跳过这一步。数据来源和处理方法见演示包说明；本仓库仅包含上述演示子集，不包含上游原始 pickle 文件。
 
 ### 3. 启动后端与前端
 
@@ -149,8 +151,8 @@ risk/
 │   ├── scripts/            数据获取、训练启动、服务与联调检查
 │   ├── tests/              算法与 API 测试
 │   ├── docs/               方法、数据来源与实验结果说明
-│   ├── data/               本地数据，不提交 Git
-│   ├── artifacts/          本地训练产物，不提交 Git
+│   ├── data/               仅演示测试快照随 Git 提交
+│   ├── artifacts/          仅选定演示模型与汇总随 Git 提交
 │   └── requirements-lock.txt
 ├── docs/smesd-demo.md      启动和演示说明
 └── README.md
@@ -172,4 +174,4 @@ risk/
 - [比赛需求及实现边界](backend/docs/competition-v1.md)
 - [后端方法、数据格式与复现说明](backend/README.md)
 
-第三方代码、数据和依赖分别遵循其适用条款。本仓库不附带上游数据及训练权重；竞赛数据应独立管理，不上传公开仓库。
+第三方代码、数据和依赖分别遵循其适用条款。演示包保留上游来源与处理说明，不主张对上游数据重新授权；本次未确认上游明确的再分发许可。竞赛数据应独立管理，不上传公开仓库。
