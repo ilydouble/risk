@@ -73,7 +73,7 @@ def configure_logging(
     uvicorn_logger.addHandler(handler)
     uvicorn_logger.setLevel(logging.INFO)
     uvicorn_logger.propagate = False
-    # Direct `uvicorn risk_api.main:app` installs child handlers before lifespan starts.
+    # Direct `uvicorn risk_api.main:create_app --factory` installs child handlers before lifespan.
     uvicorn_error = logging.getLogger("uvicorn.error")
     for existing in tuple(uvicorn_error.handlers):
         uvicorn_error.removeHandler(existing)

@@ -1,6 +1,6 @@
 # 后端
 
-`backend/` 使用 Python 3.12 与 uv。FastAPI 是 HTTP 入口，Dishka 装配依赖；SQLAlchemy AsyncSession + asyncpg、Redis asyncio、Neo4j async driver 和 `stellarmesh-objectstorage` 负责持久化访问。`stellarmesh-logging` 的 JSON formatter 输出结构化日志。
+`backend/` 使用 Python 3.12 与 uv。FastAPI 是 HTTP 入口，Dishka 装配依赖；SQLAlchemy AsyncSession + asyncpg、Redis asyncio、Neo4j async driver 和 `stellarmesh-objectstorage` 负责持久化访问。`stellarmesh-logging` 提供 Pretty 与 JSON 日志格式。
 
 ## 目录
 
@@ -12,13 +12,15 @@ backend/
     main.py, dependencies.py
     shared/
       config.py, db.py, logging.py
-      api/{envelope,page,response}.py
+      api/{envelope,page,response,middleware}.py
     modules/{auth,company,graph,score,document}/
       api/{route,handler,schemas}.py
       model.py, service.py, repository.py, errors.py（按需）
 ```
 
 `route.py` 声明路径与响应模型；`handler.py` 处理 HTTP、依赖注入及 DTO 映射；`schemas.py` 是模块自己的请求/响应 DTO。`auth`、`company`、`document` 的 `model.py` 保存各自 SQLAlchemy 映射；图谱和评分不为凑目录建立模型文件。Service 处理认证、查询、文件流程，Repository 处理数据库/图谱。Service 和 Repository 不引用 HTTP DTO。公共分页请求为 `PageRequest`，列表响应继承 `Page[T]`。模块错误映射为 `AppError`，全局 handler 调用公共响应函数序列化；参数校验、路由错误与未处理错误也走同一信封。
+
+`create_app()` 为每个 FastAPI 实例创建并装配自己的 Dishka 容器；lifespan 从 `app.state.dishka_container` 关闭它。Uvicorn 使用 `risk_api.main:create_app` factory，OpenAPI 导出也创建并关闭独立应用。请求 ID、Origin 校验与完成日志集中在 `shared/api/middleware.py`。
 
 ## 数据与生命周期
 

@@ -1,10 +1,21 @@
 from fastapi.testclient import TestClient
 
-from risk_api.main import app
+from risk_api.main import create_app
 from risk_api.modules.company.api.schemas import ResponseSearchCompany
 
 
+def test_create_app_owns_separate_containers() -> None:
+    first = create_app()
+    second = create_app()
+    assert first.state.dishka_container is not second.state.dishka_container
+
+    with TestClient(first) as first_client, TestClient(second) as second_client:
+        assert first_client.get("/health/live").json() == {"status": "ok"}
+        assert second_client.get("/health/live").json() == {"status": "ok"}
+
+
 def test_error_envelope_and_openapi_contract() -> None:
+    app = create_app()
     schema = app.openapi()
     routes = schema["paths"]
     for path in (
@@ -73,6 +84,7 @@ def test_error_envelope_and_openapi_contract() -> None:
 
 
 def test_search_pagination_contract() -> None:
+    app = create_app()
     schemas = app.openapi()["components"]["schemas"]
     request = schemas["RequestSearchCompany"]["properties"]
     response = schemas["ResponseSearchCompany"]["properties"]

@@ -2,11 +2,12 @@ import json
 import logging
 from io import StringIO
 
-from fastapi import FastAPI
+from fastapi import APIRouter, FastAPI
 from fastapi.testclient import TestClient
 
 from risk_api.errors import AppError, register_error_handlers
-from risk_api.main import app, request_policy
+from risk_api.main import create_app
+from risk_api.shared.api.middleware import request_policy
 from risk_api.shared.logging import configure_logging, request_log_context
 
 
@@ -20,7 +21,7 @@ def _events(stream: StringIO, message: str) -> list[dict[str, object]]:
 
 def test_request_logs_correlate_success_and_rejected_requests() -> None:
     stream = StringIO()
-    with TestClient(app, raise_server_exceptions=False) as client:
+    with TestClient(create_app(), raise_server_exceptions=False) as client:
         configure_logging(output_format="json", stream=stream)
         configure_logging(output_format="json", stream=stream)
         successful = client.get("/openapi.json", headers={"X-Request-ID": "log-success"})
@@ -50,6 +51,26 @@ def test_request_logs_correlate_success_and_rejected_requests() -> None:
         "/api/v1/auth/login",
     ]
     assert "top-secret" not in stream.getvalue()
+
+
+def test_request_log_uses_dynamic_route_template() -> None:
+    test_app = FastAPI()
+    test_app.middleware("http")(request_policy)
+    router = APIRouter()
+
+    @router.get("/items/{item_id}")
+    async def get_item(item_id: str) -> dict[str, str]:
+        return {"id": item_id}
+
+    test_app.include_router(router, prefix="/api/v1")
+    stream = StringIO()
+    configure_logging(output_format="json", stream=stream)
+    with TestClient(test_app) as client:
+        response = client.get("/api/v1/items/private-123", headers={"X-Request-ID": "log-dynamic"})
+
+    assert response.status_code == 200
+    assert _events(stream, "http.request_completed")[0]["route"] == "/api/v1/items/{item_id}"
+    assert "private-123" not in stream.getvalue()
 
 
 def test_unhandled_error_logs_stack_and_request_id() -> None:
