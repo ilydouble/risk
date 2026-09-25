@@ -1,0 +1,2 @@
+# risk
+code for competition 
