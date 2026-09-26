@@ -17,7 +17,7 @@ from risk_api.modules.document.api.schemas import (
 from risk_api.modules.document.model import Document
 from risk_api.modules.document.service import DocumentService
 from risk_api.shared.api.envelope import ApiEnvelope
-from risk_api.shared.api.response import success
+from risk_api.shared.api.response import success_response
 
 
 def to_dto(document: Document) -> DocumentDTO:
@@ -39,7 +39,7 @@ async def create_upload(
 ) -> ApiEnvelope[ResponseCreateUpload]:
     await authorize_request(request, auth)
     ticket = await service.create_upload(body.companyId, body.filename, body.contentType, body.size)
-    return success(
+    return success_response(
         ResponseCreateUpload(documentId=ticket.document_id, url=ticket.url, headers=ticket.headers)
     )
 
@@ -52,7 +52,7 @@ async def complete_upload(
 ) -> ApiEnvelope[ResponseCompleteUpload]:
     await authorize_request(request, auth)
     document = await service.complete(body.documentId)
-    return success(ResponseCompleteUpload(document=to_dto(document)))
+    return success_response(ResponseCompleteUpload(document=to_dto(document)))
 
 
 async def list_documents(
@@ -63,7 +63,9 @@ async def list_documents(
 ) -> ApiEnvelope[ResponseListDocuments]:
     await authorize_request(request, auth)
     documents = await service.list(body.companyId)
-    return success(ResponseListDocuments(items=[to_dto(document) for document in documents]))
+    return success_response(
+        ResponseListDocuments(items=[to_dto(document) for document in documents])
+    )
 
 
 async def create_download(
@@ -74,4 +76,4 @@ async def create_download(
 ) -> ApiEnvelope[ResponseCreateDownload]:
     await authorize_request(request, auth)
     url = await service.create_download(body.documentId)
-    return success(ResponseCreateDownload(url=url))
+    return success_response(ResponseCreateDownload(url=url))

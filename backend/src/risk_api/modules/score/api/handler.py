@@ -7,7 +7,7 @@ from risk_api.modules.company.api.schemas import CompanyDTO
 from risk_api.modules.score.api.schemas import RequestGetScore, ResponseGetScore, ScoreDetail
 from risk_api.modules.score.service import ScoreService
 from risk_api.shared.api.envelope import ApiEnvelope
-from risk_api.shared.api.response import success
+from risk_api.shared.api.response import success_response
 
 
 async def get(
@@ -18,7 +18,7 @@ async def get(
 ) -> ApiEnvelope[ResponseGetScore]:
     await authorize_request(request, auth)
     company, detail = await service.get(body.companyId, body.lang)
-    return success(
+    return success_response(
         ResponseGetScore(
             company=CompanyDTO.model_validate(company.summary),
             detail=ScoreDetail.model_validate(detail),

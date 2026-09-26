@@ -21,7 +21,7 @@ from risk_api.modules.benchmark.api.schemas import (
 )
 from risk_api.modules.benchmark.service import BenchmarkService
 from risk_api.shared.api.envelope import ApiEnvelope
-from risk_api.shared.api.response import success
+from risk_api.shared.api.response import success_response
 
 
 async def search(
@@ -32,7 +32,7 @@ async def search(
 ) -> ApiEnvelope[ResponseSearchBenchmark]:
     await authorize_request(request, auth)
     items, total = service.search(body.keyword, body.pagination.page, body.pagination.pageSize)
-    return success(
+    return success_response(
         ResponseSearchBenchmark.model_validate(
             {
                 "items": items,
@@ -51,7 +51,7 @@ async def get(
     service: FromDishka[BenchmarkService],
 ) -> ApiEnvelope[ResponseGetBenchmark]:
     await authorize_request(request, auth)
-    return success(ResponseGetBenchmark.model_validate(service.get(body.id)))
+    return success_response(ResponseGetBenchmark.model_validate(service.get(body.id)))
 
 
 async def predict(
@@ -62,7 +62,7 @@ async def predict(
 ) -> ApiEnvelope[ResponsePredictBenchmark]:
     await authorize_request(request, auth)
     card = service.model_card()
-    return success(
+    return success_response(
         ResponsePredictBenchmark.model_validate(
             {"predictions": service.predict(body.companyIds), "threshold": card["threshold"]}
         )
@@ -77,7 +77,7 @@ async def explain(
 ) -> ApiEnvelope[ResponseExplainBenchmark]:
     await authorize_request(request, auth)
     result = await service.explain(body.id)
-    return success(
+    return success_response(
         ResponseExplainBenchmark.model_validate(
             {
                 "companyId": result["company_id"],
@@ -98,7 +98,9 @@ async def graph(
     service: FromDishka[BenchmarkService],
 ) -> ApiEnvelope[ResponseGraphBenchmark]:
     await authorize_request(request, auth)
-    return success(ResponseGraphBenchmark.model_validate(service.graph(body.id, body.limit)))
+    return success_response(
+        ResponseGraphBenchmark.model_validate(service.graph(body.id, body.limit))
+    )
 
 
 async def evaluation(
@@ -108,7 +110,7 @@ async def evaluation(
     service: FromDishka[BenchmarkService],
 ) -> ApiEnvelope[ResponseEvaluationBenchmark]:
     await authorize_request(request, auth)
-    return success(ResponseEvaluationBenchmark.model_validate(service.evaluation()))
+    return success_response(ResponseEvaluationBenchmark.model_validate(service.evaluation()))
 
 
 async def model_card(
@@ -118,4 +120,4 @@ async def model_card(
     service: FromDishka[BenchmarkService],
 ) -> ApiEnvelope[ResponseModelCardBenchmark]:
     await authorize_request(request, auth)
-    return success(ResponseModelCardBenchmark.model_validate(service.model_card()))
+    return success_response(ResponseModelCardBenchmark.model_validate(service.model_card()))

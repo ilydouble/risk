@@ -13,7 +13,7 @@ COMMON_ERROR_RESPONSES: dict[int | str, dict[str, Any]] = {
 }
 
 
-def success[T](data: T, *, message: str = "OK") -> ApiEnvelope[T]:
+def success_response[T](data: T, *, message: str = "OK") -> ApiEnvelope[T]:
     return ApiEnvelope(code=200, internal_code="SUCCESS", message=message, data=data)
 
 

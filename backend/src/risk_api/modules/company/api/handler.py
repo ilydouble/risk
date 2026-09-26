@@ -14,7 +14,7 @@ from risk_api.modules.company.api.schemas import (
 from risk_api.modules.company.query import CompanySearchQuery
 from risk_api.modules.company.service import CompanyService
 from risk_api.shared.api.envelope import ApiEnvelope
-from risk_api.shared.api.response import success
+from risk_api.shared.api.response import success_response
 
 
 async def search(
@@ -36,7 +36,7 @@ async def search(
             page_size=page.pageSize,
         )
     )
-    return success(
+    return success_response(
         ResponseSearchCompany(
             items=[CompanyDTO.model_validate(company.summary) for company in companies],
             total=total,
@@ -54,7 +54,7 @@ async def get(
 ) -> ApiEnvelope[ResponseGetCompany]:
     await authorize_request(request, auth)
     company = await service.get_model(body.id)
-    return success(
+    return success_response(
         ResponseGetCompany(
             company=CompanyDTO.model_validate(company.summary),
             profile=CompanyProfile.model_validate(company.profile),

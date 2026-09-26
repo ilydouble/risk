@@ -15,7 +15,7 @@ from risk_api.modules.auth.api.schemas import (
 )
 from risk_api.modules.auth.service import COOKIE_NAME, SESSION_SECONDS, AuthService
 from risk_api.shared.api.envelope import ApiEnvelope
-from risk_api.shared.api.response import success
+from risk_api.shared.api.response import success_response
 from risk_api.shared.config import settings
 
 
@@ -27,7 +27,7 @@ async def register(
     body: RequestRegister, service: FromDishka[AuthService]
 ) -> ApiEnvelope[ResponseRegister]:
     user = await service.register(body.username, body.password, body.displayName)
-    return success(
+    return success_response(
         ResponseRegister(userId=user.id, username=user.username, displayName=user.display_name),
         message="Account created",
     )
@@ -46,7 +46,7 @@ async def login(
         samesite="strict",
         path="/",
     )
-    return success(
+    return success_response(
         ResponseLogin(
             userId=identity["user_id"],
             username=identity["username"],
@@ -62,14 +62,14 @@ async def logout(
 ) -> ApiEnvelope[ResponseLogout]:
     await service.logout(request.cookies.get(COOKIE_NAME))
     response.delete_cookie(COOKIE_NAME, path="/", secure=settings.cookie_secure, samesite="strict")
-    return success(ResponseLogout(loggedOut=True), message="Logged out")
+    return success_response(ResponseLogout(loggedOut=True), message="Logged out")
 
 
 async def me(
     _: RequestMe, request: Request, service: FromDishka[AuthService]
 ) -> ApiEnvelope[ResponseMe]:
     identity = await service.identity(request.cookies.get(COOKIE_NAME))
-    return success(
+    return success_response(
         ResponseMe(
             userId=identity["user_id"],
             username=identity["username"],

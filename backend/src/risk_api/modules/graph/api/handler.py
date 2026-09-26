@@ -6,7 +6,7 @@ from risk_api.modules.auth.service import AuthService
 from risk_api.modules.graph.api.schemas import GraphData, RequestGetGraph, ResponseGetGraph
 from risk_api.modules.graph.service import GraphService
 from risk_api.shared.api.envelope import ApiEnvelope
-from risk_api.shared.api.response import success
+from risk_api.shared.api.response import success_response
 
 
 async def get(
@@ -17,4 +17,6 @@ async def get(
 ) -> ApiEnvelope[ResponseGetGraph]:
     await authorize_request(request, auth)
     graph = await service.get(body.companyId, body.lang, body.depth)
-    return success(ResponseGetGraph(graph=GraphData.model_validate(graph)), message="Demo graph")
+    return success_response(
+        ResponseGetGraph(graph=GraphData.model_validate(graph)), message="Demo graph"
+    )
