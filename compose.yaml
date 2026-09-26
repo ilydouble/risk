@@ -93,7 +93,8 @@ services:
   backend:
     build:
       <<: *build-proxy
-      context: ./backend
+      context: .
+      dockerfile: backend/Dockerfile
     environment:
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-risk}:${POSTGRES_PASSWORD:-local-risk-db-password}@postgres:5432/${POSTGRES_DB:-risk}
       REDIS_URL: redis://redis:6379/0
@@ -126,7 +127,8 @@ services:
   demo-seed:
     build:
       <<: *build-proxy
-      context: ./backend
+      context: .
+      dockerfile: backend/Dockerfile
     command: ["python", "-m", "risk_api.seed"]
     environment:
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-risk}:${POSTGRES_PASSWORD:-local-risk-db-password}@postgres:5432/${POSTGRES_DB:-risk}

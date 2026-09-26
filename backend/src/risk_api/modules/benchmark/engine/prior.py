@@ -1,7 +1,7 @@
 """Beta-Binomial group prior; OOF training values enter the head, never messages."""
 
 import numpy as np
-import torch
+from com_risk_runtime.prior import value
 from sklearn.model_selection import StratifiedKFold
 
 
@@ -40,15 +40,3 @@ def fit_prior(data, seed=42):
         "industry Beta-Binomial, moment concentration clipped [2,100], 5-fold OOF where possible"
     )
     return full
-
-
-def value(model, group):
-    s, n = model["groups"].get(group, [0, 0])
-    return (s + model["alpha"]) / (n + model["alpha"] + model["beta"])
-
-
-def add_prior(graph, data, model, training=False):
-    # Persisted OOF values for all original training IDs, even if input labels/splits are removed.
-    vals = [model["oof"].get(n.id, value(model, n.community)) for n in data.nodes]
-    graph["prior"] = torch.tensor(vals, dtype=torch.float32).unsqueeze(1)
-    return graph

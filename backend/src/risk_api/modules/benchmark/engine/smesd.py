@@ -8,8 +8,9 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+from com_risk_runtime.schema import Dataset
 
-from .data import Dataset, dump_json
+from .data import dump_json
 
 RELATIONS = [
     "supervised",

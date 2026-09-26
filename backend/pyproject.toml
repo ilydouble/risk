@@ -14,8 +14,7 @@ dependencies = [
   "argon2-cffi>=23.1",
   "stellarmesh-logging==0.5.1",
   "stellarmesh-objectstorage==0.1.0",
-  "numpy>=2,<3",
-  "scikit-learn>=1.6,<2",
+  "com-risk-runtime",
   "torch>=2.6,<3",
 ]
 
@@ -25,10 +24,11 @@ url = "https://download.pytorch.org/whl/cpu"
 explicit = true
 
 [tool.uv.sources]
+com-risk-runtime = { path = "../com_risk_model/runtime" }
 torch = [{ index = "pytorch-cpu", marker = "sys_platform == 'linux' or sys_platform == 'win32'" }]
 
 [dependency-groups]
-dev = ["mypy>=1.15", "ruff>=0.11", "pytest>=8.3", "httpx>=0.28"]
+dev = ["mypy>=1.15", "ruff>=0.11", "pytest>=8.3", "httpx>=0.28", "scikit-learn>=1.6,<2"]
 
 [build-system]
 requires = ["hatchling"]

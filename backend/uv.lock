@@ -353,6 +353,24 @@ wheels = [
 ]
 
 [[package]]
+name = "com-risk-runtime"
+version = "0.1.0"
+source = { directory = "../com_risk_model/runtime" }
+dependencies = [
+    { name = "numpy" },
+    { name = "pydantic" },
+    { name = "torch", version = "2.14.0", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
+    { name = "torch", version = "2.14.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "numpy", specifier = ">=2,<3" },
+    { name = "pydantic", specifier = ">=2,<3" },
+    { name = "torch", specifier = ">=2.6,<3" },
+]
+
+[[package]]
 name = "dishka"
 version = "1.10.1"
 source = { registry = "https://pypi.org/simple" }
@@ -910,12 +928,11 @@ dependencies = [
     { name = "alembic" },
     { name = "argon2-cffi" },
     { name = "asyncpg" },
+    { name = "com-risk-runtime" },
     { name = "dishka" },
     { name = "fastapi" },
     { name = "neo4j" },
-    { name = "numpy" },
     { name = "redis" },
-    { name = "scikit-learn" },
     { name = "sqlalchemy", extra = ["asyncio"] },
     { name = "stellarmesh-logging" },
     { name = "stellarmesh-objectstorage" },
@@ -930,6 +947,7 @@ dev = [
     { name = "mypy" },
     { name = "pytest" },
     { name = "ruff" },
+    { name = "scikit-learn" },
 ]
 
 [package.metadata]
@@ -937,12 +955,11 @@ requires-dist = [
     { name = "alembic", specifier = ">=1.15" },
     { name = "argon2-cffi", specifier = ">=23.1" },
     { name = "asyncpg", specifier = ">=0.30" },
+    { name = "com-risk-runtime", directory = "../com_risk_model/runtime" },
     { name = "dishka", specifier = ">=1.6" },
     { name = "fastapi", specifier = ">=0.115" },
     { name = "neo4j", specifier = ">=5.28" },
-    { name = "numpy", specifier = ">=2,<3" },
     { name = "redis", specifier = ">=5.2" },
-    { name = "scikit-learn", specifier = ">=1.6,<2" },
     { name = "sqlalchemy", extras = ["asyncio"], specifier = ">=2.0" },
     { name = "stellarmesh-logging", specifier = "==0.5.1" },
     { name = "stellarmesh-objectstorage", specifier = "==0.1.0" },
@@ -957,6 +974,7 @@ dev = [
     { name = "mypy", specifier = ">=1.15" },
     { name = "pytest", specifier = ">=8.3" },
     { name = "ruff", specifier = ">=0.11" },
+    { name = "scikit-learn", specifier = ">=1.6,<2" },
 ]
 
 [[package]]

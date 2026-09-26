@@ -1,9 +1,8 @@
 """Synthetic data for software validation only; never a substitute for MSGraphFin."""
 
 import numpy as np
+from com_risk_runtime.schema import Dataset
 from sklearn.model_selection import train_test_split
-
-from .data import Dataset
 
 
 def generate(n=360, seed=42):

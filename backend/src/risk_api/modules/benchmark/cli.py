@@ -2,9 +2,12 @@ import argparse
 import json
 from pathlib import Path
 
-from .engine.data import Dataset, dump_json
+from com_risk_runtime.predictor import Predictor
+from com_risk_runtime.schema import Dataset
+
+from .engine.data import dump_json
 from .engine.demo import generate
-from .engine.pipeline import Predictor, load_data, train
+from .engine.pipeline import load_data, train
 
 
 def main():

@@ -1,18 +1,22 @@
 import numpy as np
 import pytest
 import torch
-from pydantic import ValidationError
-
-from risk_api.modules.benchmark.engine.data import Dataset, fit_preprocessor, tensorize
-from risk_api.modules.benchmark.engine.demo import generate
-from risk_api.modules.benchmark.engine.model import (
+from com_risk_runtime.model import (
     ComRisk,
     RelationLayer,
     hyper_laplacian,
     segment_softmax,
 )
-from risk_api.modules.benchmark.engine.pipeline import Predictor, metrics, train
-from risk_api.modules.benchmark.engine.prior import add_prior, fit_prior
+from com_risk_runtime.predictor import Predictor
+from com_risk_runtime.preprocessing import tensorize
+from com_risk_runtime.prior import add_prior
+from com_risk_runtime.schema import Dataset
+from pydantic import ValidationError
+
+from risk_api.modules.benchmark.engine.data import fit_preprocessor
+from risk_api.modules.benchmark.engine.demo import generate
+from risk_api.modules.benchmark.engine.pipeline import metrics, train
+from risk_api.modules.benchmark.engine.prior import fit_prior
 
 
 def test_hyper_laplacian_matches_dense_and_gradient():
@@ -128,7 +132,7 @@ def test_reload_inference_and_new_company(trained):
 
 
 def test_explanation_is_honest_sensitivity(trained):
-    from risk_api.modules.benchmark.engine.explain import explain
+    from com_risk_runtime.explain import explain
 
     path, d, _ = trained
     result = explain(Predictor(path), d, "C00000")

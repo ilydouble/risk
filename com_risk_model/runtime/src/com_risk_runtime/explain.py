@@ -2,7 +2,7 @@
 
 import torch
 
-from .data import tensorize
+from .preprocessing import tensorize
 from .prior import add_prior
 
 

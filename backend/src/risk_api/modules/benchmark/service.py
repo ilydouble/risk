@@ -10,10 +10,10 @@ from pathlib import Path
 from typing import Any
 
 import torch
+from com_risk_runtime.explain import explain
+from com_risk_runtime.predictor import Predictor
+from com_risk_runtime.schema import Dataset, Node
 
-from risk_api.modules.benchmark.engine.data import Dataset, Node
-from risk_api.modules.benchmark.engine.explain import explain
-from risk_api.modules.benchmark.engine.pipeline import Predictor
 from risk_api.modules.benchmark.errors import BenchmarkNotFound, BenchmarkUnavailable
 from risk_api.shared.config import settings
 
