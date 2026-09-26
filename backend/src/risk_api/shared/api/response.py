@@ -1,5 +1,4 @@
 from typing import Any, Literal
-from uuid import uuid4
 
 from fastapi import Request
 from fastapi.responses import JSONResponse
@@ -29,6 +28,7 @@ def error_response(
     )
     return JSONResponse(
         status_code=status,
-        headers={"X-Request-ID": getattr(request.state, "request_id", str(uuid4()))},
+        # Unhandled 500 responses bypass the middleware's normal response path.
+        headers={"X-Request-ID": request.state.request_id},
         content=payload.model_dump(),
     )
