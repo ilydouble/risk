@@ -2,6 +2,7 @@ from fastapi.testclient import TestClient
 
 from risk_api.app import create_app
 from risk_api.modules.company.api.schemas import ResponseSearchCompany
+from risk_api.modules.graph.api.schemas import RequestGetGraph
 
 
 def test_create_app_owns_separate_containers() -> None:
@@ -107,3 +108,27 @@ def test_search_pagination_contract() -> None:
         )
         assert invalid.status_code == 422
         assert invalid.json()["internal_code"] == "REQUEST_INVALID"
+
+
+def test_graph_depth_contract() -> None:
+    app = create_app()
+    depth_schema = app.openapi()["components"]["schemas"]["RequestGetGraph"]["properties"][
+        "depth"
+    ]
+    assert depth_schema["minimum"] == 1
+    assert depth_schema["maximum"] == 3
+    assert depth_schema["default"] == 3
+    assert RequestGetGraph(companyId="C-1001").depth == 3
+    for depth in (1, 2, 3):
+        assert RequestGetGraph(companyId="C-1001", depth=depth).depth == depth
+
+    with TestClient(app, raise_server_exceptions=False) as client:
+        for invalid_depth in (0, 4, 1.5):
+            response = client.post(
+                "/api/v1/graph/get",
+                json={"companyId": "C-1001", "depth": invalid_depth},
+                headers={"Origin": "http://localhost:18080"},
+            )
+            assert response.status_code == 422
+            assert response.json()["code"] == 422
+            assert response.json()["internal_code"] == "REQUEST_INVALID"

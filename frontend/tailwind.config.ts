@@ -99,17 +99,12 @@ export default {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.45" },
         },
-        dashFlow: {
-          "0%": { strokeDashoffset: "24" },
-          "100%": { strokeDashoffset: "0" },
-        },
       },
       animation: {
         "fade-up": "fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both",
         "fade-in": "fadeIn 0.6s ease-out both",
         "slide-in-left": "slideInLeft 0.4s cubic-bezier(0.22, 1, 0.36, 1) both",
         "pulse-soft": "pulseSoft 2.4s ease-in-out infinite",
-        "dash-flow": "dashFlow 1s linear infinite",
       },
     },
   },

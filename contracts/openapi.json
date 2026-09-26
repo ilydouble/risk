@@ -2395,7 +2395,7 @@
           "depth": {
             "default": 3,
             "maximum": 3.0,
-            "minimum": 2.0,
+            "minimum": 1.0,
             "title": "Depth",
             "type": "integer"
           },

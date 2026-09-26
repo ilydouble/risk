@@ -15,7 +15,7 @@ import * as CompanyApi from "@/entities/company/api/companyApi";
 import * as GraphApi from "@/entities/graph/api/graphApi";
 import { handleApiError } from "@/shared/api/http";
 import { DEFAULT_GRAPH_COMPANY_ID } from "@/entities/company/model/defaults";
-import type { Company, GraphData, GraphEdgeType, GraphNodeType } from "@/entities/demo/model/types";
+import type { Company, GraphData, GraphEdgeType } from "@/entities/demo/model/types";
 
 export default function GraphPage() {
   const { t } = useTranslation();
@@ -77,23 +77,7 @@ export default function GraphPage() {
     setFocusRisk(false);
   }, [companyId]);
 
-  const visibleNodes = useMemo(
-    () => graph.nodes.filter((node) => node.hop <= depth),
-    [graph, depth],
-  );
-
-  const visibleIds = useMemo(
-    () => new Set(visibleNodes.map((node) => node.id)),
-    [visibleNodes],
-  );
-
-  const visibleEdges = useMemo(
-    () =>
-      graph.edges.filter(
-        (edge) => visibleIds.has(edge.source) && visibleIds.has(edge.target),
-      ),
-    [graph, visibleIds],
-  );
+  const { nodes: visibleNodes, edges: visibleEdges } = graph;
 
   const riskPathNodes = useMemo(() => {
     const set = new Set<string>();
@@ -110,12 +94,6 @@ export default function GraphPage() {
     () => graph.nodes.find((node) => node.id === selectedId) ?? null,
     [graph, selectedId],
   );
-
-  const nodeTypes = useMemo(() => {
-    const set = new Set<GraphNodeType>();
-    visibleNodes.forEach((node) => set.add(node.type));
-    return Array.from(set);
-  }, [visibleNodes]);
 
   const edgeTypes = useMemo(() => {
     const set = new Set<GraphEdgeType>();
@@ -294,7 +272,7 @@ export default function GraphPage() {
             </Card>
 
             <div className="animate-fade-up" style={{ animationDelay: "80ms" }}>
-              <GraphLegend nodeTypes={nodeTypes} edgeTypes={edgeTypes} />
+              <GraphLegend edgeTypes={edgeTypes} />
             </div>
           </div>
 

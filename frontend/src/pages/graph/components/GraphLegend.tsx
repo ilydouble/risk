@@ -1,17 +1,15 @@
 import { useTranslation } from "react-i18next";
 import { useLang } from "@/shared/lib/useLang";
-import { edgeTypeMeta, nodeTypeMeta, riskColor } from "@/features/demo-scenarios/lib/graph";
-import type { GraphEdgeType, GraphNodeType, RiskLevel } from "@/entities/demo/model/types";
+import { edgeTypeMeta, riskColor } from "@/features/demo-scenarios/lib/graph";
+import type { GraphEdgeType, RiskLevel } from "@/entities/demo/model/types";
 
 interface GraphLegendProps {
-  nodeTypes: GraphNodeType[];
   edgeTypes: GraphEdgeType[];
 }
 
 const riskOrder: RiskLevel[] = ["low", "medium", "high"];
 
 export default function GraphLegend({
-  nodeTypes,
   edgeTypes,
 }: GraphLegendProps) {
   const { t } = useTranslation();
@@ -19,7 +17,7 @@ export default function GraphLegend({
 
   return (
     <section className="animate-fade-up rounded-lg border border-background-200 bg-background-100 p-4">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div>
           <p className="text-[11px] font-medium uppercase tracking-wide text-foreground-500">
             {t("graph.legend.risk")}
@@ -33,24 +31,6 @@ export default function GraphLegend({
                 ></span>
                 <span className="text-[11px] text-foreground-700">
                   {t(`risk.${risk}`)}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
-          <p className="text-[11px] font-medium uppercase tracking-wide text-foreground-500">
-            {t("graph.legend.node")}
-          </p>
-          <ul className="mt-2 flex flex-wrap gap-x-3 gap-y-1.5">
-            {nodeTypes.map((type) => (
-              <li key={type} className="flex items-center gap-1.5">
-                <span className="flex h-4 w-4 items-center justify-center text-secondary-400">
-                  <i className={`${nodeTypeMeta[type].icon} text-[13px]`}></i>
-                </span>
-                <span className="whitespace-nowrap text-[11px] text-foreground-700">
-                  {isEn ? nodeTypeMeta[type].labelEn : nodeTypeMeta[type].label}
                 </span>
               </li>
             ))}

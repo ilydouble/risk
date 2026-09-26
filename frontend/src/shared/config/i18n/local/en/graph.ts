@@ -2,7 +2,7 @@ export default {
   graph: {
     title: "Graph Relations",
     subtitle:
-      "A 2–3 hop relation network with risk-colored nodes and highlighted transmission paths",
+      "A 1–3 hop relation network with risk-colored nodes and highlighted transmission paths",
     snapshot:
       "Graph snapshot · Sources: registry / judicial / supply-chain · Updated {{date}}",
     stats: {
@@ -22,7 +22,6 @@ export default {
     },
     legend: {
       risk: "Risk coloring",
-      node: "Node types",
       edge: "Relation types",
       riskPath: "Risk transmission path",
     },
@@ -31,12 +30,6 @@ export default {
       depth: "Look-through depth",
       depthValue: "{{count}} hop",
       focus: "Risk transmission only",
-    },
-    canvas: {
-      hint: "Drag nodes to adjust · Scroll to zoom · Click empty space to deselect",
-      zoomIn: "Zoom in",
-      zoomOut: "Zoom out",
-      reset: "Reset view",
     },
     inspector: {
       title: "Node details",

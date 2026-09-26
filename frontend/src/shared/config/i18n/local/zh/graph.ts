@@ -2,7 +2,7 @@ export default {
   graph: {
     title: "图谱关系",
     subtitle:
-      "以关系图谱呈现企业 2–3 跳关联网络，节点按风险染色并高亮风险传导路径",
+      "以关系图谱呈现企业 1–3 跳关联网络，节点按风险染色并高亮风险传导路径",
     snapshot:
       "图谱快照 · 数据来源：工商登记 / 司法信息 / 供应链数据 · 最近更新 {{date}}",
     stats: {
@@ -22,7 +22,6 @@ export default {
     },
     legend: {
       risk: "风险染色",
-      node: "节点类型",
       edge: "关系类型",
       riskPath: "风险传导路径",
     },
@@ -31,12 +30,6 @@ export default {
       depth: "穿透层级",
       depthValue: "{{count}} 跳",
       focus: "只看风险传导路径",
-    },
-    canvas: {
-      hint: "拖拽节点调整布局 · 滚轮缩放 · 点击空白取消选中",
-      zoomIn: "放大",
-      zoomOut: "缩小",
-      reset: "重置视图",
     },
     inspector: {
       title: "节点详情",

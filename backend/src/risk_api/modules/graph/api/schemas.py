@@ -49,7 +49,7 @@ class GraphData(BaseModel):
 class RequestGetGraph(BaseModel):
     companyId: str
     lang: Literal["zh", "en"] = "zh"
-    depth: int = Field(default=3, ge=2, le=3)
+    depth: int = Field(default=3, ge=1, le=3)
 
 
 class ResponseGetGraph(BaseModel):
