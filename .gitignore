@@ -81,3 +81,8 @@ Thumbs.db
 /com_risk_model/runs/
 /com_risk_model/weights/*
 !/com_risk_model/weights/.gitkeep
+
+# Backend local data, artifacts and docs
+/backend/artifacts/
+/backend/data/
+/backend/docs/
