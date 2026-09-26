@@ -1,0 +1,22 @@
+__pycache__/
+*.pyc
+inspect_hyp.txt
+
+# Received data exports (large, not our own code -- Wang's raw parquet files)
+data_sg/
+data_sg_v2/
+data_sg_v3/
+data_sg_v4/
+data_sg_v5/
+
+# SMEsD pickle data (small, but binary and not our own code; original source is
+# a pinned upstream commit -- fetch it rather than committing it, see README).
+data/
+
+# Model checkpoints -- binary artifacts, not source, and easily regenerated.
+model_save/
+
+# Scratch experiment logs and raw result dumps -- ad-hoc, not curated
+# documentation. Key findings belong in README.md/SMEsD.md instead.
+*.log
+results_*.txt
