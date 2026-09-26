@@ -13,6 +13,7 @@
     "demo:generate": "node scripts/generate-demo-seed.mjs"
   },
   "dependencies": {
+    "@antv/g6": "5.1.1",
     "@radix-ui/react-dialog": "1.1.23",
     "@radix-ui/react-select": "2.3.7",
     "@radix-ui/react-tooltip": "1.2.16",
