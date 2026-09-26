@@ -12,7 +12,9 @@ Go 容器构建使用 `gateway/vendor/`，避免容器网络无法连接模块�
 
 ## Session 与浏览器
 
-登录凭据是随机 Cookie `risk_sid`，HttpOnly、SameSite=Strict，8 小时固定 TTL，不自动续期。Redis 键为 `risk:session:v1:<凭据 SHA-256>`，值为版本化 JSON 身份。Go 网关通过 Stellarmesh Gateway SDK v0.4.0 的 Cookie 凭据扩展读取它，清理外部身份头并注入可信身份。后端持有登录、退出和当前用户接口。所有业务 POST 校验允许的 Origin；本地 HTTP 的 `COOKIE_SECURE=false`，HTTPS 部署设为 `true`。
+登录凭据是随机 Cookie `risk_sid`，HttpOnly、SameSite=Strict，8 小时固定 TTL，不自动续期。Redis 键为 `risk:session:v1:<凭据 SHA-256>`，值为版本化 JSON 身份。Go 网关通过 Stellarmesh Gateway SDK v0.5.1 的 Cookie 凭据扩展读取它，清理外部身份头并注入可信身份。后端持有登录、退出和当前用户接口。所有业务 POST 校验允许的 Origin；本地 HTTP 的 `COOKIE_SECURE=false`，HTTPS 部署设为 `true`。
+
+网关统一生成请求 ID，后端仅在缺少传入值时兜底；对外响应只保留一个网关 ID。SDK 内置代理的处理与日志关联规则见 [API 与错误约定](api-errors.md#请求-id)。
 
 ## 对象存储
 

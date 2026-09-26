@@ -11,6 +11,7 @@ import (
 )
 
 func TestGatewaySessionAndEnvelope(t *testing.T) {
+	loggedID := captureRequestIDLogs(t)
 	store := miniredis.RunT(t)
 	client := redis.NewClient(&redis.Options{Addr: store.Addr()})
 	defer client.Close()
@@ -19,6 +20,7 @@ func TestGatewaySessionAndEnvelope(t *testing.T) {
 			t.Errorf("untrusted identity reached upstream: %q", r.Header.Get("X-User-ID"))
 		}
 		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set(requestIDHeader, r.Header.Get(requestIDHeader))
 		_, _ = w.Write([]byte(`{"code":200,"internal_code":"SUCCESS","message":"OK","data":{}}`))
 	}))
 	defer upstream.Close()
@@ -31,6 +33,7 @@ func TestGatewaySessionAndEnvelope(t *testing.T) {
 		request := httptest.NewRequest(http.MethodPost, "/api/v1/company/search", nil)
 		request.Header.Set("Origin", origin)
 		request.Header.Set("X-User-ID", "forged")
+		request.Header.Set(requestIDHeader, "client-id")
 		if cookie != "" {
 			request.AddCookie(&http.Cookie{Name: "risk_sid", Value: cookie})
 		}
@@ -46,8 +49,8 @@ func TestGatewaySessionAndEnvelope(t *testing.T) {
 		if body.Code != response.Code {
 			t.Fatalf("envelope code %d != HTTP %d", body.Code, response.Code)
 		}
-		if response.Header().Get("X-Request-ID") == "" {
-			t.Fatal("missing request ID")
+		if ids := response.Result().Header.Values(requestIDHeader); len(ids) != 1 || ids[0] == "client-id" || ids[0] != loggedID() {
+			t.Fatalf("response IDs differ from access log: %v", ids)
 		}
 		return response.Code, body.InternalCode
 	}

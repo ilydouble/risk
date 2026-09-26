@@ -2,7 +2,7 @@
 
 ## 请求与响应
 
-业务接口以 POST 为主，请求体直接使用 `RequestXxx` DTO。成功响应为 `ApiEnvelope[ResponseXxx]`；失败的 `data` 为 `ErrorDetail`。`code` 必须等于实际 HTTP 状态，`internal_code` 为稳定机器码，`message` 为本次消息。请求标识只放在 `X-Request-ID` 响应头。
+业务接口以 POST 为主，请求体直接使用 `RequestXxx` DTO。成功响应为 `ApiEnvelope[ResponseXxx]`；失败的 `data` 为 `ErrorDetail`。`code` 必须等于实际 HTTP 状态，`internal_code` 为稳定机器码，`message` 为本次消息。响应中的请求标识放在 `X-Request-ID` 头，不加入信封。
 
 ```json
 {"code":200,"internal_code":"SUCCESS","message":"OK","data":{"items":[],"total":0,"page":1,"pageSize":50}}
@@ -22,7 +22,14 @@
 2. 网关拒绝无效会话、伪造请求或不可用上游时输出同一四字段信封。Redis 故障为 503 `AUTH_STORE_UNAVAILABLE`，过期/缺失会话为 401 `AUTH_SESSION_EXPIRED`。
 3. SDK 从 `internal_code` 提取机器码。调用方先处理本操作的已知错误；全局监听统一处理过期会话和未消费的通用错误。不会在 HTTP 拦截层先弹出重复提示。
 
-`X-Request-ID` 贯穿网关与后端；对象存储预签名 PUT/GET 属 S3 字节通道，不套业务信封。默认网关保护业务 POST，删除客户端伪造的身份头并注入可信身份。后端再次校验 Cookie 身份与可信头一致。
+对象存储预签名 PUT/GET 属 S3 字节通道，不套业务信封。默认网关保护业务 POST，删除客户端伪造的身份头并注入可信身份。后端再次校验 Cookie 身份与可信头一致。
+
+## 请求 ID
+
+- 前端无需发送 `X-Request-ID`。网关使用 SDK v0.5.1 的默认生成器及 `TrustIncoming=false`，在路由与认证之前生成 32 位随机十六进制 ID，覆盖客户端传入值。
+- SDK 内置代理在清理逐跳请求头后，从上下文补回唯一 ID；转发响应时移除后端同名头，保留入口已设置的响应 ID，避免追加出多个值。访问日志与客户端响应使用网关选定的同一 ID。
+- 后端只在请求中间件中兜底：传入值缺少或为空时生成 UUID，随后存入 `request.state` 和日志上下文。响应构造函数只读取，不再生成；错误响应仍写入该头，覆盖外层异常处理器生成的 500。
+- 请求 ID 仅用于日志关联，不参与认证和授权。直接访问后端进行本地调试时，由后端兜底生成。
 
 ## 契约变更顺序
 

@@ -16,6 +16,8 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
+const requestIDHeader = "X-Request-ID"
+
 type sessionIdentity struct {
 	Version     int      `json:"version"`
 	UserID      string   `json:"user_id"`
@@ -91,6 +93,7 @@ func newHandler(client *redis.Client, upstreamURL, allowedOrigin string) (http.H
 			gateway.Route{Name: "openapi", Match: gateway.RouteMatch{ExactPath: "/openapi.json", Methods: []string{"GET"}}, Upstream: "api", Access: gateway.AccessPublic},
 		),
 		gateway.WithUpstreams(gateway.Upstream{Name: "api", URL: upstreamURL}),
+		gateway.WithRequestID(gateway.RequestIDConfig{Header: requestIDHeader, TrustIncoming: false}),
 		gateway.WithAuthenticator(sessionAuthenticator(client), cookie),
 		gateway.WithBeforeProxyPolicy(gateway.BeforeProxyPolicyFunc(func(_ context.Context, request *http.Request, _ gateway.RequestContext) (gateway.PolicyDecision, error) {
 			if request.Method == http.MethodPost {
