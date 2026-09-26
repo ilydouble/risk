@@ -7,8 +7,7 @@ RUN uv sync --frozen --no-dev --no-editable
 COPY backend/alembic.ini ./
 COPY backend/alembic ./alembic
 COPY backend/seed ./seed
-COPY backend/data/processed/smesd/test.json ./data/processed/smesd/test.json
-COPY backend/artifacts/smesd-v1 ./artifacts/smesd-v1
-COPY backend/docs/demo-bundle-manifest.json ./docs/demo-bundle-manifest.json
-ENV PATH="/app/backend/.venv/bin:${PATH}"
+COPY com_risk_model/data/processed/smesd/test.json /app/com_risk_model/data/processed/smesd/test.json
+RUN mkdir -p /app/com_risk_model/weights
+ENV PATH="/app/backend/.venv/bin:${PATH}" PYTHONPATH=/app/backend/src
 CMD ["sh", "-c", "alembic upgrade head && python -m risk_api"]

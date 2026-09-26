@@ -7,10 +7,13 @@
 ```bash
 cp .env.example .env
 # 将基础设施的示例凭据改为本地独有值
+# 手工下载 Release 包并解压到 com_risk_model/weights/smesd-v1/
 docker compose up --build -d
 ```
 
 访问 `http://localhost:18080`，先注册并登录，再进入侧栏 **SMEsD 基准**。依次查看检索 `C00010`、匿名企业画像、评分解释、一跳关系图与模型评估页。相关 POST 接口走现有 Caddy → Go 网关 → FastAPI 路径，使用 Session、同源校验和四字段响应信封。
+
+缺少权重仍能启动工作台，只有基准接口返回 503；下载、校验与升级见[产物约定](architecture/model-artifacts.md)。
 
 ## 核验
 
@@ -19,7 +22,7 @@ docker compose up --build -d
 ```bash
 cd backend
 uv sync --dev
-uv run pytest -q tests/test_model.py tests/test_demo_bundle.py tests/test_benchmark_api.py
+uv run pytest -q --require-model tests/test_demo_bundle.py tests/test_benchmark_api.py
 uv run python -m risk_api.export_openapi
 cd ../frontend
 npm run api:generate

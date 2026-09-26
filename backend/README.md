@@ -1,24 +1,42 @@
-# SMEsD 模型研究实现
+# 风控工作台 API
 
-`src/risk_api/modules/benchmark/engine/` 保留第一版 ComRisk-inspired 实现：数据验证与转换、企业属性和司法事件编码、门控关系聚合、超图通道、行业 Beta-Binomial 先验、自监督预训练、训练与消融评估。HTTP 接口和应用级只读加载位于 `modules/benchmark/api/` 与 `service.py`，使用现有 FastAPI、Dishka、Session 和 API 信封。
+Python 3.12 + uv，FastAPI 提供 HTTP，Dishka 管理应用/请求作用域。
+认证、企业、图谱、评分和文档按模块分层；目录、信封及日志约定见[后端架构](../docs/architecture/backend.md)。
 
-本仓库附带 474 家匿名测试企业与所选 `no_hyper-seed42` 权重，可以直接推理。完整训练、验证数据及其他消融权重不在仓库中。Python 3.12 由 uv 管理；PyTorch 使用 CPU 专用索引，仅用于 PyTorch 包。执行以下命令时工作目录为 `backend/`。
+## 运行与检查
+
+在 `backend/` 执行：
 
 ```bash
 uv sync --dev
-uv run python -m risk_api.modules.benchmark.cli validate --data data/processed/smesd/test.json
-uv run python -m risk_api.modules.benchmark.cli predict --data data/processed/smesd/test.json --model artifacts/smesd-v1/no_hyper-seed42 --ids C00010 --output /tmp/smesd-prediction.json
-uv run pytest -q tests/test_model.py tests/test_demo_bundle.py tests/test_benchmark_api.py
+uv run python -m risk_api
+uv run ruff check src alembic tests
+uv run mypy src/risk_api
+uv run pytest -q tests
+uv run python -m risk_api.export_openapi
 ```
 
-如需重训，先运行 `uv run python scripts/fetch_smesd.py` 取得固定版本上游数据并核验 SHA-256，再运行 `uv run python -m risk_api.modules.benchmark.engine.smesd` 转换为独立 train/valid/test 快照。使用 `uv run python -m risk_api.modules.benchmark.cli train --data data/processed/smesd --output artifacts/manual-full --epochs 80` 训练单版本；运行 `uv run python -m risk_api.modules.benchmark.engine.benchmark --epochs 80 --seeds 42 43 44` 比较消融。`scripts/run_v1.sh` 串联这些步骤，可能需要较长时间和完整上游数据。本次整合没有重训已选权重。
+本机运行需要对应的数据库等环境配置；Compose 会配置容器间地址并在每次后端启动前执行
+`alembic upgrade head`。独立 uv 启动不会自动读取根目录 `.env` 或执行迁移。
 
-## 方法与局限
+## 基准推理
 
-- 本实现独立实现企业自身风险、异构关系和超图聚合思路，并非逐行复现原 ComRisk，也不是完整的标准 GraphSAGE。
-- 训练和验证集用于模型拟合、早停、截距校准、阈值选择和版本选择；测试集仅用于报告。原始 2816/721/491 个监督样本跨集有重复，转换后独立公司数为 2816/686/474。
-- 行业先验仅进入预测头；训练公司用折外先验。表格基线为逻辑回归与 sklearn HistGradientBoosting，只使用企业数值属性和缺失标志。
-- 指标包括 ROC-AUC、PR-AUC、KS、Brier、Lift@10%、Top5% 捕获及 F1/Precision/Recall。`summary.json` 保留多版本实验汇总，只有所选模型的权重随包提供。
-- SMEsD 破产分类不是统一未来窗口违约概率。事件时间与关系时间不足以建立严格时点有效性。线性信用分是演示映射，解释是数值特征遮蔽敏感性而非 SHAP 或因果贡献。
+`modules/benchmark/` 仅保留 HTTP、Service、错误映射与加载生命周期。
+网络和推理通过本地路径依赖 `../com_risk_model/runtime/` 安装，训练代码和 scikit-learn
+不进入后端运行依赖。研究、训练及本地推理命令见[模型工程](../com_risk_model/README.md)。
 
-数据来源、只读文件清单、API 与再分发权限边界见[基准架构文档](../docs/architecture/benchmark.md)及[演示包说明](docs/demo-bundle.md)。
+474 家企业的测试快照位于 `../com_risk_model/data/processed/smesd/test.json`。
+下载 Release 模型包后解压到 `../com_risk_model/weights/smesd-v1/`，内含四个文件：
+`weights.pt`、`metadata.json`、`metrics.json`、`manifest.json`。
+`BENCHMARK_MODEL_VERSION` 选择版本，`BENCHMARK_MODEL_DIR` 和 `BENCHMARK_DATA_PATH` 可显式覆盖。
+
+启动时工作线程校验所选包与测试快照并预计算预测；文件缺失、损坏或不兼容时，仅基准接口
+返回 `BENCHMARK_MODEL_UNAVAILABLE` 503。其他接口仍可用，不会自动下载或训练。
+后端容器只读挂载整个 `weights/`，模型包不内置于镜像。
+
+```bash
+uv run pytest -q --require-model tests/test_benchmark_api.py tests/test_demo_bundle.py
+```
+
+普通测试在尚未下载模型时明确跳过 `model_integration`；验收必须使用 `--require-model`。
+具体打包、升级与回退方式见[模型产物约定](../docs/architecture/model-artifacts.md)。

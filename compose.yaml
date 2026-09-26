@@ -110,6 +110,11 @@ services:
       COOKIE_SECURE: ${COOKIE_SECURE:-false}
       RISK_LOG_LEVEL: ${RISK_LOG_LEVEL:-INFO}
       RISK_LOG_FORMAT: ${RISK_LOG_FORMAT:-pretty}
+      BENCHMARK_MODEL_VERSION: ${BENCHMARK_MODEL_VERSION:-smesd-v1}
+      BENCHMARK_MODEL_DIR: ${BENCHMARK_MODEL_DIR:-/app/com_risk_model/weights/${BENCHMARK_MODEL_VERSION:-smesd-v1}}
+      BENCHMARK_DATA_PATH: ${BENCHMARK_DATA_PATH:-/app/com_risk_model/data/processed/smesd/test.json}
+    volumes:
+      - ./com_risk_model/weights:/app/com_risk_model/weights:ro
     depends_on:
       postgres:
         condition: service_healthy

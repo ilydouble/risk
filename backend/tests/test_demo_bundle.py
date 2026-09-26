@@ -1,41 +1,22 @@
-"""The committed test snapshot and selected weights work without train/valid data."""
+"""The API loads the selected package and an independently located snapshot."""
 
 import asyncio
-import hashlib
-import json
 import shutil
 from pathlib import Path
 
+import pytest
+
 from risk_api.modules.benchmark.service import BenchmarkService
 
-ROOT = Path(__file__).resolve().parents[2]
 
-
-def test_shared_bundle_checksums_and_portable_inference(tmp_path: Path) -> None:
-    manifest = json.loads((ROOT / "backend/docs/demo-bundle-manifest.json").read_text())
-    assert manifest["company_count"] == 474
-    for entry in manifest["files"]:
-        relative = Path(entry["path"])
-        assert relative.parts[0] == "backend" and ".." not in relative.parts
-        content = (ROOT / relative).read_bytes()
-        assert len(content) == entry["bytes"]
-        assert hashlib.sha256(content).hexdigest() == entry["sha256"]
-        destination = tmp_path / relative
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(ROOT / relative, destination)
-    backend = tmp_path / "backend"
-    assert not (backend / "data/processed/smesd/train.json").exists()
-    assert not (backend / "data/processed/smesd/valid.json").exists()
-    (backend / "docs").mkdir(parents=True, exist_ok=True)
-    shutil.copyfile(
-        ROOT / "backend/docs/demo-bundle-manifest.json",
-        backend / "docs/demo-bundle-manifest.json",
-    )
-    service = BenchmarkService(
-        root=backend,
-        data_path=backend / "data/processed/smesd/test.json",
-        model_dir=backend / "artifacts/smesd-v1/no_hyper-seed42",
-    )
+@pytest.mark.model_integration
+def test_portable_inference(real_model, tmp_path: Path) -> None:
+    source_model, source_data = real_model
+    model = tmp_path / "unrelated-layout/model"
+    data = tmp_path / "snapshot.json"
+    shutil.copytree(source_model, model)
+    shutil.copyfile(source_data, data)
+    service = BenchmarkService(data_path=data, model_dir=model)
 
     async def verify() -> None:
         try:

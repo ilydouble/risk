@@ -17,9 +17,9 @@ SRS 将信用评分设为确定性模型，将报告生成与授信规则分离�
 | 基线 | LR、HistGradientBoosting、自身风险分支 | 未引入 XGBoost/评分卡 |
 | 可解释 | 单属性扰动敏感性、真实入边列表 | 非 SHAP、无因果宣称 |
 | 数据隔离 | 快照分离、公司去重、训练拟合预处理 | 时间戳不足，不能认证 PIT |
-| 版本与 API | 权重/schema/hash/seed、localhost API | FastAPI 实验服务；生产 Flask 适配待接入 |
+| 版本与 API | 权重/schema/hash/seed、localhost API | 现有 FastAPI/Dishka 单体推理，模型开发工程独立 |
 | 国别/时间外推 | 当前中国 SMEsD | 待真实赛题数据，不虚构结果 |
 | Co-Correcting/弱标签 | 未实现 | 真实破产标签基准先行 |
 | UI/报告/决策 | 保留既有前端 | 本次不冒充完整系统交付 |
 
-原始参赛材料不作修改。实现与结果保存在 risk/backend。
+原始参赛材料不作修改。实现与研究结果保存在 com_risk_model/，HTTP 接口位于 backend/。

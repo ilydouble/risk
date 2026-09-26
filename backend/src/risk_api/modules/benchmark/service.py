@@ -1,8 +1,6 @@
 """Read-only SMEsD test snapshot and its selected model; never joins demo companies."""
 
 import asyncio
-import hashlib
-import json
 import logging
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
@@ -10,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 import torch
+from com_risk_runtime.artifacts import validate_bundle
 from com_risk_runtime.explain import explain
 from com_risk_runtime.predictor import Predictor
 from com_risk_runtime.schema import Dataset, Node
@@ -18,7 +17,6 @@ from risk_api.modules.benchmark.errors import BenchmarkNotFound, BenchmarkUnavai
 from risk_api.shared.config import settings
 
 logger = logging.getLogger(__name__)
-ROOT = Path(__file__).resolve().parents[4]
 
 
 class BenchmarkService:
@@ -26,13 +24,11 @@ class BenchmarkService:
         self,
         model_dir: Path | None = None,
         data_path: Path | None = None,
-        manifest_path: Path | None = None,
-        root: Path | None = None,
+        model_version: str | None = None,
     ) -> None:
-        self.root = root or ROOT
         self.model_dir = model_dir or Path(settings.benchmark_model_dir)
         self.data_path = data_path or Path(settings.benchmark_data_path)
-        self.manifest_path = manifest_path or self.root / "docs/demo-bundle-manifest.json"
+        self.model_version = model_version or settings.benchmark_model_version
         self._executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="benchmark")
         self._slots = asyncio.Semaphore(2)
         self._available = False
@@ -49,28 +45,16 @@ class BenchmarkService:
             loop = asyncio.get_running_loop()
             return await loop.run_in_executor(self._executor, lambda: function(*args))
 
-    def _verify_bundle(self) -> None:
-        manifest = json.loads(self.manifest_path.read_text(encoding="utf-8"))
-        for item in manifest["files"]:
-            relative = Path(item["path"])
-            if relative.parts[0] != "backend" or ".." in relative.parts:
-                raise ValueError("Invalid bundle manifest path")
-            path = self.root.joinpath(*relative.parts[1:])
-            if path.stat().st_size != item["bytes"]:
-                raise ValueError(f"Bundle size mismatch: {item['path']}")
-            with path.open("rb") as stream:
-                digest = hashlib.file_digest(stream, "sha256").hexdigest()
-            if digest != item["sha256"]:
-                raise ValueError(f"Bundle checksum mismatch: {item['path']}")
-
     def _load(self) -> None:
         # Bound PyTorch CPU parallelism separately from the event loop's request concurrency.
         torch.set_num_threads(1)
-        self._verify_bundle()
+        bundle = validate_bundle(
+            self.model_dir, self.data_path, expected_version=self.model_version
+        )
         predictor = Predictor(self.model_dir)
-        dataset = Dataset.read(self.data_path)
+        dataset = bundle.dataset
         result = predictor.predict(dataset)
-        metrics = json.loads((self.model_dir / "metrics.json").read_text(encoding="utf-8"))
+        metrics = bundle.metrics
         self._predictor = predictor
         self._dataset = dataset
         self._predictions = {row["company_id"]: row for row in result["predictions"]}
@@ -78,18 +62,22 @@ class BenchmarkService:
         self._companies = [node for node in dataset.nodes if node.kind == "company"]
         self._event_counts = Counter(event.company for event in dataset.events)
         self._metrics = metrics
-        if len(self._companies) != 474:
-            raise ValueError("Unexpected SMEsD test company count")
 
     async def start(self) -> None:
         try:
             await self._run(self._load)
         except Exception:
             self._available = False
-            logger.exception("benchmark.model_unavailable")
+            logger.exception(
+                "benchmark.model_unavailable",
+                extra={"model_version": self.model_version, "model_dir": str(self.model_dir)},
+            )
         else:
             self._available = True
-            logger.info("benchmark.model_ready", extra={"company_count": len(self._companies)})
+            logger.info(
+                "benchmark.model_ready",
+                extra={"model_version": self.model_version, "company_count": len(self._companies)},
+            )
 
     def close(self) -> None:
         self._executor.shutdown(wait=True, cancel_futures=True)

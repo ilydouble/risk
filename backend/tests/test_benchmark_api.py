@@ -1,8 +1,14 @@
+import json
+import shutil
+from dataclasses import replace
+
+import pytest
+from com_risk_runtime.artifacts import build_manifest
 from fastapi.testclient import TestClient
 
 from risk_api.app import create_app
+from risk_api.modules.benchmark import service
 from risk_api.modules.benchmark.api import handler
-from risk_api.modules.benchmark.service import BenchmarkService
 
 ORIGIN = {"Origin": "http://localhost:18080"}
 BASE = "/api/v1/benchmark/"
@@ -12,7 +18,8 @@ async def authorize(*_args: object) -> dict[str, str]:
     return {"user_id": "test"}
 
 
-def test_benchmark_api_contract(monkeypatch) -> None:
+@pytest.mark.model_integration
+def test_benchmark_api_contract(monkeypatch, real_model) -> None:
     monkeypatch.setattr(handler, "authorize_request", authorize)
     with TestClient(create_app()) as client:
 
@@ -54,15 +61,61 @@ def test_benchmark_api_contract(monkeypatch) -> None:
         assert foreign.status_code == 403
 
 
-def test_missing_model_only_disables_benchmark(monkeypatch) -> None:
+def assert_model_unavailable(monkeypatch, model, data=None) -> None:
     monkeypatch.setattr(handler, "authorize_request", authorize)
-
-    def fail(_self: BenchmarkService) -> None:
-        raise FileNotFoundError("missing weights")
-
-    monkeypatch.setattr(BenchmarkService, "_verify_bundle", fail)
+    monkeypatch.setattr(
+        service,
+        "settings",
+        replace(
+            service.settings,
+            benchmark_model_dir=str(model),
+            benchmark_data_path=str(data or service.settings.benchmark_data_path),
+        ),
+    )
     with TestClient(create_app()) as client:
         assert client.get("/health/live").status_code == 200
+        assert client.post("/api/v1/auth/register", json={}, headers=ORIGIN).status_code == 422
         response = client.post(BASE + "evaluation", json={}, headers=ORIGIN)
         assert response.status_code == 503
         assert response.json()["internal_code"] == "BENCHMARK_MODEL_UNAVAILABLE"
+        assert response.json()["code"] == 503 and response.headers["X-Request-ID"]
+
+
+def test_missing_model_only_disables_benchmark(monkeypatch, tmp_path) -> None:
+    assert_model_unavailable(monkeypatch, tmp_path)
+
+
+@pytest.mark.model_integration
+@pytest.mark.parametrize(
+    "failure", ["missing", "modified", "snapshot", "manifest", "runtime", "metadata", "path"]
+)
+def test_invalid_bundle_only_disables_benchmark(monkeypatch, real_model, tmp_path, failure):
+    source_model, source_data = real_model
+    model = tmp_path / "model"
+    data = tmp_path / "snapshot.json"
+    shutil.copytree(source_model, model)
+    shutil.copyfile(source_data, data)
+    manifest_path = model / "manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    if failure == "missing":
+        (model / "weights.pt").unlink()
+    elif failure == "modified":
+        with (model / "weights.pt").open("ab") as stream:
+            stream.write(b"modified")
+    elif failure == "snapshot":
+        data.write_text(data.read_text() + "\n")
+    elif failure == "metadata":
+        metadata_path = model / "metadata.json"
+        metadata = json.loads(metadata_path.read_text())
+        metadata["version"] = 999
+        metadata_path.write_text(json.dumps(metadata))
+        manifest_path.write_text(build_manifest(model, "smesd-v1", data).model_dump_json())
+    else:
+        if failure == "manifest":
+            manifest["manifest_version"] = 999
+        elif failure == "runtime":
+            manifest["runtime_api_version"] = 999
+        else:
+            manifest["files"][0]["path"] = "../weights.pt"
+        manifest_path.write_text(json.dumps(manifest))
+    assert_model_unavailable(monkeypatch, model, data)

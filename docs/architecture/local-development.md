@@ -26,6 +26,14 @@ docker compose logs -f backend demo-seed
 
 后端与种子容器在本地默认输出易读的 `pretty` 日志；服务器有日志采集器时设置 `RISK_LOG_FORMAT=json`，输出单行 JSON。`RISK_LOG_LEVEL` 默认 `INFO`，只控制应用日志。业务请求的日志带 `X-Request-ID`，可以从响应头复制该值在容器日志中检索；成功的健康检查不产生日志。容器日志的保留期限取决于 Docker 配置。
 
+## 基准模型
+
+474 家企业测试快照随 Git 与后端镜像提供，权重不进入镜像。手工下载 Release 模型包，
+解压到 `com_risk_model/weights/smesd-v1/`；该目录应含 weights、metadata、metrics 和 manifest 四个文件。
+没有权重也能启动及注册登录，只有基准接口返回 `BENCHMARK_MODEL_UNAVAILABLE` 503。
+`.env` 的 `BENCHMARK_MODEL_VERSION` 选择子目录，显式目录覆盖见[模型产物约定](model-artifacts.md)。
+切换版本后运行 `docker compose up -d --no-deps --force-recreate backend`，环境变量会重新加载。
+
 ## 组件命令
 
 ```bash
@@ -48,4 +56,4 @@ npm run lint && npm run type-check && npm run build
 2. 登录后检索企业，打开画像、1–3 跳图谱及评分；评分与解释必须标记为演示快照。
 3. 在画像上传一个测试文件，经 RustFS 直传、确认登记、下载并核对字节。报告、决策、模型看板和批量评估仍能显示演示标识。
 4. 校验 401 会话过期、503 Redis 故障、伪造身份头、非法 Origin、参数 422 和不存在资源的统一信封。
-5. 登录后进入 `/benchmark`，检索 `C00010`，查看约 `0.726873` 的预测、一跳关系 16 条和测试 ROC-AUC 约 `0.793637`；核对其页头与说明未将演示分数描述为业务信用评分。
+5. 下载并校验模型后，登录进入 `/benchmark`，检索 `C00010`，查看约 `0.726873` 的预测、一跳关系 16 条和测试 ROC-AUC 约 `0.793637`；核对其页头与说明未将演示分数描述为业务信用评分。
