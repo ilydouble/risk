@@ -86,3 +86,9 @@ Thumbs.db
 /backend/artifacts/
 /backend/data/
 /backend/docs/
+
+# Local working docs and planning files
+/docs/*.docx
+/findings.md
+/progress.md
+/task_plan.md
