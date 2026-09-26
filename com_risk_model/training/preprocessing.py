@@ -1,6 +1,3 @@
-import json
-from pathlib import Path
-
 import numpy as np
 from com_risk_runtime.schema import Dataset
 
@@ -20,9 +17,3 @@ def fit_preprocessor(data: Dataset) -> dict:
         "mean": clean.mean(0).tolist(),
         "std": np.where(std < 1e-8, 1, std).tolist(),
     }
-
-
-def dump_json(path: str | Path, value):
-    Path(path).write_text(
-        json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False), encoding="utf-8"
-    )

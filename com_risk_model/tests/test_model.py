@@ -13,10 +13,11 @@ from com_risk_runtime.prior import add_prior
 from com_risk_runtime.schema import Dataset
 from pydantic import ValidationError
 
-from risk_api.modules.benchmark.engine.data import fit_preprocessor
-from risk_api.modules.benchmark.engine.demo import generate
-from risk_api.modules.benchmark.engine.pipeline import metrics, train
-from risk_api.modules.benchmark.engine.prior import fit_prior
+from training.demo import generate
+from training.evaluation import metrics
+from training.pipeline import train
+from training.preprocessing import fit_preprocessor
+from training.prior import fit_prior
 
 
 def test_hyper_laplacian_matches_dense_and_gradient():
@@ -97,14 +98,6 @@ def test_metrics_known_ranking():
     assert m["capture_at_5pct"] == 0.5
 
 
-@pytest.fixture(scope="module")
-def trained(tmp_path_factory):
-    path = tmp_path_factory.mktemp("model")
-    d = generate(100)
-    report = train(d, path, epochs=3, patience=2, hidden=8, pretrain_epochs=2)
-    return path, d, report
-
-
 def test_reload_inference_and_new_company(trained):
     path, d, report = trained
     predictor = Predictor(path)
@@ -156,7 +149,7 @@ def test_isolated_snapshot_overlap_rejected(tmp_path):
 def test_public_data_splits_disjoint_when_available():
     from pathlib import Path
 
-    from risk_api.modules.benchmark.engine.pipeline import load_data
+    from training.data import load_data
 
     path = Path("data/processed/smesd")
     if not (path / "train.json").exists() or not (path / "valid.json").exists():

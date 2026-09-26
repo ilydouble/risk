@@ -1,11 +1,10 @@
 """Reproducible ablations; choose by validation only."""
 
-import argparse
 from pathlib import Path
 from typing import Any
 
 from .data import dump_json
-from .pipeline import load_data, train
+from .pipeline import train
 
 
 def run(data, output, epochs=80, seeds=(42,)):
@@ -75,13 +74,3 @@ def run(data, output, epochs=80, seeds=(42,)):
     ]
     (root / "summary.md").write_text("\n".join(lines), encoding="utf-8")
     print(result["selected_artifact"])
-
-
-if __name__ == "__main__":
-    p = argparse.ArgumentParser()
-    p.add_argument("--data", default="data/processed/smesd")
-    p.add_argument("--output", default="artifacts/smesd-v1")
-    p.add_argument("--epochs", type=int, default=80)
-    p.add_argument("--seeds", nargs="+", type=int, default=[42])
-    a = p.parse_args()
-    run(load_data(a.data), a.output, a.epochs, a.seeds)

@@ -1,6 +1,5 @@
 """Convert public SMEsD builtin-only pickles into isolated, disjoint snapshots."""
 
-import argparse
 import hashlib
 import pickle
 from collections import Counter, defaultdict
@@ -163,11 +162,3 @@ def convert(source, output):
         }
     dump_json(output / "audit.json", audit)
     return audit
-
-
-if __name__ == "__main__":
-    p = argparse.ArgumentParser()
-    p.add_argument("--source", default="data/raw/smesd")
-    p.add_argument("--output", default="data/processed/smesd")
-    a = p.parse_args()
-    print(convert(a.source, a.output))

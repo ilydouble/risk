@@ -91,3 +91,14 @@ backend/artifacts/smesd-v1/no_hyper-seed42/*
 !backend/artifacts/smesd-v1/no_hyper-seed42/metrics.json
 
 frontend/out/
+
+# Model workspace local data and artifacts
+/com_risk_model/data/*
+!/com_risk_model/data/processed/
+/com_risk_model/data/processed/*
+!/com_risk_model/data/processed/smesd/
+/com_risk_model/data/processed/smesd/*
+!/com_risk_model/data/processed/smesd/test.json
+/com_risk_model/runs/
+/com_risk_model/weights/*
+!/com_risk_model/weights/.gitkeep
