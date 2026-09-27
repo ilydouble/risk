@@ -49,20 +49,24 @@ def test_event_relation_and_hypergraph_ablations_run(tmp_path: Path) -> None:
     assert isinstance(model.core, RiskGNNCore)
 
     artifact_path = tmp_path / "artifact.zip"
-    artifact_path.write_bytes(_artifact(TabularSuite(selection, variants), {"variants": []}))
+    artifact_path.write_bytes(
+        _artifact(
+            TabularSuite(selection, variants),
+            {"variants": [], "trainingProfile": {"profileVersion": 1}},
+        )
+    )
     with zipfile.ZipFile(artifact_path) as archive:
         manifest = json.loads(archive.read("manifest.json"))
+        profile = json.loads(archive.read("training-profile.json"))
+        assert profile["profileVersion"] == 1
+        assert manifest["trainingProfile"]["sha256"]
         assert {item["path"] for item in manifest["artifacts"]} == {
             "models/gnn_self_only.pt",
             "models/gnn_no_hyper.pt",
             "models/gnn_full.pt",
         }
-        assert {item["role"] for item in manifest["artifacts"]} == {
-            "riskgnn_configuration"
-        }
-        full = torch.load(
-            io.BytesIO(archive.read("models/gnn_full.pt")), weights_only=True
-        )
+        assert {item["role"] for item in manifest["artifacts"]} == {"riskgnn_configuration"}
+        full = torch.load(io.BytesIO(archive.read("models/gnn_full.pt")), weights_only=True)
         assert full["format"] == "workbench-riskgnn-v2"
         assert full["model"] == "RiskGNN-v1"
 
@@ -72,11 +76,7 @@ def test_gnn_fixed_seed_is_reproducible(tmp_path: Path) -> None:
     selected = select_features(data, mode="recommended", manual=[]).selected
     arguments = (data, selected, ["gnn_self_only"])
 
-    first = train_gnn_variants(
-        *arguments, use_events=True, seed=19, max_epochs=15, patience=4
-    )[0]
-    second = train_gnn_variants(
-        *arguments, use_events=True, seed=19, max_epochs=15, patience=4
-    )[0]
+    first = train_gnn_variants(*arguments, use_events=True, seed=19, max_epochs=15, patience=4)[0]
+    second = train_gnn_variants(*arguments, use_events=True, seed=19, max_epochs=15, patience=4)[0]
 
     assert first.result["metrics"] == second.result["metrics"]

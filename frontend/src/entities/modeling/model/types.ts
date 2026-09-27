@@ -90,12 +90,83 @@ export interface VariantResult {
   durationSeconds: number;
 }
 
+export interface TrainingProfileView {
+  profileVersion: 1;
+  modelFamily: "RiskGNN-v1";
+  datasetId: string;
+  experimentId: string;
+  dataset: {
+    datasetName: string;
+    bundleSchemaVersion: number;
+    bundleSha256: string;
+    taskType: "loan_application" | "entity_snapshot";
+    sampleUnit: "loan_application" | "entity_snapshot";
+    sampleCount: number;
+    entityCount: number;
+    graphSnapshotCount: number;
+    files: Record<string, { path: string; format: string; sizeBytes: number; sha256: string }>;
+  };
+  target: {
+    name: string;
+    positiveValue: string | number;
+    predictionWindowDays: number | null;
+    businessDefinition: string;
+  };
+  splits: Record<string, { rows: number; positives: number; positiveRate: number; entities: number }>;
+  features: {
+    selectionMode: string;
+    fitSplit: "train";
+    selected: FeatureDefinition[];
+    excluded: Array<{ name: string; reason: string }>;
+    rules: Record<string, unknown>;
+  };
+  encoding: Record<string, Record<string, unknown>>;
+  graph: {
+    enabled: boolean;
+    snapshotDefinition: string | null;
+    staticExperimentOnly: boolean;
+    nodes: { rows: number; types: string[] };
+    relations: { rows: number; types: string[] };
+    events: { rows: number; types: string[] };
+    hyperedges: { membershipRows: number; count: number; types: string[] };
+  };
+  training: {
+    seed: number;
+    requestedRuns: string[];
+    riskgnn: Record<string, unknown>;
+    protocol: {
+      trainingScope: "current_dataset_only";
+      weightsTransferred: false;
+      externalPretrainedEmbeddings: false;
+      embeddingInitialization: "random";
+      preprocessingFitSplit: "train";
+      earlyStoppingSplit: "validation";
+      testUsedForSelection: false;
+    };
+  };
+  evaluation: {
+    validationRole: string;
+    finalSplit: "test";
+    variants: Array<Record<string, unknown>>;
+  };
+  provenance: {
+    coreImplementation: string;
+    artifactFormat: string;
+    pythonVersion: string;
+    torchVersion: string;
+    sklearnVersion: string;
+    codeVersion: string;
+  };
+  limitations: string[];
+}
+
 export interface ExperimentResultsView {
   modelFamily?: string;
   taskType: "loan_application" | "entity_snapshot";
   targetName: string;
   targetDefinition: string;
   variants: VariantResult[];
+  trainingProfile?: TrainingProfileView;
   disclaimer: string;
 }
 

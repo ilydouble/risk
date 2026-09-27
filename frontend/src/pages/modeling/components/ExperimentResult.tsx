@@ -12,6 +12,7 @@ const metric = (value: number) => value.toFixed(4);
 export default function ExperimentResult({ experiment }: ExperimentResultProps) {
   const { t } = useTranslation();
   const results = useMemo(() => resultsOf(experiment), [experiment]);
+  const profile = results.trainingProfile;
   const variants = useMemo(() => results.variants ?? [], [results]);
   const [selectedName, setSelectedName] = useState(variants[0]?.name ?? "");
   useEffect(() => setSelectedName(variants[0]?.name ?? ""), [experiment.id, variants]);
@@ -44,6 +45,47 @@ export default function ExperimentResult({ experiment }: ExperimentResultProps) 
           <span className="rounded-full border border-primary-500/30 px-3 py-1 font-mono text-[11px] text-primary-400">{t(`modeling.task.${results.taskType}`)}</span>
         </div>
       </div>
+
+      <Card title={t("modeling.result.profile.title")} icon="ri-file-list-3-line" bodyClassName="p-5">
+        {profile ? (
+          <div className="space-y-4">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                [t("modeling.result.profile.dataset"), profile.dataset.datasetName],
+                [t("modeling.result.profile.samples"), profile.dataset.sampleCount.toLocaleString()],
+                [t("modeling.result.profile.entities"), profile.dataset.entityCount.toLocaleString()],
+                [t("modeling.result.profile.features"), profile.features.selected.length.toString()],
+                [t("modeling.result.profile.relations"), profile.graph.relations.rows.toLocaleString()],
+                [t("modeling.result.profile.hyperedges"), profile.graph.hyperedges.count.toLocaleString()],
+                [t("modeling.result.profile.seed"), profile.training.seed.toString()],
+                [t("modeling.result.profile.fingerprint"), profile.dataset.bundleSha256.slice(0, 12)],
+              ].map(([label, value]) => (
+                <div key={label} className="rounded-md bg-background-50 px-3 py-3">
+                  <p className="text-[11px] text-foreground-500">{label}</p>
+                  <p className="mt-1 truncate font-mono text-sm font-semibold text-foreground-900" title={value}>{value}</p>
+                </div>
+              ))}
+            </div>
+            <div className="rounded-md border border-primary-500/25 bg-primary-500/8 px-4 py-3">
+              <p className="text-xs font-semibold text-primary-500">{t("modeling.result.profile.independent")}</p>
+              <p className="mt-1 text-xs leading-relaxed text-foreground-600">{t("modeling.result.profile.independentDescription")}</p>
+            </div>
+            <p className="font-mono text-[11px] text-foreground-500">
+              {profile.provenance.coreImplementation} · {profile.provenance.codeVersion} · {profile.provenance.artifactFormat}
+            </p>
+            <details className="rounded-md border border-background-200 bg-background-50">
+              <summary className="cursor-pointer px-4 py-3 text-xs font-semibold text-foreground-700">
+                {t("modeling.result.profile.fullProfile")}
+              </summary>
+              <pre className="max-h-96 overflow-auto border-t border-background-200 p-4 font-mono text-[11px] leading-relaxed text-foreground-600">
+                {JSON.stringify(profile, null, 2)}
+              </pre>
+            </details>
+          </div>
+        ) : (
+          <p className="text-xs text-foreground-500">{t("modeling.result.profile.legacyUnavailable")}</p>
+        )}
+      </Card>
 
       <Card title={t("modeling.result.comparison")} icon="ri-scales-3-line" bodyClassName="overflow-x-auto">
         <table className="w-full min-w-[720px] text-left text-xs">

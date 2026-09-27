@@ -73,6 +73,8 @@ RiskGNN内部配置为：
 RiskGNN 使用事件类别 Embedding、数值投影、时间衰减、关系类型和正边权，按验证集 BCE 早停。
 所有变体报告 ROC-AUC、PR-AUC、KS、Brier、Precision、Recall、F1、混淆矩阵和校准分箱。
 制品保存在 RustFS，`manifest.json` 对每个模型文件记录大小和 SHA-256，`autoPublished=false`。
+每次实验另生成一份稳定的训练配置档案，明确数据指纹、编码、图、训练与评估协议，以及不同
+数据集之间不迁移权重的边界，详见[数据集训练配置档案](training-profile.md)。
 
 ## 本地命令
 

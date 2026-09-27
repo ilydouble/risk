@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, Any
 
 from workbench.data import load_bundle
 from workbench.gnn import train_gnn_variants
+from workbench.profile import build_training_profile
 from workbench.tabular import TabularSuite, train_tabular_suite
 
 if TYPE_CHECKING:
@@ -26,6 +27,10 @@ def _artifact(suite: TabularSuite, results: dict[str, Any]) -> bytes:
     artifact_files: list[dict[str, Any]] = []
     with zipfile.ZipFile(stream, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         archive.writestr("results.json", json.dumps(results, ensure_ascii=False, indent=2))
+        profile_payload = json.dumps(
+            results["trainingProfile"], ensure_ascii=False, indent=2
+        ).encode()
+        archive.writestr("training-profile.json", profile_payload)
         archive.writestr(
             "feature-selection.json", json.dumps(selection, ensure_ascii=False, indent=2)
         )
@@ -49,6 +54,11 @@ def _artifact(suite: TabularSuite, results: dict[str, Any]) -> bytes:
                     "format": "workbench-experiment-v2",
                     "modelFamily": "RiskGNN-v1",
                     "autoPublished": False,
+                    "trainingProfile": {
+                        "path": "training-profile.json",
+                        "sizeBytes": len(profile_payload),
+                        "sha256": hashlib.sha256(profile_payload).hexdigest(),
+                    },
                     "artifacts": artifact_files,
                 },
                 ensure_ascii=False,
@@ -58,12 +68,18 @@ def _artifact(suite: TabularSuite, results: dict[str, Any]) -> bytes:
     return stream.getvalue()
 
 
-def _train(data: Any, request: dict[str, Any]) -> tuple[TabularSuite, dict[str, Any]]:
+def _train(
+    data: Any,
+    request: dict[str, Any],
+    *,
+    bundle_sha256: str,
+    dataset_id: str,
+    experiment_id: str,
+) -> tuple[TabularSuite, dict[str, Any]]:
     configuration = request["configuration"]
     requested_models = list(request["requested_models"])
     if not configuration["useRelations"] and any(
-        model in {"graph_stats_hgb", "gnn_no_hyper", "gnn_full"}
-        for model in requested_models
+        model in {"graph_stats_hgb", "gnn_no_hyper", "gnn_full"} for model in requested_models
     ):
         raise ValueError("relation-based models require useRelations")
     if "gnn_full" in requested_models and not configuration["useHyperedges"]:
@@ -84,6 +100,14 @@ def _train(data: Any, request: dict[str, Any]) -> tuple[TabularSuite, dict[str, 
     )
     suite = TabularSuite(suite.selection, suite.variants + gnn_variants)
     task_type = data.metadata.task_type
+    training_profile = build_training_profile(
+        data,
+        request,
+        suite,
+        bundle_sha256=bundle_sha256,
+        dataset_id=dataset_id,
+        experiment_id=experiment_id,
+    )
     results = {
         "modelFamily": "RiskGNN-v1",
         "taskType": task_type,
@@ -96,6 +120,7 @@ def _train(data: Any, request: dict[str, Any]) -> tuple[TabularSuite, dict[str, 
             "ranking": suite.selection.ranking,
             "configuration": suite.selection.configuration,
         },
+        "trainingProfile": training_profile.model_dump(mode="json", by_alias=True),
         "disclaimer": (
             "该结果是贷款申请级离线实验，不代表已投入生产授信。"
             if task_type == "loan_application"
@@ -111,8 +136,17 @@ async def run_experiment(worker: ModelingWorker, job: Job) -> None:
     payload = await worker._download(str(job.payload["objectKey"]))
     await worker.store.progress(job, "validating", 10)
     data = await asyncio.to_thread(load_bundle, payload)
+    if job.experiment_id is None:
+        raise ValueError("training job requires experiment_id")
     await worker.store.progress(job, "training_tabular", 25)
-    suite, results = await asyncio.to_thread(_train, data, request)
+    suite, results = await asyncio.to_thread(
+        _train,
+        data,
+        request,
+        bundle_sha256=hashlib.sha256(payload).hexdigest(),
+        dataset_id=job.dataset_id,
+        experiment_id=job.experiment_id,
+    )
     requested = set(request["requested_models"])
     completed = {variant.name for variant in suite.variants}
     unsupported = requested.difference(completed)
@@ -121,8 +155,7 @@ async def run_experiment(worker: ModelingWorker, job: Job) -> None:
     await worker.store.progress(job, "saving_artifacts", 90)
     artifact = await asyncio.to_thread(_artifact, suite, results)
     object_key = (
-        f"modeling/{job.owner_id}/{job.dataset_id}/experiments/"
-        f"{job.experiment_id}/artifact.zip"
+        f"modeling/{job.owner_id}/{job.dataset_id}/experiments/{job.experiment_id}/artifact.zip"
     )
     await worker.storage.upload_bytes(object_key, artifact, content_type="application/zip")
     artifact_manifest = {
