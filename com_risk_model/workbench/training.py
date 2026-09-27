@@ -8,6 +8,7 @@ import zipfile
 from typing import TYPE_CHECKING, Any
 
 from workbench.data import load_bundle
+from workbench.gnn import train_gnn_variants
 from workbench.tabular import TabularSuite, train_tabular_suite
 
 if TYPE_CHECKING:
@@ -34,13 +35,29 @@ def _artifact(suite: TabularSuite, results: dict[str, Any]) -> bytes:
 
 def _train(data: Any, request: dict[str, Any]) -> tuple[TabularSuite, dict[str, Any]]:
     configuration = request["configuration"]
+    requested_models = list(request["requested_models"])
+    if not configuration["useRelations"] and any(
+        model in {"graph_stats_hgb", "gnn_no_hyper", "gnn_full"}
+        for model in requested_models
+    ):
+        raise ValueError("relation-based models require useRelations")
+    if "gnn_full" in requested_models and not configuration["useHyperedges"]:
+        raise ValueError("gnn_full requires useHyperedges")
     suite = train_tabular_suite(
         data,
-        requested_models=list(request["requested_models"]),
+        requested_models=requested_models,
         feature_mode=str(configuration["featureMode"]),
         manual_features=list(request["feature_columns"]),
         seed=int(configuration["seed"]),
     )
+    gnn_variants = train_gnn_variants(
+        data,
+        suite.selection.selected,
+        requested_models,
+        use_events=bool(configuration["useEvents"]),
+        seed=int(configuration["seed"]),
+    )
+    suite = TabularSuite(suite.selection, suite.variants + gnn_variants)
     task_type = data.metadata.task_type
     results = {
         "taskType": task_type,

@@ -152,6 +152,13 @@ class ModelingService:
         elif feature_mode != "recommended":
             raise ModelingError("CONFIGURATION_INVALID", field="featureMode")
         self._validate_capabilities(dataset.capabilities, requested_models)
+        if not use_relations and any(
+            model in {"graph_stats_hgb", "gnn_no_hyper", "gnn_full"}
+            for model in requested_models
+        ):
+            raise ModelingError("CONFIGURATION_INVALID", field="useRelations")
+        if "gnn_full" in requested_models and not use_hyperedges:
+            raise ModelingError("CONFIGURATION_INVALID", field="useHyperedges")
         configuration: dict[str, Any] = {
             "seed": seed,
             "featureMode": feature_mode,
