@@ -23,7 +23,7 @@ def _artifact(suite: TabularSuite, results: dict[str, Any]) -> bytes:
         "ranking": suite.selection.ranking,
         "configuration": suite.selection.configuration,
     }
-    model_files: list[dict[str, Any]] = []
+    artifact_files: list[dict[str, Any]] = []
     with zipfile.ZipFile(stream, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         archive.writestr("results.json", json.dumps(results, ensure_ascii=False, indent=2))
         archive.writestr(
@@ -33,9 +33,10 @@ def _artifact(suite: TabularSuite, results: dict[str, Any]) -> bytes:
             suffix = "pt" if variant.name.startswith("gnn_") else "joblib"
             path = f"models/{variant.name}.{suffix}"
             archive.writestr(path, variant.artifact)
-            model_files.append(
+            artifact_files.append(
                 {
                     "name": variant.name,
+                    "role": variant.result["role"],
                     "path": path,
                     "sizeBytes": len(variant.artifact),
                     "sha256": hashlib.sha256(variant.artifact).hexdigest(),
@@ -45,9 +46,10 @@ def _artifact(suite: TabularSuite, results: dict[str, Any]) -> bytes:
             "manifest.json",
             json.dumps(
                 {
-                    "format": "workbench-experiment-v1",
+                    "format": "workbench-experiment-v2",
+                    "modelFamily": "RiskGNN-v1",
                     "autoPublished": False,
-                    "models": model_files,
+                    "artifacts": artifact_files,
                 },
                 ensure_ascii=False,
                 indent=2,
@@ -83,6 +85,7 @@ def _train(data: Any, request: dict[str, Any]) -> tuple[TabularSuite, dict[str, 
     suite = TabularSuite(suite.selection, suite.variants + gnn_variants)
     task_type = data.metadata.task_type
     results = {
+        "modelFamily": "RiskGNN-v1",
         "taskType": task_type,
         "targetName": data.metadata.target.name,
         "targetDefinition": data.metadata.target.business_definition,
@@ -126,7 +129,8 @@ async def run_experiment(worker: ModelingWorker, job: Job) -> None:
         "objectKey": object_key,
         "sizeBytes": len(artifact),
         "sha256": hashlib.sha256(artifact).hexdigest(),
-        "format": "workbench-experiment-v1",
+        "format": "workbench-experiment-v2",
+        "modelFamily": "RiskGNN-v1",
         "autoPublished": False,
     }
     await worker.store.complete_experiment(

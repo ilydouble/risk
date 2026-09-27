@@ -1,5 +1,9 @@
 # RiskGNN
 
+> **状态：历史研究实现。** 系统唯一可部署共享内核现位于
+> `com_risk_model/runtime/src/com_risk_runtime/model.py`，训练 Worker 与后端均不导入本目录。
+> 本目录只保留新加坡大规模实验、邻居采样和结果溯源；请勿把这里的 checkpoint 当作系统模型制品。
+
 Enterprise credit-risk / bankruptcy-prediction model, extended from the ComRisk
 paper's original code (see citation below) for Topic 18. Built and validated on
 two datasets: the original SMEsD (China SMEs) and a Singapore ACRA/GLEIF export

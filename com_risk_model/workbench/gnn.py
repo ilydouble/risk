@@ -10,6 +10,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 import torch
+from com_risk_runtime.model import RiskGNNCore
 from torch import nn
 
 from workbench.data import BundleData
@@ -306,7 +307,7 @@ class MixedEncoder(nn.Module):
         return self.network(values)
 
 
-class WorkbenchGNN(nn.Module):
+class WorkbenchRiskGNN(nn.Module):
     def __init__(
         self,
         sample_numeric_width: int,
@@ -321,22 +322,54 @@ class WorkbenchGNN(nn.Module):
     ):
         super().__init__()
         self.hidden = hidden
+        self.relation_type_count = max(relation_type_count, 1)
+        self.hyper_type_count = max(hyper_type_count, 1)
         self.sample_encoder = MixedEncoder(sample_numeric_width, sample_categories, hidden)
         self.node_encoder = MixedEncoder(node_numeric_width, node_categories, hidden)
         self.node_type = nn.Embedding(max(node_type_count, 1), 8)
         self.node_fusion = nn.Linear(hidden + 8 + hidden, hidden)
         self.event_type = nn.Embedding(max(event_type_count, 1), 8)
         self.event_project = nn.Linear(9, hidden)
-        self.relation_type = nn.Embedding(max(relation_type_count, 1), hidden)
-        self.message = nn.Linear(hidden, hidden)
-        self.relation_gate = nn.Linear(hidden * 2, 1)
-        self.relation_norm = nn.LayerNorm(hidden)
-        self.hyper_type_weight = nn.Parameter(torch.zeros(max(hyper_type_count, 1)))
-        self.hyper_gate = nn.Linear(hidden * 2, 1)
-        self.hyper_norm = nn.LayerNorm(hidden)
+        self.core = RiskGNNCore(
+            hidden,
+            self.relation_type_count,
+            self.hyper_type_count,
+            layers=2,
+            dropout=0.1,
+        )
         self.classifier = nn.Sequential(
             nn.Linear(hidden * 2, hidden), nn.ReLU(), nn.Dropout(0.1), nn.Linear(hidden, 1)
         )
+
+    def _relations(
+        self, batch: GraphBatch
+    ) -> list[tuple[torch.Tensor, torch.Tensor, torch.Tensor]]:
+        return [
+            (
+                batch.edge_source[batch.edge_type == index],
+                batch.edge_target[batch.edge_type == index],
+                batch.edge_weight[batch.edge_type == index],
+            )
+            for index in range(self.relation_type_count)
+        ]
+
+    def _incidence(
+        self, batch: GraphBatch
+    ) -> list[tuple[torch.Tensor, torch.Tensor, int]]:
+        items = []
+        for index in range(self.hyper_type_count):
+            mask = batch.hyper_type == index
+            nodes = batch.hyper_node[mask]
+            if len(nodes):
+                _, groups = torch.unique(
+                    batch.hyperedge[mask], sorted=True, return_inverse=True
+                )
+                count = int(groups.max()) + 1
+            else:
+                groups = torch.zeros(0, dtype=torch.long)
+                count = 0
+            items.append((nodes, groups, count))
+        return items
 
     def forward(self, batch: GraphBatch, mode: str) -> tuple[torch.Tensor, dict[str, Any]]:
         sample = self.sample_encoder(batch.sample_numeric, batch.sample_categorical)
@@ -350,49 +383,34 @@ class WorkbenchGNN(nn.Module):
         node = torch.relu(
             self.node_fusion(torch.cat([node_base, self.node_type(batch.node_type), event], dim=1))
         )
-        relation_gate_mean = 1.0
-        if mode != "gnn_self_only":
-            messages = self.message(node[batch.edge_source]) + self.relation_type(batch.edge_type)
-            messages = messages * torch.log1p(batch.edge_weight).unsqueeze(1)
-            aggregated = torch.zeros_like(node)
-            aggregated.index_add_(0, batch.edge_target, messages)
-            counts = torch.zeros((len(node), 1), dtype=node.dtype)
-            counts.index_add_(0, batch.edge_target, torch.ones((len(messages), 1)))
-            aggregated = aggregated / counts.clamp_min(1)
-            gate = torch.sigmoid(self.relation_gate(torch.cat([node, aggregated], dim=1)))
-            node = self.relation_norm(gate * node + (1 - gate) * aggregated)
-            relation_gate_mean = float(gate.detach().mean())
-        hyper_weights: list[float] = []
-        if mode == "gnn_full" and len(batch.hyper_node):
-            hyper_count = int(batch.hyperedge.max()) + 1
-            hyper = torch.zeros((hyper_count, self.hidden), dtype=node.dtype)
-            hyper.index_add_(0, batch.hyperedge, node[batch.hyper_node])
-            counts = torch.zeros((hyper_count, 1), dtype=node.dtype)
-            counts.index_add_(0, batch.hyperedge, torch.ones((len(batch.hyperedge), 1)))
-            hyper = hyper / counts.clamp_min(1)
-            incidence_weight = torch.sigmoid(self.hyper_type_weight[batch.hyper_type]).unsqueeze(1)
-            propagated = torch.zeros_like(node)
-            propagated.index_add_(0, batch.hyper_node, hyper[batch.hyperedge] * incidence_weight)
-            node_counts = torch.zeros((len(node), 1), dtype=node.dtype)
-            node_counts.index_add_(0, batch.hyper_node, torch.ones((len(batch.hyper_node), 1)))
-            propagated = propagated / node_counts.clamp_min(1)
-            gate = torch.sigmoid(self.hyper_gate(torch.cat([node, propagated], dim=1)))
-            node = self.hyper_norm(gate * node + (1 - gate) * propagated)
-            hyper_weights = torch.sigmoid(self.hyper_type_weight).detach().tolist()
+        core_mode = {
+            "gnn_self_only": "self_only",
+            "gnn_no_hyper": "no_hyper",
+            "gnn_full": "full",
+        }.get(mode)
+        if core_mode is None:
+            raise ValueError(f"unknown RiskGNN ablation: {mode}")
+        node, diagnostics = self.core(
+            node,
+            self._relations(batch),
+            self._incidence(batch),
+            core_mode,
+        )
         logits = self.classifier(torch.cat([sample, node[batch.sample_node]], dim=1)).squeeze(1)
         return logits, {
-            "relationSelfGateMean": relation_gate_mean,
-            "hyperedgeTypeWeights": hyper_weights,
+            "contagionRiskWeight": float(diagnostics["contagionRiskWeight"]),
+            "hyperedgeTypeWeights": diagnostics["hyperedgeTypeWeights"].tolist(),
         }
 
 
 def _save_artifact(
-    model: WorkbenchGNN, batch: GraphBatch, mode: str, selected: list[str]
+    model: WorkbenchRiskGNN, batch: GraphBatch, mode: str, selected: list[str]
 ) -> bytes:
     stream = io.BytesIO()
     torch.save(
         {
-            "format": "workbench-gnn-v1",
+            "format": "workbench-riskgnn-v2",
+            "model": "RiskGNN-v1",
             "variant": mode,
             "selected_features": selected,
             "sample_columns": [column.__dict__ for column in batch.sample_columns],
@@ -438,7 +456,7 @@ def train_gnn_variants(
         np.random.seed(variant_seed)
         torch.manual_seed(variant_seed)
         torch.set_num_threads(1)
-        model = WorkbenchGNN(
+        model = WorkbenchRiskGNN(
             batch.sample_numeric.shape[1],
             sample_categories,
             batch.node_numeric.shape[1],
@@ -491,6 +509,7 @@ def train_gnn_variants(
         test_target = batch.target[masks["test"]].numpy().astype(int)
         result = {
             "name": mode,
+            "role": "riskgnn_configuration",
             "status": "completed",
             "metrics": {
                 "validation": evaluate(validation_target, validation_probability, threshold),

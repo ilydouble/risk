@@ -1,13 +1,17 @@
 from __future__ import annotations
 
+import io
 import json
 import zipfile
 from pathlib import Path
 
+import torch
+from com_risk_runtime.model import RiskGNNCore
+
 from workbench.data import load_bundle
 from workbench.demo import build_demo_bundle
 from workbench.features import select_features
-from workbench.gnn import prepare_graph_batch, train_gnn_variants
+from workbench.gnn import WorkbenchRiskGNN, prepare_graph_batch, train_gnn_variants
 from workbench.tabular import TabularSuite
 from workbench.training import _artifact
 
@@ -41,15 +45,26 @@ def test_event_relation_and_hypergraph_ablations_run(tmp_path: Path) -> None:
         assert variant.result["configuration"]["seed"] == 11
         assert 0 <= variant.result["metrics"]["test"]["rocAuc"] <= 1
 
+    model = WorkbenchRiskGNN(1, [], 1, [], 1, 1, 1, 1)
+    assert isinstance(model.core, RiskGNNCore)
+
     artifact_path = tmp_path / "artifact.zip"
     artifact_path.write_bytes(_artifact(TabularSuite(selection, variants), {"variants": []}))
     with zipfile.ZipFile(artifact_path) as archive:
         manifest = json.loads(archive.read("manifest.json"))
-        assert {item["path"] for item in manifest["models"]} == {
+        assert {item["path"] for item in manifest["artifacts"]} == {
             "models/gnn_self_only.pt",
             "models/gnn_no_hyper.pt",
             "models/gnn_full.pt",
         }
+        assert {item["role"] for item in manifest["artifacts"]} == {
+            "riskgnn_configuration"
+        }
+        full = torch.load(
+            io.BytesIO(archive.read("models/gnn_full.pt")), weights_only=True
+        )
+        assert full["format"] == "workbench-riskgnn-v2"
+        assert full["model"] == "RiskGNN-v1"
 
 
 def test_gnn_fixed_seed_is_reproducible(tmp_path: Path) -> None:

@@ -77,12 +77,13 @@ export interface MetricView {
 
 export interface VariantResult {
   name: string;
+  role?: "evaluation_baseline" | "riskgnn_configuration";
   status: string;
   metrics: { validation: MetricView; test: MetricView };
   explainability: {
     type: string;
     items?: Array<{ feature: string; value: number }>;
-    relationSelfGateMean?: number;
+    contagionRiskWeight?: number;
     hyperedgeTypeWeights?: number[];
   };
   configuration: Record<string, string | number | boolean>;
@@ -90,6 +91,7 @@ export interface VariantResult {
 }
 
 export interface ExperimentResultsView {
+  modelFamily?: string;
   taskType: "loan_application" | "entity_snapshot";
   targetName: string;
   targetDefinition: string;

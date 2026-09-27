@@ -100,7 +100,58 @@ def hyper_laplacian(x, node, group, count):
     return (x - propagated) * (degree > 0)[:, None]
 
 
-class ComRisk(nn.Module):
+class RiskGNNCore(nn.Module):
+    """Shared intra-risk and contagion-risk encoder used by every training path."""
+
+    def __init__(
+        self,
+        hidden,
+        relation_count,
+        hyperedge_count,
+        layers=2,
+        dropout=0.15,
+    ):
+        super().__init__()
+        self.layers = nn.ModuleList(
+            [RelationLayer(hidden, relation_count, dropout) for _ in range(layers)]
+        )
+        self.hyper_proj = nn.Linear(hidden, hidden, bias=False)
+        self.hyper_weight = nn.Parameter(torch.zeros(hyperedge_count))
+        self.self_proj = nn.Sequential(nn.Linear(hidden, hidden), nn.GELU())
+        self.graph_proj = nn.Linear(hidden, hidden)
+        self.gate = nn.Parameter(torch.tensor(0.0))
+
+    def forward(self, own, relations, incidence, mode="full"):
+        if mode not in {"full", "no_graph", "no_hyper", "self_only"}:
+            raise ValueError("unknown ablation")
+        intra = self.self_proj(own)
+        relational = torch.zeros_like(own)
+        if mode not in {"no_graph", "self_only"}:
+            relational = own
+            for layer in self.layers:
+                relational = layer(relational, relations)
+        hyper = torch.zeros_like(own)
+        if mode not in {"no_hyper", "self_only"}:
+            z = self.hyper_proj(own)
+            for i, (node, group, count) in enumerate(incidence):
+                hyper = hyper + self.hyper_weight[i].sigmoid() * hyper_laplacian(
+                    z, node, group, count
+                )
+        contagion = F.gelu(self.graph_proj(relational + hyper))
+        contagion_weight = self.gate.sigmoid()
+        fused = (
+            intra
+            if mode == "self_only"
+            else (1 - contagion_weight) * intra + contagion_weight * contagion
+        )
+        diagnostics = {
+            "contagionRiskWeight": contagion_weight.detach(),
+            "hyperedgeTypeWeights": self.hyper_weight.sigmoid().detach(),
+        }
+        return fused, diagnostics
+
+
+class RiskGNN(nn.Module):
     def __init__(
         self,
         feature_dim,
@@ -115,49 +166,31 @@ class ComRisk(nn.Module):
         self.feature = nn.Linear(feature_dim * 2, hidden)
         self.node_type = nn.Embedding(2, hidden)
         self.events = EventEncoder(hidden)
-        self.layers = nn.ModuleList(
-            [RelationLayer(hidden, relation_count, dropout) for _ in range(layers)]
+        self.core = RiskGNNCore(
+            hidden,
+            relation_count,
+            hyperedge_count,
+            layers=layers,
+            dropout=dropout,
         )
-        self.hyper_proj = nn.Linear(hidden, hidden, bias=False)
-        self.hyper_weight = nn.Parameter(torch.zeros(hyperedge_count))
-        self.self_proj = nn.Sequential(nn.Linear(hidden, hidden), nn.GELU())
-        self.graph_proj = nn.Linear(hidden, hidden)
-        self.gate = nn.Parameter(torch.tensor(0.0))
         self.use_prior = use_prior
         self.classifier = nn.Linear(hidden + int(use_prior), 1)
         self.dropout = nn.Dropout(dropout)
 
     def encode(self, graph, mode="full"):
-        if mode not in {"full", "no_graph", "no_hyper", "self_only"}:
-            raise ValueError("unknown ablation")
         own = F.gelu(
             self.feature(graph["x"])
             + self.node_type(graph["kinds"])
             + self.events(graph["events"], len(graph["x"]))
         )
-        intra = self.self_proj(own)
-        relational = torch.zeros_like(own)
-        if mode not in {"no_graph", "self_only"}:
-            relational = own
-            for layer in self.layers:
-                relational = layer(relational, graph["relations"])
-        hyper = torch.zeros_like(own)
-        if mode not in {"no_hyper", "self_only"}:
-            z = self.hyper_proj(own)
-            for i, (node, group, count) in enumerate(graph["incidence"]):
-                hyper = hyper + self.hyper_weight[i].sigmoid() * hyper_laplacian(
-                    z, node, group, count
-                )
-        contagion = F.gelu(self.graph_proj(relational + hyper))
-        fused = (
-            intra
-            if mode == "self_only"
-            else (1 - self.gate.sigmoid()) * intra + self.gate.sigmoid() * contagion
-        )
-        return fused
+        return self.core(own, graph["relations"], graph["incidence"], mode)[0]
 
     def forward(self, graph, mode="full"):
         fused = self.dropout(self.encode(graph, mode))
         if self.use_prior:
             fused = torch.cat([fused, graph["prior"]], dim=-1)
         return self.classifier(fused).squeeze(-1)
+
+
+# Import compatibility for existing callers and old source references. New code uses RiskGNN.
+ComRisk = RiskGNN

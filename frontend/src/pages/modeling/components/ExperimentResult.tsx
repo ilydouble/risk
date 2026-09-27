@@ -40,20 +40,20 @@ export default function ExperimentResult({ experiment }: ExperimentResultProps) 
     <div className="space-y-4">
       <div className="rounded-lg border border-primary-500/25 bg-primary-500/8 p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div><p className="text-xs text-primary-400">{t("modeling.result.completed")}</p><h2 className="mt-1 font-heading text-xl font-semibold text-foreground-950">{experiment.name}</h2><p className="mt-1 text-xs text-foreground-500">{results.targetName} · {results.targetDefinition}</p></div>
+          <div><p className="text-xs text-primary-400">{results.modelFamily ?? "RiskGNN-v1"} · {t("modeling.result.completed")}</p><h2 className="mt-1 font-heading text-xl font-semibold text-foreground-950">{experiment.name}</h2><p className="mt-1 text-xs text-foreground-500">{results.targetName} · {results.targetDefinition}</p></div>
           <span className="rounded-full border border-primary-500/30 px-3 py-1 font-mono text-[11px] text-primary-400">{t(`modeling.task.${results.taskType}`)}</span>
         </div>
       </div>
 
       <Card title={t("modeling.result.comparison")} icon="ri-scales-3-line" bodyClassName="overflow-x-auto">
         <table className="w-full min-w-[720px] text-left text-xs">
-          <thead className="border-b border-background-200 bg-background-50 text-foreground-500"><tr><th className="px-4 py-2.5">Model</th><th>ROC-AUC</th><th>PR-AUC</th><th>KS</th><th>Brier</th><th>F1</th><th>{t("modeling.result.duration")}</th></tr></thead>
-          <tbody>{variants.map((variant) => <tr key={variant.name} onClick={() => setSelectedName(variant.name)} className={`cursor-pointer border-b border-background-200/60 ${selected.name === variant.name ? "bg-primary-500/8" : "hover:bg-background-50"}`}><td className="px-4 py-3 font-mono font-semibold text-foreground-900">{variant.name}</td><td>{metric(variant.metrics.test.rocAuc)}</td><td>{metric(variant.metrics.test.prAuc)}</td><td>{metric(variant.metrics.test.ks)}</td><td>{metric(variant.metrics.test.brier)}</td><td>{metric(variant.metrics.test.f1)}</td><td>{variant.durationSeconds.toFixed(1)}s</td></tr>)}</tbody>
+          <thead className="border-b border-background-200 bg-background-50 text-foreground-500"><tr><th className="px-4 py-2.5">{t("modeling.result.configuration")}</th><th>ROC-AUC</th><th>PR-AUC</th><th>KS</th><th>Brier</th><th>F1</th><th>{t("modeling.result.duration")}</th></tr></thead>
+          <tbody>{variants.map((variant) => <tr key={variant.name} onClick={() => setSelectedName(variant.name)} className={`cursor-pointer border-b border-background-200/60 ${selected.name === variant.name ? "bg-primary-500/8" : "hover:bg-background-50"}`}><td className="px-4 py-3 font-semibold text-foreground-900">{t(`modeling.variant.${variant.name}`)}</td><td>{metric(variant.metrics.test.rocAuc)}</td><td>{metric(variant.metrics.test.prAuc)}</td><td>{metric(variant.metrics.test.ks)}</td><td>{metric(variant.metrics.test.brier)}</td><td>{metric(variant.metrics.test.f1)}</td><td>{variant.durationSeconds.toFixed(1)}s</td></tr>)}</tbody>
         </table>
       </Card>
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        {[["ROC-AUC", selected.metrics.test.rocAuc], ["PR-AUC", selected.metrics.test.prAuc], ["KS", selected.metrics.test.ks], ["Brier", selected.metrics.test.brier]].map(([label, value]) => <div key={String(label)} className="rounded-lg border border-background-200 bg-background-100 p-4"><p className="font-mono text-xs text-foreground-500">{label}</p><p className="mt-1 font-heading text-2xl font-semibold text-foreground-950">{metric(Number(value))}</p><p className="mt-1 text-[11px] text-foreground-500">test · {selected.name}</p></div>)}
+        {[["ROC-AUC", selected.metrics.test.rocAuc], ["PR-AUC", selected.metrics.test.prAuc], ["KS", selected.metrics.test.ks], ["Brier", selected.metrics.test.brier]].map(([label, value]) => <div key={String(label)} className="rounded-lg border border-background-200 bg-background-100 p-4"><p className="font-mono text-xs text-foreground-500">{label}</p><p className="mt-1 font-heading text-2xl font-semibold text-foreground-950">{metric(Number(value))}</p><p className="mt-1 text-[11px] text-foreground-500">test · {t(`modeling.variant.${selected.name}`)}</p></div>)}
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
@@ -62,7 +62,7 @@ export default function ExperimentResult({ experiment }: ExperimentResultProps) 
           <p className="mt-4 text-xs text-foreground-500">validation threshold · {selected.metrics.validation.threshold.toFixed(4)}</p>
         </Card>
         <Card title={t("modeling.result.explainability")} icon="ri-bar-chart-horizontal-line" bodyClassName="p-5">
-          {selected.explainability.items ? <div className="space-y-2">{selected.explainability.items.slice(0, 10).map((item) => <div key={item.feature} className="flex justify-between gap-3 text-xs"><span className="truncate font-mono text-foreground-700">{item.feature}</span><b className={item.value >= 0 ? "text-danger-500" : "text-primary-400"}>{item.value.toFixed(4)}</b></div>)}</div> : <div className="space-y-2 text-xs text-foreground-700"><p>{t("modeling.result.relationGate")}: <b>{selected.explainability.relationSelfGateMean?.toFixed(4) ?? "—"}</b></p><p>{t("modeling.result.hyperWeights")}: <b className="font-mono">{selected.explainability.hyperedgeTypeWeights?.map((value) => value.toFixed(3)).join(" / ") || "—"}</b></p></div>}
+          {selected.explainability.items ? <div className="space-y-2">{selected.explainability.items.slice(0, 10).map((item) => <div key={item.feature} className="flex justify-between gap-3 text-xs"><span className="truncate font-mono text-foreground-700">{item.feature}</span><b className={item.value >= 0 ? "text-danger-500" : "text-primary-400"}>{item.value.toFixed(4)}</b></div>)}</div> : <div className="space-y-2 text-xs text-foreground-700"><p>{t("modeling.result.contagionGate")}: <b>{selected.explainability.contagionRiskWeight?.toFixed(4) ?? "—"}</b></p><p>{t("modeling.result.hyperWeights")}: <b className="font-mono">{selected.explainability.hyperedgeTypeWeights?.map((value) => value.toFixed(3)).join(" / ") || "—"}</b></p></div>}
         </Card>
       </div>
 

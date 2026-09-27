@@ -118,8 +118,8 @@ def validate_bundle(
     ):
         raise ValueError("test snapshot identity/count mismatch")
     metadata = json.loads((model_dir / "metadata.json").read_text())
-    if metadata.get("version") != 2:
-        raise ValueError("unsupported metadata version; expected 2")
+    if metadata.get("version") not in {2, 3}:
+        raise ValueError("unsupported metadata version; expected 2 or 3")
     # Training records a canonical dataset hash; the manifest additionally checks original bytes.
     canonical = hashlib.sha256(dataset.model_dump_json().encode()).hexdigest()
     if metadata["dataset_sha256"]["test"] != canonical:

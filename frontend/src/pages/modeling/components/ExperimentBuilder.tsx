@@ -12,14 +12,8 @@ interface ExperimentBuilderProps {
 }
 
 type ModelName = RunInput["models"][number];
-const MODEL_NAMES: ModelName[] = [
-  "logistic_regression",
-  "hist_gradient_boosting",
-  "graph_stats_hgb",
-  "gnn_self_only",
-  "gnn_no_hyper",
-  "gnn_full",
-];
+type TrainingMode = "standard" | "baseline" | "ablation";
+const TRAINING_MODES: TrainingMode[] = ["standard", "baseline", "ablation"];
 
 export default function ExperimentBuilder({ dataset, queueing, onRun, onQueued }: ExperimentBuilderProps) {
   const { t } = useTranslation();
@@ -29,23 +23,38 @@ export default function ExperimentBuilder({ dataset, queueing, onRun, onQueued }
   const [name, setName] = useState("");
   const [featureMode, setFeatureMode] = useState<"recommended" | "manual">("recommended");
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
-  const [models, setModels] = useState<ModelName[]>([]);
+  const [trainingMode, setTrainingMode] = useState<TrainingMode>("standard");
   const [seed, setSeed] = useState(42);
   const [useEvents, setUseEvents] = useState(true);
   const [useRelations, setUseRelations] = useState(true);
   const [useHyperedges, setUseHyperedges] = useState(true);
 
-  const available = (model: ModelName) => {
-    if (model === "graph_stats_hgb") return Boolean(capabilities.relations);
-    if (model === "gnn_self_only" || model === "gnn_no_hyper") return Boolean(capabilities.gnn);
-    if (model === "gnn_full") return Boolean(capabilities.gnn && capabilities.hyperedges);
-    return true;
-  };
+  const models = useMemo<ModelName[]>(() => {
+    const riskVariant: ModelName | null = !capabilities.gnn
+      ? null
+      : !useRelations
+        ? "gnn_self_only"
+        : useHyperedges && capabilities.hyperedges
+          ? "gnn_full"
+          : "gnn_no_hyper";
+    if (trainingMode === "standard") {
+      return riskVariant ? [riskVariant] : [];
+    }
+    if (trainingMode === "baseline") {
+      return ["hist_gradient_boosting", ...(riskVariant ? [riskVariant] : [])];
+    }
+    const variants: ModelName[] = ["logistic_regression", "hist_gradient_boosting"];
+    if (capabilities.relations && useRelations) variants.push("graph_stats_hgb");
+    if (capabilities.gnn) variants.push("gnn_self_only");
+    if (capabilities.gnn && useRelations) variants.push("gnn_no_hyper");
+    if (capabilities.gnn && useRelations && capabilities.hyperedges && useHyperedges) variants.push("gnn_full");
+    return variants;
+  }, [capabilities.gnn, capabilities.hyperedges, capabilities.relations, trainingMode, useHyperedges, useRelations]);
 
   useEffect(() => {
-    setName(`${dataset.name} comparison`);
+    setName(`${dataset.name} RiskGNN`);
     setSelectedFeatures(features.filter((item) => item.recommended !== false).map((item) => item.name));
-    setModels(MODEL_NAMES.filter(available));
+    setTrainingMode(capabilities.gnn ? "standard" : "baseline");
     setUseEvents(Boolean(capabilities.events));
     setUseRelations(Boolean(capabilities.relations));
     setUseHyperedges(Boolean(capabilities.hyperedges));
@@ -54,13 +63,7 @@ export default function ExperimentBuilder({ dataset, queueing, onRun, onQueued }
   }, [dataset.id, features]);
 
   if (!manifest) return null;
-  const toggleModel = (model: ModelName) => setModels((current) => current.includes(model) ? current.filter((item) => item !== model) : [...current, model]);
   const toggleFeature = (feature: string) => setSelectedFeatures((current) => current.includes(feature) ? current.filter((item) => item !== feature) : [...current, feature]);
-  const disabledReason = (model: ModelName) => {
-    if (available(model)) return "";
-    if (model === "gnn_full" && !capabilities.hyperedges) return t("modeling.builder.requiresHyper");
-    return t("modeling.builder.requiresGraph");
-  };
 
   return (
     <Card title={t("modeling.builder.title")} subtitle={t("modeling.builder.subtitle")} icon="ri-settings-3-line" bodyClassName="p-5">
@@ -78,21 +81,25 @@ export default function ExperimentBuilder({ dataset, queueing, onRun, onQueued }
         </div>
 
         <div>
-          <p className="text-xs font-medium text-foreground-700">{t("modeling.builder.models")}</p>
-          <div className="mt-2 grid gap-2 md:grid-cols-2 xl:grid-cols-3">
-            {MODEL_NAMES.map((model) => <label key={model} title={disabledReason(model)} className={`rounded-md border px-3 py-3 text-xs ${available(model) ? "cursor-pointer border-background-200" : "cursor-not-allowed border-background-200 opacity-45"}`}><span className="flex items-center gap-2"><input type="checkbox" disabled={!available(model)} checked={models.includes(model)} onChange={() => toggleModel(model)} className="accent-primary-500" /><b className="font-mono text-foreground-900">{model}</b></span>{!available(model) && <span className="mt-1 block text-warning-600">{disabledReason(model)}</span>}</label>)}
+          <p className="text-xs font-medium text-foreground-700">{t("modeling.builder.trainingMode")}</p>
+          <div className="mt-2 grid gap-2 md:grid-cols-3">
+            {TRAINING_MODES.map((mode) => {
+              const disabled = mode !== "baseline" && !capabilities.gnn;
+              return <button key={mode} type="button" disabled={disabled} onClick={() => setTrainingMode(mode)} className={`rounded-md border px-3 py-3 text-left text-xs ${trainingMode === mode ? "border-primary-500 bg-primary-500/10" : "border-background-200"} disabled:cursor-not-allowed disabled:opacity-45`}><b className="text-foreground-900">{t(`modeling.builder.mode.${mode}.title`)}</b><span className="mt-1 block leading-relaxed text-foreground-500">{t(`modeling.builder.mode.${mode}.description`)}</span></button>;
+            })}
           </div>
+          <p className="mt-2 font-mono text-[11px] text-foreground-500">{t("modeling.builder.execution")}: {models.map((model) => t(`modeling.variant.${model}`)).join(" / ") || t("modeling.builder.requiresGraph")}</p>
         </div>
 
         <div className="flex flex-wrap gap-4 rounded-md bg-background-50 p-3 text-xs text-foreground-700">
           <label><input type="checkbox" disabled={!capabilities.events} checked={useEvents} onChange={(event) => setUseEvents(event.target.checked)} className="mr-2 accent-primary-500" />{t("modeling.builder.events")}</label>
-          <label><input type="checkbox" disabled={!capabilities.relations} checked={useRelations} onChange={(event) => { const checked = event.target.checked; setUseRelations(checked); if (!checked) setModels((current) => current.filter((model) => !["graph_stats_hgb", "gnn_no_hyper", "gnn_full"].includes(model))); }} className="mr-2 accent-primary-500" />{t("modeling.builder.relations")}</label>
-          <label><input type="checkbox" disabled={!capabilities.hyperedges} checked={useHyperedges} onChange={(event) => { const checked = event.target.checked; setUseHyperedges(checked); if (!checked) setModels((current) => current.filter((model) => model !== "gnn_full")); }} className="mr-2 accent-primary-500" />{t("modeling.builder.hyperedges")}</label>
+          <label><input type="checkbox" disabled={!capabilities.relations} checked={useRelations} onChange={(event) => setUseRelations(event.target.checked)} className="mr-2 accent-primary-500" />{t("modeling.builder.relations")}</label>
+          <label><input type="checkbox" disabled={!capabilities.hyperedges || !useRelations} checked={useHyperedges} onChange={(event) => setUseHyperedges(event.target.checked)} className="mr-2 accent-primary-500" />{t("modeling.builder.hyperedges")}</label>
         </div>
 
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-background-200 pt-4">
           <p className="max-w-2xl text-xs leading-relaxed text-foreground-500">{t("modeling.builder.method")}</p>
-          <button type="button" disabled={queueing || !name.trim() || models.length === 0 || (featureMode === "manual" && selectedFeatures.length === 0)} onClick={() => void onRun({ datasetId: dataset.id, name: name.trim(), targetName: manifest.target.name, featureMode, featureColumns: featureMode === "manual" ? selectedFeatures : [], models, useEvents, useRelations, useHyperedges, enableGnnAblations: models.some((model) => model.startsWith("gnn_")), seed }).then((queued) => { if (queued) onQueued?.(); })} className="rounded-md bg-primary-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-40">{queueing ? t("modeling.builder.queueing") : t("modeling.builder.run")}</button>
+          <button type="button" disabled={queueing || !name.trim() || models.length === 0 || (featureMode === "manual" && selectedFeatures.length === 0)} onClick={() => void onRun({ datasetId: dataset.id, name: name.trim(), targetName: manifest.target.name, featureMode, featureColumns: featureMode === "manual" ? selectedFeatures : [], models, useEvents, useRelations, useHyperedges, enableGnnAblations: trainingMode === "ablation", seed }).then((queued) => { if (queued) onQueued?.(); })} className="rounded-md bg-primary-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-40">{queueing ? t("modeling.builder.queueing") : t("modeling.builder.run")}</button>
         </div>
       </div>
     </Card>

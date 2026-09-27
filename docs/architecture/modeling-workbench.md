@@ -51,22 +51,26 @@ sequenceDiagram
 PostgreSQL只保存清单、聚合画像、状态与指标；不保存或返回客户原始行。ZIP 校验拒绝路径穿越、
 符号链接、加密包、重复文件、哈希错误及超限压缩。任务采用租约，过期可恢复，最多执行三次。
 
-## 分析与模型阶梯
+## 分析、RiskGNN 与评估基线
 
 分析阶段输出字段质量、标签/划分分布、单变量信号、相关性、PSI、泄漏提示，以及图节点、关系、
 度、孤立样本、连通分量和超边画像。推荐特征只在 train 划分计算；填补、缩放、类别词表和选择
 规则随实验制品保存。
 
-可用能力决定模型阶梯：
+正式模型只有 RiskGNN。数据包编码层把动态样本/节点/事件字段投影为节点表示，随后统一调用
+`com_risk_runtime.RiskGNNCore` 完成关系内/关系间注意力、超图拉普拉斯传播以及自身风险与传染
+风险门控融合。训练界面提供三种方案：标准训练、附带HGB基线、完整消融。
 
-1. `logistic_regression`：可解释线性基线；
-2. `hist_gradient_boosting`：非线性表格基线；
-3. `graph_stats_hgb`：加入训练安全的度、关系、邻居和超边统计；
-4. `gnn_self_only`：样本、节点与事件编码，不传播关系；
-5. `gnn_no_hyper`：门控异构关系传播；
-6. `gnn_full`：增加可学习超边传播和门控融合。
+RiskGNN内部配置为：
 
-GNN 使用事件类别 Embedding、数值投影、时间衰减、关系类型和正边权，按验证集 BCE 早停。
+1. `gnn_self_only`：仅自身属性和事件，用于内部消融；
+2. `gnn_no_hyper`：增加门控异构关系传播；
+3. `gnn_full`：增加可学习超边传播。
+
+`logistic_regression`、`hist_gradient_boosting` 和 `graph_stats_hgb` 仍可在对照/消融方案中运行，
+但被标记为评估基线，不属于模型家族，不自动发布，也不与 RiskGNN 共同组成集成模型。
+
+RiskGNN 使用事件类别 Embedding、数值投影、时间衰减、关系类型和正边权，按验证集 BCE 早停。
 所有变体报告 ROC-AUC、PR-AUC、KS、Brier、Precision、Recall、F1、混淆矩阵和校准分箱。
 制品保存在 RustFS，`manifest.json` 对每个模型文件记录大小和 SHA-256，`autoPublished=false`。
 

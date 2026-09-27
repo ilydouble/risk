@@ -163,6 +163,7 @@ def _fit_variant(
     threshold = select_threshold(validation_target, validation_probability)
     result = {
         "name": name,
+        "role": "evaluation_baseline",
         "status": "completed",
         "metrics": {
             "validation": evaluate(validation_target, validation_probability, threshold),

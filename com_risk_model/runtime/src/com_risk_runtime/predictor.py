@@ -3,7 +3,7 @@ from pathlib import Path
 
 import torch
 
-from .model import ComRisk
+from .model import RiskGNN
 from .preprocessing import tensorize
 from .prior import add_prior
 from .schema import Dataset
@@ -13,12 +13,13 @@ class Predictor:
     def __init__(self, artifact):
         artifact = Path(artifact)
         self.meta = json.loads((artifact / "metadata.json").read_text())
-        if self.meta["version"] != 2:
+        if self.meta["version"] not in {2, 3}:
             raise ValueError("unsupported artifact version; retrain")
-        self.model = ComRisk(**self.meta["config"])
-        self.model.load_state_dict(
-            torch.load(artifact / "weights.pt", map_location="cpu", weights_only=True)
-        )
+        self.model = RiskGNN(**self.meta["config"])
+        state = torch.load(artifact / "weights.pt", map_location="cpu", weights_only=True)
+        if self.meta["version"] == 2:
+            state = _migrate_v2_state(state)
+        self.model.load_state_dict(state)
         self.model.eval()
 
     def predict(self, data: Dataset, ids=None):
@@ -60,3 +61,22 @@ class Predictor:
             "threshold": self.meta["threshold"],
             "predictions": [rows[i] for i in (list(rows) if ids is None else ids)],
         }
+
+
+def _migrate_v2_state(state):
+    prefixes = {
+        "layers.": "core.layers.",
+        "hyper_proj.": "core.hyper_proj.",
+        "self_proj.": "core.self_proj.",
+        "graph_proj.": "core.graph_proj.",
+    }
+    exact = {"hyper_weight": "core.hyper_weight", "gate": "core.gate"}
+    migrated = {}
+    for key, value in state.items():
+        target = exact.get(key, key)
+        for source, destination in prefixes.items():
+            if key.startswith(source):
+                target = destination + key[len(source) :]
+                break
+        migrated[target] = value
+    return migrated

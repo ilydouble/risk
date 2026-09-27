@@ -8,7 +8,7 @@ from pathlib import Path
 
 import numpy as np
 import torch
-from com_risk_runtime.model import ComRisk
+from com_risk_runtime.model import RiskGNN
 from com_risk_runtime.preprocessing import tensorize
 from com_risk_runtime.prior import add_prior
 from sklearn.ensemble import HistGradientBoostingClassifier
@@ -79,7 +79,7 @@ def train(
         "dropout": 0.15,
         "use_prior": use_prior,
     }
-    model = ComRisk(**config)
+    model = RiskGNN(**config)
     pretrain_history = pretrain(model, graphs["train"], pretrain_epochs) if pretrain_epochs else []
     optimizer = torch.optim.AdamW(model.parameters(), lr=0.003, weight_decay=1e-4)
     best_loss, best_state, best_epoch, wait = float("inf"), None, 0, 0
@@ -166,8 +166,8 @@ def train(
         s: hashlib.sha256(d.model_dump_json().encode()).hexdigest() for s, d in datasets.items()
     }
     metadata = {
-        "version": 2,
-        "model": "ComRisk-Gated-v1",
+        "version": 3,
+        "model": "RiskGNN-v1",
         "config": config,
         "schema": schema,
         "preprocessor": preprocessor,

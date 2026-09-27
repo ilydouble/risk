@@ -1,9 +1,13 @@
+import json
+
 import numpy as np
 import pytest
 import torch
 from com_risk_runtime.model import (
     ComRisk,
     RelationLayer,
+    RiskGNN,
+    RiskGNNCore,
     hyper_laplacian,
     segment_softmax,
 )
@@ -70,6 +74,12 @@ def test_empty_graph_finite_and_permutation_equivariant():
     torch.testing.assert_close(model(gp), output[perm])
 
 
+def test_compatibility_alias_uses_shared_riskgnn_core():
+    model = ComRisk(18, 2, 3, hidden=8)
+    assert isinstance(model, RiskGNN)
+    assert isinstance(model.core, RiskGNNCore)
+
+
 def test_scaler_and_prior_ignore_heldout_labels_and_features():
     d = generate(100)
     other = d.model_copy(deep=True)
@@ -122,6 +132,35 @@ def test_reload_inference_and_new_company(trained):
     assert len(predictor.predict(unlabeled, ["NEW"])["predictions"]) == 1
     with pytest.raises(ValueError):
         predictor.predict(d, ["missing"])
+
+
+def test_v2_artifact_weights_are_migrated(trained, tmp_path):
+    path, data, _ = trained
+    metadata = json.loads((path / "metadata.json").read_text())
+    current = torch.load(path / "weights.pt", map_location="cpu", weights_only=True)
+    prefixes = {
+        "core.layers.": "layers.",
+        "core.hyper_proj.": "hyper_proj.",
+        "core.self_proj.": "self_proj.",
+        "core.graph_proj.": "graph_proj.",
+    }
+    exact = {"core.hyper_weight": "hyper_weight", "core.gate": "gate"}
+    legacy = {}
+    for key, value in current.items():
+        target = exact.get(key, key)
+        for source, destination in prefixes.items():
+            if key.startswith(source):
+                target = destination + key[len(source) :]
+                break
+        legacy[target] = value
+    metadata["version"] = 2
+    metadata["model"] = "ComRisk-Gated-v1"
+    (tmp_path / "metadata.json").write_text(json.dumps(metadata))
+    torch.save(legacy, tmp_path / "weights.pt")
+    legacy_prediction = Predictor(tmp_path).predict(data)
+    current_prediction = Predictor(path).predict(data)
+    assert legacy_prediction["model"] == "ComRisk-Gated-v1"
+    assert legacy_prediction["predictions"] == current_prediction["predictions"]
 
 
 def test_explanation_is_honest_sensitivity(trained):
