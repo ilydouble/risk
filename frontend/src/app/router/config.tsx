@@ -14,6 +14,7 @@ const DecisionPage = lazy(() => import("@/pages/decision/page"));
 const ModelPage = lazy(() => import("@/pages/model/page"));
 const ModelArchivePage = lazy(() => import("@/pages/model/archive/page"));
 const BatchPage = lazy(() => import("@/pages/batch/page"));
+const ModelingWorkbenchPage = lazy(() => import("@/pages/modeling/page"));
 const LoginPage = lazy(() => import("@/pages/login/page"));
 const RegisterPage = lazy(() => import("@/pages/register/page"));
 const BenchmarkOverview = lazy(() => import("@/pages/benchmark/overview"));
@@ -45,6 +46,7 @@ const routes: RouteObject[] = [
         { path: "/model-card", element: load(<ModelArchivePage />) },
         { path: "/model", element: load(<ModelPage />) },
         { path: "/batch", element: load(<BatchPage />) },
+        { path: "/modeling", element: load(<ModelingWorkbenchPage />) },
         { path: "/benchmark", element: load(<BenchmarkOverview />) },
         { path: "/benchmark/search", element: load(<BenchmarkSearch />) },
         { path: "/benchmark/company/:id", element: load(<BenchmarkCompany />) },

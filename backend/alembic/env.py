@@ -10,6 +10,7 @@ from alembic import context
 from risk_api.modules.auth import model as auth_model  # noqa: F401
 from risk_api.modules.company import model as company_model  # noqa: F401
 from risk_api.modules.document import model as document_model  # noqa: F401
+from risk_api.modules.modeling import model as modeling_model  # noqa: F401
 from risk_api.shared.config import settings
 from risk_api.shared.db import Base
 from risk_api.shared.logging import configure_logging

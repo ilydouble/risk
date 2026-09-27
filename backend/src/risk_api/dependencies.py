@@ -15,6 +15,8 @@ from risk_api.modules.document.repository import DocumentRepository
 from risk_api.modules.document.service import DocumentService
 from risk_api.modules.graph.repository import GraphRepository
 from risk_api.modules.graph.service import GraphService
+from risk_api.modules.modeling.repository import ModelingRepository
+from risk_api.modules.modeling.service import ModelingService
 from risk_api.modules.score.service import ScoreService
 from risk_api.shared.config import settings
 from risk_api.shared.db import session_factory
@@ -102,3 +104,13 @@ class InfrastructureProvider(Provider):
         self, companies: CompanyService, repository: DocumentRepository, storage: AsyncClient
     ) -> DocumentService:
         return DocumentService(companies, repository, storage)
+
+    @provide(scope=Scope.REQUEST)
+    def modeling_repository(self, session: AsyncSession) -> ModelingRepository:
+        return ModelingRepository(session)
+
+    @provide(scope=Scope.REQUEST)
+    def modeling_service(
+        self, repository: ModelingRepository, storage: AsyncClient
+    ) -> ModelingService:
+        return ModelingService(repository, storage)

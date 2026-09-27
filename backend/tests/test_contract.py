@@ -32,6 +32,13 @@ def test_error_envelope_and_openapi_contract() -> None:
         "/api/v1/document/complete-upload",
         "/api/v1/document/list",
         "/api/v1/document/create-download",
+        "/api/v1/modeling/create-upload",
+        "/api/v1/modeling/complete-upload",
+        "/api/v1/modeling/list-datasets",
+        "/api/v1/modeling/get-dataset",
+        "/api/v1/modeling/run-experiment",
+        "/api/v1/modeling/list-experiments",
+        "/api/v1/modeling/get-experiment",
     ):
         assert "post" in routes[path]
         assert "422" in routes[path]["post"]["responses"]

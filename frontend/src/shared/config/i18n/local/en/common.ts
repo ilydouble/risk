@@ -8,6 +8,7 @@ export default {
   nav: {
     workspace: "Workspace",
     modeling: "Models & Evaluation",
+    modelingWorkbench: "Experiment Workbench",
     overview: "Overview",
     search: "Company Search",
     company: "Company Profile",

@@ -8,6 +8,7 @@ export default {
   nav: {
     workspace: "工作台",
     modeling: "模型与评估",
+    modelingWorkbench: "模型实验工作台",
     overview: "总览看板",
     search: "企业检索",
     company: "企业画像",

@@ -310,6 +310,125 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/modeling/complete-upload": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Complete Dataset Upload */
+        post: operations["complete_dataset_upload_api_v1_modeling_complete_upload_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/modeling/create-upload": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Dataset Upload */
+        post: operations["create_dataset_upload_api_v1_modeling_create_upload_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/modeling/get-dataset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Get Dataset */
+        post: operations["get_dataset_api_v1_modeling_get_dataset_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/modeling/get-experiment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Get Experiment */
+        post: operations["get_experiment_api_v1_modeling_get_experiment_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/modeling/list-datasets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** List Datasets */
+        post: operations["list_datasets_api_v1_modeling_list_datasets_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/modeling/list-experiments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** List Experiments */
+        post: operations["list_experiments_api_v1_modeling_list_experiments_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/modeling/run-experiment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Run Experiment */
+        post: operations["run_experiment_api_v1_modeling_run_experiment_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/score/get": {
         parameters: {
             query?: never;
@@ -331,11 +450,31 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** ApiEnvelope[ResponseCompleteDatasetUpload] */
+        ApiEnvelope_ResponseCompleteDatasetUpload_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseCompleteDatasetUpload"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
         /** ApiEnvelope[ResponseCompleteUpload] */
         ApiEnvelope_ResponseCompleteUpload_: {
             /** Code */
             code: number;
             data: components["schemas"]["ResponseCompleteUpload"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseCreateDatasetUpload] */
+        ApiEnvelope_ResponseCreateDatasetUpload_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseCreateDatasetUpload"] | null;
             /** Internal Code */
             internal_code: string;
             /** Message */
@@ -401,6 +540,26 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ApiEnvelope[ResponseGetDataset] */
+        ApiEnvelope_ResponseGetDataset_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseGetDataset"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseGetExperiment] */
+        ApiEnvelope_ResponseGetExperiment_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseGetExperiment"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
         /** ApiEnvelope[ResponseGetGraph] */
         ApiEnvelope_ResponseGetGraph_: {
             /** Code */
@@ -431,11 +590,31 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ApiEnvelope[ResponseListDatasets] */
+        ApiEnvelope_ResponseListDatasets_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseListDatasets"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
         /** ApiEnvelope[ResponseListDocuments] */
         ApiEnvelope_ResponseListDocuments_: {
             /** Code */
             code: number;
             data: components["schemas"]["ResponseListDocuments"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseListExperiments] */
+        ApiEnvelope_ResponseListExperiments_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseListExperiments"] | null;
             /** Internal Code */
             internal_code: string;
             /** Message */
@@ -496,6 +675,16 @@ export interface components {
             /** Code */
             code: number;
             data: components["schemas"]["ResponseRegister"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseRunExperiment] */
+        ApiEnvelope_ResponseRunExperiment_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseRunExperiment"] | null;
             /** Internal Code */
             internal_code: string;
             /** Message */
@@ -612,6 +801,43 @@ export interface components {
             roc_auc: number | null;
             /** Threshold */
             threshold: number;
+        };
+        /** CalibrationBinDTO */
+        CalibrationBinDTO: {
+            /** Count */
+            count: number;
+            /** Lower */
+            lower: number;
+            /** Meanprediction */
+            meanPrediction: number;
+            /** Observedrate */
+            observedRate: number;
+        };
+        /** CoefficientDTO */
+        CoefficientDTO: {
+            /** Coefficient */
+            coefficient: number;
+            /** Feature */
+            feature: string;
+        };
+        /** ColumnProfileDTO */
+        ColumnProfileDTO: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "numeric" | "categorical" | "text";
+            /** Missingcount */
+            missingCount: number;
+            /** Missingrate */
+            missingRate: number;
+            /** Name */
+            name: string;
+            numeric?: components["schemas"]["NumericProfileDTO"] | null;
+            /** Samples */
+            samples: string[];
+            /** Uniquecount */
+            uniqueCount: number;
         };
         /** CommunityBenchmark */
         CommunityBenchmark: {
@@ -752,6 +978,71 @@ export interface components {
             summaryEn?: string | null;
             /** Timeline */
             timeline: components["schemas"]["TimelineEvent"][];
+        };
+        /** ConfusionMatrixDTO */
+        ConfusionMatrixDTO: {
+            /** Fn */
+            fn: number;
+            /** Fp */
+            fp: number;
+            /** Tn */
+            tn: number;
+            /** Tp */
+            tp: number;
+        };
+        /** DatasetAnalysisDTO */
+        DatasetAnalysisDTO: {
+            /** Categoricalcolumncount */
+            categoricalColumnCount: number;
+            /** Columncount */
+            columnCount: number;
+            /** Columns */
+            columns: components["schemas"]["ColumnProfileDTO"][];
+            /** Duplicaterows */
+            duplicateRows: number;
+            /** Missingcells */
+            missingCells: number;
+            /** Missingrate */
+            missingRate: number;
+            /** Numericcolumncount */
+            numericColumnCount: number;
+            /** Rowcount */
+            rowCount: number;
+            /** Targetcandidates */
+            targetCandidates: components["schemas"]["TargetCandidateDTO"][];
+            /** Warnings */
+            warnings: string[];
+        };
+        /** DatasetDTO */
+        DatasetDTO: {
+            analysis: components["schemas"]["DatasetAnalysisDTO"] | null;
+            /** Columncount */
+            columnCount: number | null;
+            /** Contenttype */
+            contentType: string;
+            /** Createdat */
+            createdAt: string;
+            /** Error */
+            error: string | null;
+            /** Filename */
+            filename: string;
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Preview */
+            preview: {
+                [key: string]: string;
+            }[] | null;
+            /** Rowcount */
+            rowCount: number | null;
+            /** Size */
+            size: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "pending" | "ready" | "failed";
         };
         /** DocumentDTO */
         DocumentDTO: {
@@ -903,6 +1194,38 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ErrorEnvelope[Literal[404], Literal['MODELING_DATASET_NOT_FOUND']] */
+        ErrorEnvelope_Literal_404__Literal__MODELING_DATASET_NOT_FOUND___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 404;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @constant
+             */
+            internal_code: "MODELING_DATASET_NOT_FOUND";
+            /** Message */
+            message: string;
+        };
+        /** ErrorEnvelope[Literal[404], Literal['MODELING_EXPERIMENT_NOT_FOUND']] */
+        ErrorEnvelope_Literal_404__Literal__MODELING_EXPERIMENT_NOT_FOUND___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 404;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @constant
+             */
+            internal_code: "MODELING_EXPERIMENT_NOT_FOUND";
+            /** Message */
+            message: string;
+        };
         /** ErrorEnvelope[Literal[409], Literal['AUTH_USERNAME_TAKEN']] */
         ErrorEnvelope_Literal_409__Literal__AUTH_USERNAME_TAKEN___: {
             /**
@@ -948,6 +1271,54 @@ export interface components {
              * @constant
              */
             internal_code: "DOCUMENT_UPLOAD_INCOMPLETE";
+            /** Message */
+            message: string;
+        };
+        /** ErrorEnvelope[Literal[409], Literal['MODELING_UPLOAD_INCOMPLETE']] */
+        ErrorEnvelope_Literal_409__Literal__MODELING_UPLOAD_INCOMPLETE___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 409;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @constant
+             */
+            internal_code: "MODELING_UPLOAD_INCOMPLETE";
+            /** Message */
+            message: string;
+        };
+        /** ErrorEnvelope[Literal[422], Literal['MODELING_CONFIGURATION_INVALID']] */
+        ErrorEnvelope_Literal_422__Literal__MODELING_CONFIGURATION_INVALID___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 422;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @constant
+             */
+            internal_code: "MODELING_CONFIGURATION_INVALID";
+            /** Message */
+            message: string;
+        };
+        /** ErrorEnvelope[Literal[422], Literal['MODELING_FILE_INVALID']] */
+        ErrorEnvelope_Literal_422__Literal__MODELING_FILE_INVALID___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 422;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @constant
+             */
+            internal_code: "MODELING_FILE_INVALID";
             /** Message */
             message: string;
         };
@@ -1047,6 +1418,73 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ErrorEnvelope[Literal[503], Literal['MODELING_STORAGE_UNAVAILABLE']] */
+        ErrorEnvelope_Literal_503__Literal__MODELING_STORAGE_UNAVAILABLE___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 503;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @constant
+             */
+            internal_code: "MODELING_STORAGE_UNAVAILABLE";
+            /** Message */
+            message: string;
+        };
+        /** ExperimentConfigurationDTO */
+        ExperimentConfigurationDTO: {
+            /** Evaluationscope */
+            evaluationScope: string;
+            /** Negativevalue */
+            negativeValue: string;
+            /** Seed */
+            seed: number;
+            /** Split */
+            split: string;
+            /** Testrows */
+            testRows: number;
+            /** Trainrows */
+            trainRows: number;
+        };
+        /** ExperimentDTO */
+        ExperimentDTO: {
+            /** Coefficients */
+            coefficients: components["schemas"]["CoefficientDTO"][];
+            configuration: components["schemas"]["ExperimentConfigurationDTO"];
+            /** Createdat */
+            createdAt: string;
+            /** Datasetid */
+            datasetId: string;
+            /** Featurecolumns */
+            featureColumns: string[];
+            /** Id */
+            id: string;
+            metrics: components["schemas"]["ExperimentMetricsDTO"];
+            /**
+             * Modeltype
+             * @constant
+             */
+            modelType: "logistic_regression";
+            /** Name */
+            name: string;
+            /** Positivevalue */
+            positiveValue: string;
+            /**
+             * Status
+             * @constant
+             */
+            status: "completed";
+            /** Targetcolumn */
+            targetColumn: string;
+        };
+        /** ExperimentMetricsDTO */
+        ExperimentMetricsDTO: {
+            test: components["schemas"]["MetricSetDTO"];
+            train: components["schemas"]["MetricSetDTO"];
+        };
         /** FiveCDimension */
         FiveCDimension: {
             /** En */
@@ -1124,6 +1562,43 @@ export interface components {
              */
             type: "company" | "owner" | "subsidiary" | "supplier" | "guarantor" | "client" | "counterparty" | "person" | "bank" | "fund";
         };
+        /** MetricSetDTO */
+        MetricSetDTO: {
+            /** Brier */
+            brier: number;
+            /** Calibration */
+            calibration: components["schemas"]["CalibrationBinDTO"][];
+            confusion: components["schemas"]["ConfusionMatrixDTO"];
+            /** F1 */
+            f1: number;
+            /** Ks */
+            ks: number;
+            /** Positives */
+            positives: number;
+            /** Prauc */
+            prAuc: number;
+            /** Precision */
+            precision: number;
+            /** Recall */
+            recall: number;
+            /** Rocauc */
+            rocAuc: number;
+            /** Rows */
+            rows: number;
+            /** Threshold */
+            threshold: number;
+        };
+        /** NumericProfileDTO */
+        NumericProfileDTO: {
+            /** Max */
+            max: number;
+            /** Mean */
+            mean: number;
+            /** Min */
+            min: number;
+            /** Std */
+            std: number;
+        };
         /** PageRequest */
         PageRequest: {
             /**
@@ -1159,10 +1634,26 @@ export interface components {
              */
             riskLevel: "low" | "medium" | "high";
         };
+        /** RequestCompleteDatasetUpload */
+        RequestCompleteDatasetUpload: {
+            /** Datasetid */
+            datasetId: string;
+        };
         /** RequestCompleteUpload */
         RequestCompleteUpload: {
             /** Documentid */
             documentId: string;
+        };
+        /** RequestCreateDatasetUpload */
+        RequestCreateDatasetUpload: {
+            /** Contenttype */
+            contentType: string;
+            /** Filename */
+            filename: string;
+            /** Name */
+            name: string;
+            /** Size */
+            size: number;
         };
         /** RequestCreateDownload */
         RequestCreateDownload: {
@@ -1196,6 +1687,16 @@ export interface components {
         RequestGetCompany: {
             /** Id */
             id: string;
+        };
+        /** RequestGetDataset */
+        RequestGetDataset: {
+            /** Datasetid */
+            datasetId: string;
+        };
+        /** RequestGetExperiment */
+        RequestGetExperiment: {
+            /** Experimentid */
+            experimentId: string;
         };
         /** RequestGetGraph */
         RequestGetGraph: {
@@ -1234,11 +1735,15 @@ export interface components {
              */
             limit: number;
         };
+        /** RequestListDatasets */
+        RequestListDatasets: Record<string, never>;
         /** RequestListDocuments */
         RequestListDocuments: {
             /** Companyid */
             companyId: string;
         };
+        /** RequestListExperiments */
+        RequestListExperiments: Record<string, never>;
         /** RequestLogin */
         RequestLogin: {
             /** Password */
@@ -1265,6 +1770,30 @@ export interface components {
             password: string;
             /** Username */
             username: string;
+        };
+        /** RequestRunExperiment */
+        RequestRunExperiment: {
+            /** Datasetid */
+            datasetId: string;
+            /** Featurecolumns */
+            featureColumns: string[];
+            /**
+             * Modeltype
+             * @default logistic_regression
+             * @constant
+             */
+            modelType: "logistic_regression";
+            /** Name */
+            name: string;
+            /** Positivevalue */
+            positiveValue: string;
+            /**
+             * Seed
+             * @default 42
+             */
+            seed: number;
+            /** Targetcolumn */
+            targetColumn: string;
         };
         /** RequestSearchBenchmark */
         RequestSearchBenchmark: {
@@ -1302,9 +1831,29 @@ export interface components {
              */
             sort: "score_desc" | "score_asc" | "dp_desc" | "recent";
         };
+        /** ResponseCompleteDatasetUpload */
+        ResponseCompleteDatasetUpload: {
+            dataset: components["schemas"]["DatasetDTO"];
+        };
         /** ResponseCompleteUpload */
         ResponseCompleteUpload: {
             document: components["schemas"]["DocumentDTO"];
+        };
+        /** ResponseCreateDatasetUpload */
+        ResponseCreateDatasetUpload: {
+            /** Datasetid */
+            datasetId: string;
+            /**
+             * Expiresin
+             * @default 60
+             */
+            expiresIn: number;
+            /** Headers */
+            headers: {
+                [key: string]: string;
+            };
+            /** Url */
+            url: string;
         };
         /** ResponseCreateDownload */
         ResponseCreateDownload: {
@@ -1410,6 +1959,14 @@ export interface components {
             demo: true;
             profile: components["schemas"]["CompanyProfile"];
         };
+        /** ResponseGetDataset */
+        ResponseGetDataset: {
+            dataset: components["schemas"]["DatasetDTO"];
+        };
+        /** ResponseGetExperiment */
+        ResponseGetExperiment: {
+            experiment: components["schemas"]["ExperimentDTO"];
+        };
         /** ResponseGetGraph */
         ResponseGetGraph: {
             /**
@@ -1444,10 +2001,20 @@ export interface components {
             /** Truncated */
             truncated: boolean;
         };
+        /** ResponseListDatasets */
+        ResponseListDatasets: {
+            /** Items */
+            items: components["schemas"]["DatasetDTO"][];
+        };
         /** ResponseListDocuments */
         ResponseListDocuments: {
             /** Items */
             items: components["schemas"]["DocumentDTO"][];
+        };
+        /** ResponseListExperiments */
+        ResponseListExperiments: {
+            /** Items */
+            items: components["schemas"]["ExperimentDTO"][];
         };
         /** ResponseLogin */
         ResponseLogin: {
@@ -1516,6 +2083,10 @@ export interface components {
             userId: string;
             /** Username */
             username: string;
+        };
+        /** ResponseRunExperiment */
+        ResponseRunExperiment: {
+            experiment: components["schemas"]["ExperimentDTO"];
         };
         /** ResponseSearchBenchmark */
         ResponseSearchBenchmark: {
@@ -1612,6 +2183,13 @@ export interface components {
             label: string;
             /** Value */
             value: string;
+        };
+        /** TargetCandidateDTO */
+        TargetCandidateDTO: {
+            /** Name */
+            name: string;
+            /** Values */
+            values: string[];
         };
         /** TimelineEvent */
         TimelineEvent: {
@@ -3006,6 +3584,543 @@ export interface operations {
             };
         };
     };
+    complete_dataset_upload_api_v1_modeling_complete_upload_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestCompleteDatasetUpload"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseCompleteDatasetUpload_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_DATASET_NOT_FOUND___"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_UPLOAD_INCOMPLETE___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__MODELING_FILE_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__MODELING_STORAGE_UNAVAILABLE___"];
+                };
+            };
+        };
+    };
+    create_dataset_upload_api_v1_modeling_create_upload_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestCreateDatasetUpload"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseCreateDatasetUpload_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__MODELING_FILE_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__MODELING_STORAGE_UNAVAILABLE___"];
+                };
+            };
+        };
+    };
+    get_dataset_api_v1_modeling_get_dataset_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestGetDataset"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseGetDataset_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_DATASET_NOT_FOUND___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"] | components["schemas"]["ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"];
+                };
+            };
+        };
+    };
+    get_experiment_api_v1_modeling_get_experiment_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestGetExperiment"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseGetExperiment_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_EXPERIMENT_NOT_FOUND___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"] | components["schemas"]["ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"];
+                };
+            };
+        };
+    };
+    list_datasets_api_v1_modeling_list_datasets_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestListDatasets"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseListDatasets_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"] | components["schemas"]["ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"];
+                };
+            };
+        };
+    };
+    list_experiments_api_v1_modeling_list_experiments_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestListExperiments"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseListExperiments_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"] | components["schemas"]["ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"];
+                };
+            };
+        };
+    };
+    run_experiment_api_v1_modeling_run_experiment_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestRunExperiment"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseRunExperiment_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_DATASET_NOT_FOUND___"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_UPLOAD_INCOMPLETE___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__MODELING_CONFIGURATION_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__MODELING_STORAGE_UNAVAILABLE___"];
+                };
+            };
+        };
+    };
     get_api_v1_score_get_post: {
         parameters: {
             query?: never;
@@ -3086,41 +4201,55 @@ export interface operations {
     };
 }
 
+export type RequestCompleteDatasetUpload = components["schemas"]["RequestCompleteDatasetUpload"];
 export type RequestCompleteUpload = components["schemas"]["RequestCompleteUpload"];
+export type RequestCreateDatasetUpload = components["schemas"]["RequestCreateDatasetUpload"];
 export type RequestCreateDownload = components["schemas"]["RequestCreateDownload"];
 export type RequestCreateUpload = components["schemas"]["RequestCreateUpload"];
 export type RequestEvaluationBenchmark = components["schemas"]["RequestEvaluationBenchmark"];
 export type RequestExplainBenchmark = components["schemas"]["RequestExplainBenchmark"];
 export type RequestGetBenchmark = components["schemas"]["RequestGetBenchmark"];
 export type RequestGetCompany = components["schemas"]["RequestGetCompany"];
+export type RequestGetDataset = components["schemas"]["RequestGetDataset"];
+export type RequestGetExperiment = components["schemas"]["RequestGetExperiment"];
 export type RequestGetGraph = components["schemas"]["RequestGetGraph"];
 export type RequestGetScore = components["schemas"]["RequestGetScore"];
 export type RequestGraphBenchmark = components["schemas"]["RequestGraphBenchmark"];
+export type RequestListDatasets = components["schemas"]["RequestListDatasets"];
 export type RequestListDocuments = components["schemas"]["RequestListDocuments"];
+export type RequestListExperiments = components["schemas"]["RequestListExperiments"];
 export type RequestLogin = components["schemas"]["RequestLogin"];
 export type RequestLogout = components["schemas"]["RequestLogout"];
 export type RequestMe = components["schemas"]["RequestMe"];
 export type RequestModelCardBenchmark = components["schemas"]["RequestModelCardBenchmark"];
 export type RequestPredictBenchmark = components["schemas"]["RequestPredictBenchmark"];
 export type RequestRegister = components["schemas"]["RequestRegister"];
+export type RequestRunExperiment = components["schemas"]["RequestRunExperiment"];
 export type RequestSearchBenchmark = components["schemas"]["RequestSearchBenchmark"];
 export type RequestSearchCompany = components["schemas"]["RequestSearchCompany"];
+export type ResponseCompleteDatasetUpload = components["schemas"]["ResponseCompleteDatasetUpload"];
 export type ResponseCompleteUpload = components["schemas"]["ResponseCompleteUpload"];
+export type ResponseCreateDatasetUpload = components["schemas"]["ResponseCreateDatasetUpload"];
 export type ResponseCreateDownload = components["schemas"]["ResponseCreateDownload"];
 export type ResponseCreateUpload = components["schemas"]["ResponseCreateUpload"];
 export type ResponseEvaluationBenchmark = components["schemas"]["ResponseEvaluationBenchmark"];
 export type ResponseExplainBenchmark = components["schemas"]["ResponseExplainBenchmark"];
 export type ResponseGetBenchmark = components["schemas"]["ResponseGetBenchmark"];
 export type ResponseGetCompany = components["schemas"]["ResponseGetCompany"];
+export type ResponseGetDataset = components["schemas"]["ResponseGetDataset"];
+export type ResponseGetExperiment = components["schemas"]["ResponseGetExperiment"];
 export type ResponseGetGraph = components["schemas"]["ResponseGetGraph"];
 export type ResponseGetScore = components["schemas"]["ResponseGetScore"];
 export type ResponseGraphBenchmark = components["schemas"]["ResponseGraphBenchmark"];
+export type ResponseListDatasets = components["schemas"]["ResponseListDatasets"];
 export type ResponseListDocuments = components["schemas"]["ResponseListDocuments"];
+export type ResponseListExperiments = components["schemas"]["ResponseListExperiments"];
 export type ResponseLogin = components["schemas"]["ResponseLogin"];
 export type ResponseLogout = components["schemas"]["ResponseLogout"];
 export type ResponseMe = components["schemas"]["ResponseMe"];
 export type ResponseModelCardBenchmark = components["schemas"]["ResponseModelCardBenchmark"];
 export type ResponsePredictBenchmark = components["schemas"]["ResponsePredictBenchmark"];
 export type ResponseRegister = components["schemas"]["ResponseRegister"];
+export type ResponseRunExperiment = components["schemas"]["ResponseRunExperiment"];
 export type ResponseSearchBenchmark = components["schemas"]["ResponseSearchBenchmark"];
 export type ResponseSearchCompany = components["schemas"]["ResponseSearchCompany"];

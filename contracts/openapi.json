@@ -1,6 +1,40 @@
 {
   "components": {
     "schemas": {
+      "ApiEnvelope_ResponseCompleteDatasetUpload_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseCompleteDatasetUpload"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseCompleteDatasetUpload]",
+        "type": "object"
+      },
       "ApiEnvelope_ResponseCompleteUpload_": {
         "properties": {
           "code": {
@@ -33,6 +67,40 @@
           "data"
         ],
         "title": "ApiEnvelope[ResponseCompleteUpload]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseCreateDatasetUpload_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseCreateDatasetUpload"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseCreateDatasetUpload]",
         "type": "object"
       },
       "ApiEnvelope_ResponseCreateDownload_": {
@@ -239,6 +307,74 @@
         "title": "ApiEnvelope[ResponseGetCompany]",
         "type": "object"
       },
+      "ApiEnvelope_ResponseGetDataset_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseGetDataset"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseGetDataset]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseGetExperiment_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseGetExperiment"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseGetExperiment]",
+        "type": "object"
+      },
       "ApiEnvelope_ResponseGetGraph_": {
         "properties": {
           "code": {
@@ -341,6 +477,40 @@
         "title": "ApiEnvelope[ResponseGraphBenchmark]",
         "type": "object"
       },
+      "ApiEnvelope_ResponseListDatasets_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseListDatasets"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseListDatasets]",
+        "type": "object"
+      },
       "ApiEnvelope_ResponseListDocuments_": {
         "properties": {
           "code": {
@@ -373,6 +543,40 @@
           "data"
         ],
         "title": "ApiEnvelope[ResponseListDocuments]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseListExperiments_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseListExperiments"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseListExperiments]",
         "type": "object"
       },
       "ApiEnvelope_ResponseLogin_": {
@@ -577,6 +781,40 @@
           "data"
         ],
         "title": "ApiEnvelope[ResponseRegister]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseRunExperiment_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseRunExperiment"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseRunExperiment]",
         "type": "object"
       },
       "ApiEnvelope_ResponseSearchBenchmark_": {
@@ -913,6 +1151,108 @@
           "recall"
         ],
         "title": "BenchmarkMetrics",
+        "type": "object"
+      },
+      "CalibrationBinDTO": {
+        "properties": {
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "lower": {
+            "title": "Lower",
+            "type": "number"
+          },
+          "meanPrediction": {
+            "title": "Meanprediction",
+            "type": "number"
+          },
+          "observedRate": {
+            "title": "Observedrate",
+            "type": "number"
+          }
+        },
+        "required": [
+          "lower",
+          "count",
+          "meanPrediction",
+          "observedRate"
+        ],
+        "title": "CalibrationBinDTO",
+        "type": "object"
+      },
+      "CoefficientDTO": {
+        "properties": {
+          "coefficient": {
+            "title": "Coefficient",
+            "type": "number"
+          },
+          "feature": {
+            "title": "Feature",
+            "type": "string"
+          }
+        },
+        "required": [
+          "feature",
+          "coefficient"
+        ],
+        "title": "CoefficientDTO",
+        "type": "object"
+      },
+      "ColumnProfileDTO": {
+        "properties": {
+          "kind": {
+            "enum": [
+              "numeric",
+              "categorical",
+              "text"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "missingCount": {
+            "title": "Missingcount",
+            "type": "integer"
+          },
+          "missingRate": {
+            "title": "Missingrate",
+            "type": "number"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "numeric": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/NumericProfileDTO"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "samples": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Samples",
+            "type": "array"
+          },
+          "uniqueCount": {
+            "title": "Uniquecount",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "kind",
+          "missingCount",
+          "missingRate",
+          "uniqueCount",
+          "samples"
+        ],
+        "title": "ColumnProfileDTO",
         "type": "object"
       },
       "CommunityBenchmark": {
@@ -1398,6 +1738,214 @@
         "title": "CompanyProfile",
         "type": "object"
       },
+      "ConfusionMatrixDTO": {
+        "properties": {
+          "fn": {
+            "title": "Fn",
+            "type": "integer"
+          },
+          "fp": {
+            "title": "Fp",
+            "type": "integer"
+          },
+          "tn": {
+            "title": "Tn",
+            "type": "integer"
+          },
+          "tp": {
+            "title": "Tp",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "tp",
+          "fp",
+          "tn",
+          "fn"
+        ],
+        "title": "ConfusionMatrixDTO",
+        "type": "object"
+      },
+      "DatasetAnalysisDTO": {
+        "properties": {
+          "categoricalColumnCount": {
+            "title": "Categoricalcolumncount",
+            "type": "integer"
+          },
+          "columnCount": {
+            "title": "Columncount",
+            "type": "integer"
+          },
+          "columns": {
+            "items": {
+              "$ref": "#/components/schemas/ColumnProfileDTO"
+            },
+            "title": "Columns",
+            "type": "array"
+          },
+          "duplicateRows": {
+            "title": "Duplicaterows",
+            "type": "integer"
+          },
+          "missingCells": {
+            "title": "Missingcells",
+            "type": "integer"
+          },
+          "missingRate": {
+            "title": "Missingrate",
+            "type": "number"
+          },
+          "numericColumnCount": {
+            "title": "Numericcolumncount",
+            "type": "integer"
+          },
+          "rowCount": {
+            "title": "Rowcount",
+            "type": "integer"
+          },
+          "targetCandidates": {
+            "items": {
+              "$ref": "#/components/schemas/TargetCandidateDTO"
+            },
+            "title": "Targetcandidates",
+            "type": "array"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "rowCount",
+          "columnCount",
+          "missingCells",
+          "missingRate",
+          "duplicateRows",
+          "numericColumnCount",
+          "categoricalColumnCount",
+          "columns",
+          "targetCandidates",
+          "warnings"
+        ],
+        "title": "DatasetAnalysisDTO",
+        "type": "object"
+      },
+      "DatasetDTO": {
+        "properties": {
+          "analysis": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DatasetAnalysisDTO"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "columnCount": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Columncount"
+          },
+          "contentType": {
+            "title": "Contenttype",
+            "type": "string"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "filename": {
+            "title": "Filename",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "preview": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preview"
+          },
+          "rowCount": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rowcount"
+          },
+          "size": {
+            "title": "Size",
+            "type": "integer"
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "ready",
+              "failed"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "filename",
+          "contentType",
+          "size",
+          "status",
+          "rowCount",
+          "columnCount",
+          "analysis",
+          "preview",
+          "error",
+          "createdAt"
+        ],
+        "title": "DatasetDTO",
+        "type": "object"
+      },
       "DocumentDTO": {
         "properties": {
           "companyId": {
@@ -1692,6 +2240,64 @@
         "title": "ErrorEnvelope[Literal[404], Literal['GRAPH_NOT_FOUND']]",
         "type": "object"
       },
+      "ErrorEnvelope_Literal_404__Literal__MODELING_DATASET_NOT_FOUND___": {
+        "properties": {
+          "code": {
+            "const": 404,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "MODELING_DATASET_NOT_FOUND",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[404], Literal['MODELING_DATASET_NOT_FOUND']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_404__Literal__MODELING_EXPERIMENT_NOT_FOUND___": {
+        "properties": {
+          "code": {
+            "const": 404,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "MODELING_EXPERIMENT_NOT_FOUND",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[404], Literal['MODELING_EXPERIMENT_NOT_FOUND']]",
+        "type": "object"
+      },
       "ErrorEnvelope_Literal_409__Literal__AUTH_USERNAME_TAKEN___": {
         "properties": {
           "code": {
@@ -1777,6 +2383,93 @@
           "data"
         ],
         "title": "ErrorEnvelope[Literal[409], Literal['DOCUMENT_UPLOAD_INCOMPLETE']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_409__Literal__MODELING_UPLOAD_INCOMPLETE___": {
+        "properties": {
+          "code": {
+            "const": 409,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "MODELING_UPLOAD_INCOMPLETE",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[409], Literal['MODELING_UPLOAD_INCOMPLETE']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_422__Literal__MODELING_CONFIGURATION_INVALID___": {
+        "properties": {
+          "code": {
+            "const": 422,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "MODELING_CONFIGURATION_INVALID",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[422], Literal['MODELING_CONFIGURATION_INVALID']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_422__Literal__MODELING_FILE_INVALID___": {
+        "properties": {
+          "code": {
+            "const": 422,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "MODELING_FILE_INVALID",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[422], Literal['MODELING_FILE_INVALID']]",
         "type": "object"
       },
       "ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___": {
@@ -1951,6 +2644,163 @@
           "data"
         ],
         "title": "ErrorEnvelope[Literal[503], Literal['DOCUMENT_STORAGE_UNAVAILABLE']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_503__Literal__MODELING_STORAGE_UNAVAILABLE___": {
+        "properties": {
+          "code": {
+            "const": 503,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "MODELING_STORAGE_UNAVAILABLE",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[503], Literal['MODELING_STORAGE_UNAVAILABLE']]",
+        "type": "object"
+      },
+      "ExperimentConfigurationDTO": {
+        "properties": {
+          "evaluationScope": {
+            "title": "Evaluationscope",
+            "type": "string"
+          },
+          "negativeValue": {
+            "title": "Negativevalue",
+            "type": "string"
+          },
+          "seed": {
+            "title": "Seed",
+            "type": "integer"
+          },
+          "split": {
+            "title": "Split",
+            "type": "string"
+          },
+          "testRows": {
+            "title": "Testrows",
+            "type": "integer"
+          },
+          "trainRows": {
+            "title": "Trainrows",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "seed",
+          "split",
+          "evaluationScope",
+          "trainRows",
+          "testRows",
+          "negativeValue"
+        ],
+        "title": "ExperimentConfigurationDTO",
+        "type": "object"
+      },
+      "ExperimentDTO": {
+        "properties": {
+          "coefficients": {
+            "items": {
+              "$ref": "#/components/schemas/CoefficientDTO"
+            },
+            "title": "Coefficients",
+            "type": "array"
+          },
+          "configuration": {
+            "$ref": "#/components/schemas/ExperimentConfigurationDTO"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "datasetId": {
+            "title": "Datasetid",
+            "type": "string"
+          },
+          "featureColumns": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Featurecolumns",
+            "type": "array"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "metrics": {
+            "$ref": "#/components/schemas/ExperimentMetricsDTO"
+          },
+          "modelType": {
+            "const": "logistic_regression",
+            "title": "Modeltype",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "positiveValue": {
+            "title": "Positivevalue",
+            "type": "string"
+          },
+          "status": {
+            "const": "completed",
+            "title": "Status",
+            "type": "string"
+          },
+          "targetColumn": {
+            "title": "Targetcolumn",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "datasetId",
+          "name",
+          "modelType",
+          "status",
+          "targetColumn",
+          "positiveValue",
+          "featureColumns",
+          "configuration",
+          "metrics",
+          "coefficients",
+          "createdAt"
+        ],
+        "title": "ExperimentDTO",
+        "type": "object"
+      },
+      "ExperimentMetricsDTO": {
+        "properties": {
+          "test": {
+            "$ref": "#/components/schemas/MetricSetDTO"
+          },
+          "train": {
+            "$ref": "#/components/schemas/MetricSetDTO"
+          }
+        },
+        "required": [
+          "train",
+          "test"
+        ],
+        "title": "ExperimentMetricsDTO",
         "type": "object"
       },
       "FiveCDimension": {
@@ -2186,6 +3036,104 @@
         "title": "GraphNode",
         "type": "object"
       },
+      "MetricSetDTO": {
+        "properties": {
+          "brier": {
+            "title": "Brier",
+            "type": "number"
+          },
+          "calibration": {
+            "items": {
+              "$ref": "#/components/schemas/CalibrationBinDTO"
+            },
+            "title": "Calibration",
+            "type": "array"
+          },
+          "confusion": {
+            "$ref": "#/components/schemas/ConfusionMatrixDTO"
+          },
+          "f1": {
+            "title": "F1",
+            "type": "number"
+          },
+          "ks": {
+            "title": "Ks",
+            "type": "number"
+          },
+          "positives": {
+            "title": "Positives",
+            "type": "integer"
+          },
+          "prAuc": {
+            "title": "Prauc",
+            "type": "number"
+          },
+          "precision": {
+            "title": "Precision",
+            "type": "number"
+          },
+          "recall": {
+            "title": "Recall",
+            "type": "number"
+          },
+          "rocAuc": {
+            "title": "Rocauc",
+            "type": "number"
+          },
+          "rows": {
+            "title": "Rows",
+            "type": "integer"
+          },
+          "threshold": {
+            "title": "Threshold",
+            "type": "number"
+          }
+        },
+        "required": [
+          "rows",
+          "positives",
+          "rocAuc",
+          "prAuc",
+          "ks",
+          "brier",
+          "precision",
+          "recall",
+          "f1",
+          "threshold",
+          "confusion",
+          "calibration"
+        ],
+        "title": "MetricSetDTO",
+        "type": "object"
+      },
+      "NumericProfileDTO": {
+        "properties": {
+          "max": {
+            "title": "Max",
+            "type": "number"
+          },
+          "mean": {
+            "title": "Mean",
+            "type": "number"
+          },
+          "min": {
+            "title": "Min",
+            "type": "number"
+          },
+          "std": {
+            "title": "Std",
+            "type": "number"
+          }
+        },
+        "required": [
+          "min",
+          "max",
+          "mean",
+          "std"
+        ],
+        "title": "NumericProfileDTO",
+        "type": "object"
+      },
       "PageRequest": {
         "additionalProperties": false,
         "properties": {
@@ -2277,6 +3225,19 @@
         "title": "RelatedParty",
         "type": "object"
       },
+      "RequestCompleteDatasetUpload": {
+        "properties": {
+          "datasetId": {
+            "title": "Datasetid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "datasetId"
+        ],
+        "title": "RequestCompleteDatasetUpload",
+        "type": "object"
+      },
       "RequestCompleteUpload": {
         "properties": {
           "documentId": {
@@ -2288,6 +3249,42 @@
           "documentId"
         ],
         "title": "RequestCompleteUpload",
+        "type": "object"
+      },
+      "RequestCreateDatasetUpload": {
+        "properties": {
+          "contentType": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Contenttype",
+            "type": "string"
+          },
+          "filename": {
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Filename",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "size": {
+            "exclusiveMinimum": 0.0,
+            "maximum": 5000000.0,
+            "title": "Size",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "filename",
+          "contentType",
+          "size"
+        ],
+        "title": "RequestCreateDatasetUpload",
         "type": "object"
       },
       "RequestCreateDownload": {
@@ -2386,6 +3383,32 @@
         "title": "RequestGetCompany",
         "type": "object"
       },
+      "RequestGetDataset": {
+        "properties": {
+          "datasetId": {
+            "title": "Datasetid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "datasetId"
+        ],
+        "title": "RequestGetDataset",
+        "type": "object"
+      },
+      "RequestGetExperiment": {
+        "properties": {
+          "experimentId": {
+            "title": "Experimentid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "experimentId"
+        ],
+        "title": "RequestGetExperiment",
+        "type": "object"
+      },
       "RequestGetGraph": {
         "properties": {
           "companyId": {
@@ -2459,6 +3482,11 @@
         "title": "RequestGraphBenchmark",
         "type": "object"
       },
+      "RequestListDatasets": {
+        "properties": {},
+        "title": "RequestListDatasets",
+        "type": "object"
+      },
       "RequestListDocuments": {
         "properties": {
           "companyId": {
@@ -2470,6 +3498,11 @@
           "companyId"
         ],
         "title": "RequestListDocuments",
+        "type": "object"
+      },
+      "RequestListExperiments": {
+        "properties": {},
+        "title": "RequestListExperiments",
         "type": "object"
       },
       "RequestLogin": {
@@ -2556,6 +3589,62 @@
         "title": "RequestRegister",
         "type": "object"
       },
+      "RequestRunExperiment": {
+        "properties": {
+          "datasetId": {
+            "title": "Datasetid",
+            "type": "string"
+          },
+          "featureColumns": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Featurecolumns",
+            "type": "array"
+          },
+          "modelType": {
+            "const": "logistic_regression",
+            "default": "logistic_regression",
+            "title": "Modeltype",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "positiveValue": {
+            "maxLength": 255,
+            "title": "Positivevalue",
+            "type": "string"
+          },
+          "seed": {
+            "default": 42,
+            "maximum": 2147483647.0,
+            "minimum": 0.0,
+            "title": "Seed",
+            "type": "integer"
+          },
+          "targetColumn": {
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Targetcolumn",
+            "type": "string"
+          }
+        },
+        "required": [
+          "datasetId",
+          "name",
+          "targetColumn",
+          "positiveValue",
+          "featureColumns"
+        ],
+        "title": "RequestRunExperiment",
+        "type": "object"
+      },
       "RequestSearchBenchmark": {
         "additionalProperties": false,
         "properties": {
@@ -2621,6 +3710,18 @@
         "title": "RequestSearchCompany",
         "type": "object"
       },
+      "ResponseCompleteDatasetUpload": {
+        "properties": {
+          "dataset": {
+            "$ref": "#/components/schemas/DatasetDTO"
+          }
+        },
+        "required": [
+          "dataset"
+        ],
+        "title": "ResponseCompleteDatasetUpload",
+        "type": "object"
+      },
       "ResponseCompleteUpload": {
         "properties": {
           "document": {
@@ -2631,6 +3732,37 @@
           "document"
         ],
         "title": "ResponseCompleteUpload",
+        "type": "object"
+      },
+      "ResponseCreateDatasetUpload": {
+        "properties": {
+          "datasetId": {
+            "title": "Datasetid",
+            "type": "string"
+          },
+          "expiresIn": {
+            "default": 60,
+            "title": "Expiresin",
+            "type": "integer"
+          },
+          "headers": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Headers",
+            "type": "object"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "datasetId",
+          "url",
+          "headers"
+        ],
+        "title": "ResponseCreateDatasetUpload",
         "type": "object"
       },
       "ResponseCreateDownload": {
@@ -2886,6 +4018,30 @@
         "title": "ResponseGetCompany",
         "type": "object"
       },
+      "ResponseGetDataset": {
+        "properties": {
+          "dataset": {
+            "$ref": "#/components/schemas/DatasetDTO"
+          }
+        },
+        "required": [
+          "dataset"
+        ],
+        "title": "ResponseGetDataset",
+        "type": "object"
+      },
+      "ResponseGetExperiment": {
+        "properties": {
+          "experiment": {
+            "$ref": "#/components/schemas/ExperimentDTO"
+          }
+        },
+        "required": [
+          "experiment"
+        ],
+        "title": "ResponseGetExperiment",
+        "type": "object"
+      },
       "ResponseGetGraph": {
         "properties": {
           "demo": {
@@ -2965,6 +4121,22 @@
         "title": "ResponseGraphBenchmark",
         "type": "object"
       },
+      "ResponseListDatasets": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/DatasetDTO"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "ResponseListDatasets",
+        "type": "object"
+      },
       "ResponseListDocuments": {
         "properties": {
           "items": {
@@ -2979,6 +4151,22 @@
           "items"
         ],
         "title": "ResponseListDocuments",
+        "type": "object"
+      },
+      "ResponseListExperiments": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ExperimentDTO"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "ResponseListExperiments",
         "type": "object"
       },
       "ResponseLogin": {
@@ -3164,6 +4352,18 @@
           "displayName"
         ],
         "title": "ResponseRegister",
+        "type": "object"
+      },
+      "ResponseRunExperiment": {
+        "properties": {
+          "experiment": {
+            "$ref": "#/components/schemas/ExperimentDTO"
+          }
+        },
+        "required": [
+          "experiment"
+        ],
+        "title": "ResponseRunExperiment",
         "type": "object"
       },
       "ResponseSearchBenchmark": {
@@ -3442,6 +4642,27 @@
           "desc"
         ],
         "title": "ShapFeature",
+        "type": "object"
+      },
+      "TargetCandidateDTO": {
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "values": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Values",
+            "type": "array"
+          }
+        },
+        "required": [
+          "name",
+          "values"
+        ],
+        "title": "TargetCandidateDTO",
         "type": "object"
       },
       "TimelineEvent": {
@@ -5199,6 +6420,665 @@
         "summary": "Get",
         "tags": [
           "graph"
+        ]
+      }
+    },
+    "/api/v1/modeling/complete-upload": {
+      "post": {
+        "operationId": "complete_dataset_upload_api_v1_modeling_complete_upload_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestCompleteDatasetUpload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseCompleteDatasetUpload_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_DATASET_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_UPLOAD_INCOMPLETE___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__MODELING_FILE_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODELING_STORAGE_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Complete Dataset Upload",
+        "tags": [
+          "modeling"
+        ]
+      }
+    },
+    "/api/v1/modeling/create-upload": {
+      "post": {
+        "operationId": "create_dataset_upload_api_v1_modeling_create_upload_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestCreateDatasetUpload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseCreateDatasetUpload_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__MODELING_FILE_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODELING_STORAGE_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Create Dataset Upload",
+        "tags": [
+          "modeling"
+        ]
+      }
+    },
+    "/api/v1/modeling/get-dataset": {
+      "post": {
+        "operationId": "get_dataset_api_v1_modeling_get_dataset_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestGetDataset"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseGetDataset_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_DATASET_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"
+                    }
+                  ],
+                  "title": "Response 503 Get Dataset Api V1 Modeling Get Dataset Post"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Get Dataset",
+        "tags": [
+          "modeling"
+        ]
+      }
+    },
+    "/api/v1/modeling/get-experiment": {
+      "post": {
+        "operationId": "get_experiment_api_v1_modeling_get_experiment_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestGetExperiment"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseGetExperiment_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_EXPERIMENT_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"
+                    }
+                  ],
+                  "title": "Response 503 Get Experiment Api V1 Modeling Get Experiment Post"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Get Experiment",
+        "tags": [
+          "modeling"
+        ]
+      }
+    },
+    "/api/v1/modeling/list-datasets": {
+      "post": {
+        "operationId": "list_datasets_api_v1_modeling_list_datasets_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestListDatasets"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseListDatasets_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"
+                    }
+                  ],
+                  "title": "Response 503 List Datasets Api V1 Modeling List Datasets Post"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "List Datasets",
+        "tags": [
+          "modeling"
+        ]
+      }
+    },
+    "/api/v1/modeling/list-experiments": {
+      "post": {
+        "operationId": "list_experiments_api_v1_modeling_list_experiments_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestListExperiments"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseListExperiments_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"
+                    }
+                  ],
+                  "title": "Response 503 List Experiments Api V1 Modeling List Experiments Post"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "List Experiments",
+        "tags": [
+          "modeling"
+        ]
+      }
+    },
+    "/api/v1/modeling/run-experiment": {
+      "post": {
+        "operationId": "run_experiment_api_v1_modeling_run_experiment_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestRunExperiment"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseRunExperiment_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_DATASET_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_UPLOAD_INCOMPLETE___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__MODELING_CONFIGURATION_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODELING_STORAGE_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Run Experiment",
+        "tags": [
+          "modeling"
         ]
       }
     },

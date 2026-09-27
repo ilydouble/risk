@@ -23,7 +23,8 @@ flowchart LR
 | Compose、Session 与对象存储 | [基础设施](infrastructure.md) |
 | 命令与验收 | [本地开发](local-development.md) |
 | SMEsD 模型与只读测试包 | [公开基准](benchmark.md) |
+| CSV 分析、快速基线与实验留档 | [模型实验工作台](modeling-workbench.md) |
 
-原工作台评分和解释由种子快照提供；报告、决策、模型看板和批量评估仍是前端演示。独立 `/benchmark` 使用保存的真实模型权重推理匿名测试样本，不与工作台企业数据合并。文件字节经预签名 URL 直连对象存储，业务 API 负责授权和元数据。
+原工作台评分和解释由种子快照提供；报告、决策、模型看板和批量评估仍是前端演示。独立 `/benchmark` 使用保存的真实模型权重推理匿名测试样本，不与工作台企业数据合并。`/modeling` 则对用户上传 CSV 做真实质量分析和快速逻辑回归实验。文件字节经预签名 URL 直连对象存储，业务 API 负责授权和元数据。
 
 - [模型产物约定](model-artifacts.md)：独立开发环境、Release 包、挂载和升级。

@@ -13,7 +13,7 @@ backend/
     shared/
       config.py, db.py, logging.py
       api/{envelope,page,response,middleware}.py
-    modules/{auth,company,graph,score,document}/
+    modules/{auth,company,graph,score,document,modeling}/
       api/{route,handler,schemas}.py
       model.py, service.py, repository.py, errors.py（按需）
     modules/benchmark/
@@ -27,7 +27,7 @@ backend/
 
 ## 数据与生命周期
 
-- PostgreSQL 的 `users`、`companies`、`documents` 保存账号、检索字段与文件状态。画像及中英评分快照存 JSONB，读取时由 Pydantic DTO 校验。
+- PostgreSQL 的 `users`、`companies`、`documents` 保存账号、检索字段与文件状态；`modeling_datasets`、`modeling_experiments` 保存用户实验的元数据、质量分析和真实指标。画像及中英评分快照存 JSONB，读取时由 Pydantic DTO 校验。
 - 自助注册复用现有 `users` 表，无需迁移；密码由 Argon2 哈希后写入，用户名冲突由唯一约束原子判定。注册不写入 Redis，成功后用户单独登录。
 - Neo4j 保存演示关系节点和边，图谱查询接受 1–3 跳（默认 3），由后端返回对应范围的节点及范围内的边。图谱不从 PostgreSQL JSON 拷贝响应。
 - `V0001_initial_schema.py` 的 revision 是 `V0001`；后续迁移顺序递增。后端容器启动时先执行 `alembic upgrade head`，成功后启动 HTTP 服务。

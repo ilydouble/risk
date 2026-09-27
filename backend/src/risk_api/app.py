@@ -15,6 +15,7 @@ from risk_api.modules.benchmark.service import BenchmarkService
 from risk_api.modules.company.api.route import router as company_router
 from risk_api.modules.document.api.route import router as document_router
 from risk_api.modules.graph.api.route import router as graph_router
+from risk_api.modules.modeling.api.route import router as modeling_router
 from risk_api.modules.score.api.route import router as score_router
 from risk_api.shared.api.middleware import request_policy
 from risk_api.shared.config import settings
@@ -53,4 +54,5 @@ def create_app() -> FastAPI:
     app.include_router(score_router, prefix="/api/v1/score", tags=["score"])
     app.include_router(document_router, prefix="/api/v1/document", tags=["document"])
     app.include_router(benchmark_router, prefix="/api/v1/benchmark", tags=["benchmark"])
+    app.include_router(modeling_router, prefix="/api/v1/modeling", tags=["modeling"])
     return app

@@ -45,6 +45,12 @@ export const NAV_GROUPS: NavGroup[] = [
     labelKey: "nav.modeling",
     items: [
       {
+        key: "modeling",
+        labelKey: "nav.modelingWorkbench",
+        path: "/modeling",
+        icon: "ri-function-line",
+      },
+      {
         key: "benchmark",
         labelKey: "nav.benchmark",
         path: "/benchmark",
