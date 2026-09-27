@@ -188,6 +188,59 @@ class JobStore:
                 values,
             )
 
+    async def experiment_request(self, job: Job) -> dict[str, Any]:
+        async with self.engine.connect() as connection:
+            row = (
+                await connection.execute(
+                    text(
+                        "SELECT configuration, feature_columns, requested_models, target_name "
+                        "FROM modeling_experiments WHERE id=:id AND dataset_id=:dataset_id"
+                    ),
+                    {"id": job.experiment_id, "dataset_id": job.dataset_id},
+                )
+            ).mappings().first()
+        if row is None:
+            raise ValueError("experiment does not exist")
+        return dict(row)
+
+    async def complete_experiment(
+        self,
+        job: Job,
+        selected_features: list[str],
+        results: dict[str, Any],
+        artifacts: dict[str, Any],
+    ) -> None:
+        values = {
+            "job_id": job.id,
+            "experiment_id": job.experiment_id,
+            "selected_features": json.dumps(selected_features),
+            "results": json.dumps(results, ensure_ascii=False),
+            "artifacts": json.dumps(artifacts),
+        }
+        async with self.engine.begin() as connection:
+            await connection.execute(
+                text(
+                    """
+                    UPDATE modeling_experiments
+                    SET status='completed', selected_features=CAST(:selected_features AS jsonb),
+                        results=CAST(:results AS jsonb), artifacts=CAST(:artifacts AS jsonb),
+                        progress='{"stage":"completed","percent":100}'::jsonb,
+                        error=NULL, finished_at=now()
+                    WHERE id=:experiment_id
+                    """
+                ),
+                values,
+            )
+            await connection.execute(
+                text(
+                    "UPDATE modeling_jobs SET status='completed', lease_owner=NULL, "
+                    "lease_until=NULL, "
+                    "progress='{\"stage\":\"completed\",\"percent\":100}'::jsonb, "
+                    "error=NULL, updated_at=now() WHERE id=:job_id"
+                ),
+                values,
+            )
+
     async def fail(self, job: Job, error: Exception) -> None:
         retry = job.attempt_count < job.max_attempts
         status = "queued" if retry else "failed"

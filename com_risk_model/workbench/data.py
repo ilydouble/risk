@@ -91,9 +91,12 @@ def _validate_samples(data: BundleData, limits: DataLimits) -> None:
     positive = str(data.metadata.target.positive_value)
     if positive not in values or len(values) != 2 or frame["target"].isna().any():
         raise DataValidationError("target must be a complete binary field containing positiveValue")
-    train = frame[frame["split"] == "train"]
-    if train["target"].astype(str).value_counts().min() < 2:
-        raise DataValidationError("each target class needs at least two training samples")
+    for split, rows in frame.groupby("split"):
+        counts = rows["target"].astype(str).value_counts()
+        if len(counts) != 2 or counts.min() < 2:
+            raise DataValidationError(
+                f"each target class needs at least two samples in the {split} split"
+            )
 
 
 def _validate_graph(data: BundleData, limits: DataLimits) -> None:

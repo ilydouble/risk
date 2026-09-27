@@ -6,11 +6,12 @@ import io
 import json
 import random
 import zipfile
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Literal
 
 
-def _csv_bytes(rows: list[dict[str, object]]) -> bytes:
+def _csv_bytes(rows: Sequence[Mapping[str, object]]) -> bytes:
     stream = io.StringIO(newline="")
     writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
     writer.writeheader()
@@ -24,6 +25,7 @@ def build_demo_bundle(
     *,
     rows: int = 180,
     seed: int = 42,
+    include_graph: bool = False,
 ) -> Path:
     """Create a deterministic Bundle v1 used by local acceptance tests and demos."""
     if rows < 60:
@@ -58,6 +60,78 @@ def build_demo_bundle(
         if task_type == "loan_application"
         else "观察时点后 12 个月内发生约定口径的经营异常"
     )
+    payloads = {"samples.csv": samples_bytes}
+    files: dict[str, object] = {
+        "samples": {
+            "path": "samples.csv",
+            "format": "csv",
+            "sizeBytes": len(samples_bytes),
+            "sha256": hashlib.sha256(samples_bytes).hexdigest(),
+        }
+    }
+    graph = None
+    if include_graph:
+        node_keys = sorted(
+            {(str(row["graph_snapshot_id"]), str(row["entity_id"])) for row in samples}
+        )
+        nodes = [
+            {"graph_snapshot_id": snapshot, "node_id": entity, "node_type": "company"}
+            for snapshot, entity in node_keys
+        ]
+        relations = []
+        hyperedges = []
+        events = []
+        by_snapshot: dict[str, list[str]] = {}
+        for snapshot, entity in node_keys:
+            by_snapshot.setdefault(snapshot, []).append(entity)
+            hyperedges.append(
+                {
+                    "graph_snapshot_id": snapshot,
+                    "hyperedge_id": f"industry-{int(entity[1:]) % 5}",
+                    "hyperedge_type": "industry",
+                    "node_id": entity,
+                }
+            )
+            events.append(
+                {
+                    "graph_snapshot_id": snapshot,
+                    "node_id": entity,
+                    "event_type": "litigation" if int(entity[1:]) % 7 == 0 else "registry",
+                    "event_time": "2024-01-01T00:00:00Z",
+                    "amount": (int(entity[1:]) % 9) * 1000,
+                }
+            )
+        for snapshot, entities in by_snapshot.items():
+            for index, source in enumerate(entities):
+                relations.append(
+                    {
+                        "graph_snapshot_id": snapshot,
+                        "source_id": source,
+                        "target_id": entities[(index + 1) % len(entities)],
+                        "relation_type": "shared_address" if index % 2 else "ownership",
+                        "weight": 1 + index % 3,
+                    }
+                )
+        tables = {
+            "nodes": _csv_bytes(nodes),
+            "relations": _csv_bytes(relations),
+            "events": _csv_bytes(events),
+            "hyperedges": _csv_bytes(hyperedges),
+        }
+        for name, payload in tables.items():
+            path = f"{name}.csv"
+            payloads[path] = payload
+            files[name] = {
+                "path": path,
+                "format": "csv",
+                "sizeBytes": len(payload),
+                "sha256": hashlib.sha256(payload).hexdigest(),
+            }
+        graph = {
+            "snapshotMode": "external",
+            "snapshotDefinition": "synthetic observation-time graph snapshots",
+            "staticExperimentOnly": False,
+        }
     metadata = {
         "schemaVersion": 1,
         "datasetName": f"synthetic-{task_type}",
@@ -83,18 +157,14 @@ def build_demo_bundle(
             {"name": "company_age_years", "kind": "numeric", "group": "registry"},
             {"name": "industry", "kind": "categorical", "group": "registry"},
         ],
-        "files": {
-            "samples": {
-                "path": "samples.csv",
-                "format": "csv",
-                "sizeBytes": len(samples_bytes),
-                "sha256": hashlib.sha256(samples_bytes).hexdigest(),
-            }
-        },
+        "files": files,
     }
+    if graph is not None:
+        metadata["graph"] = graph
     output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         archive.writestr("metadata.json", json.dumps(metadata, ensure_ascii=False, indent=2))
-        archive.writestr("samples.csv", samples_bytes)
+        for path, payload in payloads.items():
+            archive.writestr(path, payload)
     return output
