@@ -37,6 +37,10 @@ def upgrade() -> None:
     )
     op.add_column("modeling_datasets", sa.Column("started_at", sa.DateTime(timezone=True)))
     op.add_column("modeling_datasets", sa.Column("finished_at", sa.DateTime(timezone=True)))
+    op.execute(
+        "UPDATE modeling_datasets SET task_type='legacy_tabular', status='legacy', "
+        "progress='{\"stage\":\"legacy_read_only\",\"percent\":100}'::jsonb"
+    )
 
     op.alter_column("modeling_experiments", "status", type_=sa.String(24))
     op.add_column("modeling_experiments", sa.Column("target_name", sa.String(128)))

@@ -1,19 +1,26 @@
-import asyncio
 import logging
 from dataclasses import dataclass
 from pathlib import PurePath
+from typing import Any
 from uuid import uuid4
 
 from stellarmesh_objectstorage import AsyncClient, NotFoundError, StorageError
 
-from risk_api.modules.modeling.analysis import AnalysisError, analyze_csv, train_baseline
 from risk_api.modules.modeling.errors import ModelingError
-from risk_api.modules.modeling.model import ModelingDataset, ModelingExperiment
+from risk_api.modules.modeling.model import ModelingDataset, ModelingExperiment, ModelingJob
 from risk_api.modules.modeling.repository import ModelingRepository
 
 logger = logging.getLogger(__name__)
 
-MAX_DATASET_BYTES = 5_000_000
+MAX_BUNDLE_BYTES = 512 * 1024 * 1024
+MODEL_NAMES = {
+    "logistic_regression",
+    "hist_gradient_boosting",
+    "graph_stats_hgb",
+    "gnn_self_only",
+    "gnn_no_hyper",
+    "gnn_full",
+}
 
 
 @dataclass(frozen=True)
@@ -40,9 +47,9 @@ class ModelingService:
         if not name:
             raise ModelingError("FILE_INVALID", field="name")
         filename = PurePath(filename.replace("\\", "/")).name
-        if filename in {"", ".", ".."} or not filename.casefold().endswith(".csv"):
+        if filename in {"", ".", ".."} or not filename.casefold().endswith(".zip"):
             raise ModelingError("FILE_INVALID", field="filename")
-        if size > MAX_DATASET_BYTES:
+        if size <= 0 or size > MAX_BUNDLE_BYTES:
             raise ModelingError("FILE_INVALID", field="size")
         dataset_id = str(uuid4())
         key = f"modeling/{owner_id}/{dataset_id}/{filename}"
@@ -60,51 +67,44 @@ class ModelingService:
             filename=filename,
             content_type=content_type,
             size=size,
-            status="pending",
+            status="pending_upload",
+            schema_version=1,
+            capabilities={},
+            validation={},
+            progress={"stage": "upload", "percent": 0},
         )
         await self.repository.add_dataset(dataset)
-        logger.info(
-            "modeling.dataset_upload_requested",
-            extra={"dataset_id": dataset_id, "owner_id": owner_id, "size_bytes": size},
-        )
         return DatasetUploadTicket(dataset_id, signed.url, dict(signed.headers))
 
     async def complete_upload(self, owner_id: str, dataset_id: str) -> ModelingDataset:
         dataset = await self.get_dataset(owner_id, dataset_id)
-        if dataset.status == "ready":
+        if dataset.status in {"queued", "running", "ready"}:
             return dataset
+        if dataset.status == "failed":
+            raise ModelingError("DATASET_NOT_READY")
         try:
             info = await self.storage.stat(dataset.object_key)
         except NotFoundError as error:
             raise ModelingError("UPLOAD_INCOMPLETE") from error
         except StorageError as error:
             raise ModelingError("STORAGE_UNAVAILABLE") from error
-        if info.size != dataset.size or info.size > MAX_DATASET_BYTES:
+        if info.size != dataset.size or info.size > MAX_BUNDLE_BYTES:
             raise ModelingError("FILE_INVALID", field="size")
-        payload = await self._read(dataset.object_key)
-        try:
-            analysis, preview = await asyncio.to_thread(analyze_csv, payload)
-        except AnalysisError as error:
-            dataset.status = "failed"
-            dataset.error = str(error)
-            await self.repository.save_dataset(dataset)
-            raise ModelingError("FILE_INVALID") from error
-        dataset.status = "ready"
-        dataset.row_count = analysis["rowCount"]
-        dataset.column_count = analysis["columnCount"]
-        dataset.analysis = analysis
-        dataset.preview = preview
+        dataset.status = "queued"
+        dataset.progress = {"stage": "queued", "percent": 0}
         dataset.error = None
-        await self.repository.save_dataset(dataset)
-        logger.info(
-            "modeling.dataset_analyzed",
-            extra={
-                "dataset_id": dataset.id,
-                "owner_id": owner_id,
-                "row_count": dataset.row_count,
-                "column_count": dataset.column_count,
-            },
+        await self.repository.add_job(
+            ModelingJob(
+                id=str(uuid4()),
+                owner_id=owner_id,
+                dataset_id=dataset.id,
+                kind="analyze_bundle",
+                status="queued",
+                payload={"objectKey": dataset.object_key},
+                progress={"stage": "queued", "percent": 0},
+            )
         )
+        await self.repository.save_dataset(dataset)
         return dataset
 
     async def get_dataset(self, owner_id: str, dataset_id: str) -> ModelingDataset:
@@ -121,9 +121,14 @@ class ModelingService:
         owner_id: str,
         dataset_id: str,
         name: str,
-        target_column: str,
-        positive_value: str,
+        target_name: str,
+        feature_mode: str,
         feature_columns: list[str],
+        models: list[str],
+        use_events: bool,
+        use_relations: bool,
+        use_hyperedges: bool,
+        enable_gnn_ablations: bool,
         seed: int,
     ) -> ModelingExperiment:
         name = name.strip()
@@ -132,43 +137,72 @@ class ModelingService:
         dataset = await self.get_dataset(owner_id, dataset_id)
         if dataset.status != "ready":
             raise ModelingError("DATASET_NOT_READY")
-        payload = await self._read(dataset.object_key)
-        try:
-            result = await asyncio.to_thread(
-                train_baseline,
-                payload,
-                target_column,
-                positive_value,
-                feature_columns,
-                seed,
-            )
-        except AnalysisError as error:
-            raise ModelingError("CONFIGURATION_INVALID") from error
+        if dataset.schema_version != 1 or dataset.manifest is None:
+            raise ModelingError("CONFIGURATION_INVALID", field="datasetId")
+        target = dataset.manifest.get("target", {})
+        if target_name != target.get("name"):
+            raise ModelingError("CONFIGURATION_INVALID", field="targetName")
+        requested_models = list(dict.fromkeys(models))
+        if not requested_models or not set(requested_models).issubset(MODEL_NAMES):
+            raise ModelingError("CONFIGURATION_INVALID", field="models")
+        features = {item["name"] for item in dataset.manifest.get("features", [])}
+        if feature_mode == "manual":
+            if not feature_columns or not set(feature_columns).issubset(features):
+                raise ModelingError("CONFIGURATION_INVALID", field="featureColumns")
+        elif feature_mode != "recommended":
+            raise ModelingError("CONFIGURATION_INVALID", field="featureMode")
+        self._validate_capabilities(dataset.capabilities, requested_models)
+        configuration: dict[str, Any] = {
+            "seed": seed,
+            "featureMode": feature_mode,
+            "useEvents": use_events,
+            "useRelations": use_relations,
+            "useHyperedges": use_hyperedges,
+            "enableGnnAblations": enable_gnn_ablations,
+        }
         experiment = ModelingExperiment(
             id=str(uuid4()),
             dataset_id=dataset_id,
             owner_id=owner_id,
             name=name,
-            model_type="logistic_regression",
-            status="completed",
-            target_column=target_column,
-            positive_value=positive_value,
+            model_type="comparison_suite",
+            status="queued",
+            target_column="target",
+            positive_value=str(target.get("positiveValue", "1")),
             feature_columns=feature_columns,
-            configuration=result["configuration"],
-            metrics=result["metrics"],
-            coefficients=result["coefficients"],
+            configuration=configuration,
+            metrics={},
+            coefficients=[],
+            target_name=target_name,
+            selected_features=[],
+            requested_models=requested_models,
+            progress={"stage": "queued", "percent": 0},
+            results={},
+            artifacts={},
         )
         await self.repository.add_experiment(experiment)
-        logger.info(
-            "modeling.experiment_completed",
-            extra={
-                "dataset_id": dataset_id,
-                "experiment_id": experiment.id,
-                "owner_id": owner_id,
-                "feature_count": len(feature_columns),
-            },
+        await self.repository.add_job(
+            ModelingJob(
+                id=str(uuid4()),
+                owner_id=owner_id,
+                dataset_id=dataset_id,
+                experiment_id=experiment.id,
+                kind="train_experiment",
+                status="queued",
+                payload={"objectKey": dataset.object_key},
+                progress={"stage": "queued", "percent": 0},
+            )
         )
         return experiment
+
+    @staticmethod
+    def _validate_capabilities(capabilities: dict[str, Any], models: list[str]) -> None:
+        if "graph_stats_hgb" in models and not capabilities.get("relations"):
+            raise ModelingError("CONFIGURATION_INVALID", field="models")
+        if any(model.startswith("gnn_") for model in models) and not capabilities.get("gnn"):
+            raise ModelingError("CONFIGURATION_INVALID", field="models")
+        if "gnn_full" in models and not capabilities.get("hyperedges"):
+            raise ModelingError("CONFIGURATION_INVALID", field="models")
 
     async def get_experiment(self, owner_id: str, experiment_id: str) -> ModelingExperiment:
         experiment = await self.repository.experiment(experiment_id, owner_id)
@@ -178,15 +212,3 @@ class ModelingService:
 
     async def list_experiments(self, owner_id: str) -> list[ModelingExperiment]:
         return await self.repository.experiments(owner_id)
-
-    async def _read(self, object_key: str) -> bytes:
-        try:
-            async with self.storage.open_object(object_key) as stream:
-                payload = await stream.read(MAX_DATASET_BYTES + 1)
-        except NotFoundError as error:
-            raise ModelingError("UPLOAD_INCOMPLETE") from error
-        except StorageError as error:
-            raise ModelingError("STORAGE_UNAVAILABLE") from error
-        if len(payload) > MAX_DATASET_BYTES:
-            raise ModelingError("FILE_INVALID", field="size")
-        return payload

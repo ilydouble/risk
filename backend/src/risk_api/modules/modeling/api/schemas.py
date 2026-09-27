@@ -1,41 +1,15 @@
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
-
-class NumericProfileDTO(BaseModel):
-    min: float
-    max: float
-    mean: float
-    std: float
-
-
-class ColumnProfileDTO(BaseModel):
-    name: str
-    kind: Literal["numeric", "categorical", "text"]
-    missingCount: int
-    missingRate: float
-    uniqueCount: int
-    samples: list[str]
-    numeric: NumericProfileDTO | None = None
-
-
-class TargetCandidateDTO(BaseModel):
-    name: str
-    values: list[str]
-
-
-class DatasetAnalysisDTO(BaseModel):
-    rowCount: int
-    columnCount: int
-    missingCells: int
-    missingRate: float
-    duplicateRows: int
-    numericColumnCount: int
-    categoricalColumnCount: int
-    columns: list[ColumnProfileDTO]
-    targetCandidates: list[TargetCandidateDTO]
-    warnings: list[str]
+ModelName = Literal[
+    "logistic_regression",
+    "hist_gradient_boosting",
+    "graph_stats_hgb",
+    "gnn_self_only",
+    "gnn_no_hyper",
+    "gnn_full",
+]
 
 
 class DatasetDTO(BaseModel):
@@ -44,20 +18,28 @@ class DatasetDTO(BaseModel):
     filename: str
     contentType: str
     size: int
-    status: Literal["pending", "ready", "failed"]
+    schemaVersion: int
+    taskType: Literal["loan_application", "entity_snapshot", "legacy_tabular"] | None
+    sampleUnit: Literal["loan_application", "entity_snapshot"] | None
+    status: Literal["pending_upload", "queued", "running", "ready", "failed", "legacy"]
     rowCount: int | None
     columnCount: int | None
-    analysis: DatasetAnalysisDTO | None
-    preview: list[dict[str, str]] | None
+    manifest: dict[str, Any] | None
+    capabilities: dict[str, Any]
+    analysis: dict[str, Any] | None
+    validation: dict[str, Any]
+    progress: dict[str, Any]
     error: str | None
     createdAt: str
+    startedAt: str | None
+    finishedAt: str | None
 
 
 class RequestCreateDatasetUpload(BaseModel):
     name: str = Field(min_length=1, max_length=128)
     filename: str = Field(min_length=1, max_length=255)
     contentType: str = Field(min_length=1, max_length=128)
-    size: int = Field(gt=0, le=5_000_000)
+    size: int = Field(gt=0, le=512 * 1024 * 1024)
 
 
 class ResponseCreateDatasetUpload(BaseModel):
@@ -91,76 +73,38 @@ class ResponseGetDataset(BaseModel):
     dataset: DatasetDTO
 
 
-class ConfusionMatrixDTO(BaseModel):
-    tp: int
-    fp: int
-    tn: int
-    fn: int
-
-
-class CalibrationBinDTO(BaseModel):
-    lower: float
-    count: int
-    meanPrediction: float
-    observedRate: float
-
-
-class MetricSetDTO(BaseModel):
-    rows: int
-    positives: int
-    rocAuc: float
-    prAuc: float
-    ks: float
-    brier: float
-    precision: float
-    recall: float
-    f1: float
-    threshold: float
-    confusion: ConfusionMatrixDTO
-    calibration: list[CalibrationBinDTO]
-
-
-class ExperimentMetricsDTO(BaseModel):
-    train: MetricSetDTO
-    test: MetricSetDTO
-
-
-class CoefficientDTO(BaseModel):
-    feature: str
-    coefficient: float
-
-
-class ExperimentConfigurationDTO(BaseModel):
-    seed: int
-    split: str
-    evaluationScope: str
-    trainRows: int
-    testRows: int
-    negativeValue: str
-
-
 class ExperimentDTO(BaseModel):
     id: str
     datasetId: str
     name: str
-    modelType: Literal["logistic_regression"]
-    status: Literal["completed"]
-    targetColumn: str
+    modelType: Literal["comparison_suite", "logistic_regression"]
+    status: Literal["queued", "running", "completed", "failed"]
+    targetName: str | None
     positiveValue: str
     featureColumns: list[str]
-    configuration: ExperimentConfigurationDTO
-    metrics: ExperimentMetricsDTO
-    coefficients: list[CoefficientDTO]
+    selectedFeatures: list[str]
+    requestedModels: list[str]
+    configuration: dict[str, Any]
+    progress: dict[str, Any]
+    results: dict[str, Any]
+    artifacts: dict[str, Any]
+    error: str | None
     createdAt: str
+    startedAt: str | None
+    finishedAt: str | None
 
 
 class RequestRunExperiment(BaseModel):
     datasetId: str
     name: str = Field(min_length=1, max_length=128)
-    modelType: Literal["logistic_regression"] = "logistic_regression"
-    targetColumn: str = Field(min_length=1, max_length=255)
-    positiveValue: str = Field(max_length=255)
-    featureColumns: list[str] = Field(min_length=1, max_length=20)
+    targetName: str = Field(min_length=1, max_length=128)
+    featureMode: Literal["recommended", "manual"] = "recommended"
+    featureColumns: list[str] = Field(default_factory=list, max_length=200)
+    models: list[ModelName] = Field(min_length=1, max_length=6)
+    useEvents: bool = True
+    useRelations: bool = True
+    useHyperedges: bool = True
+    enableGnnAblations: bool = True
     seed: int = Field(default=42, ge=0, le=2_147_483_647)
 
 

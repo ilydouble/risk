@@ -57,11 +57,11 @@ def test_bundle_rejects_path_traversal() -> None:
 
 def test_bundle_rejects_duplicate_member() -> None:
     payload = io.BytesIO()
-    with zipfile.ZipFile(payload, "w") as archive:
+    with pytest.warns(UserWarning), zipfile.ZipFile(payload, "w") as archive:
         archive.writestr("metadata.json", "{}")
         archive.writestr("metadata.json", "{}")
 
-    with pytest.warns(UserWarning), pytest.raises(BundleValidationError, match="duplicate"):
+    with pytest.raises(BundleValidationError, match="duplicate"):
         validate_bundle(payload.getvalue())
 
 

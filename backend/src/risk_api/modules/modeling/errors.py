@@ -8,7 +8,7 @@ class ModelingError(AppError):
     _errors = {
         "DATASET_NOT_FOUND": (404, "MODELING_DATASET_NOT_FOUND", "Dataset not found"),
         "EXPERIMENT_NOT_FOUND": (404, "MODELING_EXPERIMENT_NOT_FOUND", "Experiment not found"),
-        "FILE_INVALID": (422, "MODELING_FILE_INVALID", "CSV file is invalid"),
+        "FILE_INVALID": (422, "MODELING_FILE_INVALID", "Dataset bundle is invalid"),
         "CONFIGURATION_INVALID": (
             422,
             "MODELING_CONFIGURATION_INVALID",

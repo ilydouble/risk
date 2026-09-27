@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from risk_api.modules.modeling.model import ModelingDataset, ModelingExperiment
+from risk_api.modules.modeling.model import ModelingDataset, ModelingExperiment, ModelingJob
 
 
 class ModelingRepository:
@@ -32,6 +32,10 @@ class ModelingRepository:
 
     async def add_experiment(self, experiment: ModelingExperiment) -> None:
         self.session.add(experiment)
+        await self.session.commit()
+
+    async def add_job(self, job: ModelingJob) -> None:
+        self.session.add(job)
         await self.session.commit()
 
     async def experiment(self, experiment_id: str, owner_id: str) -> ModelingExperiment | None:
