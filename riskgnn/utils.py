@@ -9,15 +9,19 @@ import time
 
 
 def  set_random_seed(seed):
+    # Set BEFORE any torch/CUDA call. cuBLAS reads this when it first initialises, and
+    # torch.cuda.manual_seed_all() below can already create the CUDA context -- setting the
+    # variable after that risks it being ignored.
+    # Required for CUDA + torch.use_deterministic_algorithms(True): without it cuBLAS raises
+    # "Deterministic behavior was enabled ... but this operation is not deterministic". This
+    # does NOT relax determinism -- it enables it on CUDA.
+    os.environ['CUBLAS_WORKSPACE_CONFIG'] = ':4096:8'
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
     np.random.seed(seed)
     random.seed(seed)
     os.environ['PYTHONHASHSEED'] = str(seed)
     # os.environ['CUDA_LAUNCH_BLOCKING'] = str(1)
-    # os.environ['CUBLAS_WORKSPACE_CONFIG'] = ':4096:8'
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed(seed)
     torch.backends.cudnn.enabled = False
     torch.backends.cudnn.benchmark = False
     torch.backends.cudnn.deterministic = True

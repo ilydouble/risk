@@ -78,6 +78,13 @@ parser.add_argument('--ablation', type=str, default='full',
                          "diagnostic finding that edge contagion is ~absent (0.09% "
                          "distress-distress edges) while industry grouping is strong "
                          "(24x spread in distress rate).")
+parser.add_argument('--hyper_impl', type=str, default='scipy', choices=['scipy', 'vectorized'],
+                    help="scipy: original HyperGNN (scipy.sparse Laplacian, OOMs above "
+                         "~50k nodes). vectorized: HyperGNNVectorized (index_add/bincount, "
+                         "ported from Li Ruirui's backend/comrisk/model.py hyper_laplacian) "
+                         "-- mathematically equivalent to scipy on covered nodes (verified "
+                         "numerically, max diff ~1e-7), but zeroes isolated (no-group) nodes "
+                         "instead of passing them through as identity.")
 
 args = parser.parse_args()
 
@@ -143,9 +150,15 @@ x_test=initializae_company_info(test_risk_data,test_company_attr,test_company_nu
 # the "country x industry" prior described in the team's proposal -- ComRisk's Chinese
 # SME data has no country field, so we use its 'area' (region) grouping instead, which
 # plays the same structural role.
-area_prior, area_alpha, area_beta, area_global_mean = fit_bayesian_group_prior(
+area_prior, area_alpha, area_beta, area_global_mean, area_group_stats = fit_bayesian_group_prior(
     train_hyp_graph['area'], train_label, train_idx)
-train_community_prior = build_group_prior_feature(train_hyp_graph['area'], train_idx, area_prior, area_global_mean)
+# LEAVE-ONE-OUT for the training feature: found 2026-09-25 (independently also caught
+# by a teammate in a parallel dataset) that scoring a company with a prior fit using
+# its OWN label leaks that label back in -- worst for singleton groups (n=1), where the
+# "prior" collapses to just that company's own value. 56/153 (36.6%) of this dataset's
+# area groups are singletons. valid/test are unaffected (their labels were never used
+# to fit area_prior), so they keep the plain, non-LOO lookup.
+train_community_prior = build_group_prior_feature_loo(train_hyp_graph['area'], train_idx, train_label, area_group_stats, area_alpha, area_beta, area_global_mean)
 valid_community_prior = build_group_prior_feature(valid_hyp_graph['area'], valid_idx, area_prior, area_global_mean)
 test_community_prior = build_group_prior_feature(test_hyp_graph['area'], test_idx, area_prior, area_global_mean)
 print('Bayesian community prior fitted: alpha=%.3f beta=%.3f global_mean=%.4f (%d areas)' % (
@@ -174,8 +187,8 @@ gnn=RiskGNN(args.input_dim,args.output_dim,
     cause_type_num, device,com_initial_emb,person_initial_emb,
     court_type,category,time_label_num,
     num_heads=1,dropout=0.2,norm=True,
-    use_hypergraph=use_hypergraph,use_edgegraph=use_edgegraph)
-print('Ablation=%s -> use_hypergraph=%s use_edgegraph=%s' % (args.ablation, use_hypergraph, use_edgegraph))
+    use_hypergraph=use_hypergraph,use_edgegraph=use_edgegraph,hyper_impl=args.hyper_impl)
+print('Ablation=%s -> use_hypergraph=%s use_edgegraph=%s hyper_impl=%s' % (args.ablation, use_hypergraph, use_edgegraph, args.hyper_impl))
 
 classifier = Classifier(args.output_dim, 2).to(device)
 model = nn.Sequential(gnn, classifier)
@@ -192,38 +205,14 @@ elif args.optimizer == 'adagrad':
 scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, 20, eta_min=1e-6)
 
 ['industry', 'area', 'qualify']
-train_hyp=[]
-for i in ['industry', 'area', 'qualify']:
-    train_hyp+=[gen_attribute_hg(total_company_num, train_hyp_graph[i], X=None)]
-valid_hyp=[]
-for i in ['industry', 'area', 'qualify']:
-    valid_hyp+=[gen_attribute_hg(total_company_num, valid_hyp_graph[i], X=None)]
-test_hyp=[]
-for i in ['industry', 'area', 'qualify']:
-    test_hyp+=[gen_attribute_hg(total_company_num, test_hyp_graph[i], X=None)]
-
-
-def test():
-    # weights_only=False: PyTorch 2.6+ defaults torch.load to weights_only=True, which
-    # refuses to unpickle nn.Sequential. Safe here since this checkpoint was just written
-    # by this same script moments earlier, not loaded from an untrusted external source.
-    best_model = torch.load('./model_save/%s.pkl'%(args.conv_name), weights_only=False)
-    best_model.eval()
-    gnn, classifier = best_model
-    with torch.no_grad():
-        company_emb=gnn.forward(test_risk_data,test_company_attr,test_hete_graph,test_hyp,test_idx,x_test,test_community_prior)
-
-        res = classifier.forward(company_emb)
-
-        pred=res.argmax(dim=1)
-        ac=acc(test_label,pred)
-        pr=pre(test_label,pred)
-        re=rec(test_label,pred)
-        f=f1(test_label,pred)
-        rc=roc(test_label,res[:,1])
-
-        print('Best Test Acc: %.4f Best Test Pre: %.4f Best Test Recall: %.4f Best Test F1: %.4f Best Test ROC: %.4f' % (ac,pr,re,f,rc))
-        print(sum(pred))
+if args.hyper_impl == 'vectorized':
+    train_hyp=[build_incidence(total_company_num, train_hyp_graph[i]) for i in ['industry', 'area', 'qualify']]
+    valid_hyp=[build_incidence(total_company_num, valid_hyp_graph[i]) for i in ['industry', 'area', 'qualify']]
+    test_hyp=[build_incidence(total_company_num, test_hyp_graph[i]) for i in ['industry', 'area', 'qualify']]
+else:
+    train_hyp=[gen_attribute_hg(total_company_num, train_hyp_graph[i], X=None) for i in ['industry', 'area', 'qualify']]
+    valid_hyp=[gen_attribute_hg(total_company_num, valid_hyp_graph[i], X=None) for i in ['industry', 'area', 'qualify']]
+    test_hyp=[gen_attribute_hg(total_company_num, test_hyp_graph[i], X=None) for i in ['industry', 'area', 'qualify']]
 
 
 best_acc=0

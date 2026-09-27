@@ -37,7 +37,7 @@ def ks_stat(y_true, y_score):
     y_score = np.asarray(y_score)
     return ks_2samp(y_score[y_true == 1], y_score[y_true == 0]).statistic
 
-sys.path.insert(0, 'data_sg_v5/comrisk_export')
+sys.path.insert(0, 'data_sg_v7/comrisk_export')
 from load_comrisk import ComRiskExport
 
 from gnn import RiskGNN
@@ -65,7 +65,7 @@ else:
     device = torch.device(args.device)
 log('device=%s' % device)
 
-ds = ComRiskExport(path='data_sg_v5/comrisk_export', verbose=True).load()
+ds = ComRiskExport(path='data_sg_v7/comrisk_export', verbose=True).load()
 ds.build_labels()
 X = ds.build_features(mode='no_priors')  # Wang's v2.0 recommended 6-dim set, NO SSIC (matches her baseline_tree.py reference exactly)
 n_feat = X.shape[1]

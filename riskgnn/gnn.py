@@ -21,12 +21,30 @@ import numpy as np
 
 class HeteGNN(MessagePassing):
     def __init__(self, input_dim,output_dim,rel_num,negative_slope=0.2,num_company_rel=7,num_person_rel=3,
-    aggr = "add", flow= "source_to_target", node_dim = -2):
+    aggr = "add", flow= "source_to_target", node_dim = -2, use_scalar_weights=None):
         super(HeteGNN,self).__init__(aggr=aggr, flow=flow, node_dim=node_dim)
         self.input_dim=input_dim
         self.output_dim=output_dim
         self.rel_num=rel_num
         self.negative_slope=negative_slope
+        # Which of message()'s two paths a relation takes is decided at RUNTIME, from that
+        # relation's own weights:
+        #   non-uniform weights -> weight-only path  -> needs a Linear of width output_dim
+        #   all-1.0 weights     -> concat(x_i, x_j)  -> needs a Linear of width 2*output_dim
+        # so the per-relation Linear must be built to match. Three modes:
+        #   None  -> ComRisk's original per-relation-index convention: indices 6-9 are the
+        #            weighted relations in the SMEsD data, everything else is uniform.
+        #            This preserves the upstream behaviour exactly.
+        #   True  -> every relation takes the weight-only path.
+        #   False -> every relation takes the concat path. Correct for the Singapore
+        #            pipeline, which forces all edge weights to 1.0.
+        # NOTE: branching on the index alone (the original `if i in [6,7,8,9]`) is only
+        # valid while weighted relations happen to land in 6-9. On a graph with >= 7
+        # relation types and no weighted relations -- e.g. the Singapore export once an
+        # address-type split takes it to 7 -- index 6 exists again, gets the narrow Linear,
+        # and training dies with "mat1 and mat2 shapes cannot be multiplied". That is why
+        # the Singapore side passes False explicitly rather than relying on the default.
+        self.use_scalar_weights=use_scalar_weights
 
         self.proj_com=nn.Linear(input_dim,output_dim,bias=False)
         self.proj_per=nn.Linear(input_dim,output_dim,bias=False)
@@ -42,11 +60,14 @@ class HeteGNN(MessagePassing):
         self.crelation_pri   = nn.Parameter(torch.ones(rel_num))
 
         self.rel_wi=nn.ModuleList()
+        # See the comment in __init__ for what each mode means.
         for i in range(rel_num):
-            if i in [6,7,8,9]:
-                self.rel_wi.append(nn.Linear(output_dim,output_dim,bias=False))
+            if use_scalar_weights is None:
+                weighted = i in [6, 7, 8, 9]   # ComRisk's original convention (SMEsD)
             else:
-                self.rel_wi.append(nn.Linear(output_dim*2,output_dim,bias=False))
+                weighted = bool(use_scalar_weights)
+            self.rel_wi.append(nn.Linear(output_dim if weighted else output_dim*2,
+                                         output_dim,bias=False))
 
 
         self.skip = nn.Parameter(torch.ones(1))
@@ -217,6 +238,7 @@ class RiskGNN(nn.Module):
      device,com_initial_emb,person_initial_emb,
      court_type_num=4,category_num=4,time_label_num=5,num_heads=1,dropout=0.2,norm=True,
      use_hypergraph=True,use_edgegraph=True,n_company_attr_dims=3,hyper_impl='scipy',
+     hete_scalar_weights=None,
      ):
         super(RiskGNN,self).__init__()
         # Ablation switches: node-features-only (both False), +hypergraph, +edgegraph,
@@ -252,9 +274,11 @@ class RiskGNN(nn.Module):
         self.hetegnn=nn.ModuleList()
         for i in range(5):
             if i==0:
-                self.hetegnn.append(HeteGNN(input_dim,output_dim,rel_num))
+                self.hetegnn.append(HeteGNN(input_dim,output_dim,rel_num,
+                                            use_scalar_weights=hete_scalar_weights))
             else:
-                self.hetegnn.append(HeteGNN(output_dim,output_dim,rel_num))
+                self.hetegnn.append(HeteGNN(output_dim,output_dim,rel_num,
+                                            use_scalar_weights=hete_scalar_weights))
 
         self.company_proj=nn.Linear(32,input_dim,bias=False)
         self.person_proj=nn.Linear(32,input_dim,bias=False)

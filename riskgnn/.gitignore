@@ -4,10 +4,7 @@ inspect_hyp.txt
 
 # Received data exports (large, not our own code -- Wang's raw parquet files)
 data_sg/
-data_sg_v2/
-data_sg_v3/
-data_sg_v4/
-data_sg_v5/
+data_sg_v*/
 
 # SMEsD pickle data (small, but binary and not our own code; original source is
 # a pinned upstream commit -- fetch it rather than committing it, see README).
@@ -20,3 +17,13 @@ model_save/
 # documentation. Key findings belong in README.md/SMEsD.md instead.
 *.log
 results_*.txt
+
+# Test/validation prediction dumps (12 files, ~82 MB) -- regenerable by re-running the
+# batch (~3.4 h GPU).
+preds/
+
+# Ad-hoc diagnostic / data-verification scripts written against the local data exports
+# (subgraph sizes, edge-count checks, RAM benchmarks). They hard-code local paths that
+# are not in this repo, so they are deliberately not shipped; the findings they produced
+# are in README.md instead.
+_*.py

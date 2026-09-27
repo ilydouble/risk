@@ -20,6 +20,7 @@ with an empty edge set, so the comparison is apples-to-apples.
 import argparse
 import sys
 import time
+from array import array
 import numpy as np
 import pandas as pd
 import torch
@@ -52,7 +53,12 @@ def _sample_task(seed_nodes, rng_seed):
     indptr, dst, et, ew, fanouts = _W['indptr'], _W['dst'], _W['et'], _W['ew'], _W['fanouts']
     rng = np.random.default_rng(rng_seed)
     node_map = {}
-    order_nodes = []
+    # array('i') instead of list: 4 bytes per element instead of ~36 (8-byte pointer +
+    # a 28-byte PyLong object per distinct int). At ~2M edges per batch x 8 workers the
+    # Python lists were the single largest peak-RAM consumer (~290 MB per worker, ~2.3 GB
+    # across the pool). The appended VALUES are identical and in the same order, so the
+    # arrays produced downstream are bit-identical -- memory-only change.
+    order_nodes = array('i')
     for nid in seed_nodes:
         nid = int(nid)
         if nid not in node_map:
@@ -60,7 +66,8 @@ def _sample_task(seed_nodes, rng_seed):
             order_nodes.append(nid)
     batch_size = len(order_nodes)
     frontier = list(range(batch_size))
-    edges_src, edges_dst, edges_et, edges_ew = [], [], [], []
+    edges_src, edges_dst, edges_et = array('i'), array('i'), array('i')
+    edges_ew = array('f')
     for fanout in fanouts:
         new_frontier = []
         for center_local in frontier:
@@ -88,14 +95,18 @@ def _sample_task(seed_nodes, rng_seed):
     # that workers sit ~96% idle -- IPC serialization, not sampling compute, is
     # the bottleneck). Purely a packaging change; the sampled edges/nodes are
     # identical either way.
-    n_id = np.array(order_nodes, dtype=np.int64)
+    # Return NumPy arrays with the SMALLEST safe dtype: indices are < 2^31, so int32 is exact,
+    # and it halves the bytes pickled across the process-pool boundary (the dominant per-batch
+    # overhead on this dense graph). Values are identical -> results unchanged (verified by
+    # re-running seed 0 / 1 epoch and checking the ROC matches exactly).
+    n_id = np.array(order_nodes, dtype=np.int32)
     if edges_src:
-        edge_index_local = np.array([edges_src, edges_dst], dtype=np.int64)
-        edge_type_local = np.array(edges_et, dtype=np.int64)
+        edge_index_local = np.array([edges_src, edges_dst], dtype=np.int32)
+        edge_type_local = np.array(edges_et, dtype=np.int32)
         edge_weight_local = np.array(edges_ew, dtype=np.float32)
     else:
-        edge_index_local = np.zeros((2, 0), dtype=np.int64)
-        edge_type_local = np.zeros((0,), dtype=np.int64)
+        edge_index_local = np.zeros((2, 0), dtype=np.int32)
+        edge_type_local = np.zeros((0,), dtype=np.int32)
         edge_weight_local = np.zeros((0,), dtype=np.float32)
     return n_id, edge_index_local, edge_type_local, edge_weight_local, batch_size
 
@@ -108,7 +119,10 @@ def build_csr(edge_index, edge_type, edge_weight, num_nodes):
     ew = edge_weight.numpy()[order]
     src_sorted = src[order]
     indptr = np.searchsorted(src_sorted, np.arange(num_nodes + 1))
-    return indptr, dst, et, ew
+    # int32 is exact at these sizes (2.1M nodes, 7.7M directed edges) and halves the
+    # index tables. On Windows the pool uses spawn, so each of the NUM_WORKERS workers
+    # holds its OWN copy of this table -- narrow dtypes are a direct per-worker saving.
+    return (indptr.astype(np.int32), dst.astype(np.int32), et.astype(np.int32), ew)
 
 
 class ParallelBatchSource:
@@ -153,6 +167,87 @@ def ks_stat(y_true, y_score):
     return ks_2samp(y_score[y_true == 1], y_score[y_true == 0]).statistic
 
 
+# --- ranking + calibration metrics (added 2026-09-27, for Wang's "two free metrics") ---
+# NOTE ON UNITS: Classifier.forward returns log_softmax output, so res[:, 1] (the `score`
+# returned by run_eval) is a LOG-probability, not a probability. ROC/KS/AP are rank-based
+# and therefore unaffected -- which is why this was easy to miss -- but Brier and the
+# calibration curve are NOT: they must be computed on exp(score).
+def proba_from_logprob(score):
+    return np.exp(np.asarray(score, dtype=np.float64))
+
+
+def _top_frac_mask(y_score, frac):
+    """Boolean mask over the top `frac` of ranked scores (stable tie-breaking by index)."""
+    y_score = np.asarray(y_score)
+    k = max(1, int(round(frac * len(y_score))))
+    order = np.argsort(-y_score, kind='stable')
+    mask = np.zeros(len(y_score), dtype=bool)
+    mask[order[:k]] = True
+    return mask
+
+
+def capture_at_frac(y_true, y_score, frac):
+    """Share of all positives that fall inside the top `frac` of predictions."""
+    y_true = np.asarray(y_true)
+    total = y_true.sum()
+    if total == 0:
+        return float('nan')
+    return float(y_true[_top_frac_mask(y_score, frac)].sum() / total)
+
+
+def lift_at_frac(y_true, y_score, frac):
+    """Positive rate inside the top `frac`, divided by the overall positive rate."""
+    y_true = np.asarray(y_true)
+    base = y_true.mean()
+    if base == 0:
+        return float('nan')
+    return float(y_true[_top_frac_mask(y_score, frac)].mean() / base)
+
+
+def brier_score(y_true, proba):
+    """Mean squared error between predicted probability and the 0/1 outcome."""
+    return float(np.mean((np.asarray(proba, dtype=np.float64)
+                          - np.asarray(y_true, dtype=np.float64)) ** 2))
+
+
+def brier_skill_score(y_true, proba, base_rate=None):
+    """BSS = 1 - Brier / [p(1-p)], where p is the base rate of the reference (constant)
+    predictor that always outputs p.
+
+    At a 2.1% positive rate that reference already scores p(1-p) = 0.0206, so an absolute
+    threshold like "Brier <= 0.10" is passed by a constant predictor and carries no
+    information -- it was written for a balanced dataset. BSS is the informative number:
+    1 = perfect, 0 = no better than a constant, negative = worse than a constant.
+    (Raised by Wang, 2026-09-27.)
+    """
+    y = np.asarray(y_true, dtype=np.float64)
+    p = float(y.mean()) if base_rate is None else float(base_rate)
+    ref = p * (1.0 - p)
+    if ref <= 0:
+        return float('nan')
+    return float(1.0 - brier_score(y, proba) / ref)
+
+
+def calibration_curve(y_true, proba, n_bins=10):
+    """Equal-width bins over [0,1]: predicted mean vs observed positive rate per bin."""
+    y_true = np.asarray(y_true, dtype=np.float64)
+    proba = np.asarray(proba, dtype=np.float64)
+    edges = np.linspace(0.0, 1.0, n_bins + 1)
+    idx = np.clip(np.digitize(proba, edges[1:-1]), 0, n_bins - 1)
+    rows = []
+    for b in range(n_bins):
+        m = idx == b
+        rows.append({
+            'bin': b,
+            'lo': float(edges[b]),
+            'hi': float(edges[b + 1]),
+            'count': int(m.sum()),
+            'mean_prediction': float(proba[m].mean()) if m.any() else None,
+            'observed_rate': float(y_true[m].mean()) if m.any() else None,
+        })
+    return rows
+
+
 def make_batches(idx_np, batch_size, shuffle, rng):
     idx = idx_np.copy()
     if shuffle:
@@ -161,23 +256,19 @@ def make_batches(idx_np, batch_size, shuffle, rng):
 
 
 def to_batch_tensors(n_id_np, ei_local, et_local, ew_local, device):
-    # ei_local/et_local/ew_local are now NumPy arrays (see _sample_task).
-    n_id = torch.from_numpy(n_id_np).to(device)
+    # ei_local/et_local/ew_local are NumPy arrays (see _sample_task); indices arrive as int32
+    # (halved IPC payload) and are widened to int64 here for safe indexing on device.
+    n_id = torch.from_numpy(n_id_np).long().to(device)
     if ei_local.shape[1] > 0:
-        ei = torch.from_numpy(ei_local).transpose(0, 1).to(device)
+        ei = torch.from_numpy(ei_local).long().transpose(0, 1).to(device)
     else:
         ei = torch.zeros((0, 2), dtype=torch.long, device=device)
-    et = torch.from_numpy(et_local).to(device)
+    et = torch.from_numpy(et_local).long().to(device)
     ew = torch.from_numpy(ew_local).to(device)
     return n_id, ei, et, ew
 
 
 def main():
-    sys.path.insert(0, 'data_sg_v5/comrisk_export')
-    from load_comrisk import ComRiskExport
-    from gnn import RiskGNN
-    from utils import Classifier, set_random_seed
-
     parser = argparse.ArgumentParser()
     parser.add_argument('--variant', type=str, required=True, choices=['node_only', 'node_edge'])
     parser.add_argument('--n_epoch', type=int, default=30)
@@ -191,7 +282,22 @@ def main():
     parser.add_argument('--eval_every', type=int, default=5)
     parser.add_argument('--device', type=str, default='auto', choices=['auto', 'cpu', 'cuda'])
     parser.add_argument('--num_workers', type=int, default=8)
+    parser.add_argument('--data_dir', type=str, default='data_sg_v7/comrisk_export',
+                        help='comrisk_export folder to load. Defaults to the current v7 export; the older v5/v6 exports differ only in the edge build (v5 predates the v3 edge fix).')
+    parser.add_argument('--edges_file', type=str, default=None,
+                        help='Optional override for the edge table (e.g. edges_no_liq.parquet); only used for --variant node_edge.')
+    parser.add_argument('--dump_preds', type=str, default=None,
+                        help='Optional .npz path: saves the test-fold logprob/proba/true/pred arrays so ranking and calibration metrics can be recomputed offline without another run.')
     args = parser.parse_args()
+
+    # Only `load_comrisk` lives inside the export folder, so --data_dir is added to sys.path to
+    # import the loader that matches the data being loaded (byte-identical across v2/v3 as of
+    # 2026-09-26, but this keeps loader and data in lockstep). `gnn` and `utils` are NOT in the
+    # export folder -- they resolve from the repo root (comrisk_sg/), which is intended.
+    sys.path.insert(0, args.data_dir)
+    from load_comrisk import ComRiskExport   # noqa: E402  (loaded from --data_dir)
+    from gnn import RiskGNN                  # noqa: E402  (from repo root)
+    from utils import Classifier, set_random_seed  # noqa: E402  (from repo root)
 
     t0 = time.time()
     def log(msg):
@@ -202,9 +308,13 @@ def main():
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     else:
         device = torch.device(args.device)
-    log('device=%s variant=%s num_workers=%d' % (device, args.variant, args.num_workers))
+    log('device=%s variant=%s num_workers=%d data_dir=%s edges_file=%s' % (
+        device, args.variant, args.num_workers, args.data_dir, args.edges_file))
 
-    ds = ComRiskExport(path='data_sg_v5/comrisk_export', verbose=True).load()
+    ds = ComRiskExport(path=args.data_dir, verbose=True).load()
+    if args.edges_file is not None:
+        ds.edges = pd.read_parquet(args.edges_file)
+        log('edges overridden from %s: %d rows' % (args.edges_file, len(ds.edges)))
     ds.build_labels()
     X = ds.build_features(mode='no_priors')
     n_feat = X.shape[1]
@@ -247,7 +357,14 @@ def main():
                   person_initial_emb=np.zeros((0, 32)),
                   court_type_num=4, category_num=4, time_label_num=5,
                   use_hypergraph=False, use_edgegraph=True,
-                  n_company_attr_dims=n_feat, hyper_impl='vectorized').to(device)
+                  n_company_attr_dims=n_feat, hyper_impl='vectorized',
+                    # This loader forces every edge weight to 1.0, so ALL relations take
+                    # message()'s concat path and every per-relation Linear must be
+                    # 2*output_dim wide. Passed explicitly because the gnn.py default (None)
+                    # means "ComRisk's original index-6..9 convention", which would crash
+                    # here as soon as the graph has 7+ relation types (e.g. the
+                    # address-type split).
+                    hete_scalar_weights=False).to(device)
     classifier = Classifier(args.output_dim, 2).to(device)
     model = nn.Sequential(gnn, classifier)
     optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
@@ -311,9 +428,35 @@ def main():
             log('Epoch %d (%.2fs, %d batches) TrainLoss=%.3f' % (epoch, time.time() - st, n_batches, ep_loss / max(n_batches, 1)))
 
     pred, score, true = run_eval(test_idx_np, y, args.eval_batch_size)
+    # Kept byte-identical to previous runs: with deterministic seeds this line must
+    # reproduce exactly, which is the integrity check Wang asked for. Report any drift
+    # rather than silently accepting it.
     log('FINAL TEST: Acc=%.4f Pre=%.4f Recall=%.4f F1=%.4f ROC=%.4f KS=%.4f AP=%.4f' % (
         acc(true, pred), pre(true, pred, zero_division=0), rec(true, pred, zero_division=0),
         f1(true, pred, zero_division=0), roc(true, score), ks_stat(true, score), ap_score(true, score)))
+    # Ranking + calibration. `score` is a log-probability -> exp() for anything that
+    # needs real probabilities (Brier, calibration bins).
+    proba = proba_from_logprob(score)
+    log('FINAL METRICS: Capture@5%%=%.4f Lift@10%%=%.4f Brier=%.4f n=%d n_pos=%d' % (
+        capture_at_frac(true, score, 0.05), lift_at_frac(true, score, 0.10),
+        brier_score(true, proba), len(true), int(true.sum())))
+    for row in calibration_curve(true, proba):
+        if row['count']:
+            log('  CALIB bin%02d [%.1f,%.1f) n=%-6d pred=%.4f obs=%.4f' % (
+                row['bin'], row['lo'], row['hi'], row['count'],
+                row['mean_prediction'], row['observed_rate']))
+    if args.dump_preds:
+        # Validation predictions are dumped too so the probabilities can be recalibrated
+        # offline (fit the calibration map on validation, apply it to test). --use_class_weight
+        # inflates the raw probabilities by ~47x (w1/w0), which wrecks Brier and the
+        # calibration curve while leaving the rank-based ROC/KS/AP untouched.
+        vpred, vscore, vtrue = run_eval(valid_idx_np, y, args.eval_batch_size)
+        np.savez(args.dump_preds,
+                 test_logprob=np.asarray(score), test_proba=proba,
+                 test_true=np.asarray(true), test_pred=np.asarray(pred),
+                 valid_logprob=np.asarray(vscore), valid_proba=proba_from_logprob(vscore),
+                 valid_true=np.asarray(vtrue), valid_pred=np.asarray(vpred))
+        log('  dumped test+valid fold predictions -> %s' % args.dump_preds)
     pool.shutdown()
 
 
