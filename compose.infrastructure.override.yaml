@@ -1,0 +1,17 @@
+name: risk
+
+# Local development overlay: expose infrastructure on loopback while every
+# application process (gateway, API, worker and Vite) runs on the host.
+services:
+  postgres:
+    ports:
+      - "127.0.0.1:${POSTGRES_HOST_PORT:-15432}:5432"
+
+  redis:
+    ports:
+      - "127.0.0.1:${REDIS_HOST_PORT:-16379}:6379"
+
+  neo4j:
+    ports:
+      - "127.0.0.1:${NEO4J_HTTP_HOST_PORT:-17474}:7474"
+      - "127.0.0.1:${NEO4J_BOLT_HOST_PORT:-17687}:7687"

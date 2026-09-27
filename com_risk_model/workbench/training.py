@@ -23,13 +23,36 @@ def _artifact(suite: TabularSuite, results: dict[str, Any]) -> bytes:
         "ranking": suite.selection.ranking,
         "configuration": suite.selection.configuration,
     }
+    model_files: list[dict[str, Any]] = []
     with zipfile.ZipFile(stream, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         archive.writestr("results.json", json.dumps(results, ensure_ascii=False, indent=2))
         archive.writestr(
             "feature-selection.json", json.dumps(selection, ensure_ascii=False, indent=2)
         )
         for variant in suite.variants:
-            archive.writestr(f"models/{variant.name}.joblib", variant.artifact)
+            suffix = "pt" if variant.name.startswith("gnn_") else "joblib"
+            path = f"models/{variant.name}.{suffix}"
+            archive.writestr(path, variant.artifact)
+            model_files.append(
+                {
+                    "name": variant.name,
+                    "path": path,
+                    "sizeBytes": len(variant.artifact),
+                    "sha256": hashlib.sha256(variant.artifact).hexdigest(),
+                }
+            )
+        archive.writestr(
+            "manifest.json",
+            json.dumps(
+                {
+                    "format": "workbench-experiment-v1",
+                    "autoPublished": False,
+                    "models": model_files,
+                },
+                ensure_ascii=False,
+                indent=2,
+            ),
+        )
     return stream.getvalue()
 
 

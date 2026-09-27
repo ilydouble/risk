@@ -136,6 +136,7 @@ def _quality(data: BundleData) -> dict[str, Any]:
     return {
         "rowCount": len(frame),
         "columnCount": len(frame.columns),
+        "duplicateRows": int(frame.astype(str).duplicated().sum()),
         "duplicateSampleIds": int(frame["sample_id"].astype(str).duplicated().sum()),
         "columns": columns,
     }
@@ -232,6 +233,30 @@ def _graph_profile(data: BundleData) -> dict[str, Any]:
             "p95": float(degree.quantile(0.95)) if len(degree) else 0,
             "max": int(degree.max()) if len(degree) else 0,
         }
+        parents: dict[tuple[str, str], tuple[str, str]] = {}
+
+        def find(node: tuple[str, str]) -> tuple[str, str]:
+            parents.setdefault(node, node)
+            while parents[node] != node:
+                parents[node] = parents[parents[node]]
+                node = parents[node]
+            return node
+
+        def union(left: tuple[str, str], right: tuple[str, str]) -> None:
+            left_root, right_root = find(left), find(right)
+            if left_root != right_root:
+                parents[right_root] = left_root
+
+        for row in nodes[["graph_snapshot_id", "node_id"]].astype(str).itertuples(index=False):
+            find((row.graph_snapshot_id, row.node_id))
+        for row in relations[["graph_snapshot_id", "source_id", "target_id"]].astype(
+            str
+        ).itertuples(index=False):
+            union(
+                (row.graph_snapshot_id, row.source_id),
+                (row.graph_snapshot_id, row.target_id),
+            )
+        profile["connectedComponents"] = len({find(node) for node in parents})
     if data.hyperedges is not None:
         sizes = data.hyperedges.groupby(["graph_snapshot_id", "hyperedge_id"]).size()
         profile["hyperedgeCount"] = len(sizes)

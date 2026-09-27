@@ -40,7 +40,7 @@ class WorkerSettings:
                 "postgresql+asyncpg://risk:local-risk-db-password@localhost:5432/risk",
             ),
             storage_bucket=os.getenv("STORAGE_BUCKET", "risk-documents"),
-            storage_endpoint=os.getenv("STORAGE_ENDPOINT", "http://localhost:19000"),
+            storage_endpoint=os.getenv("STORAGE_ENDPOINT", "http://127.0.0.1:19000"),
             storage_region=os.getenv("STORAGE_REGION", "us-east-1"),
             storage_access_key=os.getenv("STORAGE_ACCESS_KEY", "RISKDOCUMENTSAPP2026"),
             storage_secret_key=os.getenv(
@@ -91,7 +91,7 @@ class JobStore:
                 lease_owner = :worker_id,
                 lease_until = :lease_until,
                 error = NULL,
-                progress = '{"stage":"starting","percent":1}'::jsonb,
+                progress = CAST(:starting_progress AS jsonb),
                 updated_at = now()
             FROM candidate
             WHERE job.id = candidate.id
@@ -102,7 +102,12 @@ class JobStore:
         async with self.engine.begin() as connection:
             row = (
                 await connection.execute(
-                    statement, {"worker_id": self.worker_id, "lease_until": lease_until}
+                    statement,
+                    {
+                        "worker_id": self.worker_id,
+                        "lease_until": lease_until,
+                        "starting_progress": json.dumps({"stage": "starting", "percent": 1}),
+                    },
                 )
             ).mappings().first()
             if row is None:
@@ -114,10 +119,13 @@ class JobStore:
                 text(
                     f"UPDATE {target} SET status='running', "
                     "started_at=COALESCE(started_at, now()), "
-                    "progress='{\"stage\":\"starting\",\"percent\":1}'::jsonb, error=NULL "
+                    "progress=CAST(:progress AS jsonb), error=NULL "
                     "WHERE id=:target_id"
                 ),
-                {"target_id": target_id},
+                {
+                    "target_id": target_id,
+                    "progress": json.dumps({"stage": "starting", "percent": 1}),
+                },
             )
         return Job(**dict(row))
 
@@ -160,6 +168,8 @@ class JobStore:
             "analysis": json.dumps(analysis, ensure_ascii=False),
             "row_count": len(data.samples),
             "column_count": len(data.samples.columns),
+            "ready_progress": json.dumps({"stage": "ready", "percent": 100}),
+            "completed_progress": json.dumps({"stage": "completed", "percent": 100}),
         }
         async with self.engine.begin() as connection:
             await connection.execute(
@@ -171,7 +181,7 @@ class JobStore:
                         capabilities=CAST(:capabilities AS jsonb),
                         validation=CAST(:validation AS jsonb), analysis=CAST(:analysis AS jsonb),
                         preview=NULL, row_count=:row_count, column_count=:column_count,
-                        progress='{"stage":"ready","percent":100}'::jsonb,
+                        progress=CAST(:ready_progress AS jsonb),
                         error=NULL, finished_at=now()
                     WHERE id=:dataset_id
                     """
@@ -182,7 +192,7 @@ class JobStore:
                 text(
                     "UPDATE modeling_jobs SET status='completed', lease_owner=NULL, "
                     "lease_until=NULL, "
-                    "progress='{\"stage\":\"completed\",\"percent\":100}'::jsonb, "
+                    "progress=CAST(:completed_progress AS jsonb), "
                     "error=NULL, updated_at=now() WHERE id=:job_id"
                 ),
                 values,
@@ -216,6 +226,7 @@ class JobStore:
             "selected_features": json.dumps(selected_features),
             "results": json.dumps(results, ensure_ascii=False),
             "artifacts": json.dumps(artifacts),
+            "completed_progress": json.dumps({"stage": "completed", "percent": 100}),
         }
         async with self.engine.begin() as connection:
             await connection.execute(
@@ -224,7 +235,7 @@ class JobStore:
                     UPDATE modeling_experiments
                     SET status='completed', selected_features=CAST(:selected_features AS jsonb),
                         results=CAST(:results AS jsonb), artifacts=CAST(:artifacts AS jsonb),
-                        progress='{"stage":"completed","percent":100}'::jsonb,
+                        progress=CAST(:completed_progress AS jsonb),
                         error=NULL, finished_at=now()
                     WHERE id=:experiment_id
                     """
@@ -235,7 +246,7 @@ class JobStore:
                 text(
                     "UPDATE modeling_jobs SET status='completed', lease_owner=NULL, "
                     "lease_until=NULL, "
-                    "progress='{\"stage\":\"completed\",\"percent\":100}'::jsonb, "
+                    "progress=CAST(:completed_progress AS jsonb), "
                     "error=NULL, updated_at=now() WHERE id=:job_id"
                 ),
                 values,
@@ -353,7 +364,11 @@ def main() -> None:
     parser.add_argument("--once", action="store_true", help="claim at most one job")
     arguments = parser.parse_args()
     logging.basicConfig(level=os.getenv("RISK_LOG_LEVEL", "INFO"))
-    raise SystemExit(asyncio.run(run_worker(WorkerSettings.from_env(), once=arguments.once)))
+    try:
+        exit_code = asyncio.run(run_worker(WorkerSettings.from_env(), once=arguments.once))
+    except KeyboardInterrupt:
+        exit_code = 0
+    raise SystemExit(exit_code)
 
 
 if __name__ == "__main__":

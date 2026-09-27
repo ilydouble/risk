@@ -13,8 +13,25 @@ Python 3.12 + uv。模型工程和 `../backend/` 各自维护虚拟环境与锁�
 | `runs/` | 忽略的实验、检查点与导出结果 |
 | `weights/` | 下载的正式模型包；只跟踪 `.gitkeep` |
 | `docs/` | 研究文档、实验汇总与历史来源记录 |
+| `workbench/` | Bundle v1 校验、数据分析、模型阶梯与本地异步 Worker |
 
 所有下列命令均在本目录运行。`testing/` 不属于 pytest 测试目录。
+
+## 元数据建模 Worker
+
+外部适配器输出 Bundle v1 后，可先生成等价的双任务合成包做环境验收，再启动 Worker：
+
+```bash
+uv run python -m workbench.demo --output runs/loan.zip \
+  --task loan_application --with-graph
+uv run python -m workbench.demo --output runs/entity.zip \
+  --task entity_snapshot --with-graph
+uv run python -m workbench.worker
+```
+
+Worker 通过 `DATABASE_URL` 领取 PostgreSQL 持久任务，通过 `STORAGE_ENDPOINT`、
+`STORAGE_BUCKET`、`STORAGE_ACCESS_KEY`、`STORAGE_SECRET_KEY` 访问 RustFS。`--once` 最多处理
+一个任务，适合验收。它不进入 Compose，也不会自动替换公开基准或产品评分模型。
 
 ## 软件冒烟测试
 

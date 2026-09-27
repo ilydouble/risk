@@ -1,5 +1,49 @@
 # 本地开发与验收
 
+## 推荐开发模式：基础设施容器，应用本地运行
+
+开发时不要执行全量 `docker compose up`。只启动四项基础设施和两个一次性初始化服务：
+
+```bash
+cp .env.example .env
+docker compose -f compose.yaml -f compose.infrastructure.override.yaml \
+  up -d postgres redis rustfs rustfs-init neo4j neo4j-init
+docker compose -f compose.yaml -f compose.infrastructure.override.yaml ps -a
+```
+
+覆盖文件只把基础设施端口绑定到 `127.0.0.1`。在四个终端分别启动应用：
+
+```bash
+# 终端 1：FastAPI（先迁移）
+cd backend
+export DATABASE_URL=postgresql+asyncpg://risk:local-risk-db-password@localhost:15432/risk
+export REDIS_URL=redis://localhost:16379/0 NEO4J_URI=bolt://localhost:17687
+export NEO4J_USER=neo4j NEO4J_PASSWORD=local-risk-graph-password
+export STORAGE_ENDPOINT=http://127.0.0.1:19000 STORAGE_PUBLIC_ENDPOINT=http://localhost:19000
+export STORAGE_BUCKET=risk-documents AWS_ACCESS_KEY_ID=RISKDOCUMENTSAPP2026
+export AWS_SECRET_ACCESS_KEY=local-rustfs-app-change-me-2026
+uv run alembic upgrade head
+uv run python -m risk_api
+
+# 终端 2：Go 网关
+cd gateway
+REDIS_URL=redis://localhost:16379/0 BACKEND_URL=http://localhost:8000 go run .
+
+# 终端 3：Vite 前端
+cd frontend && npm run dev
+
+# 终端 4：模型 Worker（环境与终端 1 的数据库/存储相同）
+cd com_risk_model
+export DATABASE_URL=postgresql+asyncpg://risk:local-risk-db-password@localhost:15432/risk
+export STORAGE_ENDPOINT=http://127.0.0.1:19000 STORAGE_BUCKET=risk-documents
+export STORAGE_ACCESS_KEY=RISKDOCUMENTSAPP2026
+export STORAGE_SECRET_KEY=local-rustfs-app-change-me-2026
+uv run python -m workbench.worker
+```
+
+浏览器访问 `http://localhost:3000`。此拓扑中 Docker 里不应出现 `backend`、`gateway`、
+`frontend` 或模型 Worker；Worker 也不会加入 Compose。
+
 ## Compose
 
 ```bash
@@ -19,6 +63,10 @@ docker compose logs -f backend demo-seed
 | `GATEWAY_HOST_PORT` | 18081 | 8081 |
 | `RUSTFS_API_HOST_PORT` | 19000 | 9000 |
 | `RUSTFS_CONSOLE_HOST_PORT` | 19001 | 9001 |
+| `POSTGRES_HOST_PORT` | 15432 | 5432 |
+| `REDIS_HOST_PORT` | 16379 | 6379 |
+| `NEO4J_HTTP_HOST_PORT` | 17474 | 7474 |
+| `NEO4J_BOLT_HOST_PORT` | 17687 | 7687 |
 
 本机默认的 Origin 白名单随前端端口变化，浏览器预签名地址随 RustFS API 端口变化；独立运行的 Vite 仍监听 3000，其 API 代理会读取仓库根目录 `.env` 的网关端口。自定义域名可显式设置 `PUBLIC_ORIGINS`、`STORAGE_PUBLIC_ENDPOINT`，`VITE_API_PROXY` 仍可覆盖开发代理。旧 `.env` 如保留固定的 `PUBLIC_ORIGINS` 或 `STORAGE_PUBLIC_ENDPOINT`，需删除这两项旧默认值才能让端口自动联动；自定义值会继续覆盖默认值。
 
@@ -57,3 +105,4 @@ npm run lint && npm run type-check && npm run build
 3. 在画像上传一个测试文件，经 RustFS 直传、确认登记、下载并核对字节。报告、决策、模型看板和批量评估仍能显示演示标识。
 4. 校验 401 会话过期、503 Redis 故障、伪造身份头、非法 Origin、参数 422 和不存在资源的统一信封。
 5. 下载并校验模型后，登录进入 `/benchmark`，检索 `C00010`，查看约 `0.726873` 的预测、一跳关系 16 条和测试 ROC-AUC 约 `0.793637`；核对其页头与说明未将演示分数描述为业务信用评分。
+6. 生成贷款申请与企业快照 ZIP，分别上传到 `/modeling`；Worker 完成分析后运行完整模型阶梯。贷款包显示 `default_12m`，企业包显示经营风险语义；后者不得出现贷款违约概率文案。

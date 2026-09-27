@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import csv
 import hashlib
 import io
@@ -8,7 +9,7 @@ import random
 import zipfile
 from collections.abc import Mapping, Sequence
 from pathlib import Path
-from typing import Literal
+from typing import Literal, cast
 
 
 def _csv_bytes(rows: Sequence[Mapping[str, object]]) -> bytes:
@@ -168,3 +169,30 @@ def build_demo_bundle(
         for path, payload in payloads.items():
             archive.writestr(path, payload)
     return output
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Generate a deterministic Bundle v1 example")
+    parser.add_argument("--output", required=True, help="destination .zip path")
+    parser.add_argument(
+        "--task",
+        choices=("loan_application", "entity_snapshot"),
+        default="loan_application",
+    )
+    parser.add_argument("--rows", type=int, default=180)
+    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--with-graph", action="store_true")
+    arguments = parser.parse_args()
+    task_type = cast(Literal["loan_application", "entity_snapshot"], arguments.task)
+    output = build_demo_bundle(
+        arguments.output,
+        task_type,
+        rows=arguments.rows,
+        seed=arguments.seed,
+        include_graph=arguments.with_graph,
+    )
+    print(output)
+
+
+if __name__ == "__main__":
+    main()

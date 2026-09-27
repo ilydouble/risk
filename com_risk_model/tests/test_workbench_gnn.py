@@ -1,16 +1,21 @@
 from __future__ import annotations
 
+import json
+import zipfile
 from pathlib import Path
 
 from workbench.data import load_bundle
 from workbench.demo import build_demo_bundle
 from workbench.features import select_features
 from workbench.gnn import prepare_graph_batch, train_gnn_variants
+from workbench.tabular import TabularSuite
+from workbench.training import _artifact
 
 
 def test_event_relation_and_hypergraph_ablations_run(tmp_path: Path) -> None:
     data = load_bundle(build_demo_bundle(tmp_path / "graph.zip", rows=180, include_graph=True))
-    selected = select_features(data, mode="recommended", manual=[]).selected
+    selection = select_features(data, mode="recommended", manual=[])
+    selected = selection.selected
 
     batch, _, _ = prepare_graph_batch(data, selected, use_events=True)
     variants = train_gnn_variants(
@@ -33,7 +38,18 @@ def test_event_relation_and_hypergraph_ablations_run(tmp_path: Path) -> None:
     for variant in variants:
         assert variant.artifact
         assert variant.result["configuration"]["fitSplit"] == "train"
+        assert variant.result["configuration"]["seed"] == 11
         assert 0 <= variant.result["metrics"]["test"]["rocAuc"] <= 1
+
+    artifact_path = tmp_path / "artifact.zip"
+    artifact_path.write_bytes(_artifact(TabularSuite(selection, variants), {"variants": []}))
+    with zipfile.ZipFile(artifact_path) as archive:
+        manifest = json.loads(archive.read("manifest.json"))
+        assert {item["path"] for item in manifest["models"]} == {
+            "models/gnn_self_only.pt",
+            "models/gnn_no_hyper.pt",
+            "models/gnn_full.pt",
+        }
 
 
 def test_gnn_fixed_seed_is_reproducible(tmp_path: Path) -> None:

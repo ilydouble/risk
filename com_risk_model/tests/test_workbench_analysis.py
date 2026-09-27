@@ -22,6 +22,7 @@ def test_analysis_uses_declared_splits_without_raw_preview(tmp_path: Path) -> No
 
     assert analysis["excludedRawPreview"] is True
     assert analysis["quality"]["rowCount"] == 180
+    assert analysis["quality"]["duplicateRows"] == 0
     assert set(analysis["splits"]) == {"train", "validation", "test"}
     assert {item["name"] for item in analysis["signals"]} == {
         "debt_ratio",
@@ -31,6 +32,16 @@ def test_analysis_uses_declared_splits_without_raw_preview(tmp_path: Path) -> No
     }
     assert data.capabilities["tabular"] is True
     assert data.capabilities["gnn"] is False
+
+
+def test_graph_analysis_reports_components(tmp_path: Path) -> None:
+    path = build_demo_bundle(tmp_path / "graph.zip", rows=180, include_graph=True)
+
+    analysis = analyze_bundle(load_bundle(path))
+
+    assert analysis["graph"]["available"] is True
+    assert analysis["graph"]["connectedComponents"] == 3
+    assert analysis["graph"]["relationTypes"]
 
 
 def test_sample_contract_rejects_invalid_split(tmp_path: Path) -> None:

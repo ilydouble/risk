@@ -429,11 +429,11 @@ def train_gnn_variants(
         pos_weight=torch.tensor(negative / max(positive, 1.0))
     )
     variants = []
-    for offset, mode in enumerate(modes):
+    for mode in modes:
         if mode == "gnn_full" and not len(batch.hyper_node):
             raise ValueError("gnn_full requires hyperedges")
         started = time.monotonic()
-        variant_seed = seed + offset
+        variant_seed = seed
         random.seed(variant_seed)
         np.random.seed(variant_seed)
         torch.manual_seed(variant_seed)
