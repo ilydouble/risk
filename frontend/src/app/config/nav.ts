@@ -1,5 +1,3 @@
-import { DEFAULT_COMPANY_ID } from "@/entities/company/model/defaults";
-
 export interface NavItem {
   key: string;
   /** i18n key，渲染时用 t() 取本地化文案。 */
@@ -31,12 +29,6 @@ export const NAV_GROUPS: NavGroup[] = [
         labelKey: "nav.search",
         path: "/search",
         icon: "ri-search-line",
-      },
-      {
-        key: "company",
-        labelKey: "nav.company",
-        path: `/company/${DEFAULT_COMPANY_ID}`,
-        icon: "ri-building-2-line",
       },
     ],
   },
