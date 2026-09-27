@@ -1,7 +1,7 @@
 export default { benchmark: {
-  title: "Public SMEsD benchmark", home: "Overview", search: "Sample search", model: "Model & evaluation",
+  title: "Public Benchmark Validation", home: "Validation overview", search: "Sample search", model: "Model version & metrics",
   profile: "Anonymous company", explanation: "Prediction & sensitivity", graph: "One-hop graph",
-  subtitle: "Separate from the eight demo companies; the identifiers have no crosswalk.",
+  subtitle: "Current validation dataset: SMEsD. Reproduces a fixed test protocol independently from business data and the experiment workbench.",
   disclaimer: "Anonymous SMEsD bankruptcy classification samples. Predictions use a saved model. The score is a linear demonstration, not future default probability, a credit decision, or evidence of Southeast Asian performance.",
   loading: "Loading benchmark data…", retry: "Retry", errorUnavailable: "Benchmark model is unavailable. Please retry later.", errorMissing: "Benchmark company ID not found.",
   companies: "Test companies", savedMetric: "Saved test-set evaluation metric", startHere: "Explore the benchmark",

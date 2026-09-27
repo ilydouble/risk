@@ -23,7 +23,7 @@ export default function PageFrame({ title, subtitle, actions, headerExtra, compa
     <motion.div key={location.pathname} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.18 }}>
       <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <div>
-          <div className="flex items-center gap-2"><h1 className="font-heading text-xl font-semibold text-foreground-950 md:text-2xl">{title}</h1><span className="rounded-full border border-accent-500/30 bg-accent-500/10 px-2 py-0.5 text-[10px] text-accent-400">{benchmark ? (isEn ? "Public SMEsD benchmark · saved model" : "公开 SMEsD 基准 · 已保存模型") : (isEn ? "Demo data · no live model" : "演示数据 · 未运行真实模型")}</span></div>
+          <div className="flex items-center gap-2"><h1 className="font-heading text-xl font-semibold text-foreground-950 md:text-2xl">{title}</h1><span className="rounded-full border border-accent-500/30 bg-accent-500/10 px-2 py-0.5 text-[10px] text-accent-400">{benchmark ? (isEn ? "Public benchmark validation · saved model" : "公开基准验证 · 已保存模型") : (isEn ? "Demo data · no live model" : "演示数据 · 未运行真实模型")}</span></div>
           {subtitle && <p className="mt-1 text-sm text-foreground-500">{subtitle}</p>}
         </div>
         {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}

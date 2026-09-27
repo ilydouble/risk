@@ -13,7 +13,7 @@ export default {
     search: "Company Search",
     company: "Company Profile",
     model: "Model Card",
-    benchmark: "SMEsD Benchmark",
+    benchmark: "Public Benchmark Validation",
     batch: "Batch Evaluation",
   },
   sidebar: {
