@@ -802,43 +802,6 @@ export interface components {
             /** Threshold */
             threshold: number;
         };
-        /** CalibrationBinDTO */
-        CalibrationBinDTO: {
-            /** Count */
-            count: number;
-            /** Lower */
-            lower: number;
-            /** Meanprediction */
-            meanPrediction: number;
-            /** Observedrate */
-            observedRate: number;
-        };
-        /** CoefficientDTO */
-        CoefficientDTO: {
-            /** Coefficient */
-            coefficient: number;
-            /** Feature */
-            feature: string;
-        };
-        /** ColumnProfileDTO */
-        ColumnProfileDTO: {
-            /**
-             * Kind
-             * @enum {string}
-             */
-            kind: "numeric" | "categorical" | "text";
-            /** Missingcount */
-            missingCount: number;
-            /** Missingrate */
-            missingRate: number;
-            /** Name */
-            name: string;
-            numeric?: components["schemas"]["NumericProfileDTO"] | null;
-            /** Samples */
-            samples: string[];
-            /** Uniquecount */
-            uniqueCount: number;
-        };
         /** CommunityBenchmark */
         CommunityBenchmark: {
             /** Avgdefaultprob */
@@ -979,43 +942,16 @@ export interface components {
             /** Timeline */
             timeline: components["schemas"]["TimelineEvent"][];
         };
-        /** ConfusionMatrixDTO */
-        ConfusionMatrixDTO: {
-            /** Fn */
-            fn: number;
-            /** Fp */
-            fp: number;
-            /** Tn */
-            tn: number;
-            /** Tp */
-            tp: number;
-        };
-        /** DatasetAnalysisDTO */
-        DatasetAnalysisDTO: {
-            /** Categoricalcolumncount */
-            categoricalColumnCount: number;
-            /** Columncount */
-            columnCount: number;
-            /** Columns */
-            columns: components["schemas"]["ColumnProfileDTO"][];
-            /** Duplicaterows */
-            duplicateRows: number;
-            /** Missingcells */
-            missingCells: number;
-            /** Missingrate */
-            missingRate: number;
-            /** Numericcolumncount */
-            numericColumnCount: number;
-            /** Rowcount */
-            rowCount: number;
-            /** Targetcandidates */
-            targetCandidates: components["schemas"]["TargetCandidateDTO"][];
-            /** Warnings */
-            warnings: string[];
-        };
         /** DatasetDTO */
         DatasetDTO: {
-            analysis: components["schemas"]["DatasetAnalysisDTO"] | null;
+            /** Analysis */
+            analysis: {
+                [key: string]: unknown;
+            } | null;
+            /** Capabilities */
+            capabilities: {
+                [key: string]: unknown;
+            };
             /** Columncount */
             columnCount: number | null;
             /** Contenttype */
@@ -1026,23 +962,41 @@ export interface components {
             error: string | null;
             /** Filename */
             filename: string;
+            /** Finishedat */
+            finishedAt: string | null;
             /** Id */
             id: string;
+            /** Manifest */
+            manifest: {
+                [key: string]: unknown;
+            } | null;
             /** Name */
             name: string;
-            /** Preview */
-            preview: {
-                [key: string]: string;
-            }[] | null;
+            /** Progress */
+            progress: {
+                [key: string]: unknown;
+            };
             /** Rowcount */
             rowCount: number | null;
+            /** Sampleunit */
+            sampleUnit: ("loan_application" | "entity_snapshot") | null;
+            /** Schemaversion */
+            schemaVersion: number;
             /** Size */
             size: number;
+            /** Startedat */
+            startedAt: string | null;
             /**
              * Status
              * @enum {string}
              */
-            status: "pending" | "ready" | "failed";
+            status: "pending_upload" | "queued" | "running" | "ready" | "failed" | "legacy";
+            /** Tasktype */
+            taskType: ("loan_application" | "entity_snapshot" | "legacy_tabular") | null;
+            /** Validation */
+            validation: {
+                [key: string]: unknown;
+            };
         };
         /** DocumentDTO */
         DocumentDTO: {
@@ -1434,56 +1388,58 @@ export interface components {
             /** Message */
             message: string;
         };
-        /** ExperimentConfigurationDTO */
-        ExperimentConfigurationDTO: {
-            /** Evaluationscope */
-            evaluationScope: string;
-            /** Negativevalue */
-            negativeValue: string;
-            /** Seed */
-            seed: number;
-            /** Split */
-            split: string;
-            /** Testrows */
-            testRows: number;
-            /** Trainrows */
-            trainRows: number;
-        };
         /** ExperimentDTO */
         ExperimentDTO: {
-            /** Coefficients */
-            coefficients: components["schemas"]["CoefficientDTO"][];
-            configuration: components["schemas"]["ExperimentConfigurationDTO"];
+            /** Artifacts */
+            artifacts: {
+                [key: string]: unknown;
+            };
+            /** Configuration */
+            configuration: {
+                [key: string]: unknown;
+            };
             /** Createdat */
             createdAt: string;
             /** Datasetid */
             datasetId: string;
+            /** Error */
+            error: string | null;
             /** Featurecolumns */
             featureColumns: string[];
+            /** Finishedat */
+            finishedAt: string | null;
             /** Id */
             id: string;
-            metrics: components["schemas"]["ExperimentMetricsDTO"];
             /**
              * Modeltype
-             * @constant
+             * @enum {string}
              */
-            modelType: "logistic_regression";
+            modelType: "comparison_suite" | "logistic_regression";
             /** Name */
             name: string;
             /** Positivevalue */
             positiveValue: string;
+            /** Progress */
+            progress: {
+                [key: string]: unknown;
+            };
+            /** Requestedmodels */
+            requestedModels: string[];
+            /** Results */
+            results: {
+                [key: string]: unknown;
+            };
+            /** Selectedfeatures */
+            selectedFeatures: string[];
+            /** Startedat */
+            startedAt: string | null;
             /**
              * Status
-             * @constant
+             * @enum {string}
              */
-            status: "completed";
-            /** Targetcolumn */
-            targetColumn: string;
-        };
-        /** ExperimentMetricsDTO */
-        ExperimentMetricsDTO: {
-            test: components["schemas"]["MetricSetDTO"];
-            train: components["schemas"]["MetricSetDTO"];
+            status: "queued" | "running" | "completed" | "failed";
+            /** Targetname */
+            targetName: string | null;
         };
         /** FiveCDimension */
         FiveCDimension: {
@@ -1561,43 +1517,6 @@ export interface components {
              * @enum {string}
              */
             type: "company" | "owner" | "subsidiary" | "supplier" | "guarantor" | "client" | "counterparty" | "person" | "bank" | "fund";
-        };
-        /** MetricSetDTO */
-        MetricSetDTO: {
-            /** Brier */
-            brier: number;
-            /** Calibration */
-            calibration: components["schemas"]["CalibrationBinDTO"][];
-            confusion: components["schemas"]["ConfusionMatrixDTO"];
-            /** F1 */
-            f1: number;
-            /** Ks */
-            ks: number;
-            /** Positives */
-            positives: number;
-            /** Prauc */
-            prAuc: number;
-            /** Precision */
-            precision: number;
-            /** Recall */
-            recall: number;
-            /** Rocauc */
-            rocAuc: number;
-            /** Rows */
-            rows: number;
-            /** Threshold */
-            threshold: number;
-        };
-        /** NumericProfileDTO */
-        NumericProfileDTO: {
-            /** Max */
-            max: number;
-            /** Mean */
-            mean: number;
-            /** Min */
-            min: number;
-            /** Std */
-            std: number;
         };
         /** PageRequest */
         PageRequest: {
@@ -1775,25 +1694,45 @@ export interface components {
         RequestRunExperiment: {
             /** Datasetid */
             datasetId: string;
-            /** Featurecolumns */
-            featureColumns: string[];
             /**
-             * Modeltype
-             * @default logistic_regression
-             * @constant
+             * Enablegnnablations
+             * @default true
              */
-            modelType: "logistic_regression";
+            enableGnnAblations: boolean;
+            /** Featurecolumns */
+            featureColumns?: string[];
+            /**
+             * Featuremode
+             * @default recommended
+             * @enum {string}
+             */
+            featureMode: "recommended" | "manual";
+            /** Models */
+            models: ("logistic_regression" | "hist_gradient_boosting" | "graph_stats_hgb" | "gnn_self_only" | "gnn_no_hyper" | "gnn_full")[];
             /** Name */
             name: string;
-            /** Positivevalue */
-            positiveValue: string;
             /**
              * Seed
              * @default 42
              */
             seed: number;
-            /** Targetcolumn */
-            targetColumn: string;
+            /** Targetname */
+            targetName: string;
+            /**
+             * Useevents
+             * @default true
+             */
+            useEvents: boolean;
+            /**
+             * Usehyperedges
+             * @default true
+             */
+            useHyperedges: boolean;
+            /**
+             * Userelations
+             * @default true
+             */
+            useRelations: boolean;
         };
         /** RequestSearchBenchmark */
         RequestSearchBenchmark: {
@@ -2183,13 +2122,6 @@ export interface components {
             label: string;
             /** Value */
             value: string;
-        };
-        /** TargetCandidateDTO */
-        TargetCandidateDTO: {
-            /** Name */
-            name: string;
-            /** Values */
-            values: string[];
         };
         /** TimelineEvent */
         TimelineEvent: {

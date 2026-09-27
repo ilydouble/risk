@@ -1,106 +1,72 @@
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { ModelingExperiment } from "@/entities/modeling/model/types";
+import { resultsOf, type ModelingExperiment } from "@/entities/modeling/model/types";
 import Card from "@/shared/ui/Card";
 
 interface ExperimentResultProps {
   experiment: ModelingExperiment;
 }
 
-function metric(value: number) {
-  return value.toFixed(4);
-}
+const metric = (value: number) => value.toFixed(4);
 
 export default function ExperimentResult({ experiment }: ExperimentResultProps) {
   const { t } = useTranslation();
-  const test = experiment.metrics.test;
-  const maxCoefficient = Math.max(
-    ...experiment.coefficients.map((item) => Math.abs(item.coefficient)),
-    1,
+  const results = useMemo(() => resultsOf(experiment), [experiment]);
+  const variants = useMemo(() => results.variants ?? [], [results]);
+  const [selectedName, setSelectedName] = useState(variants[0]?.name ?? "");
+  useEffect(() => setSelectedName(variants[0]?.name ?? ""), [experiment.id, variants]);
+  const selected = useMemo(
+    () => variants.find((item) => item.name === selectedName) ?? variants[0],
+    [selectedName, variants],
   );
+
+  if (experiment.status !== "completed") {
+    const progress = Number(experiment.progress.percent ?? 0);
+    return (
+      <Card title={experiment.name} icon="ri-loader-4-line" bodyClassName="p-5">
+        <div className="flex items-center justify-between text-xs text-foreground-500">
+          <span>{experiment.error ?? String(experiment.progress.stage ?? experiment.status)}</span>
+          <span>{progress}%</span>
+        </div>
+        <div className="mt-2 h-2 overflow-hidden rounded-full bg-background-200">
+          <div className={`h-full ${experiment.status === "failed" ? "bg-danger-500" : "bg-primary-500"}`} style={{ width: `${progress}%` }} />
+        </div>
+      </Card>
+    );
+  }
+  if (!selected) return null;
 
   return (
     <div className="space-y-4">
       <div className="rounded-lg border border-primary-500/25 bg-primary-500/8 p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <p className="text-xs text-primary-400">{t("modeling.result.completed")}</p>
-            <h2 className="mt-1 font-heading text-xl font-semibold text-foreground-950">
-              {experiment.name}
-            </h2>
-          </div>
-          <span className="rounded-full border border-primary-500/30 px-3 py-1 font-mono text-[11px] text-primary-400">
-            logistic_regression · seed {experiment.configuration.seed}
-          </span>
+          <div><p className="text-xs text-primary-400">{t("modeling.result.completed")}</p><h2 className="mt-1 font-heading text-xl font-semibold text-foreground-950">{experiment.name}</h2><p className="mt-1 text-xs text-foreground-500">{results.targetName} · {results.targetDefinition}</p></div>
+          <span className="rounded-full border border-primary-500/30 px-3 py-1 font-mono text-[11px] text-primary-400">{t(`modeling.task.${results.taskType}`)}</span>
         </div>
       </div>
 
+      <Card title={t("modeling.result.comparison")} icon="ri-scales-3-line" bodyClassName="overflow-x-auto">
+        <table className="w-full min-w-[720px] text-left text-xs">
+          <thead className="border-b border-background-200 bg-background-50 text-foreground-500"><tr><th className="px-4 py-2.5">Model</th><th>ROC-AUC</th><th>PR-AUC</th><th>KS</th><th>Brier</th><th>F1</th><th>{t("modeling.result.duration")}</th></tr></thead>
+          <tbody>{variants.map((variant) => <tr key={variant.name} onClick={() => setSelectedName(variant.name)} className={`cursor-pointer border-b border-background-200/60 ${selected.name === variant.name ? "bg-primary-500/8" : "hover:bg-background-50"}`}><td className="px-4 py-3 font-mono font-semibold text-foreground-900">{variant.name}</td><td>{metric(variant.metrics.test.rocAuc)}</td><td>{metric(variant.metrics.test.prAuc)}</td><td>{metric(variant.metrics.test.ks)}</td><td>{metric(variant.metrics.test.brier)}</td><td>{metric(variant.metrics.test.f1)}</td><td>{variant.durationSeconds.toFixed(1)}s</td></tr>)}</tbody>
+        </table>
+      </Card>
+
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        {[
-          ["ROC-AUC", metric(test.rocAuc)],
-          ["PR-AUC", metric(test.prAuc)],
-          ["KS", metric(test.ks)],
-          ["Brier", metric(test.brier)],
-        ].map(([label, value]) => (
-          <div key={label} className="rounded-lg border border-background-200 bg-background-100 p-4">
-            <p className="font-mono text-xs text-foreground-500">{label}</p>
-            <p className="mt-1 font-heading text-2xl font-semibold text-foreground-950">{value}</p>
-            <p className="mt-1 text-[11px] text-foreground-500">{t("modeling.result.testSet")}</p>
-          </div>
-        ))}
+        {[["ROC-AUC", selected.metrics.test.rocAuc], ["PR-AUC", selected.metrics.test.prAuc], ["KS", selected.metrics.test.ks], ["Brier", selected.metrics.test.brier]].map(([label, value]) => <div key={String(label)} className="rounded-lg border border-background-200 bg-background-100 p-4"><p className="font-mono text-xs text-foreground-500">{label}</p><p className="mt-1 font-heading text-2xl font-semibold text-foreground-950">{metric(Number(value))}</p><p className="mt-1 text-[11px] text-foreground-500">test · {selected.name}</p></div>)}
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <Card title={t("modeling.result.validation")} icon="ri-scales-3-line" bodyClassName="p-5">
-          <div className="grid grid-cols-3 gap-3 text-center">
-            {[
-              ["Precision", test.precision],
-              ["Recall", test.recall],
-              ["F1", test.f1],
-            ].map(([label, value]) => (
-              <div key={String(label)} className="rounded-md bg-background-50 px-2 py-3">
-                <p className="text-[11px] text-foreground-500">{label}</p>
-                <p className="mt-1 font-mono text-lg text-foreground-950">{metric(Number(value))}</p>
-              </div>
-            ))}
-          </div>
-          <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
-            {Object.entries(test.confusion).map(([key, value]) => (
-              <div key={key} className="flex justify-between rounded-md border border-background-200 px-3 py-2">
-                <span className="font-mono uppercase text-foreground-500">{key}</span>
-                <strong className="text-foreground-900">{value}</strong>
-              </div>
-            ))}
-          </div>
+        <Card title={t("modeling.result.threshold")} icon="ri-dashboard-3-line" bodyClassName="p-5">
+          <div className="grid grid-cols-3 gap-3 text-center">{[["Precision", selected.metrics.test.precision], ["Recall", selected.metrics.test.recall], ["F1", selected.metrics.test.f1]].map(([label, value]) => <div key={String(label)} className="rounded-md bg-background-50 px-2 py-3"><p className="text-[11px] text-foreground-500">{label}</p><p className="mt-1 font-mono text-lg text-foreground-950">{metric(Number(value))}</p></div>)}</div>
+          <p className="mt-4 text-xs text-foreground-500">validation threshold · {selected.metrics.validation.threshold.toFixed(4)}</p>
         </Card>
-
-        <Card title={t("modeling.result.coefficients")} icon="ri-bar-chart-horizontal-line" bodyClassName="p-5">
-          <div className="space-y-3">
-            {experiment.coefficients.slice(0, 8).map((item) => (
-              <div key={item.feature}>
-                <div className="mb-1 flex justify-between gap-3 text-[11px]">
-                  <span className="truncate font-mono text-foreground-700">{item.feature}</span>
-                  <span className={item.coefficient >= 0 ? "text-danger-500" : "text-primary-400"}>
-                    {item.coefficient >= 0 ? "+" : ""}{item.coefficient.toFixed(4)}
-                  </span>
-                </div>
-                <div className="h-1.5 overflow-hidden rounded-full bg-background-200">
-                  <div
-                    className={`h-full rounded-full ${item.coefficient >= 0 ? "bg-danger-500" : "bg-primary-500"}`}
-                    style={{ width: `${Math.max(3, Math.abs(item.coefficient) / maxCoefficient * 100)}%` }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
+        <Card title={t("modeling.result.explainability")} icon="ri-bar-chart-horizontal-line" bodyClassName="p-5">
+          {selected.explainability.items ? <div className="space-y-2">{selected.explainability.items.slice(0, 10).map((item) => <div key={item.feature} className="flex justify-between gap-3 text-xs"><span className="truncate font-mono text-foreground-700">{item.feature}</span><b className={item.value >= 0 ? "text-danger-500" : "text-primary-400"}>{item.value.toFixed(4)}</b></div>)}</div> : <div className="space-y-2 text-xs text-foreground-700"><p>{t("modeling.result.relationGate")}: <b>{selected.explainability.relationSelfGateMean?.toFixed(4) ?? "—"}</b></p><p>{t("modeling.result.hyperWeights")}: <b className="font-mono">{selected.explainability.hyperedgeTypeWeights?.map((value) => value.toFixed(3)).join(" / ") || "—"}</b></p></div>}
         </Card>
       </div>
 
-      <p className="rounded-md border border-background-200 bg-background-100 px-4 py-3 text-xs leading-relaxed text-foreground-500">
-        {t("modeling.result.disclaimer", {
-          train: experiment.configuration.trainRows,
-          test: experiment.configuration.testRows,
-        })}
-      </p>
+      <p className="rounded-md border border-warning-500/25 bg-warning-500/8 px-4 py-3 text-xs leading-relaxed text-warning-700">{results.disclaimer}</p>
     </div>
   );
 }

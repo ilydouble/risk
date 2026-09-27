@@ -1153,108 +1153,6 @@
         "title": "BenchmarkMetrics",
         "type": "object"
       },
-      "CalibrationBinDTO": {
-        "properties": {
-          "count": {
-            "title": "Count",
-            "type": "integer"
-          },
-          "lower": {
-            "title": "Lower",
-            "type": "number"
-          },
-          "meanPrediction": {
-            "title": "Meanprediction",
-            "type": "number"
-          },
-          "observedRate": {
-            "title": "Observedrate",
-            "type": "number"
-          }
-        },
-        "required": [
-          "lower",
-          "count",
-          "meanPrediction",
-          "observedRate"
-        ],
-        "title": "CalibrationBinDTO",
-        "type": "object"
-      },
-      "CoefficientDTO": {
-        "properties": {
-          "coefficient": {
-            "title": "Coefficient",
-            "type": "number"
-          },
-          "feature": {
-            "title": "Feature",
-            "type": "string"
-          }
-        },
-        "required": [
-          "feature",
-          "coefficient"
-        ],
-        "title": "CoefficientDTO",
-        "type": "object"
-      },
-      "ColumnProfileDTO": {
-        "properties": {
-          "kind": {
-            "enum": [
-              "numeric",
-              "categorical",
-              "text"
-            ],
-            "title": "Kind",
-            "type": "string"
-          },
-          "missingCount": {
-            "title": "Missingcount",
-            "type": "integer"
-          },
-          "missingRate": {
-            "title": "Missingrate",
-            "type": "number"
-          },
-          "name": {
-            "title": "Name",
-            "type": "string"
-          },
-          "numeric": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/NumericProfileDTO"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "samples": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Samples",
-            "type": "array"
-          },
-          "uniqueCount": {
-            "title": "Uniquecount",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "name",
-          "kind",
-          "missingCount",
-          "missingRate",
-          "uniqueCount",
-          "samples"
-        ],
-        "title": "ColumnProfileDTO",
-        "type": "object"
-      },
       "CommunityBenchmark": {
         "properties": {
           "avgDefaultProb": {
@@ -1738,112 +1636,24 @@
         "title": "CompanyProfile",
         "type": "object"
       },
-      "ConfusionMatrixDTO": {
-        "properties": {
-          "fn": {
-            "title": "Fn",
-            "type": "integer"
-          },
-          "fp": {
-            "title": "Fp",
-            "type": "integer"
-          },
-          "tn": {
-            "title": "Tn",
-            "type": "integer"
-          },
-          "tp": {
-            "title": "Tp",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "tp",
-          "fp",
-          "tn",
-          "fn"
-        ],
-        "title": "ConfusionMatrixDTO",
-        "type": "object"
-      },
-      "DatasetAnalysisDTO": {
-        "properties": {
-          "categoricalColumnCount": {
-            "title": "Categoricalcolumncount",
-            "type": "integer"
-          },
-          "columnCount": {
-            "title": "Columncount",
-            "type": "integer"
-          },
-          "columns": {
-            "items": {
-              "$ref": "#/components/schemas/ColumnProfileDTO"
-            },
-            "title": "Columns",
-            "type": "array"
-          },
-          "duplicateRows": {
-            "title": "Duplicaterows",
-            "type": "integer"
-          },
-          "missingCells": {
-            "title": "Missingcells",
-            "type": "integer"
-          },
-          "missingRate": {
-            "title": "Missingrate",
-            "type": "number"
-          },
-          "numericColumnCount": {
-            "title": "Numericcolumncount",
-            "type": "integer"
-          },
-          "rowCount": {
-            "title": "Rowcount",
-            "type": "integer"
-          },
-          "targetCandidates": {
-            "items": {
-              "$ref": "#/components/schemas/TargetCandidateDTO"
-            },
-            "title": "Targetcandidates",
-            "type": "array"
-          },
-          "warnings": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Warnings",
-            "type": "array"
-          }
-        },
-        "required": [
-          "rowCount",
-          "columnCount",
-          "missingCells",
-          "missingRate",
-          "duplicateRows",
-          "numericColumnCount",
-          "categoricalColumnCount",
-          "columns",
-          "targetCandidates",
-          "warnings"
-        ],
-        "title": "DatasetAnalysisDTO",
-        "type": "object"
-      },
       "DatasetDTO": {
         "properties": {
           "analysis": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/DatasetAnalysisDTO"
+                "additionalProperties": true,
+                "type": "object"
               },
               {
                 "type": "null"
               }
-            ]
+            ],
+            "title": "Analysis"
+          },
+          "capabilities": {
+            "additionalProperties": true,
+            "title": "Capabilities",
+            "type": "object"
           },
           "columnCount": {
             "anyOf": [
@@ -1879,30 +1689,41 @@
             "title": "Filename",
             "type": "string"
           },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "name": {
-            "title": "Name",
-            "type": "string"
-          },
-          "preview": {
+          "finishedAt": {
             "anyOf": [
               {
-                "items": {
-                  "additionalProperties": {
-                    "type": "string"
-                  },
-                  "type": "object"
-                },
-                "type": "array"
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Preview"
+            "title": "Finishedat"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "manifest": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Manifest"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "progress": {
+            "additionalProperties": true,
+            "title": "Progress",
+            "type": "object"
           },
           "rowCount": {
             "anyOf": [
@@ -1915,18 +1736,72 @@
             ],
             "title": "Rowcount"
           },
+          "sampleUnit": {
+            "anyOf": [
+              {
+                "enum": [
+                  "loan_application",
+                  "entity_snapshot"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sampleunit"
+          },
+          "schemaVersion": {
+            "title": "Schemaversion",
+            "type": "integer"
+          },
           "size": {
             "title": "Size",
             "type": "integer"
           },
+          "startedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Startedat"
+          },
           "status": {
             "enum": [
-              "pending",
+              "pending_upload",
+              "queued",
+              "running",
               "ready",
-              "failed"
+              "failed",
+              "legacy"
             ],
             "title": "Status",
             "type": "string"
+          },
+          "taskType": {
+            "anyOf": [
+              {
+                "enum": [
+                  "loan_application",
+                  "entity_snapshot",
+                  "legacy_tabular"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tasktype"
+          },
+          "validation": {
+            "additionalProperties": true,
+            "title": "Validation",
+            "type": "object"
           }
         },
         "required": [
@@ -1935,13 +1810,21 @@
           "filename",
           "contentType",
           "size",
+          "schemaVersion",
+          "taskType",
+          "sampleUnit",
           "status",
           "rowCount",
           "columnCount",
+          "manifest",
+          "capabilities",
           "analysis",
-          "preview",
+          "validation",
+          "progress",
           "error",
-          "createdAt"
+          "createdAt",
+          "startedAt",
+          "finishedAt"
         ],
         "title": "DatasetDTO",
         "type": "object"
@@ -2675,55 +2558,17 @@
         "title": "ErrorEnvelope[Literal[503], Literal['MODELING_STORAGE_UNAVAILABLE']]",
         "type": "object"
       },
-      "ExperimentConfigurationDTO": {
-        "properties": {
-          "evaluationScope": {
-            "title": "Evaluationscope",
-            "type": "string"
-          },
-          "negativeValue": {
-            "title": "Negativevalue",
-            "type": "string"
-          },
-          "seed": {
-            "title": "Seed",
-            "type": "integer"
-          },
-          "split": {
-            "title": "Split",
-            "type": "string"
-          },
-          "testRows": {
-            "title": "Testrows",
-            "type": "integer"
-          },
-          "trainRows": {
-            "title": "Trainrows",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "seed",
-          "split",
-          "evaluationScope",
-          "trainRows",
-          "testRows",
-          "negativeValue"
-        ],
-        "title": "ExperimentConfigurationDTO",
-        "type": "object"
-      },
       "ExperimentDTO": {
         "properties": {
-          "coefficients": {
-            "items": {
-              "$ref": "#/components/schemas/CoefficientDTO"
-            },
-            "title": "Coefficients",
-            "type": "array"
+          "artifacts": {
+            "additionalProperties": true,
+            "title": "Artifacts",
+            "type": "object"
           },
           "configuration": {
-            "$ref": "#/components/schemas/ExperimentConfigurationDTO"
+            "additionalProperties": true,
+            "title": "Configuration",
+            "type": "object"
           },
           "createdAt": {
             "title": "Createdat",
@@ -2733,6 +2578,17 @@
             "title": "Datasetid",
             "type": "string"
           },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
           "featureColumns": {
             "items": {
               "type": "string"
@@ -2740,15 +2596,26 @@
             "title": "Featurecolumns",
             "type": "array"
           },
+          "finishedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finishedat"
+          },
           "id": {
             "title": "Id",
             "type": "string"
           },
-          "metrics": {
-            "$ref": "#/components/schemas/ExperimentMetricsDTO"
-          },
           "modelType": {
-            "const": "logistic_regression",
+            "enum": [
+              "comparison_suite",
+              "logistic_regression"
+            ],
             "title": "Modeltype",
             "type": "string"
           },
@@ -2760,14 +2627,61 @@
             "title": "Positivevalue",
             "type": "string"
           },
+          "progress": {
+            "additionalProperties": true,
+            "title": "Progress",
+            "type": "object"
+          },
+          "requestedModels": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Requestedmodels",
+            "type": "array"
+          },
+          "results": {
+            "additionalProperties": true,
+            "title": "Results",
+            "type": "object"
+          },
+          "selectedFeatures": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Selectedfeatures",
+            "type": "array"
+          },
+          "startedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Startedat"
+          },
           "status": {
-            "const": "completed",
+            "enum": [
+              "queued",
+              "running",
+              "completed",
+              "failed"
+            ],
             "title": "Status",
             "type": "string"
           },
-          "targetColumn": {
-            "title": "Targetcolumn",
-            "type": "string"
+          "targetName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Targetname"
           }
         },
         "required": [
@@ -2776,31 +2690,21 @@
           "name",
           "modelType",
           "status",
-          "targetColumn",
+          "targetName",
           "positiveValue",
           "featureColumns",
+          "selectedFeatures",
+          "requestedModels",
           "configuration",
-          "metrics",
-          "coefficients",
-          "createdAt"
+          "progress",
+          "results",
+          "artifacts",
+          "error",
+          "createdAt",
+          "startedAt",
+          "finishedAt"
         ],
         "title": "ExperimentDTO",
-        "type": "object"
-      },
-      "ExperimentMetricsDTO": {
-        "properties": {
-          "test": {
-            "$ref": "#/components/schemas/MetricSetDTO"
-          },
-          "train": {
-            "$ref": "#/components/schemas/MetricSetDTO"
-          }
-        },
-        "required": [
-          "train",
-          "test"
-        ],
-        "title": "ExperimentMetricsDTO",
         "type": "object"
       },
       "FiveCDimension": {
@@ -3036,104 +2940,6 @@
         "title": "GraphNode",
         "type": "object"
       },
-      "MetricSetDTO": {
-        "properties": {
-          "brier": {
-            "title": "Brier",
-            "type": "number"
-          },
-          "calibration": {
-            "items": {
-              "$ref": "#/components/schemas/CalibrationBinDTO"
-            },
-            "title": "Calibration",
-            "type": "array"
-          },
-          "confusion": {
-            "$ref": "#/components/schemas/ConfusionMatrixDTO"
-          },
-          "f1": {
-            "title": "F1",
-            "type": "number"
-          },
-          "ks": {
-            "title": "Ks",
-            "type": "number"
-          },
-          "positives": {
-            "title": "Positives",
-            "type": "integer"
-          },
-          "prAuc": {
-            "title": "Prauc",
-            "type": "number"
-          },
-          "precision": {
-            "title": "Precision",
-            "type": "number"
-          },
-          "recall": {
-            "title": "Recall",
-            "type": "number"
-          },
-          "rocAuc": {
-            "title": "Rocauc",
-            "type": "number"
-          },
-          "rows": {
-            "title": "Rows",
-            "type": "integer"
-          },
-          "threshold": {
-            "title": "Threshold",
-            "type": "number"
-          }
-        },
-        "required": [
-          "rows",
-          "positives",
-          "rocAuc",
-          "prAuc",
-          "ks",
-          "brier",
-          "precision",
-          "recall",
-          "f1",
-          "threshold",
-          "confusion",
-          "calibration"
-        ],
-        "title": "MetricSetDTO",
-        "type": "object"
-      },
-      "NumericProfileDTO": {
-        "properties": {
-          "max": {
-            "title": "Max",
-            "type": "number"
-          },
-          "mean": {
-            "title": "Mean",
-            "type": "number"
-          },
-          "min": {
-            "title": "Min",
-            "type": "number"
-          },
-          "std": {
-            "title": "Std",
-            "type": "number"
-          }
-        },
-        "required": [
-          "min",
-          "max",
-          "mean",
-          "std"
-        ],
-        "title": "NumericProfileDTO",
-        "type": "object"
-      },
       "PageRequest": {
         "additionalProperties": false,
         "properties": {
@@ -3273,7 +3079,7 @@
           },
           "size": {
             "exclusiveMinimum": 0.0,
-            "maximum": 5000000.0,
+            "maximum": 536870912.0,
             "title": "Size",
             "type": "integer"
           }
@@ -3595,30 +3401,49 @@
             "title": "Datasetid",
             "type": "string"
           },
+          "enableGnnAblations": {
+            "default": true,
+            "title": "Enablegnnablations",
+            "type": "boolean"
+          },
           "featureColumns": {
             "items": {
               "type": "string"
             },
-            "maxItems": 20,
-            "minItems": 1,
+            "maxItems": 200,
             "title": "Featurecolumns",
             "type": "array"
           },
-          "modelType": {
-            "const": "logistic_regression",
-            "default": "logistic_regression",
-            "title": "Modeltype",
+          "featureMode": {
+            "default": "recommended",
+            "enum": [
+              "recommended",
+              "manual"
+            ],
+            "title": "Featuremode",
             "type": "string"
+          },
+          "models": {
+            "items": {
+              "enum": [
+                "logistic_regression",
+                "hist_gradient_boosting",
+                "graph_stats_hgb",
+                "gnn_self_only",
+                "gnn_no_hyper",
+                "gnn_full"
+              ],
+              "type": "string"
+            },
+            "maxItems": 6,
+            "minItems": 1,
+            "title": "Models",
+            "type": "array"
           },
           "name": {
             "maxLength": 128,
             "minLength": 1,
             "title": "Name",
-            "type": "string"
-          },
-          "positiveValue": {
-            "maxLength": 255,
-            "title": "Positivevalue",
             "type": "string"
           },
           "seed": {
@@ -3628,19 +3453,33 @@
             "title": "Seed",
             "type": "integer"
           },
-          "targetColumn": {
-            "maxLength": 255,
+          "targetName": {
+            "maxLength": 128,
             "minLength": 1,
-            "title": "Targetcolumn",
+            "title": "Targetname",
             "type": "string"
+          },
+          "useEvents": {
+            "default": true,
+            "title": "Useevents",
+            "type": "boolean"
+          },
+          "useHyperedges": {
+            "default": true,
+            "title": "Usehyperedges",
+            "type": "boolean"
+          },
+          "useRelations": {
+            "default": true,
+            "title": "Userelations",
+            "type": "boolean"
           }
         },
         "required": [
           "datasetId",
           "name",
-          "targetColumn",
-          "positiveValue",
-          "featureColumns"
+          "targetName",
+          "models"
         ],
         "title": "RequestRunExperiment",
         "type": "object"
@@ -4642,27 +4481,6 @@
           "desc"
         ],
         "title": "ShapFeature",
-        "type": "object"
-      },
-      "TargetCandidateDTO": {
-        "properties": {
-          "name": {
-            "title": "Name",
-            "type": "string"
-          },
-          "values": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Values",
-            "type": "array"
-          }
-        },
-        "required": [
-          "name",
-          "values"
-        ],
-        "title": "TargetCandidateDTO",
         "type": "object"
       },
       "TimelineEvent": {
