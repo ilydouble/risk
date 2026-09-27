@@ -8,8 +8,10 @@ from risk_api.modules.overview.api.schemas import (
     OverviewSampleCompanyDTO,
     OverviewSamplingDTO,
     RequestGetOverview,
+    RequestGetOverviewCompany,
     RequestSearchOverviewCompany,
     ResponseGetOverview,
+    ResponseGetOverviewCompany,
     ResponseSearchOverviewCompany,
 )
 from risk_api.modules.overview.query import OverviewSampleSearchQuery
@@ -57,3 +59,14 @@ async def search_companies(
             industryCodes=industry_codes,
         )
     )
+
+
+async def get_company(
+    body: RequestGetOverviewCompany,
+    request: Request,
+    auth: FromDishka[AuthService],
+    service: FromDishka[OverviewService],
+) -> ApiEnvelope[ResponseGetOverviewCompany]:
+    await authorize_request(request, auth)
+    result = await service.get_sample(body.datasetId, body.companyId)
+    return success_response(ResponseGetOverviewCompany.model_validate(result))

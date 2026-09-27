@@ -1,6 +1,6 @@
 from typing import Any
 
-from risk_api.modules.overview.errors import OverviewUnavailable
+from risk_api.modules.overview.errors import OverviewCompanyNotFound, OverviewUnavailable
 from risk_api.modules.overview.query import OverviewSampleSearchQuery
 from risk_api.modules.overview.repository import OverviewRepository
 
@@ -79,3 +79,36 @@ class OverviewService:
             industry_codes,
             total,
         )
+
+    async def get_sample(self, dataset_id: str, company_id: str) -> dict[str, Any]:
+        payload = await self.get()
+        if payload["dataset"]["id"] != dataset_id:
+            raise OverviewCompanyNotFound()
+        normalized_id = company_id.strip().casefold()
+        sample = next(
+            (
+                item
+                for item in payload["sampleCompanies"]
+                if str(item["companyId"]).casefold() == normalized_id
+            ),
+            None,
+        )
+        if sample is None:
+            raise OverviewCompanyNotFound()
+        return {
+            "profileVersion": 1,
+            "dataset": payload["dataset"],
+            "sampling": payload["sampling"],
+            "company": sample,
+            "facts": sample["facts"],
+            "observedLabel": {
+                "category": sample["labelCategory"],
+                "status": sample["status"],
+                "taskType": payload["dataset"]["taskType"],
+                "modelOutput": False,
+            },
+            "relations": sample["relationProfile"],
+            "groups": sample["groups"],
+            "dataAvailability": sample["dataAvailability"],
+            "warnings": payload["warnings"],
+        }

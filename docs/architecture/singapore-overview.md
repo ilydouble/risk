@@ -20,7 +20,7 @@ ComRisk v2 ZIP
   → 幂等 seed
   → PostgreSQL overview_snapshots(JSONB)
   → POST /api/v1/overview/get
-  → React /overview
+  → React /overview、/search、/company/:datasetId/:companyId
 ```
 
 生成命令：
@@ -45,9 +45,20 @@ uv run python -m workbench.sg_overview \
 - `payload`：聚合、质量、图结构和调试样本；
 - `created_at`：入库时间。
 
-种子使用 `ON CONFLICT DO NOTHING`，只补缺失快照，不覆盖已有数据。接口要求登录 Session，返回最新快照；没有导入时返回稳定错误码 `OVERVIEW_DATA_UNAVAILABLE`。
+`V0005` 允许同一源包产生多个版本化派生快照；`source_sha256` 保留普通索引用于溯源，不再作为唯一身份。种子仍使用 `ON CONFLICT DO NOTHING`，只补缺失快照、不覆盖已有数据。接口要求登录 Session，返回最新快照；没有导入时返回稳定错误码 `OVERVIEW_DATA_UNAVAILABLE`。
 
 `/overview/search-companies` 在快照中的 300 家调试样本上执行名称/UEN/登记状态关键词检索、类别与 SSIC 筛选、排序和分页。主产品 `/search` 与顶栏联想使用这个接口；原 `/company/search` 继续只服务八家演示企业的画像与图谱链路。真实样本没有对应画像时，检索结果不会链接到演示详情页。
+
+`/overview/get-company` 用 `datasetId + companyId` 定位一条调试样本，返回独立的真实画像契约。搜索结果进入 `/company/:datasetId/:companyId`，展示：
+
+- 可核验的登记与经营事实；
+- 原始观察标签及其任务定义；
+- 按关系类型统计的一跳结构和最多 12 条邻居摘要；
+- 行业、邮编地区和实体资质群组归属及全量群组规模；
+- 资本、诉讼、银行征信和模型输出的数据可用性；
+- 数据集版本、源包摘要和使用限制。
+
+真实画像不复用八家演示企业的 `CompanyProfile`、评分、报告或授信组件。普通边和群组归属是结构事实，不是传染概率；未绑定有效模型制品时只显示“模型尚未运行”。
 
 ## 已知数据边界
 

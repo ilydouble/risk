@@ -4,7 +4,7 @@ from typing import Any
 
 import pytest
 
-from risk_api.modules.overview.errors import OverviewUnavailable
+from risk_api.modules.overview.errors import OverviewCompanyNotFound, OverviewUnavailable
 from risk_api.modules.overview.query import OverviewSampleSearchQuery
 from risk_api.modules.overview.service import OverviewService
 
@@ -102,5 +102,49 @@ def test_overview_service_searches_filters_sorts_and_pages_samples() -> None:
         )
         assert [sample["companyId"] for sample in page] == ["C-3"]
         assert page_total == 3
+
+    asyncio.run(scenario())
+
+
+def test_overview_service_returns_real_sample_profile_and_checks_identity() -> None:
+    async def scenario() -> None:
+        sample = {
+            "companyId": "A-1",
+            "name": "Alpha Trading",
+            "labelCategory": "healthy",
+            "status": "Live",
+            "ageYears": 4.0,
+            "industryCode": "46900",
+            "relationCount": 1,
+            "facts": {"country": "SG"},
+            "relationProfile": {"totalCount": 1},
+            "groups": [{"type": "industry", "value": "46900", "memberCount": 10}],
+            "dataAvailability": {"registry": "available"},
+        }
+        payload = {
+            "dataset": {"id": "sg-v2", "taskType": "entity_status_distress"},
+            "sampling": {"sampleCount": 1},
+            "sampleCompanies": [sample],
+            "warnings": ["singapore_only_not_loan_default"],
+        }
+        service = OverviewService(FakeRepository(payload))  # type: ignore[arg-type]
+
+        profile = await service.get_sample("sg-v2", "a-1")
+
+        assert profile["profileVersion"] == 1
+        assert profile["company"] == sample
+        assert profile["observedLabel"] == {
+            "category": "healthy",
+            "status": "Live",
+            "taskType": "entity_status_distress",
+            "modelOutput": False,
+        }
+        assert profile["relations"] == {"totalCount": 1}
+        assert profile["warnings"] == ["singapore_only_not_loan_default"]
+
+        with pytest.raises(OverviewCompanyNotFound):
+            await service.get_sample("another-dataset", "A-1")
+        with pytest.raises(OverviewCompanyNotFound):
+            await service.get_sample("sg-v2", "missing")
 
     asyncio.run(scenario())

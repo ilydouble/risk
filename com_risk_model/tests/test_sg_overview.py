@@ -24,6 +24,12 @@ def _archive(path: Path) -> Path:
             "name": ["Alpha", "Beta", "Gamma", "Delta"],
             "age_years": [2.0, 8.0, 15.0, 55.0],
             "ssic_code": ["01", "02", "03", "04"],
+            "ssic2": ["01", "02", "03", "04"],
+            "setup_time_months": [24.0, 96.0, 180.0, 660.0],
+            "country": ["SG"] * 4,
+            "officers": [1.0, 2.0, 3.0, 4.0],
+            "name_change_count": [0, 1, 0, 2],
+            "has_unit": [1, 0, 1, 1],
             "register_capital": [None] * 4,
             "paid_capital": [None] * 4,
         }
@@ -41,6 +47,7 @@ def _archive(path: Path) -> Path:
             "src_id": ["A", "B"],
             "dst_id": ["B", "C"],
             "rel_type": ["SAME_ADDRESS", "EQUITY_DIRECT"],
+            "weight": [0.5, 0.8],
         }
     )
     group = pd.DataFrame({"company_id": ["A", "B", "C", "D"], "group_value": ["x", "x", "y", "z"]})
@@ -103,3 +110,28 @@ def test_build_singapore_overview_uses_real_aggregate_semantics(tmp_path: Path) 
         "C",
         "D",
     }
+    companies = {item["companyId"]: item for item in snapshot["sampleCompanies"]}
+    assert companies["B"]["facts"] == {
+        "country": "SG",
+        "setupTimeMonths": 96.0,
+        "industryDivisionCode": "02",
+        "officerCount": 2,
+        "nameChangeCount": 1,
+        "hasUnit": False,
+        "registeredCapital": None,
+        "paidCapital": None,
+    }
+    assert companies["B"]["relationProfile"]["byType"] == [
+        {"type": "EQUITY_DIRECT", "count": 1},
+        {"type": "SAME_ADDRESS", "count": 1},
+    ]
+    assert [item["companyId"] for item in companies["B"]["relationProfile"]["neighbors"]] == [
+        "C",
+        "A",
+    ]
+    assert companies["B"]["groups"] == [
+        {"type": "industry", "value": "x", "memberCount": 2},
+        {"type": "area", "value": "x", "memberCount": 2},
+        {"type": "qualify", "value": "x", "memberCount": 2},
+    ]
+    assert companies["D"]["dataAvailability"]["relations"] == "no_records"

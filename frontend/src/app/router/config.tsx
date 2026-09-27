@@ -7,6 +7,7 @@ import NotFound from "@/pages/NotFound";
 const Overview = lazy(() => import("@/pages/overview/page"));
 const SearchPage = lazy(() => import("@/pages/search/page"));
 const CompanyPage = lazy(() => import("@/pages/company/page"));
+const RealCompanyProfilePage = lazy(() => import("@/pages/company/real/page"));
 const GraphPage = lazy(() => import("@/pages/graph/page"));
 const ScorePage = lazy(() => import("@/pages/score/page"));
 const ReportPage = lazy(() => import("@/pages/report/page"));
@@ -38,6 +39,7 @@ const routes: RouteObject[] = [
       children: [
         { path: "/", element: load(<Overview />) },
         { path: "/search", element: load(<SearchPage />) },
+        { path: "/company/:datasetId/:companyId", element: load(<RealCompanyProfilePage />) },
         { path: "/company/:id", element: load(<CompanyPage />) },
         { path: "/graph", element: load(<GraphPage />) },
         { path: "/score/:id", element: load(<ScorePage />) },

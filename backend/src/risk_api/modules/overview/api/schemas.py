@@ -12,6 +12,13 @@ OverviewWarning = Literal[
     "capital_litigation_unavailable",
 ]
 OverviewLabelCategory = Literal["healthy", "distress", "unlabeled"]
+OverviewAvailability = Literal[
+    "available",
+    "no_records",
+    "source_unavailable",
+    "not_in_dataset",
+    "not_run",
+]
 
 
 class RequestGetOverview(BaseModel):
@@ -82,6 +89,61 @@ class OverviewSampleCompanyDTO(BaseModel):
     relationCount: int = Field(ge=0)
 
 
+class OverviewCompanyFactsDTO(BaseModel):
+    country: str | None
+    setupTimeMonths: float | None = Field(ge=0)
+    industryDivisionCode: str | None
+    officerCount: int | None = Field(ge=0)
+    nameChangeCount: int | None = Field(ge=0)
+    hasUnit: bool | None
+    registeredCapital: float | None = Field(ge=0)
+    paidCapital: float | None = Field(ge=0)
+
+
+class OverviewRelationCountDTO(BaseModel):
+    type: str
+    count: int = Field(ge=0)
+
+
+class OverviewRelatedCompanyDTO(BaseModel):
+    companyId: str
+    name: str
+    status: str
+    labelCategory: OverviewLabelCategory
+    relationType: str
+    weight: float = Field(gt=0)
+
+
+class OverviewRelationProfileDTO(BaseModel):
+    totalCount: int = Field(ge=0)
+    byType: list[OverviewRelationCountDTO]
+    neighbors: list[OverviewRelatedCompanyDTO]
+    displayedCount: int = Field(ge=0)
+    truncated: bool
+
+
+class OverviewGroupMembershipDTO(BaseModel):
+    type: Literal["industry", "area", "qualify"]
+    value: str
+    memberCount: int = Field(ge=1)
+
+
+class OverviewDataAvailabilityDTO(BaseModel):
+    registry: OverviewAvailability
+    relations: OverviewAvailability
+    capital: OverviewAvailability
+    litigation: OverviewAvailability
+    bankCredit: OverviewAvailability
+    modelRisk: OverviewAvailability
+
+
+class OverviewObservedLabelDTO(BaseModel):
+    category: OverviewLabelCategory
+    status: str
+    taskType: Literal["entity_status_distress"]
+    modelOutput: Literal[False] = False
+
+
 class OverviewQualityDTO(BaseModel):
     labeledRate: float = Field(ge=0, le=1)
     distressRateWithinLabeled: float = Field(ge=0, le=1)
@@ -119,3 +181,23 @@ class ResponseSearchOverviewCompany(Page[OverviewSampleCompanyDTO]):
     dataset: OverviewDatasetDTO
     sampling: OverviewSamplingDTO
     industryCodes: list[str]
+
+
+class RequestGetOverviewCompany(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    datasetId: str = Field(min_length=1, max_length=120)
+    companyId: str = Field(min_length=1, max_length=120)
+
+
+class ResponseGetOverviewCompany(BaseModel):
+    profileVersion: Literal[1]
+    dataset: OverviewDatasetDTO
+    sampling: OverviewSamplingDTO
+    company: OverviewSampleCompanyDTO
+    facts: OverviewCompanyFactsDTO
+    observedLabel: OverviewObservedLabelDTO
+    relations: OverviewRelationProfileDTO
+    groups: list[OverviewGroupMembershipDTO]
+    dataAvailability: OverviewDataAvailabilityDTO
+    warnings: list[OverviewWarning]

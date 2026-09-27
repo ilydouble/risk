@@ -447,6 +447,40 @@
         "title": "ApiEnvelope[ResponseGetGraph]",
         "type": "object"
       },
+      "ApiEnvelope_ResponseGetOverviewCompany_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseGetOverviewCompany"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseGetOverviewCompany]",
+        "type": "object"
+      },
       "ApiEnvelope_ResponseGetOverview_": {
         "properties": {
           "code": {
@@ -2330,6 +2364,35 @@
         "title": "ErrorEnvelope[Literal[404], Literal['MODELING_EXPERIMENT_NOT_FOUND']]",
         "type": "object"
       },
+      "ErrorEnvelope_Literal_404__Literal__OVERVIEW_COMPANY_NOT_FOUND___": {
+        "properties": {
+          "code": {
+            "const": 404,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "OVERVIEW_COMPANY_NOT_FOUND",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[404], Literal['OVERVIEW_COMPANY_NOT_FOUND']]",
+        "type": "object"
+      },
       "ErrorEnvelope_Literal_409__Literal__AUTH_USERNAME_TAKEN___": {
         "properties": {
           "code": {
@@ -3149,6 +3212,195 @@
         "title": "GraphNode",
         "type": "object"
       },
+      "OverviewCompanyFactsDTO": {
+        "properties": {
+          "country": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Country"
+          },
+          "hasUnit": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hasunit"
+          },
+          "industryDivisionCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Industrydivisioncode"
+          },
+          "nameChangeCount": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Namechangecount"
+          },
+          "officerCount": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Officercount"
+          },
+          "paidCapital": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Paidcapital"
+          },
+          "registeredCapital": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Registeredcapital"
+          },
+          "setupTimeMonths": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Setuptimemonths"
+          }
+        },
+        "required": [
+          "country",
+          "setupTimeMonths",
+          "industryDivisionCode",
+          "officerCount",
+          "nameChangeCount",
+          "hasUnit",
+          "registeredCapital",
+          "paidCapital"
+        ],
+        "title": "OverviewCompanyFactsDTO",
+        "type": "object"
+      },
+      "OverviewDataAvailabilityDTO": {
+        "properties": {
+          "bankCredit": {
+            "enum": [
+              "available",
+              "no_records",
+              "source_unavailable",
+              "not_in_dataset",
+              "not_run"
+            ],
+            "title": "Bankcredit",
+            "type": "string"
+          },
+          "capital": {
+            "enum": [
+              "available",
+              "no_records",
+              "source_unavailable",
+              "not_in_dataset",
+              "not_run"
+            ],
+            "title": "Capital",
+            "type": "string"
+          },
+          "litigation": {
+            "enum": [
+              "available",
+              "no_records",
+              "source_unavailable",
+              "not_in_dataset",
+              "not_run"
+            ],
+            "title": "Litigation",
+            "type": "string"
+          },
+          "modelRisk": {
+            "enum": [
+              "available",
+              "no_records",
+              "source_unavailable",
+              "not_in_dataset",
+              "not_run"
+            ],
+            "title": "Modelrisk",
+            "type": "string"
+          },
+          "registry": {
+            "enum": [
+              "available",
+              "no_records",
+              "source_unavailable",
+              "not_in_dataset",
+              "not_run"
+            ],
+            "title": "Registry",
+            "type": "string"
+          },
+          "relations": {
+            "enum": [
+              "available",
+              "no_records",
+              "source_unavailable",
+              "not_in_dataset",
+              "not_run"
+            ],
+            "title": "Relations",
+            "type": "string"
+          }
+        },
+        "required": [
+          "registry",
+          "relations",
+          "capital",
+          "litigation",
+          "bankCredit",
+          "modelRisk"
+        ],
+        "title": "OverviewDataAvailabilityDTO",
+        "type": "object"
+      },
       "OverviewDatasetDTO": {
         "properties": {
           "country": {
@@ -3195,6 +3447,70 @@
         "title": "OverviewDatasetDTO",
         "type": "object"
       },
+      "OverviewGroupMembershipDTO": {
+        "properties": {
+          "memberCount": {
+            "minimum": 1.0,
+            "title": "Membercount",
+            "type": "integer"
+          },
+          "type": {
+            "enum": [
+              "industry",
+              "area",
+              "qualify"
+            ],
+            "title": "Type",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "value",
+          "memberCount"
+        ],
+        "title": "OverviewGroupMembershipDTO",
+        "type": "object"
+      },
+      "OverviewObservedLabelDTO": {
+        "properties": {
+          "category": {
+            "enum": [
+              "healthy",
+              "distress",
+              "unlabeled"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "modelOutput": {
+            "const": false,
+            "default": false,
+            "title": "Modeloutput",
+            "type": "boolean"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "taskType": {
+            "const": "entity_status_distress",
+            "title": "Tasktype",
+            "type": "string"
+          }
+        },
+        "required": [
+          "category",
+          "status",
+          "taskType"
+        ],
+        "title": "OverviewObservedLabelDTO",
+        "type": "object"
+      },
       "OverviewQualityDTO": {
         "properties": {
           "capitalCoverage": {
@@ -3235,6 +3551,110 @@
           "litigationRows"
         ],
         "title": "OverviewQualityDTO",
+        "type": "object"
+      },
+      "OverviewRelatedCompanyDTO": {
+        "properties": {
+          "companyId": {
+            "title": "Companyid",
+            "type": "string"
+          },
+          "labelCategory": {
+            "enum": [
+              "healthy",
+              "distress",
+              "unlabeled"
+            ],
+            "title": "Labelcategory",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "relationType": {
+            "title": "Relationtype",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "weight": {
+            "exclusiveMinimum": 0.0,
+            "title": "Weight",
+            "type": "number"
+          }
+        },
+        "required": [
+          "companyId",
+          "name",
+          "status",
+          "labelCategory",
+          "relationType",
+          "weight"
+        ],
+        "title": "OverviewRelatedCompanyDTO",
+        "type": "object"
+      },
+      "OverviewRelationCountDTO": {
+        "properties": {
+          "count": {
+            "minimum": 0.0,
+            "title": "Count",
+            "type": "integer"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "count"
+        ],
+        "title": "OverviewRelationCountDTO",
+        "type": "object"
+      },
+      "OverviewRelationProfileDTO": {
+        "properties": {
+          "byType": {
+            "items": {
+              "$ref": "#/components/schemas/OverviewRelationCountDTO"
+            },
+            "title": "Bytype",
+            "type": "array"
+          },
+          "displayedCount": {
+            "minimum": 0.0,
+            "title": "Displayedcount",
+            "type": "integer"
+          },
+          "neighbors": {
+            "items": {
+              "$ref": "#/components/schemas/OverviewRelatedCompanyDTO"
+            },
+            "title": "Neighbors",
+            "type": "array"
+          },
+          "totalCount": {
+            "minimum": 0.0,
+            "title": "Totalcount",
+            "type": "integer"
+          },
+          "truncated": {
+            "title": "Truncated",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "totalCount",
+          "byType",
+          "neighbors",
+          "displayedCount",
+          "truncated"
+        ],
+        "title": "OverviewRelationProfileDTO",
         "type": "object"
       },
       "OverviewSampleCompanyDTO": {
@@ -3683,6 +4103,29 @@
       "RequestGetOverview": {
         "properties": {},
         "title": "RequestGetOverview",
+        "type": "object"
+      },
+      "RequestGetOverviewCompany": {
+        "additionalProperties": false,
+        "properties": {
+          "companyId": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Companyid",
+            "type": "string"
+          },
+          "datasetId": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Datasetid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "datasetId",
+          "companyId"
+        ],
+        "title": "RequestGetOverviewCompany",
         "type": "object"
       },
       "RequestGetScore": {
@@ -4474,6 +4917,71 @@
           "warnings"
         ],
         "title": "ResponseGetOverview",
+        "type": "object"
+      },
+      "ResponseGetOverviewCompany": {
+        "properties": {
+          "company": {
+            "$ref": "#/components/schemas/OverviewSampleCompanyDTO"
+          },
+          "dataAvailability": {
+            "$ref": "#/components/schemas/OverviewDataAvailabilityDTO"
+          },
+          "dataset": {
+            "$ref": "#/components/schemas/OverviewDatasetDTO"
+          },
+          "facts": {
+            "$ref": "#/components/schemas/OverviewCompanyFactsDTO"
+          },
+          "groups": {
+            "items": {
+              "$ref": "#/components/schemas/OverviewGroupMembershipDTO"
+            },
+            "title": "Groups",
+            "type": "array"
+          },
+          "observedLabel": {
+            "$ref": "#/components/schemas/OverviewObservedLabelDTO"
+          },
+          "profileVersion": {
+            "const": 1,
+            "title": "Profileversion",
+            "type": "integer"
+          },
+          "relations": {
+            "$ref": "#/components/schemas/OverviewRelationProfileDTO"
+          },
+          "sampling": {
+            "$ref": "#/components/schemas/OverviewSamplingDTO"
+          },
+          "warnings": {
+            "items": {
+              "enum": [
+                "singapore_only_not_loan_default",
+                "administrative_terminations_unlabeled",
+                "age_time_confound",
+                "weak_address_graph",
+                "capital_litigation_unavailable"
+              ],
+              "type": "string"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "profileVersion",
+          "dataset",
+          "sampling",
+          "company",
+          "facts",
+          "observedLabel",
+          "relations",
+          "groups",
+          "dataAvailability",
+          "warnings"
+        ],
+        "title": "ResponseGetOverviewCompany",
         "type": "object"
       },
       "ResponseGetScore": {
@@ -7623,6 +8131,97 @@
           }
         },
         "summary": "Get",
+        "tags": [
+          "overview"
+        ]
+      }
+    },
+    "/api/v1/overview/get-company": {
+      "post": {
+        "operationId": "get_company_api_v1_overview_get_company_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestGetOverviewCompany"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseGetOverviewCompany_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__OVERVIEW_COMPANY_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__OVERVIEW_DATA_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Get Company",
         "tags": [
           "overview"
         ]

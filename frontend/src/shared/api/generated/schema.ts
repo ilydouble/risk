@@ -446,6 +446,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/overview/get-company": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Get Company */
+        post: operations["get_company_api_v1_overview_get_company_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/overview/search-companies": {
         parameters: {
             query?: never;
@@ -613,6 +630,16 @@ export interface components {
             /** Code */
             code: number;
             data: components["schemas"]["ResponseGetGraph"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseGetOverviewCompany] */
+        ApiEnvelope_ResponseGetOverviewCompany_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseGetOverviewCompany"] | null;
             /** Internal Code */
             internal_code: string;
             /** Message */
@@ -1265,6 +1292,22 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ErrorEnvelope[Literal[404], Literal['OVERVIEW_COMPANY_NOT_FOUND']] */
+        ErrorEnvelope_Literal_404__Literal__OVERVIEW_COMPANY_NOT_FOUND___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 404;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @constant
+             */
+            internal_code: "OVERVIEW_COMPANY_NOT_FOUND";
+            /** Message */
+            message: string;
+        };
         /** ErrorEnvelope[Literal[409], Literal['AUTH_USERNAME_TAKEN']] */
         ErrorEnvelope_Literal_409__Literal__AUTH_USERNAME_TAKEN___: {
             /**
@@ -1631,6 +1674,58 @@ export interface components {
              */
             type: "company" | "owner" | "subsidiary" | "supplier" | "guarantor" | "client" | "counterparty" | "person" | "bank" | "fund";
         };
+        /** OverviewCompanyFactsDTO */
+        OverviewCompanyFactsDTO: {
+            /** Country */
+            country: string | null;
+            /** Hasunit */
+            hasUnit: boolean | null;
+            /** Industrydivisioncode */
+            industryDivisionCode: string | null;
+            /** Namechangecount */
+            nameChangeCount: number | null;
+            /** Officercount */
+            officerCount: number | null;
+            /** Paidcapital */
+            paidCapital: number | null;
+            /** Registeredcapital */
+            registeredCapital: number | null;
+            /** Setuptimemonths */
+            setupTimeMonths: number | null;
+        };
+        /** OverviewDataAvailabilityDTO */
+        OverviewDataAvailabilityDTO: {
+            /**
+             * Bankcredit
+             * @enum {string}
+             */
+            bankCredit: "available" | "no_records" | "source_unavailable" | "not_in_dataset" | "not_run";
+            /**
+             * Capital
+             * @enum {string}
+             */
+            capital: "available" | "no_records" | "source_unavailable" | "not_in_dataset" | "not_run";
+            /**
+             * Litigation
+             * @enum {string}
+             */
+            litigation: "available" | "no_records" | "source_unavailable" | "not_in_dataset" | "not_run";
+            /**
+             * Modelrisk
+             * @enum {string}
+             */
+            modelRisk: "available" | "no_records" | "source_unavailable" | "not_in_dataset" | "not_run";
+            /**
+             * Registry
+             * @enum {string}
+             */
+            registry: "available" | "no_records" | "source_unavailable" | "not_in_dataset" | "not_run";
+            /**
+             * Relations
+             * @enum {string}
+             */
+            relations: "available" | "no_records" | "source_unavailable" | "not_in_dataset" | "not_run";
+        };
         /** OverviewDatasetDTO */
         OverviewDatasetDTO: {
             /**
@@ -1654,6 +1749,39 @@ export interface components {
              */
             taskType: "entity_status_distress";
         };
+        /** OverviewGroupMembershipDTO */
+        OverviewGroupMembershipDTO: {
+            /** Membercount */
+            memberCount: number;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "industry" | "area" | "qualify";
+            /** Value */
+            value: string;
+        };
+        /** OverviewObservedLabelDTO */
+        OverviewObservedLabelDTO: {
+            /**
+             * Category
+             * @enum {string}
+             */
+            category: "healthy" | "distress" | "unlabeled";
+            /**
+             * Modeloutput
+             * @default false
+             * @constant
+             */
+            modelOutput: false;
+            /** Status */
+            status: string;
+            /**
+             * Tasktype
+             * @constant
+             */
+            taskType: "entity_status_distress";
+        };
         /** OverviewQualityDTO */
         OverviewQualityDTO: {
             /** Capitalcoverage */
@@ -1666,6 +1794,44 @@ export interface components {
             litigationRows: number;
             /** Ordinaryedgecoveragewithinlabeled */
             ordinaryEdgeCoverageWithinLabeled: number;
+        };
+        /** OverviewRelatedCompanyDTO */
+        OverviewRelatedCompanyDTO: {
+            /** Companyid */
+            companyId: string;
+            /**
+             * Labelcategory
+             * @enum {string}
+             */
+            labelCategory: "healthy" | "distress" | "unlabeled";
+            /** Name */
+            name: string;
+            /** Relationtype */
+            relationType: string;
+            /** Status */
+            status: string;
+            /** Weight */
+            weight: number;
+        };
+        /** OverviewRelationCountDTO */
+        OverviewRelationCountDTO: {
+            /** Count */
+            count: number;
+            /** Type */
+            type: string;
+        };
+        /** OverviewRelationProfileDTO */
+        OverviewRelationProfileDTO: {
+            /** Bytype */
+            byType: components["schemas"]["OverviewRelationCountDTO"][];
+            /** Displayedcount */
+            displayedCount: number;
+            /** Neighbors */
+            neighbors: components["schemas"]["OverviewRelatedCompanyDTO"][];
+            /** Totalcount */
+            totalCount: number;
+            /** Truncated */
+            truncated: boolean;
         };
         /** OverviewSampleCompanyDTO */
         OverviewSampleCompanyDTO: {
@@ -1836,6 +2002,13 @@ export interface components {
         };
         /** RequestGetOverview */
         RequestGetOverview: Record<string, never>;
+        /** RequestGetOverviewCompany */
+        RequestGetOverviewCompany: {
+            /** Companyid */
+            companyId: string;
+            /** Datasetid */
+            datasetId: string;
+        };
         /** RequestGetScore */
         RequestGetScore: {
             /** Companyid */
@@ -2168,6 +2341,25 @@ export interface components {
             stats: components["schemas"]["OverviewStatsDTO"];
             /** Statusdistribution */
             statusDistribution: components["schemas"]["StatusDistributionItemDTO"][];
+            /** Warnings */
+            warnings: ("singapore_only_not_loan_default" | "administrative_terminations_unlabeled" | "age_time_confound" | "weak_address_graph" | "capital_litigation_unavailable")[];
+        };
+        /** ResponseGetOverviewCompany */
+        ResponseGetOverviewCompany: {
+            company: components["schemas"]["OverviewSampleCompanyDTO"];
+            dataAvailability: components["schemas"]["OverviewDataAvailabilityDTO"];
+            dataset: components["schemas"]["OverviewDatasetDTO"];
+            facts: components["schemas"]["OverviewCompanyFactsDTO"];
+            /** Groups */
+            groups: components["schemas"]["OverviewGroupMembershipDTO"][];
+            observedLabel: components["schemas"]["OverviewObservedLabelDTO"];
+            /**
+             * Profileversion
+             * @constant
+             */
+            profileVersion: 1;
+            relations: components["schemas"]["OverviewRelationProfileDTO"];
+            sampling: components["schemas"]["OverviewSamplingDTO"];
             /** Warnings */
             warnings: ("singapore_only_not_loan_default" | "administrative_terminations_unlabeled" | "age_time_confound" | "weak_address_graph" | "capital_litigation_unavailable")[];
         };
@@ -4399,6 +4591,84 @@ export interface operations {
             };
         };
     };
+    get_company_api_v1_overview_get_company_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestGetOverviewCompany"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseGetOverviewCompany_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__OVERVIEW_COMPANY_NOT_FOUND___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__OVERVIEW_DATA_UNAVAILABLE___"];
+                };
+            };
+        };
+    };
     search_companies_api_v1_overview_search_companies_post: {
         parameters: {
             query?: never;
@@ -4561,6 +4831,7 @@ export type RequestGetDataset = components["schemas"]["RequestGetDataset"];
 export type RequestGetExperiment = components["schemas"]["RequestGetExperiment"];
 export type RequestGetGraph = components["schemas"]["RequestGetGraph"];
 export type RequestGetOverview = components["schemas"]["RequestGetOverview"];
+export type RequestGetOverviewCompany = components["schemas"]["RequestGetOverviewCompany"];
 export type RequestGetScore = components["schemas"]["RequestGetScore"];
 export type RequestGraphBenchmark = components["schemas"]["RequestGraphBenchmark"];
 export type RequestListDatasets = components["schemas"]["RequestListDatasets"];
@@ -4589,6 +4860,7 @@ export type ResponseGetDataset = components["schemas"]["ResponseGetDataset"];
 export type ResponseGetExperiment = components["schemas"]["ResponseGetExperiment"];
 export type ResponseGetGraph = components["schemas"]["ResponseGetGraph"];
 export type ResponseGetOverview = components["schemas"]["ResponseGetOverview"];
+export type ResponseGetOverviewCompany = components["schemas"]["ResponseGetOverviewCompany"];
 export type ResponseGetScore = components["schemas"]["ResponseGetScore"];
 export type ResponseGraphBenchmark = components["schemas"]["ResponseGraphBenchmark"];
 export type ResponseListDatasets = components["schemas"]["ResponseListDatasets"];

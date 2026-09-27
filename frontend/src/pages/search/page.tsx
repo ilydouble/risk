@@ -28,6 +28,7 @@ export default function SearchPage() {
   const [results, setResults] = useState<OverviewSampleCompany[]>([]);
   const [industryCodes, setIndustryCodes] = useState<string[]>([]);
   const [sampleCount, setSampleCount] = useState(0);
+  const [datasetId, setDatasetId] = useState("");
   const [datasetName, setDatasetName] = useState("");
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -68,6 +69,7 @@ export default function SearchPage() {
         setTotal(data.total);
         setIndustryCodes(data.industryCodes);
         setSampleCount(data.sampling.sampleCount);
+        setDatasetId(data.dataset.id);
         setDatasetName(data.dataset.name);
         setError("");
       })
@@ -171,7 +173,7 @@ export default function SearchPage() {
 
       {!loading && results.length > 0 && (
         <div className="animate-fade-in space-y-2.5">
-          {results.map((company, index) => <div key={company.companyId} className="animate-fade-up" style={{ animationDelay: `${Math.min(index, 8) * 35}ms` }}><SampleResultItem company={company} keyword={applied} /></div>)}
+          {results.map((company, index) => <div key={company.companyId} className="animate-fade-up" style={{ animationDelay: `${Math.min(index, 8) * 35}ms` }}><SampleResultItem company={company} datasetId={datasetId} keyword={applied} /></div>)}
         </div>
       )}
 

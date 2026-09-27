@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import type { components } from "@/shared/api/generated/schema";
 import Highlight from "@/pages/search/components/Highlight";
 
@@ -12,9 +13,11 @@ const CATEGORY_TONE: Record<OverviewSampleCompany["labelCategory"], string> = {
 
 export default function SampleResultItem({
   company,
+  datasetId,
   keyword,
 }: {
   company: OverviewSampleCompany;
+  datasetId: string;
   keyword: string;
 }) {
   const { t } = useTranslation();
@@ -63,9 +66,13 @@ export default function SampleResultItem({
             </dd>
           </div>
         </dl>
-        <span className="shrink-0 rounded-md border border-background-300 px-3 py-2 text-[11px] text-foreground-500">
+        <Link
+          to={`/company/${encodeURIComponent(datasetId)}/${encodeURIComponent(company.companyId)}`}
+          className="flex shrink-0 items-center gap-1.5 rounded-md border border-primary-500/30 px-3 py-2 text-[11px] font-medium text-primary-400 transition-colors hover:border-primary-400 hover:bg-primary-500/8"
+        >
+          <i className="ri-building-line text-sm" />
           {t("search.profileUnavailable")}
-        </span>
+        </Link>
       </div>
     </article>
   );
