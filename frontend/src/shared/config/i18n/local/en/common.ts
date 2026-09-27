@@ -24,7 +24,7 @@ export default {
   },
   topbar: {
     openNav: "Open navigation",
-    searchPlaceholder: "Search company name / English name / Reg. no.",
+    searchPlaceholder: "Search Singapore company / UEN / status",
     presetCases: "Preset cases",
     init: "One-click init",
     presetTitle: "Preset demo cases",

@@ -20,6 +20,7 @@ export default function Overview() {
     <PageFrame
       title={t("overview.title")}
       subtitle={t("overview.subtitle")}
+      dataset
       actions={
         <>
           <button

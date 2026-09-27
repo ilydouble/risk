@@ -957,6 +957,40 @@
         "title": "ApiEnvelope[ResponseSearchCompany]",
         "type": "object"
       },
+      "ApiEnvelope_ResponseSearchOverviewCompany_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseSearchOverviewCompany"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseSearchOverviewCompany]",
+        "type": "object"
+      },
       "BenchmarkCompany": {
         "properties": {
           "community": {
@@ -3956,6 +3990,49 @@
         "title": "RequestSearchCompany",
         "type": "object"
       },
+      "RequestSearchOverviewCompany": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "default": "all",
+            "enum": [
+              "all",
+              "healthy",
+              "distress",
+              "unlabeled"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "industryCode": {
+            "default": "all",
+            "maxLength": 32,
+            "title": "Industrycode",
+            "type": "string"
+          },
+          "keyword": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Keyword",
+            "type": "string"
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PageRequest"
+          },
+          "sort": {
+            "default": "name_asc",
+            "enum": [
+              "name_asc",
+              "age_desc",
+              "relations_desc"
+            ],
+            "title": "Sort",
+            "type": "string"
+          }
+        },
+        "title": "RequestSearchOverviewCompany",
+        "type": "object"
+      },
       "ResponseCompleteDatasetUpload": {
         "properties": {
           "dataset": {
@@ -4773,6 +4850,57 @@
           "pageSize"
         ],
         "title": "ResponseSearchCompany",
+        "type": "object"
+      },
+      "ResponseSearchOverviewCompany": {
+        "properties": {
+          "dataset": {
+            "$ref": "#/components/schemas/OverviewDatasetDTO"
+          },
+          "industryCodes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Industrycodes",
+            "type": "array"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/OverviewSampleCompanyDTO"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "page": {
+            "minimum": 1.0,
+            "title": "Page",
+            "type": "integer"
+          },
+          "pageSize": {
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Pagesize",
+            "type": "integer"
+          },
+          "sampling": {
+            "$ref": "#/components/schemas/OverviewSamplingDTO"
+          },
+          "total": {
+            "minimum": 0.0,
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "page",
+          "pageSize",
+          "dataset",
+          "sampling",
+          "industryCodes"
+        ],
+        "title": "ResponseSearchOverviewCompany",
         "type": "object"
       },
       "RiskFlag": {
@@ -7495,6 +7623,87 @@
           }
         },
         "summary": "Get",
+        "tags": [
+          "overview"
+        ]
+      }
+    },
+    "/api/v1/overview/search-companies": {
+      "post": {
+        "operationId": "search_companies_api_v1_overview_search_companies_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestSearchOverviewCompany"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseSearchOverviewCompany_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__OVERVIEW_DATA_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Search Companies",
         "tags": [
           "overview"
         ]

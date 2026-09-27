@@ -1,6 +1,8 @@
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
+
+from risk_api.shared.api.page import Page, PageRequest
 
 OverviewWarning = Literal[
     "singapore_only_not_loan_default",
@@ -9,6 +11,7 @@ OverviewWarning = Literal[
     "weak_address_graph",
     "capital_litigation_unavailable",
 ]
+OverviewLabelCategory = Literal["healthy", "distress", "unlabeled"]
 
 
 class RequestGetOverview(BaseModel):
@@ -72,7 +75,7 @@ class OverviewSamplingDTO(BaseModel):
 class OverviewSampleCompanyDTO(BaseModel):
     companyId: str
     name: str
-    labelCategory: Literal["healthy", "distress", "unlabeled"]
+    labelCategory: OverviewLabelCategory
     status: str
     ageYears: float | None
     industryCode: str | None
@@ -100,3 +103,19 @@ class ResponseGetOverview(BaseModel):
     sampleCompanies: list[OverviewSampleCompanyDTO]
     quality: OverviewQualityDTO
     warnings: list[OverviewWarning]
+
+
+class RequestSearchOverviewCompany(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    keyword: str = Field(default="", max_length=200)
+    category: Literal["all", "healthy", "distress", "unlabeled"] = "all"
+    industryCode: str = Field(default="all", max_length=32)
+    sort: Literal["name_asc", "age_desc", "relations_desc"] = "name_asc"
+    pagination: PageRequest = Field(default_factory=PageRequest)
+
+
+class ResponseSearchOverviewCompany(Page[OverviewSampleCompanyDTO]):
+    dataset: OverviewDatasetDTO
+    sampling: OverviewSamplingDTO
+    industryCodes: list[str]

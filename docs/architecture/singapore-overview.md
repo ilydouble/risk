@@ -47,6 +47,8 @@ uv run python -m workbench.sg_overview \
 
 种子使用 `ON CONFLICT DO NOTHING`，只补缺失快照，不覆盖已有数据。接口要求登录 Session，返回最新快照；没有导入时返回稳定错误码 `OVERVIEW_DATA_UNAVAILABLE`。
 
+`/overview/search-companies` 在快照中的 300 家调试样本上执行名称/UEN/登记状态关键词检索、类别与 SSIC 筛选、排序和分页。主产品 `/search` 与顶栏联想使用这个接口；原 `/company/search` 继续只服务八家演示企业的画像与图谱链路。真实样本没有对应画像时，检索结果不会链接到演示详情页。
+
 ## 已知数据边界
 
 - 标签只描述企业存续状态中的正常或清算/财务困境；行政终止保持未标注。

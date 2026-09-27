@@ -446,6 +446,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/overview/search-companies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Search Companies */
+        post: operations["search_companies_api_v1_overview_search_companies_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/score/get": {
         parameters: {
             query?: never;
@@ -746,6 +763,16 @@ export interface components {
             /** Code */
             code: number;
             data: components["schemas"]["ResponseSearchCompany"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseSearchOverviewCompany] */
+        ApiEnvelope_ResponseSearchOverviewCompany_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseSearchOverviewCompany"] | null;
             /** Internal Code */
             internal_code: string;
             /** Message */
@@ -1946,6 +1973,32 @@ export interface components {
              */
             sort: "score_desc" | "score_asc" | "dp_desc" | "recent";
         };
+        /** RequestSearchOverviewCompany */
+        RequestSearchOverviewCompany: {
+            /**
+             * Category
+             * @default all
+             * @enum {string}
+             */
+            category: "all" | "healthy" | "distress" | "unlabeled";
+            /**
+             * Industrycode
+             * @default all
+             */
+            industryCode: string;
+            /**
+             * Keyword
+             * @default
+             */
+            keyword: string;
+            pagination?: components["schemas"]["PageRequest"];
+            /**
+             * Sort
+             * @default name_asc
+             * @enum {string}
+             */
+            sort: "name_asc" | "age_desc" | "relations_desc";
+        };
         /** ResponseCompleteDatasetUpload */
         ResponseCompleteDatasetUpload: {
             dataset: components["schemas"]["DatasetDTO"];
@@ -2248,6 +2301,21 @@ export interface components {
             page: number;
             /** Pagesize */
             pageSize: number;
+            /** Total */
+            total: number;
+        };
+        /** ResponseSearchOverviewCompany */
+        ResponseSearchOverviewCompany: {
+            dataset: components["schemas"]["OverviewDatasetDTO"];
+            /** Industrycodes */
+            industryCodes: string[];
+            /** Items */
+            items: components["schemas"]["OverviewSampleCompanyDTO"][];
+            /** Page */
+            page: number;
+            /** Pagesize */
+            pageSize: number;
+            sampling: components["schemas"]["OverviewSamplingDTO"];
             /** Total */
             total: number;
         };
@@ -4331,6 +4399,75 @@ export interface operations {
             };
         };
     };
+    search_companies_api_v1_overview_search_companies_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestSearchOverviewCompany"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseSearchOverviewCompany_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__OVERVIEW_DATA_UNAVAILABLE___"];
+                };
+            };
+        };
+    };
     get_api_v1_score_get_post: {
         parameters: {
             query?: never;
@@ -4438,6 +4575,7 @@ export type RequestRegister = components["schemas"]["RequestRegister"];
 export type RequestRunExperiment = components["schemas"]["RequestRunExperiment"];
 export type RequestSearchBenchmark = components["schemas"]["RequestSearchBenchmark"];
 export type RequestSearchCompany = components["schemas"]["RequestSearchCompany"];
+export type RequestSearchOverviewCompany = components["schemas"]["RequestSearchOverviewCompany"];
 export type ResponseCompleteDatasetUpload = components["schemas"]["ResponseCompleteDatasetUpload"];
 export type ResponseCompleteUpload = components["schemas"]["ResponseCompleteUpload"];
 export type ResponseCreateDatasetUpload = components["schemas"]["ResponseCreateDatasetUpload"];
@@ -4465,3 +4603,4 @@ export type ResponseRegister = components["schemas"]["ResponseRegister"];
 export type ResponseRunExperiment = components["schemas"]["ResponseRunExperiment"];
 export type ResponseSearchBenchmark = components["schemas"]["ResponseSearchBenchmark"];
 export type ResponseSearchCompany = components["schemas"]["ResponseSearchCompany"];
+export type ResponseSearchOverviewCompany = components["schemas"]["ResponseSearchOverviewCompany"];

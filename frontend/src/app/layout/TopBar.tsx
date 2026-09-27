@@ -1,22 +1,28 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import * as CompanyApi from "@/entities/company/api/companyApi";
+import * as OverviewApi from "@/entities/overview/api/overviewApi";
 import * as AuthApi from "@/features/auth/api/authApi";
 import { useAuthUser } from "@/features/auth/model/AuthContext";
 import { handleApiError } from "@/shared/api/http";
-import type { Company } from "@/entities/demo/model/types";
+import type { components } from "@/shared/api/generated/schema";
 import { presetCases } from "@/features/demo-scenarios/model/fixtures/overview";
 import { useDemoMode } from "@/features/demo-scenarios/model/DemoModeContext";
 import RiskBadge from "@/entities/risk/ui/RiskBadge";
 import StatusDot from "@/entities/risk/ui/StatusDot";
 import CompanyBreadcrumb from "@/app/layout/CompanyBreadcrumb";
 import LanguageSwitcher from "@/shared/ui/LanguageSwitcher";
-import { useLang } from "@/shared/lib/useLang";
+
+type OverviewSampleCompany = components["schemas"]["OverviewSampleCompanyDTO"];
+
+const SAMPLE_TONE: Record<OverviewSampleCompany["labelCategory"], string> = {
+  healthy: "bg-primary-500/12 text-primary-400",
+  distress: "bg-danger-500/12 text-danger-500",
+  unlabeled: "bg-background-300/70 text-foreground-600",
+};
 
 export default function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
   const { t } = useTranslation();
-  const { pick } = useLang();
   const authUser = useAuthUser();
   const displayName = authUser?.displayName ?? authUser?.username ?? "";
   const navigate = useNavigate();
@@ -24,7 +30,7 @@ export default function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
   const [query, setQuery] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
   const [caseOpen, setCaseOpen] = useState(false);
-  const [results, setResults] = useState<Company[]>([]);
+  const [results, setResults] = useState<OverviewSampleCompany[]>([]);
   const searchRef = useRef<HTMLDivElement>(null);
   const caseRef = useRef<HTMLDivElement>(null);
 
@@ -32,7 +38,7 @@ export default function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
     if (!query.trim()) { setResults([]); return; }
     let active = true;
     const timer = window.setTimeout(() => {
-      CompanyApi.requestSearchCompany({ keyword: query.trim(), region: "all", sector: "all", risks: [], sort: "score_desc", pagination: { page: 1, pageSize: 6 } })
+      OverviewApi.requestSearchOverviewCompany({ keyword: query.trim(), category: "all", industryCode: "all", sort: "name_asc", pagination: { page: 1, pageSize: 6 } })
         .then((data) => { if (active) setResults(data.items); })
         .catch((failure) => { if (active) handleApiError(failure); });
     }, 180);
@@ -104,11 +110,11 @@ export default function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
           <div className="animate-fade-in absolute left-0 right-0 top-full z-30 mt-2 overflow-hidden rounded-md border border-background-200 bg-background-100 shadow-none">
             <ul>
               {results.map((c) => (
-                <li key={c.id}>
+                <li key={c.companyId}>
                   <button
                     type="button"
                     onMouseDown={() => {
-                      navigate(`/company/${c.id}`);
+                      navigate(`/search?q=${encodeURIComponent(c.companyId)}`);
                       setQuery("");
                       setSearchOpen(false);
                     }}
@@ -119,13 +125,15 @@ export default function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-sm text-foreground-900">
-                        {pick(c.nameCn, c.nameEn)}
+                        {c.name}
                       </span>
                       <span className="block truncate font-mono text-[11px] text-foreground-500">
-                        {c.regNo} · {c.country}
+                        {c.companyId} · SG · {c.status}
                       </span>
                     </span>
-                    <RiskBadge level={c.riskLevel} size="sm" />
+                    <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${SAMPLE_TONE[c.labelCategory]}`}>
+                      {t(`search.category.${c.labelCategory}`)}
+                    </span>
                   </button>
                 </li>
               ))}
