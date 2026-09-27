@@ -1,6 +1,44 @@
 {
   "components": {
     "schemas": {
+      "AgeDistributionItemDTO": {
+        "properties": {
+          "bucket": {
+            "enum": [
+              "0_3",
+              "4_10",
+              "11_20",
+              "21_50",
+              "50_plus"
+            ],
+            "title": "Bucket",
+            "type": "string"
+          },
+          "distress": {
+            "minimum": 0.0,
+            "title": "Distress",
+            "type": "integer"
+          },
+          "labeled": {
+            "minimum": 0.0,
+            "title": "Labeled",
+            "type": "integer"
+          },
+          "total": {
+            "minimum": 0.0,
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "bucket",
+          "total",
+          "labeled",
+          "distress"
+        ],
+        "title": "AgeDistributionItemDTO",
+        "type": "object"
+      },
       "ApiEnvelope_ResponseCompleteDatasetUpload_": {
         "properties": {
           "code": {
@@ -407,6 +445,40 @@
           "data"
         ],
         "title": "ApiEnvelope[ResponseGetGraph]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseGetOverview_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseGetOverview"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseGetOverview]",
         "type": "object"
       },
       "ApiEnvelope_ResponseGetScore_": {
@@ -1829,6 +1901,30 @@
         "title": "DatasetDTO",
         "type": "object"
       },
+      "DistributionItemDTO": {
+        "properties": {
+          "key": {
+            "enum": [
+              "healthy",
+              "distress",
+              "unlabeled"
+            ],
+            "title": "Key",
+            "type": "string"
+          },
+          "value": {
+            "minimum": 0.0,
+            "title": "Value",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "key",
+          "value"
+        ],
+        "title": "DistributionItemDTO",
+        "type": "object"
+      },
       "DocumentDTO": {
         "properties": {
           "companyId": {
@@ -1865,6 +1961,25 @@
           "createdAt"
         ],
         "title": "DocumentDTO",
+        "type": "object"
+      },
+      "EdgeTypeItemDTO": {
+        "properties": {
+          "count": {
+            "minimum": 0.0,
+            "title": "Count",
+            "type": "integer"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "count"
+        ],
+        "title": "EdgeTypeItemDTO",
         "type": "object"
       },
       "ErrorDetail": {
@@ -2558,6 +2673,35 @@
         "title": "ErrorEnvelope[Literal[503], Literal['MODELING_STORAGE_UNAVAILABLE']]",
         "type": "object"
       },
+      "ErrorEnvelope_Literal_503__Literal__OVERVIEW_DATA_UNAVAILABLE___": {
+        "properties": {
+          "code": {
+            "const": 503,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "OVERVIEW_DATA_UNAVAILABLE",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[503], Literal['OVERVIEW_DATA_UNAVAILABLE']]",
+        "type": "object"
+      },
       "ExperimentDTO": {
         "properties": {
           "artifacts": {
@@ -2756,6 +2900,37 @@
         "title": "FiveCDimension",
         "type": "object"
       },
+      "GraphComponentDTO": {
+        "properties": {
+          "groupCount": {
+            "minimum": 0.0,
+            "title": "Groupcount",
+            "type": "integer"
+          },
+          "key": {
+            "enum": [
+              "relations",
+              "industry",
+              "area",
+              "qualify"
+            ],
+            "title": "Key",
+            "type": "string"
+          },
+          "rowCount": {
+            "minimum": 0.0,
+            "title": "Rowcount",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "key",
+          "rowCount",
+          "groupCount"
+        ],
+        "title": "GraphComponentDTO",
+        "type": "object"
+      },
       "GraphData": {
         "properties": {
           "edges": {
@@ -2938,6 +3113,233 @@
           "exposure"
         ],
         "title": "GraphNode",
+        "type": "object"
+      },
+      "OverviewDatasetDTO": {
+        "properties": {
+          "country": {
+            "const": "SG",
+            "title": "Country",
+            "type": "string"
+          },
+          "generatedAt": {
+            "title": "Generatedat",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "sourceArchiveSha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Sourcearchivesha256",
+            "type": "string"
+          },
+          "sourceScope": {
+            "title": "Sourcescope",
+            "type": "string"
+          },
+          "taskType": {
+            "const": "entity_status_distress",
+            "title": "Tasktype",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "country",
+          "taskType",
+          "generatedAt",
+          "sourceScope",
+          "sourceArchiveSha256"
+        ],
+        "title": "OverviewDatasetDTO",
+        "type": "object"
+      },
+      "OverviewQualityDTO": {
+        "properties": {
+          "capitalCoverage": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Capitalcoverage",
+            "type": "number"
+          },
+          "distressRateWithinLabeled": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Distressratewithinlabeled",
+            "type": "number"
+          },
+          "labeledRate": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Labeledrate",
+            "type": "number"
+          },
+          "litigationRows": {
+            "minimum": 0.0,
+            "title": "Litigationrows",
+            "type": "integer"
+          },
+          "ordinaryEdgeCoverageWithinLabeled": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Ordinaryedgecoveragewithinlabeled",
+            "type": "number"
+          }
+        },
+        "required": [
+          "labeledRate",
+          "distressRateWithinLabeled",
+          "ordinaryEdgeCoverageWithinLabeled",
+          "capitalCoverage",
+          "litigationRows"
+        ],
+        "title": "OverviewQualityDTO",
+        "type": "object"
+      },
+      "OverviewSampleCompanyDTO": {
+        "properties": {
+          "ageYears": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ageyears"
+          },
+          "companyId": {
+            "title": "Companyid",
+            "type": "string"
+          },
+          "industryCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Industrycode"
+          },
+          "labelCategory": {
+            "enum": [
+              "healthy",
+              "distress",
+              "unlabeled"
+            ],
+            "title": "Labelcategory",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "relationCount": {
+            "minimum": 0.0,
+            "title": "Relationcount",
+            "type": "integer"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "companyId",
+          "name",
+          "labelCategory",
+          "status",
+          "ageYears",
+          "industryCode",
+          "relationCount"
+        ],
+        "title": "OverviewSampleCompanyDTO",
+        "type": "object"
+      },
+      "OverviewSamplingDTO": {
+        "properties": {
+          "representative": {
+            "const": false,
+            "title": "Representative",
+            "type": "boolean"
+          },
+          "requestedPerClass": {
+            "minimum": 1.0,
+            "title": "Requestedperclass",
+            "type": "integer"
+          },
+          "sampleCount": {
+            "minimum": 0.0,
+            "title": "Samplecount",
+            "type": "integer"
+          },
+          "strategy": {
+            "const": "deterministic_stratified_hash",
+            "title": "Strategy",
+            "type": "string"
+          }
+        },
+        "required": [
+          "strategy",
+          "requestedPerClass",
+          "sampleCount",
+          "representative"
+        ],
+        "title": "OverviewSamplingDTO",
+        "type": "object"
+      },
+      "OverviewStatsDTO": {
+        "properties": {
+          "companyCount": {
+            "minimum": 0.0,
+            "title": "Companycount",
+            "type": "integer"
+          },
+          "distressCount": {
+            "minimum": 0.0,
+            "title": "Distresscount",
+            "type": "integer"
+          },
+          "edgeCount": {
+            "minimum": 0.0,
+            "title": "Edgecount",
+            "type": "integer"
+          },
+          "healthyCount": {
+            "minimum": 0.0,
+            "title": "Healthycount",
+            "type": "integer"
+          },
+          "labeledCount": {
+            "minimum": 0.0,
+            "title": "Labeledcount",
+            "type": "integer"
+          },
+          "unlabeledCount": {
+            "minimum": 0.0,
+            "title": "Unlabeledcount",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "companyCount",
+          "labeledCount",
+          "distressCount",
+          "healthyCount",
+          "unlabeledCount",
+          "edgeCount"
+        ],
+        "title": "OverviewStatsDTO",
         "type": "object"
       },
       "PageRequest": {
@@ -3242,6 +3644,11 @@
           "companyId"
         ],
         "title": "RequestGetGraph",
+        "type": "object"
+      },
+      "RequestGetOverview": {
+        "properties": {},
+        "title": "RequestGetOverview",
         "type": "object"
       },
       "RequestGetScore": {
@@ -3899,6 +4306,99 @@
         "title": "ResponseGetGraph",
         "type": "object"
       },
+      "ResponseGetOverview": {
+        "properties": {
+          "ageDistribution": {
+            "items": {
+              "$ref": "#/components/schemas/AgeDistributionItemDTO"
+            },
+            "title": "Agedistribution",
+            "type": "array"
+          },
+          "dataset": {
+            "$ref": "#/components/schemas/OverviewDatasetDTO"
+          },
+          "edgeTypes": {
+            "items": {
+              "$ref": "#/components/schemas/EdgeTypeItemDTO"
+            },
+            "title": "Edgetypes",
+            "type": "array"
+          },
+          "graphComponents": {
+            "items": {
+              "$ref": "#/components/schemas/GraphComponentDTO"
+            },
+            "title": "Graphcomponents",
+            "type": "array"
+          },
+          "labelDistribution": {
+            "items": {
+              "$ref": "#/components/schemas/DistributionItemDTO"
+            },
+            "title": "Labeldistribution",
+            "type": "array"
+          },
+          "quality": {
+            "$ref": "#/components/schemas/OverviewQualityDTO"
+          },
+          "sampleCompanies": {
+            "items": {
+              "$ref": "#/components/schemas/OverviewSampleCompanyDTO"
+            },
+            "title": "Samplecompanies",
+            "type": "array"
+          },
+          "sampling": {
+            "$ref": "#/components/schemas/OverviewSamplingDTO"
+          },
+          "snapshotVersion": {
+            "const": 1,
+            "title": "Snapshotversion",
+            "type": "integer"
+          },
+          "stats": {
+            "$ref": "#/components/schemas/OverviewStatsDTO"
+          },
+          "statusDistribution": {
+            "items": {
+              "$ref": "#/components/schemas/StatusDistributionItemDTO"
+            },
+            "title": "Statusdistribution",
+            "type": "array"
+          },
+          "warnings": {
+            "items": {
+              "enum": [
+                "singapore_only_not_loan_default",
+                "administrative_terminations_unlabeled",
+                "age_time_confound",
+                "weak_address_graph",
+                "capital_litigation_unavailable"
+              ],
+              "type": "string"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "snapshotVersion",
+          "dataset",
+          "stats",
+          "labelDistribution",
+          "ageDistribution",
+          "statusDistribution",
+          "edgeTypes",
+          "graphComponents",
+          "sampling",
+          "sampleCompanies",
+          "quality",
+          "warnings"
+        ],
+        "title": "ResponseGetOverview",
+        "type": "object"
+      },
       "ResponseGetScore": {
         "properties": {
           "company": {
@@ -4481,6 +4981,25 @@
           "desc"
         ],
         "title": "ShapFeature",
+        "type": "object"
+      },
+      "StatusDistributionItemDTO": {
+        "properties": {
+          "count": {
+            "minimum": 0.0,
+            "title": "Count",
+            "type": "integer"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "count"
+        ],
+        "title": "StatusDistributionItemDTO",
         "type": "object"
       },
       "TimelineEvent": {
@@ -6897,6 +7416,87 @@
         "summary": "Run Experiment",
         "tags": [
           "modeling"
+        ]
+      }
+    },
+    "/api/v1/overview/get": {
+      "post": {
+        "operationId": "get_api_v1_overview_get_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestGetOverview"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseGetOverview_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__OVERVIEW_DATA_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Get",
+        "tags": [
+          "overview"
         ]
       }
     },

@@ -25,7 +25,8 @@ flowchart LR
 | SMEsD 模型与只读测试包 | [公开基准](benchmark.md) |
 | Bundle 分析、异步训练与模型对比 | [模型实验工作台](modeling-workbench.md) |
 | 建模术语、不变量与适配边界 | [建模领域模型](modeling-domain.md) |
+| 新加坡企业聚合与调试样本 | [新加坡企业概览](singapore-overview.md) |
 
-原工作台评分和解释由种子快照提供；报告、决策、模型看板和批量评估仍是前端演示。独立 `/benchmark` 使用保存的真实模型权重推理匿名测试样本，不与工作台企业数据合并。`/modeling` 对标准 ZIP Bundle 做真实分析，并由本地 Worker 异步运行表格、图统计和 GNN 对照实验。文件字节经预签名 URL 直连对象存储，业务 API 负责授权和元数据。
+原工作台评分和解释由种子快照提供；报告、决策、模型看板和批量评估仍是前端演示。`/overview` 使用新加坡导出包的真实全量聚合与 300 条固定调试样本，不生成信用分或 PD。独立 `/benchmark` 使用保存的真实模型权重推理匿名测试样本，不与工作台企业数据合并。`/modeling` 对标准 ZIP Bundle 做真实分析，并由本地 Worker 异步运行表格、图统计和 GNN 对照实验。文件字节经预签名 URL 直连对象存储，业务 API 负责授权和元数据。
 
 - [模型产物约定](model-artifacts.md)：独立开发环境、Release 包、挂载和升级。

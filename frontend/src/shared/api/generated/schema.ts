@@ -429,6 +429,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/overview/get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Get */
+        post: operations["get_api_v1_overview_get_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/score/get": {
         parameters: {
             query?: never;
@@ -450,6 +467,20 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AgeDistributionItemDTO */
+        AgeDistributionItemDTO: {
+            /**
+             * Bucket
+             * @enum {string}
+             */
+            bucket: "0_3" | "4_10" | "11_20" | "21_50" | "50_plus";
+            /** Distress */
+            distress: number;
+            /** Labeled */
+            labeled: number;
+            /** Total */
+            total: number;
+        };
         /** ApiEnvelope[ResponseCompleteDatasetUpload] */
         ApiEnvelope_ResponseCompleteDatasetUpload_: {
             /** Code */
@@ -565,6 +596,16 @@ export interface components {
             /** Code */
             code: number;
             data: components["schemas"]["ResponseGetGraph"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseGetOverview] */
+        ApiEnvelope_ResponseGetOverview_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseGetOverview"] | null;
             /** Internal Code */
             internal_code: string;
             /** Message */
@@ -998,6 +1039,16 @@ export interface components {
                 [key: string]: unknown;
             };
         };
+        /** DistributionItemDTO */
+        DistributionItemDTO: {
+            /**
+             * Key
+             * @enum {string}
+             */
+            key: "healthy" | "distress" | "unlabeled";
+            /** Value */
+            value: number;
+        };
         /** DocumentDTO */
         DocumentDTO: {
             /** Companyid */
@@ -1012,6 +1063,13 @@ export interface components {
             id: string;
             /** Size */
             size: number;
+        };
+        /** EdgeTypeItemDTO */
+        EdgeTypeItemDTO: {
+            /** Count */
+            count: number;
+            /** Type */
+            type: string;
         };
         /** ErrorDetail */
         ErrorDetail: {
@@ -1388,6 +1446,22 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ErrorEnvelope[Literal[503], Literal['OVERVIEW_DATA_UNAVAILABLE']] */
+        ErrorEnvelope_Literal_503__Literal__OVERVIEW_DATA_UNAVAILABLE___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 503;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @constant
+             */
+            internal_code: "OVERVIEW_DATA_UNAVAILABLE";
+            /** Message */
+            message: string;
+        };
         /** ExperimentDTO */
         ExperimentDTO: {
             /** Artifacts */
@@ -1458,6 +1532,18 @@ export interface components {
             /** Weight */
             weight: number;
         };
+        /** GraphComponentDTO */
+        GraphComponentDTO: {
+            /** Groupcount */
+            groupCount: number;
+            /**
+             * Key
+             * @enum {string}
+             */
+            key: "relations" | "industry" | "area" | "qualify";
+            /** Rowcount */
+            rowCount: number;
+        };
         /** GraphData */
         GraphData: {
             /** Edges */
@@ -1517,6 +1603,94 @@ export interface components {
              * @enum {string}
              */
             type: "company" | "owner" | "subsidiary" | "supplier" | "guarantor" | "client" | "counterparty" | "person" | "bank" | "fund";
+        };
+        /** OverviewDatasetDTO */
+        OverviewDatasetDTO: {
+            /**
+             * Country
+             * @constant
+             */
+            country: "SG";
+            /** Generatedat */
+            generatedAt: string;
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Sourcearchivesha256 */
+            sourceArchiveSha256: string;
+            /** Sourcescope */
+            sourceScope: string;
+            /**
+             * Tasktype
+             * @constant
+             */
+            taskType: "entity_status_distress";
+        };
+        /** OverviewQualityDTO */
+        OverviewQualityDTO: {
+            /** Capitalcoverage */
+            capitalCoverage: number;
+            /** Distressratewithinlabeled */
+            distressRateWithinLabeled: number;
+            /** Labeledrate */
+            labeledRate: number;
+            /** Litigationrows */
+            litigationRows: number;
+            /** Ordinaryedgecoveragewithinlabeled */
+            ordinaryEdgeCoverageWithinLabeled: number;
+        };
+        /** OverviewSampleCompanyDTO */
+        OverviewSampleCompanyDTO: {
+            /** Ageyears */
+            ageYears: number | null;
+            /** Companyid */
+            companyId: string;
+            /** Industrycode */
+            industryCode: string | null;
+            /**
+             * Labelcategory
+             * @enum {string}
+             */
+            labelCategory: "healthy" | "distress" | "unlabeled";
+            /** Name */
+            name: string;
+            /** Relationcount */
+            relationCount: number;
+            /** Status */
+            status: string;
+        };
+        /** OverviewSamplingDTO */
+        OverviewSamplingDTO: {
+            /**
+             * Representative
+             * @constant
+             */
+            representative: false;
+            /** Requestedperclass */
+            requestedPerClass: number;
+            /** Samplecount */
+            sampleCount: number;
+            /**
+             * Strategy
+             * @constant
+             */
+            strategy: "deterministic_stratified_hash";
+        };
+        /** OverviewStatsDTO */
+        OverviewStatsDTO: {
+            /** Companycount */
+            companyCount: number;
+            /** Distresscount */
+            distressCount: number;
+            /** Edgecount */
+            edgeCount: number;
+            /** Healthycount */
+            healthyCount: number;
+            /** Labeledcount */
+            labeledCount: number;
+            /** Unlabeledcount */
+            unlabeledCount: number;
         };
         /** PageRequest */
         PageRequest: {
@@ -1633,6 +1807,8 @@ export interface components {
              */
             lang: "zh" | "en";
         };
+        /** RequestGetOverview */
+        RequestGetOverview: Record<string, never>;
         /** RequestGetScore */
         RequestGetScore: {
             /** Companyid */
@@ -1916,6 +2092,32 @@ export interface components {
             demo: true;
             graph: components["schemas"]["GraphData"];
         };
+        /** ResponseGetOverview */
+        ResponseGetOverview: {
+            /** Agedistribution */
+            ageDistribution: components["schemas"]["AgeDistributionItemDTO"][];
+            dataset: components["schemas"]["OverviewDatasetDTO"];
+            /** Edgetypes */
+            edgeTypes: components["schemas"]["EdgeTypeItemDTO"][];
+            /** Graphcomponents */
+            graphComponents: components["schemas"]["GraphComponentDTO"][];
+            /** Labeldistribution */
+            labelDistribution: components["schemas"]["DistributionItemDTO"][];
+            quality: components["schemas"]["OverviewQualityDTO"];
+            /** Samplecompanies */
+            sampleCompanies: components["schemas"]["OverviewSampleCompanyDTO"][];
+            sampling: components["schemas"]["OverviewSamplingDTO"];
+            /**
+             * Snapshotversion
+             * @constant
+             */
+            snapshotVersion: 1;
+            stats: components["schemas"]["OverviewStatsDTO"];
+            /** Statusdistribution */
+            statusDistribution: components["schemas"]["StatusDistributionItemDTO"][];
+            /** Warnings */
+            warnings: ("singapore_only_not_loan_default" | "administrative_terminations_unlabeled" | "age_time_confound" | "weak_address_graph" | "capital_litigation_unavailable")[];
+        };
         /** ResponseGetScore */
         ResponseGetScore: {
             company: components["schemas"]["CompanyDTO"];
@@ -2122,6 +2324,13 @@ export interface components {
             label: string;
             /** Value */
             value: string;
+        };
+        /** StatusDistributionItemDTO */
+        StatusDistributionItemDTO: {
+            /** Count */
+            count: number;
+            /** Status */
+            status: string;
         };
         /** TimelineEvent */
         TimelineEvent: {
@@ -4053,6 +4262,75 @@ export interface operations {
             };
         };
     };
+    get_api_v1_overview_get_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestGetOverview"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseGetOverview_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__OVERVIEW_DATA_UNAVAILABLE___"];
+                };
+            };
+        };
+    };
     get_api_v1_score_get_post: {
         parameters: {
             query?: never;
@@ -4145,6 +4423,7 @@ export type RequestGetCompany = components["schemas"]["RequestGetCompany"];
 export type RequestGetDataset = components["schemas"]["RequestGetDataset"];
 export type RequestGetExperiment = components["schemas"]["RequestGetExperiment"];
 export type RequestGetGraph = components["schemas"]["RequestGetGraph"];
+export type RequestGetOverview = components["schemas"]["RequestGetOverview"];
 export type RequestGetScore = components["schemas"]["RequestGetScore"];
 export type RequestGraphBenchmark = components["schemas"]["RequestGraphBenchmark"];
 export type RequestListDatasets = components["schemas"]["RequestListDatasets"];
@@ -4171,6 +4450,7 @@ export type ResponseGetCompany = components["schemas"]["ResponseGetCompany"];
 export type ResponseGetDataset = components["schemas"]["ResponseGetDataset"];
 export type ResponseGetExperiment = components["schemas"]["ResponseGetExperiment"];
 export type ResponseGetGraph = components["schemas"]["ResponseGetGraph"];
+export type ResponseGetOverview = components["schemas"]["ResponseGetOverview"];
 export type ResponseGetScore = components["schemas"]["ResponseGetScore"];
 export type ResponseGraphBenchmark = components["schemas"]["ResponseGraphBenchmark"];
 export type ResponseListDatasets = components["schemas"]["ResponseListDatasets"];

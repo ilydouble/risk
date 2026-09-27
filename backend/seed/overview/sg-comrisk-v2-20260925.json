@@ -1,0 +1,2978 @@
+{
+  "snapshotVersion": 1,
+  "dataset": {
+    "id": "sg-comrisk-v2-20260925",
+    "name": "Singapore ACRA/GLEIF ComRisk Export v2.0",
+    "country": "SG",
+    "taskType": "entity_status_distress",
+    "generatedAt": "2026-09-25T20:21:21.312401",
+    "sourceScope": "Singapore only — AUC/KS results are Singapore corporate distress prediction, NOT the 10-country SEA dataset",
+    "sourceArchiveSha256": "7a1148ecae3608aa4d7471f38217c45960def2d9dd87f7edfc3b93268ca1fcbe"
+  },
+  "stats": {
+    "companyCount": 2111884,
+    "labeledCount": 634646,
+    "distressCount": 13328,
+    "healthyCount": 621318,
+    "unlabeledCount": 1477238,
+    "edgeCount": 3006200
+  },
+  "labelDistribution": [
+    {
+      "key": "healthy",
+      "value": 621318
+    },
+    {
+      "key": "distress",
+      "value": 13328
+    },
+    {
+      "key": "unlabeled",
+      "value": 1477238
+    }
+  ],
+  "ageDistribution": [
+    {
+      "bucket": "0_3",
+      "total": 228595,
+      "labeled": 195285,
+      "distress": 43
+    },
+    {
+      "bucket": "4_10",
+      "total": 445691,
+      "labeled": 211374,
+      "distress": 1086
+    },
+    {
+      "bucket": "11_20",
+      "total": 577060,
+      "labeled": 135130,
+      "distress": 2714
+    },
+    {
+      "bucket": "21_50",
+      "total": 801595,
+      "labeled": 85422,
+      "distress": 7770
+    },
+    {
+      "bucket": "50_plus",
+      "total": 58943,
+      "labeled": 7435,
+      "distress": 1715
+    }
+  ],
+  "statusDistribution": [
+    {
+      "status": "Struck Off",
+      "count": 520242
+    },
+    {
+      "status": "Live Company",
+      "count": 465300
+    },
+    {
+      "status": "Terminated",
+      "count": 354392
+    },
+    {
+      "status": "Cancelled",
+      "count": 298575
+    },
+    {
+      "status": "Live",
+      "count": 156018
+    },
+    {
+      "status": "Cancelled (Non-Renewal)",
+      "count": 137148
+    },
+    {
+      "status": "Ceased Registration",
+      "count": 109914
+    },
+    {
+      "status": "Dissolved - Members Voluntary Winding Up",
+      "count": 34873
+    },
+    {
+      "status": "Gazetted To Be Struck Off",
+      "count": 8255
+    },
+    {
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "count": 6159
+    },
+    {
+      "status": "Converted To LLP",
+      "count": 4150
+    },
+    {
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "count": 3952
+    },
+    {
+      "status": "(blank)",
+      "count": 3005
+    },
+    {
+      "status": "Amalgamated",
+      "count": 2634
+    },
+    {
+      "status": "In Liquidation - Compulsory Winding Up (Insolvency)",
+      "count": 1860
+    },
+    {
+      "status": "In Liquidation - Members voluntary winding up",
+      "count": 1189
+    },
+    {
+      "status": "Registration expired and has not been renewed",
+      "count": 1052
+    },
+    {
+      "status": "In Liquidation - Creditors voluntary winding up",
+      "count": 832
+    },
+    {
+      "status": "Cancellation In Progress",
+      "count": 789
+    },
+    {
+      "status": "Removed (Applied To Be Revoked)",
+      "count": 318
+    },
+    {
+      "status": "Dissolved",
+      "count": 265
+    },
+    {
+      "status": "Dissolved - Compulsory Winding Up",
+      "count": 183
+    },
+    {
+      "status": "In Liquidation - Compulsory Winding Up",
+      "count": 164
+    },
+    {
+      "status": "Live (Receiver or Receiver and Manager appointed)",
+      "count": 112
+    },
+    {
+      "status": "Removed (Dissolved)",
+      "count": 104
+    },
+    {
+      "status": "Struck Off (Early Dissolution)",
+      "count": 94
+    },
+    {
+      "status": "Suspended",
+      "count": 60
+    },
+    {
+      "status": "Struck Off (Early Dissolution - simplified winding up)",
+      "count": 53
+    },
+    {
+      "status": "In Liquidation - Simplified Winding Up",
+      "count": 47
+    },
+    {
+      "status": "To Be Ceased",
+      "count": 36
+    },
+    {
+      "status": "Dissolved - Partner Voluntary Winding Up",
+      "count": 27
+    },
+    {
+      "status": "Dissolved - Pursuant to Section 212(1)(D) Of The Companies Act",
+      "count": 23
+    },
+    {
+      "status": "In Liquidation",
+      "count": 19
+    },
+    {
+      "status": "Dissolved - Simplified Winding Up",
+      "count": 14
+    },
+    {
+      "status": "Ceased Registration (Transferred to Singapore)",
+      "count": 12
+    },
+    {
+      "status": "Under Judicial Management",
+      "count": 11
+    },
+    {
+      "status": "In Liquidation - Partners voluntary winding up",
+      "count": 3
+    }
+  ],
+  "edgeTypes": [
+    {
+      "type": "SAME_ADDRESS",
+      "count": 3005111
+    },
+    {
+      "type": "EQUITY_DIRECT",
+      "count": 693
+    },
+    {
+      "type": "EQUITY_ULTIMATE",
+      "count": 339
+    },
+    {
+      "type": "FUND_MANAGED_BY",
+      "count": 57
+    }
+  ],
+  "graphComponents": [
+    {
+      "key": "relations",
+      "rowCount": 3006200,
+      "groupCount": 4
+    },
+    {
+      "key": "industry",
+      "rowCount": 2101427,
+      "groupCount": 959
+    },
+    {
+      "key": "area",
+      "rowCount": 2060990,
+      "groupCount": 91757
+    },
+    {
+      "key": "qualify",
+      "rowCount": 2111884,
+      "groupCount": 5
+    }
+  ],
+  "sampling": {
+    "strategy": "deterministic_stratified_hash",
+    "requestedPerClass": 100,
+    "sampleCount": 300,
+    "representative": false
+  },
+  "sampleCompanies": [
+    {
+      "companyId": "53212843E",
+      "name": "P&J ACETECH",
+      "labelCategory": "unlabeled",
+      "status": "Ceased Registration",
+      "ageYears": 14.41,
+      "industryCode": "74111",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202320163Z",
+      "name": "ALLIED PROPERTIES & COMPANY PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 3.3,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "43211200J",
+      "name": "THE CASTLE PUB",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled",
+      "ageYears": 36.08,
+      "industryCode": "56130",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200716692D",
+      "name": "GME AUTOPARTS PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 19.0,
+      "industryCode": "46563",
+      "relationCount": 0
+    },
+    {
+      "companyId": "48174500M",
+      "name": "ECP LOGISTICS & MATERIALS MANAGEMENT CENTRE",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled",
+      "ageYears": 33.5,
+      "industryCode": "70201",
+      "relationCount": 0
+    },
+    {
+      "companyId": "40022000L",
+      "name": "NEW YONG JIA HAN TRADING",
+      "labelCategory": "unlabeled",
+      "status": "Terminated",
+      "ageYears": 37.92,
+      "industryCode": "46411",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53053567W",
+      "name": "DXS",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled",
+      "ageYears": 20.96,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201006390Z",
+      "name": "CREATIVE TNG CONSTRUCTION PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 16.47,
+      "industryCode": "43303",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53275899D",
+      "name": "JANICE STORE",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled (Non-Renewal)",
+      "ageYears": 11.96,
+      "industryCode": "47630",
+      "relationCount": 0
+    },
+    {
+      "companyId": "T21LL0503E",
+      "name": "THE SOCIALITES AGENCY LLP",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 5.44,
+      "industryCode": "70201",
+      "relationCount": 0
+    },
+    {
+      "companyId": "36741300X",
+      "name": "JERRY'S GENERAL (BLOODSTOCK) SUPPLIES",
+      "labelCategory": "unlabeled",
+      "status": "Terminated",
+      "ageYears": 39.86,
+      "industryCode": "47714",
+      "relationCount": 0
+    },
+    {
+      "companyId": "40775200E",
+      "name": "KIM KEE FISH PORRIDGE",
+      "labelCategory": "unlabeled",
+      "status": "Terminated",
+      "ageYears": 37.48,
+      "industryCode": "56140",
+      "relationCount": 0
+    },
+    {
+      "companyId": "36720900D",
+      "name": "INTERLAND RESEARCH CONSULTANCY",
+      "labelCategory": "unlabeled",
+      "status": "Terminated",
+      "ageYears": 39.87,
+      "industryCode": "81211",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202301391E",
+      "name": "UNTANGLE PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 3.67,
+      "industryCode": "56112",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53149761E",
+      "name": "UNIQUE-COLOURS",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled (Non-Renewal)",
+      "ageYears": 17.06,
+      "industryCode": "96040",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202021410M",
+      "name": "OPQ SYSTEMS & SERVICES PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 6.14,
+      "industryCode": "62021",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202308984G",
+      "name": "D LINK INTERNATIONAL TRAVEL PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 3.51,
+      "industryCode": "79101",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53117123W",
+      "name": "LONG GLOBAI TRADING",
+      "labelCategory": "unlabeled",
+      "status": "Terminated",
+      "ageYears": 18.29,
+      "industryCode": "47109",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198701380E",
+      "name": "HONG RENG TANG IMPERIAL KITCHEN (S) PTE LTD",
+      "labelCategory": "unlabeled",
+      "status": "Dissolved - Members Voluntary Winding Up",
+      "ageYears": 39.32,
+      "industryCode": "56111",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201502696C",
+      "name": "TILT DESIGNS PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 11.62,
+      "industryCode": "18112",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53042621L",
+      "name": "UNO BOOKS COLLECTORS' REFERENCE",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled",
+      "ageYears": 21.41,
+      "industryCode": "47742",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201425701H",
+      "name": "CREATIVE KRUNCH PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 12.03,
+      "industryCode": "70201",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202535429E",
+      "name": "D3V3LOP PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 1.08,
+      "industryCode": "85507",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202006346G",
+      "name": "TR COLOURS PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 6.54,
+      "industryCode": "43304",
+      "relationCount": 0
+    },
+    {
+      "companyId": "T13LL0332E",
+      "name": "SPQX LLP",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 13.54,
+      "industryCode": "46661",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53105049A",
+      "name": "HONG HUA TRADING",
+      "labelCategory": "unlabeled",
+      "status": "Ceased Registration",
+      "ageYears": 18.81,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "41113500K",
+      "name": "AH GUAN MOTOR VEHICLE SERVICE",
+      "labelCategory": "unlabeled",
+      "status": "Ceased Registration",
+      "ageYears": 37.29,
+      "industryCode": "95301",
+      "relationCount": 0
+    },
+    {
+      "companyId": "47155300W",
+      "name": "J R OPTICAL",
+      "labelCategory": "unlabeled",
+      "status": "Terminated",
+      "ageYears": 34.0,
+      "industryCode": "47751",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202619562G",
+      "name": "TINY TINKERS PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 0.36,
+      "industryCode": "85509",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202518472E",
+      "name": "AMBERFREIGHT, PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 1.37,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53181945X",
+      "name": "DOTSG",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled (Non-Renewal)",
+      "ageYears": 15.72,
+      "industryCode": "62090",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202616802E",
+      "name": "LK LION CITY JOURNEYS PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 0.41,
+      "industryCode": "79101",
+      "relationCount": 0
+    },
+    {
+      "companyId": "52937198K",
+      "name": "SRI DEVI CATERING SERVICES",
+      "labelCategory": "unlabeled",
+      "status": "Ceased Registration",
+      "ageYears": 25.59,
+      "industryCode": "56200",
+      "relationCount": 0
+    },
+    {
+      "companyId": "52893060E",
+      "name": "YI HONG CAR WASHING & POLISHING SERVICE",
+      "labelCategory": "unlabeled",
+      "status": "Terminated",
+      "ageYears": 27.32,
+      "industryCode": "95302",
+      "relationCount": 34
+    },
+    {
+      "companyId": "197300422H",
+      "name": "LEE KEE HONG REALTY (PTE) LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 55.51,
+      "industryCode": "68201",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200107158C",
+      "name": "LIAN TAT HUAT TRADING PTE LTD",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 24.86,
+      "industryCode": "31001",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202615552H",
+      "name": "MN GLOBAL PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 0.43,
+      "industryCode": "63201",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201300886W",
+      "name": "WISERS FLOW PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 13.67,
+      "industryCode": "46301",
+      "relationCount": 0
+    },
+    {
+      "companyId": "48080400A",
+      "name": "SOON HONG SAFETY TRADING SERVICES",
+      "labelCategory": "unlabeled",
+      "status": "Ceased Registration",
+      "ageYears": 33.54,
+      "industryCode": "28199",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202320729C",
+      "name": "AVWA TECHNOLOGY PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 3.3,
+      "industryCode": "74111",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201811262N",
+      "name": "AF-INBLOCK PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 8.44,
+      "industryCode": "70201",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200306307G",
+      "name": "LELONG.COM PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 23.19,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "199801249G",
+      "name": "RACHMEE INTERNATIONAL PTE LTD",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 28.5,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202029528W",
+      "name": "BRAINUP PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 5.97,
+      "industryCode": "63909",
+      "relationCount": 0
+    },
+    {
+      "companyId": "52824656M",
+      "name": "ARTS OF LIVING",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled",
+      "ageYears": 30.21,
+      "industryCode": "47742",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202318774D",
+      "name": "LINKEDIN 514 PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 3.33,
+      "industryCode": "74191",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53348617C",
+      "name": "UNITED WORLD SPORTS MANAGEMENT",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled (Non-Renewal)",
+      "ageYears": 9.89,
+      "industryCode": "85507",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202025603G",
+      "name": "WALK WALK PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 6.05,
+      "industryCode": "79101",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200804294Z",
+      "name": "DYMON ASIA CAPITAL (SINGAPORE) PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 18.52,
+      "industryCode": "66309",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53232214B",
+      "name": "TOYSFLEA",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled",
+      "ageYears": 13.52,
+      "industryCode": "47711",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200601785N",
+      "name": "PCSL LOGISTICS (S) PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 20.58,
+      "industryCode": "52222",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201541952G",
+      "name": "JUNE AND HUI HAIR BEAUTY SALON PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 10.78,
+      "industryCode": "96029",
+      "relationCount": 0
+    },
+    {
+      "companyId": "24617400E",
+      "name": "RONG YEK TRADING CO",
+      "labelCategory": "unlabeled",
+      "status": "Terminated",
+      "ageYears": 23.66,
+      "industryCode": "96099",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53031109K",
+      "name": "SING EXCHANGE",
+      "labelCategory": "healthy",
+      "status": "Live",
+      "ageYears": 21.91,
+      "industryCode": "66126",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53315380L",
+      "name": "BSL MOVER",
+      "labelCategory": "unlabeled",
+      "status": "Ceased Registration",
+      "ageYears": 11.02,
+      "industryCode": "49232",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53495182A",
+      "name": "MARIAM EATS",
+      "labelCategory": "healthy",
+      "status": "Live",
+      "ageYears": 1.79,
+      "industryCode": "56122",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202230738W",
+      "name": "WINE MICRO STORAGE DIGITALIZE TECHNOLOGY NETWORK PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 4.03,
+      "industryCode": "46307",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201703254N",
+      "name": "EVENTTUALLY PRODUCTION PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 9.59,
+      "industryCode": "82303",
+      "relationCount": 0
+    },
+    {
+      "companyId": "33981900J",
+      "name": "LYTTON ELECTRICAL ENGINEERING",
+      "labelCategory": "unlabeled",
+      "status": "Terminated",
+      "ageYears": 41.65,
+      "industryCode": "43210",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202136155W",
+      "name": "SMARTVITA HEALTH PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 4.9,
+      "industryCode": "93111",
+      "relationCount": 0
+    },
+    {
+      "companyId": "52961253D",
+      "name": "Z TECHNOLOGIES",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled",
+      "ageYears": 24.64,
+      "industryCode": "47412",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53380132W",
+      "name": "CLAY BOWL RICE",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled (Non-Renewal)",
+      "ageYears": 8.42,
+      "industryCode": "56140",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202417234G",
+      "name": "INSTERNITY GROUP PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 2.37,
+      "industryCode": "41009",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53282037A",
+      "name": "HOUSE FOR CREATIVE LEARNING",
+      "labelCategory": "unlabeled",
+      "status": "Ceased Registration",
+      "ageYears": 11.84,
+      "industryCode": "85609",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198000461D",
+      "name": "STRAITS & ISLANDS SHIPPING CO. PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 46.59,
+      "industryCode": "46661",
+      "relationCount": 0
+    },
+    {
+      "companyId": "30576300L",
+      "name": "ASCEND TRADING CO",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled",
+      "ageYears": 43.56,
+      "industryCode": "46100",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200108081E",
+      "name": "M M LIFESTYLE PRODUCT PTE LTD",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 24.73,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "199608878H",
+      "name": "SENDY AUTO PTE LTD",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 29.74,
+      "industryCode": "95301",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200917241N",
+      "name": "HEAT-AX PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 16.99,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "52852510K",
+      "name": "JS VISION MANAGEMENT",
+      "labelCategory": "healthy",
+      "status": "Live",
+      "ageYears": 29.02,
+      "industryCode": "70201",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53182585W",
+      "name": "STEPPING STONES EDUCATIONAL SUPPORT",
+      "labelCategory": "healthy",
+      "status": "Live",
+      "ageYears": 15.69,
+      "industryCode": "85609",
+      "relationCount": 0
+    },
+    {
+      "companyId": "39896400M",
+      "name": "SPORTS CREATIONS",
+      "labelCategory": "unlabeled",
+      "status": "Terminated",
+      "ageYears": 37.99,
+      "industryCode": "47630",
+      "relationCount": 0
+    },
+    {
+      "companyId": "T14LL1087L",
+      "name": "HUMAN TRAFFIC LLP",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 12.29,
+      "industryCode": "62011",
+      "relationCount": 0
+    },
+    {
+      "companyId": "52910397D",
+      "name": "HUP LIANG TRADING",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled",
+      "ageYears": 26.66,
+      "industryCode": "94110",
+      "relationCount": 0
+    },
+    {
+      "companyId": "46596800K",
+      "name": "KINGWAY IMPEX TRADING",
+      "labelCategory": "unlabeled",
+      "status": "Terminated",
+      "ageYears": 34.29,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201413667E",
+      "name": "KIYOMITSUKI PRIVATE LIMITED",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 12.33,
+      "industryCode": "47742",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201703456E",
+      "name": "NEURO TECH SOLUTIONS PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 9.59,
+      "industryCode": "82302",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53414256K",
+      "name": "USIN FROZEN SEAFOOD",
+      "labelCategory": "unlabeled",
+      "status": "Ceased Registration",
+      "ageYears": 6.28,
+      "industryCode": "46302",
+      "relationCount": 78
+    },
+    {
+      "companyId": "06289200B",
+      "name": "TONG AIK",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled",
+      "ageYears": 51.2,
+      "industryCode": "47103",
+      "relationCount": 199
+    },
+    {
+      "companyId": "200913064W",
+      "name": "BASTECH NDT SERVICES (S) PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 17.15,
+      "industryCode": "30110",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201502096N",
+      "name": "VERSYS HOLDINGS PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 11.64,
+      "industryCode": "64202",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201114733D",
+      "name": "BONJOY F&B PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 15.22,
+      "industryCode": "47219",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198703233M",
+      "name": "PRIDE-CHEM INDUSTRIES PTE LTD",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 38.91,
+      "industryCode": "20113",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53252733W",
+      "name": "SUCCESSFULLY SLIM",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled",
+      "ageYears": 12.65,
+      "industryCode": "47711",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201828646D",
+      "name": "PLUS TOKEN PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 8.06,
+      "industryCode": "64202",
+      "relationCount": 0
+    },
+    {
+      "companyId": "199603065E",
+      "name": "HUGE WIN PTE LTD",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 30.37,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "199201176R",
+      "name": "WORLDHEAD SINGAPORE PTE LTD",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 34.52,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "52951686A",
+      "name": "ACELINKS SERVICES",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled (Non-Renewal)",
+      "ageYears": 25.03,
+      "industryCode": "74112",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53203770K",
+      "name": "DDML",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled",
+      "ageYears": 14.81,
+      "industryCode": "70201",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201321596Z",
+      "name": "SKM DEVELOPMENTS PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 13.1,
+      "industryCode": "64202",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53078978K",
+      "name": "S BEST",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled",
+      "ageYears": 19.9,
+      "industryCode": "47109",
+      "relationCount": 0
+    },
+    {
+      "companyId": "199902680W",
+      "name": "WING SEONG FATTY'S (ALBERT) RESTAURANT PTE LTD",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 27.32,
+      "industryCode": "56111",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202521643K",
+      "name": "TERRA FIRMA GLOBAL ADVISORY PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 1.31,
+      "industryCode": "70201",
+      "relationCount": 0
+    },
+    {
+      "companyId": "34077000K",
+      "name": "CHUAN LEE SPRAY PAINTING & TRADING",
+      "labelCategory": "unlabeled",
+      "status": "Terminated",
+      "ageYears": 41.59,
+      "industryCode": "95301",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201943469K",
+      "name": "DYNAMIC SOLUTION PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 6.71,
+      "industryCode": "64999",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53315337M",
+      "name": "MOBILEPHONE GURU",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled (Non-Renewal)",
+      "ageYears": 11.02,
+      "industryCode": "47711",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53211479E",
+      "name": "A & Z HAIR SALON",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled",
+      "ageYears": 14.47,
+      "industryCode": "96021",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198902388R",
+      "name": "TERRAPINN PTE LTD",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 37.25,
+      "industryCode": "82301",
+      "relationCount": 0
+    },
+    {
+      "companyId": "22915500J",
+      "name": "GUAN KUIN TROPICAL FISH",
+      "labelCategory": "unlabeled",
+      "status": "Terminated",
+      "ageYears": 49.2,
+      "industryCode": "3202",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53243748M",
+      "name": "PHARMA+LIFE ENTERPRISE",
+      "labelCategory": "unlabeled",
+      "status": "Ceased Registration",
+      "ageYears": 13.05,
+      "industryCode": "21012",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53239825D",
+      "name": "AUTOMOBILES BY ALAN",
+      "labelCategory": "unlabeled",
+      "status": "Ceased Registration",
+      "ageYears": 13.21,
+      "industryCode": "47311",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53392267D",
+      "name": "OTWAY SERVICE",
+      "labelCategory": "unlabeled",
+      "status": "Ceased Registration",
+      "ageYears": 7.67,
+      "industryCode": "49232",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202015595K",
+      "name": "YAOFA SINGAPORE TRADING PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 6.27,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200911413H",
+      "name": "AERON ACCESSORIES PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 17.21,
+      "industryCode": "64202",
+      "relationCount": 0
+    },
+    {
+      "companyId": "31903200X",
+      "name": "M K LEE MANAGEMENT SERVICES",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled (Non-Renewal)",
+      "ageYears": 42.83,
+      "industryCode": "71121",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53011686C",
+      "name": "KSN TRANSPORT SERVICES",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled",
+      "ageYears": 22.66,
+      "industryCode": "49212",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198900795C",
+      "name": "HWA HENG FAMOUS BEEF NOODLE (1989) PTE LTD",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 37.53,
+      "industryCode": "56140",
+      "relationCount": 0
+    },
+    {
+      "companyId": "52918132X",
+      "name": "MEGA RADIANCE INTERNATIONAL",
+      "labelCategory": "unlabeled",
+      "status": "Terminated",
+      "ageYears": 26.39,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "30040700M",
+      "name": "SRI-BUILT BUILDING SUPPLIES CO",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled",
+      "ageYears": 43.94,
+      "industryCode": "46421",
+      "relationCount": 0
+    },
+    {
+      "companyId": "46789700W",
+      "name": "CHOON MING FURNITURE TRADING",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled",
+      "ageYears": 34.19,
+      "industryCode": "31001",
+      "relationCount": 0
+    },
+    {
+      "companyId": "31821800C",
+      "name": "PACIFIC SUNKEN TRADING CO",
+      "labelCategory": "unlabeled",
+      "status": "Terminated",
+      "ageYears": 42.88,
+      "industryCode": "46100",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201216778E",
+      "name": "EDEN GARDEN FARM PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 14.18,
+      "industryCode": "47211",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53158887D",
+      "name": "DREAMAKERS INTERNATIONAL",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled",
+      "ageYears": 16.68,
+      "industryCode": "70201",
+      "relationCount": 0
+    },
+    {
+      "companyId": "46801000M",
+      "name": "WANDSON TRADING",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled (Non-Renewal)",
+      "ageYears": 34.19,
+      "industryCode": "43301",
+      "relationCount": 0
+    },
+    {
+      "companyId": "199409376D",
+      "name": "CMN MANAGEMENT SERVICES PTE LTD",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 31.72,
+      "industryCode": "70201",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53275759M",
+      "name": "ALBRIGHT ACADEMY",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled (Non-Renewal)",
+      "ageYears": 11.97,
+      "industryCode": "85509",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200703286H",
+      "name": "WHS GLOBAL TRANSPORTATION PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 19.53,
+      "industryCode": "49231",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202514874Z",
+      "name": "HONG PROSPERITY HUB PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 1.43,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202131538C",
+      "name": "UNITED HAMPSHIRE US REIT SUB 3 PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 5.0,
+      "industryCode": "64202",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200102369M",
+      "name": "AVENTURES CAPITAL MANAGEMENT PTE LTD",
+      "labelCategory": "unlabeled",
+      "status": "Dissolved - Members Voluntary Winding Up",
+      "ageYears": 25.43,
+      "industryCode": "64202",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201213540C",
+      "name": "MEDICAL PROPERTIES PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 14.28,
+      "industryCode": "86201",
+      "relationCount": 0
+    },
+    {
+      "companyId": "199402416G",
+      "name": "TECHNOLIFT INTERNATIONAL PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 32.43,
+      "industryCode": "28249",
+      "relationCount": 0
+    },
+    {
+      "companyId": "194000034W",
+      "name": "CANTONESE LABOUR SYNDICATE LIMITED",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 85.84,
+      "industryCode": "96099",
+      "relationCount": 0
+    },
+    {
+      "companyId": "45882300K",
+      "name": "CHIPPENDALE REVIVED HANDMADE PERIOD FURNITURE",
+      "labelCategory": "unlabeled",
+      "status": "Terminated",
+      "ageYears": 34.63,
+      "industryCode": "47531",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53100932K",
+      "name": "E C LOGISTICS",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled",
+      "ageYears": 18.98,
+      "industryCode": "52292",
+      "relationCount": 0
+    },
+    {
+      "companyId": "47177600M",
+      "name": "J-JAY SERVICES",
+      "labelCategory": "unlabeled",
+      "status": "Terminated",
+      "ageYears": 33.99,
+      "industryCode": "14103",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202333125W",
+      "name": "CHEF GOURMET ALLIANCE PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 3.07,
+      "industryCode": "59112",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53320922J",
+      "name": "5 STAR CLEANING AND MAINTENANCE SERVICES",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled (Non-Renewal)",
+      "ageYears": 10.87,
+      "industryCode": "81211",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202184444R",
+      "name": "QHF META PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 4.73,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201205192D",
+      "name": "MANDAH PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 14.53,
+      "industryCode": "68101",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201320323M",
+      "name": "WISDOM SEA GROUP PTE. LTD.",
+      "labelCategory": "unlabeled",
+      "status": "Struck Off",
+      "ageYears": 13.13,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202103911R",
+      "name": "WHALE (SG) CO. PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 5.62,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "32249100B",
+      "name": "YONG HUP HENG RENOVATION CONTRACTOR",
+      "labelCategory": "unlabeled",
+      "status": "Cancelled",
+      "ageYears": 42.59,
+      "industryCode": "43301",
+      "relationCount": 0
+    },
+    {
+      "companyId": "42340900W",
+      "name": "LOY BUSINESS CONSULTANT",
+      "labelCategory": "unlabeled",
+      "status": "Terminated",
+      "ageYears": 36.55,
+      "industryCode": "70201",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202621099R",
+      "name": "ANTHEON INFOTECH PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 0.33,
+      "industryCode": "62011",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202326310K",
+      "name": "PULNOVO MEDICAL PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 3.19,
+      "industryCode": "32501",
+      "relationCount": 0
+    },
+    {
+      "companyId": "199900268H",
+      "name": "WALTER AG SINGAPORE PTE LTD",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 27.65,
+      "industryCode": "46900",
+      "relationCount": 199
+    },
+    {
+      "companyId": "202106774E",
+      "name": "REFORGED LABS PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 5.54,
+      "industryCode": "58201",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202618465H",
+      "name": "NEXORA TALENT SOLUTIONS PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 0.38,
+      "industryCode": "78104",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200515791D",
+      "name": "AMERICAN IT INTERNATIONAL PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 20.82,
+      "industryCode": "46633",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202229546H",
+      "name": "URBAN CHAIR CRAFT PRIVATE LIMITED",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 4.05,
+      "industryCode": "31001",
+      "relationCount": 0
+    },
+    {
+      "companyId": "52841336L",
+      "name": "ASIA  BUSINESS  CONSULTING",
+      "labelCategory": "healthy",
+      "status": "Live",
+      "ageYears": 29.48,
+      "industryCode": "59120",
+      "relationCount": 0
+    },
+    {
+      "companyId": "196600229C",
+      "name": "YONG TAI SENG ENGINEERING WORKS (PRIVATE) LIMITED",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 60.16,
+      "industryCode": "25120",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202219850C",
+      "name": "WHITE STORM CONSULTING PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 4.26,
+      "industryCode": "70201",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200107399M",
+      "name": "WAH BOOM SERVICES PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 24.83,
+      "industryCode": "46649",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53214012E",
+      "name": "DLY SERVICES",
+      "labelCategory": "healthy",
+      "status": "Live",
+      "ageYears": 14.37,
+      "industryCode": "68209",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202533887E",
+      "name": "GLOWY TRADING & CONSULTANCY PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 1.1,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201720515E",
+      "name": "FOCUS EVENT SOLUTIONS PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 9.14,
+      "industryCode": "82303",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202343068E",
+      "name": "PERMAISURI CUISINE PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 2.87,
+      "industryCode": "96040",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53467427E",
+      "name": "MILKY STUDIOS",
+      "labelCategory": "healthy",
+      "status": "Live",
+      "ageYears": 3.33,
+      "industryCode": "73100",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201533644G",
+      "name": "BE SOLUTION PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 11.02,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201419023C",
+      "name": "GNOMON WATCHES PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 12.2,
+      "industryCode": "47733",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202615907W",
+      "name": "WYBORN PRESS PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 0.42,
+      "industryCode": "58110",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201022600Z",
+      "name": "FREIGHTCOM PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 15.89,
+      "industryCode": "52292",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53508726L",
+      "name": "SANDY.NOMS",
+      "labelCategory": "healthy",
+      "status": "Live",
+      "ageYears": 1.08,
+      "industryCode": "47746",
+      "relationCount": 0
+    },
+    {
+      "companyId": "T11LL0316B",
+      "name": "V-TRUST CAPITAL LLP",
+      "labelCategory": "healthy",
+      "status": "Live",
+      "ageYears": 15.55,
+      "industryCode": "64202",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202414015N",
+      "name": "MOONBLINK PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 2.42,
+      "industryCode": "47711",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202527874G",
+      "name": "AIRPORTSTAFFINGLINK PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 1.21,
+      "industryCode": "52239",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53463439K",
+      "name": "KELLY LIGHTWORKER",
+      "labelCategory": "healthy",
+      "status": "Live",
+      "ageYears": 3.55,
+      "industryCode": "88999",
+      "relationCount": 0
+    },
+    {
+      "companyId": "52977301E",
+      "name": "1ST LOT EXPRESS",
+      "labelCategory": "healthy",
+      "status": "Live",
+      "ageYears": 24.01,
+      "industryCode": "47752",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201313369Z",
+      "name": "SING-TOKYO PRIVATE LIMITED",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 13.32,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202522847Z",
+      "name": "WILL BE TRUE PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 1.3,
+      "industryCode": "62011",
+      "relationCount": 0
+    },
+    {
+      "companyId": "199204951C",
+      "name": "LIAN PANG INVESTMENTS PTE LTD",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 33.99,
+      "industryCode": "64202",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53122937L",
+      "name": "WSH RESOURCES",
+      "labelCategory": "healthy",
+      "status": "Live",
+      "ageYears": 18.09,
+      "industryCode": "70201",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202614807G",
+      "name": "WATER CHRONOSPACE HEALTH TECHNOLOGY PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 0.44,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200205334M",
+      "name": "KENLIN CONSTRUCTION PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 24.23,
+      "industryCode": "41001",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201721634K",
+      "name": "THE WATCH VAULT PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 9.11,
+      "industryCode": "47733",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200107738D",
+      "name": "KIM BOON TAI EATING HOUSE PTE LTD",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 24.78,
+      "industryCode": "56111",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202548962Z",
+      "name": "FUTUREVANCE PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 0.85,
+      "industryCode": "70205",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202235088C",
+      "name": "SHIPSFOCUS VENTURES PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 3.94,
+      "industryCode": "66304",
+      "relationCount": 35
+    },
+    {
+      "companyId": "202614387R",
+      "name": "FREQ AUDIO GLOBAL PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 0.45,
+      "industryCode": "46436",
+      "relationCount": 0
+    },
+    {
+      "companyId": "196800592E",
+      "name": "HONG SEH COMPANY (PRIVATE) LIMITED",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 57.75,
+      "industryCode": "46661",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201423856H",
+      "name": "ZEN CREATIVE ASIA PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 12.08,
+      "industryCode": "82301",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201930410C",
+      "name": "JADA INTERNATIONAL TRADING PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 7.0,
+      "industryCode": "46301",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53509172M",
+      "name": "AQUAMARINE PLASTIC",
+      "labelCategory": "healthy",
+      "status": "Live",
+      "ageYears": 1.06,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197902718Z",
+      "name": "T.K. FASTENER SINGAPORE PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 47.0,
+      "industryCode": "25993",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202510932R",
+      "name": "VALENT ENERGY BESS PARTNERSHIP 1 PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 1.5,
+      "industryCode": "64202",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200819345C",
+      "name": "HERLI TECHNOCHEM PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 17.94,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53483392J",
+      "name": "U'BEWAY",
+      "labelCategory": "healthy",
+      "status": "Live",
+      "ageYears": 2.45,
+      "industryCode": "47102",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202519397G",
+      "name": "VALMARK LOGISTICS PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 1.35,
+      "industryCode": "52101",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202015086R",
+      "name": "VSIBL PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 6.28,
+      "industryCode": "73100",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53514049E",
+      "name": "BEAUTYFUEL STUDIO",
+      "labelCategory": "healthy",
+      "status": "Live",
+      "ageYears": 0.81,
+      "industryCode": "96029",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201629848D",
+      "name": "MINECONNECT PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 9.86,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202518490H",
+      "name": "ZESON SHIPPING PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 1.37,
+      "industryCode": "50021",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200616609C",
+      "name": "TWO NINE PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 19.84,
+      "industryCode": "64202",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53503810X",
+      "name": "CROSSOVER TRAVEL & TRANSPORT",
+      "labelCategory": "healthy",
+      "status": "Live",
+      "ageYears": 1.34,
+      "industryCode": "50013",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202639653R",
+      "name": "NEXUS GLOBAL LOGISTICS PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 0.04,
+      "industryCode": "52101",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198400034N",
+      "name": "TEP HOLDINGS PTE LTD",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 42.67,
+      "industryCode": "64201",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53385441E",
+      "name": "LIM YEW CHUAN",
+      "labelCategory": "healthy",
+      "status": "Live",
+      "ageYears": 8.11,
+      "industryCode": "43301",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53523212L",
+      "name": "UNCLE EG8",
+      "labelCategory": "healthy",
+      "status": "Live",
+      "ageYears": 0.37,
+      "industryCode": "56123",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202008294G",
+      "name": "HUIZHONG NETWORK PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 6.5,
+      "industryCode": "58201",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200202814K",
+      "name": "INNOCEPT PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 24.44,
+      "industryCode": "46473",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202629248C",
+      "name": "ALPHAIFLOW  SINGAPORE PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 0.2,
+      "industryCode": "62011",
+      "relationCount": 33
+    },
+    {
+      "companyId": "201901027N",
+      "name": "VENA ENERGY (KOREA) PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 7.67,
+      "industryCode": "64202",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200407020M",
+      "name": "URAH RESOURCES PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 22.26,
+      "industryCode": "72106",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202414807Z",
+      "name": "AXIOM BUILDERS PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 2.41,
+      "industryCode": "41001",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201606952Z",
+      "name": "PSYCHOANALYTIC PERSPECTIVE PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 10.49,
+      "industryCode": "86909",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197903156W",
+      "name": "HEXON TECHNOLOGY PTE LTD",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 46.9,
+      "industryCode": "47109",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202106739H",
+      "name": "WOORAY COMMODITIES PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 5.54,
+      "industryCode": "46620",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202227834E",
+      "name": "GREEN POWERED PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 4.09,
+      "industryCode": "41001",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201200312H",
+      "name": "DFW CREATIVE (PTE.) LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 14.69,
+      "industryCode": "73100",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202438321H",
+      "name": "GWEN'S FROZEN CUSTARD AND ICES PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 1.98,
+      "industryCode": "56123",
+      "relationCount": 0
+    },
+    {
+      "companyId": "53494486L",
+      "name": "REVE RELAX SPA",
+      "labelCategory": "healthy",
+      "status": "Live",
+      "ageYears": 1.83,
+      "industryCode": "96024",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202521697W",
+      "name": "LOYALRICH PTE. LTD.",
+      "labelCategory": "healthy",
+      "status": "Live Company",
+      "ageYears": 1.31,
+      "industryCode": "46522",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198801135K",
+      "name": "FOOD BIOTECHNOLOGY INDUSTRIES PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 38.41,
+      "industryCode": "46306",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200817078R",
+      "name": "SWISSCO ENERGY SERVICES PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 18.04,
+      "industryCode": "77310",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197400349Z",
+      "name": "KIAN LEE S.M.R. FACTORY (PTE) LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 52.52,
+      "industryCode": "1190",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200808402W",
+      "name": "SAKURA FORTE CENTRAL KITCHEN PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 18.37,
+      "industryCode": "10799",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198602949M",
+      "name": "RESOURCES PRIMA GROUP LIMITED",
+      "labelCategory": "distress",
+      "status": "In Liquidation - Creditors voluntary winding up",
+      "ageYears": 39.71,
+      "industryCode": "64202",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197600309R",
+      "name": "CHANDOS PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 50.57,
+      "industryCode": "64999",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201319431G",
+      "name": "GEOSHIPPING PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 13.15,
+      "industryCode": "52226",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201418201G",
+      "name": "LA CURE GOURMANDE ASIA PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 12.22,
+      "industryCode": "47213",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198004354N",
+      "name": "J. OSAWA & CO. (SINGAPORE) PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 45.8,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197201863C",
+      "name": "KHMER MARINE CO. (PTE) LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 53.72,
+      "industryCode": "52222",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198902222Z",
+      "name": "FOLETTE DESIGN (SINGAPORE) PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 37.28,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197200532M",
+      "name": "JACK CHIA HOLDINGS (S'PORE) PTE LTD",
+      "labelCategory": "distress",
+      "status": "In Liquidation - Compulsory Winding Up (Insolvency)",
+      "ageYears": 54.36,
+      "industryCode": "64201",
+      "relationCount": 0
+    },
+    {
+      "companyId": "199403257R",
+      "name": "KOREA LEASING (SINGAPORE) PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 32.35,
+      "industryCode": "77330",
+      "relationCount": 0
+    },
+    {
+      "companyId": "199503051E",
+      "name": "INDOCHINA BUSINESS SERVICES PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 31.36,
+      "industryCode": "70201",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201211493K",
+      "name": "INVERTED EDGE PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 14.34,
+      "industryCode": "47711",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197601521Z",
+      "name": "NEE KWANG CONTRACTORS PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 50.14,
+      "industryCode": "68101",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198501895W",
+      "name": "PROTRA ENVIRONMENTAL ENGINEERING & SERVICES PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 41.02,
+      "industryCode": "41009",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202005470W",
+      "name": "FLASH COFFEE PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 6.57,
+      "industryCode": "56112",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198000091D",
+      "name": "TECK HENG AND SON TRANSPORT ENGINEERING PRIVATE LIMITED",
+      "labelCategory": "distress",
+      "status": "In Liquidation - Compulsory Winding Up (Insolvency)",
+      "ageYears": 46.67,
+      "industryCode": "43220",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197701957E",
+      "name": "SINWARD (PTE) LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 49.01,
+      "industryCode": "46631",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200412335Z",
+      "name": "EASTMARCOSSE PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "In Liquidation - Compulsory Winding Up (Insolvency)",
+      "ageYears": 21.95,
+      "industryCode": "71129",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198804774G",
+      "name": "SOUTH EAST ASIA MADAGASCAR LINER CORPORATION PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 37.7,
+      "industryCode": "50021",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200812326M",
+      "name": "ALLCO INVESTMENTS PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 18.21,
+      "industryCode": "64202",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198200108G",
+      "name": "COASTAL TRANS PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 44.67,
+      "industryCode": "52222",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201300707M",
+      "name": "TERAS INVESTMENTS PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "In Liquidation - Creditors voluntary winding up",
+      "ageYears": 13.68,
+      "industryCode": "64202",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202306772K",
+      "name": "BELOVED GENIUS PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 3.55,
+      "industryCode": "85509",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198700467N",
+      "name": "EASTERN SHINE TRADING PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 39.55,
+      "industryCode": "24109",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197802198K",
+      "name": "COMTECH (S) PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 48.03,
+      "industryCode": "68103",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197400766K",
+      "name": "PROPERTY AGENCY (PTE.) LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 52.37,
+      "industryCode": "68101",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200804119W",
+      "name": "GROMAKS PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 18.53,
+      "industryCode": "56111",
+      "relationCount": 0
+    },
+    {
+      "companyId": "199700636Z",
+      "name": "STUART ANDERSON'S BLACK ANGUS (ASIA) PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 29.62,
+      "industryCode": "56111",
+      "relationCount": 0
+    },
+    {
+      "companyId": "199001332D",
+      "name": "MP3 TECHNOLOGY PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 36.47,
+      "industryCode": "47535",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198000485M",
+      "name": "HUSH PILING (SINGAPORE) PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 46.59,
+      "industryCode": "41009",
+      "relationCount": 0
+    },
+    {
+      "companyId": "199404910G",
+      "name": "NORDIC LIFT-TRUCK PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 32.16,
+      "industryCode": "28161",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197702657W",
+      "name": "MOBILI PRIVATE LIMITED",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 48.76,
+      "industryCode": "14101",
+      "relationCount": 0
+    },
+    {
+      "companyId": "196400371E",
+      "name": "INTERNATIONAL DISTRIBUTORS COMPANY (PRIVATE) LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 61.78,
+      "industryCode": "70102",
+      "relationCount": 0
+    },
+    {
+      "companyId": "199404963D",
+      "name": "HENAN INTERNATIONAL HOLDINGS LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 32.16,
+      "industryCode": "64201",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198804613E",
+      "name": "ELECTA SYSTEM PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 37.74,
+      "industryCode": "46411",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197302358K",
+      "name": "BAJAJSONS PRIVATE LIMITED",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 52.73,
+      "industryCode": "64201",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197101066N",
+      "name": "SINDO REALTY PRIVATE LIMITED",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 54.95,
+      "industryCode": "68101",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197300456K",
+      "name": "SOUTHERN SUPPLIERS PRIVATE LIMITED",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 53.49,
+      "industryCode": "68101",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201204735K",
+      "name": "MAKE PRODUCTIONS PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 14.54,
+      "industryCode": "59119",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198203274R",
+      "name": "MARCOM SHIPYARD PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 44.11,
+      "industryCode": "31001",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197902681W",
+      "name": "AMIJI (PRIVATE) LIMITED",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 47.0,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "199406747E",
+      "name": "IMAGECRAFT PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 31.98,
+      "industryCode": "74200",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200211162M",
+      "name": "JUDIS MONETA FINANCIAL SERVICES PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 23.7,
+      "industryCode": "66192",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197901836C",
+      "name": "MAGNA SHIPPING (PRIVATE) LIMITED",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 47.21,
+      "industryCode": "50021",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201809244D",
+      "name": "SHIXIAOFU PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 8.49,
+      "industryCode": "56111",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200401324C",
+      "name": "SOON BOON PLUMBING & SANITARY PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 22.6,
+      "industryCode": "43220",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198202238M",
+      "name": "CON-STRESS PRESTRESSED CONCRET E PRODUCTS PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 44.29,
+      "industryCode": "28300",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201223808Z",
+      "name": "ASIA MARINE LOGISTICS PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "In Liquidation - Compulsory Winding Up (Insolvency)",
+      "ageYears": 13.95,
+      "industryCode": "52292",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200001216C",
+      "name": "EYE-BIZ PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "In Liquidation - Compulsory Winding Up (Insolvency)",
+      "ageYears": 26.57,
+      "industryCode": "46491",
+      "relationCount": 0
+    },
+    {
+      "companyId": "199803108D",
+      "name": "ALESSANDRO NANNINI CAFES (S) PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 28.22,
+      "industryCode": "56111",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200102422Z",
+      "name": "JAISREE IMPEX PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 25.42,
+      "industryCode": "46222",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198101027Z",
+      "name": "APOLLO INDUSTRIAL PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 45.5,
+      "industryCode": "46474",
+      "relationCount": 71
+    },
+    {
+      "companyId": "199308321E",
+      "name": "MING IN DANG PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 32.74,
+      "industryCode": "47722",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200506825K",
+      "name": "PREDICTION ASSET MANAGEMENT PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 21.32,
+      "industryCode": "66301",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197400368N",
+      "name": "C.I.T.S. INSPECTION (S) PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 52.52,
+      "industryCode": "71126",
+      "relationCount": 0
+    },
+    {
+      "companyId": "202022697R",
+      "name": "ONEUPSKATES PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "In Liquidation - Compulsory Winding Up",
+      "ageYears": 6.1,
+      "industryCode": "46441",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197601183Z",
+      "name": "TROPIC ISLAND SHIPPING CO. PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up",
+      "ageYears": 50.25,
+      "industryCode": "52222",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198302168Z",
+      "name": "KIMWELL ENTERPRISE PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 43.33,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201407761C",
+      "name": "BLUEWAVE BROADBAND SERVICES PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 12.48,
+      "industryCode": "61010",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198200318H",
+      "name": "INTERNATIONAL (I & E) PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 44.63,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "199100785E",
+      "name": "MRM PTE LTD",
+      "labelCategory": "distress",
+      "status": "In Liquidation - Compulsory Winding Up (Insolvency)",
+      "ageYears": 35.55,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198500212Z",
+      "name": "SANTAN OFFSHORE PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 41.63,
+      "industryCode": "71126",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201228581D",
+      "name": "THE B28 WHISKY FUND PRIVATE LIMITED",
+      "labelCategory": "distress",
+      "status": "In Liquidation - Creditors voluntary winding up",
+      "ageYears": 13.8,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "199301138K",
+      "name": "FURNLINK MARKETING (S) PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 33.54,
+      "industryCode": "46431",
+      "relationCount": 0
+    },
+    {
+      "companyId": "196400130N",
+      "name": "SINGAPORE POLYETHYLENE PRODUCT S PRIVATE LIMITED",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 62.41,
+      "industryCode": "22213",
+      "relationCount": 0
+    },
+    {
+      "companyId": "196700253W",
+      "name": "EK SENG CORPORATION PRIVATE LIMITED",
+      "labelCategory": "distress",
+      "status": "In Liquidation - Creditors voluntary winding up",
+      "ageYears": 59.1,
+      "industryCode": "46100",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197902818N",
+      "name": "CLOVERMATES INTERNATIONAL PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 46.98,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197900979D",
+      "name": "HAVA HOLDINGS PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 47.44,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201422161H",
+      "name": "TRIYARDS STRATEGIC INVESTMENTS PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 12.12,
+      "industryCode": "64202",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198103556M",
+      "name": "ATARI ENTERPRISE (PTE) LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 45.12,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197602102D",
+      "name": "MAN & HIS WOMAN (PTE) LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 49.9,
+      "industryCode": "47711",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198502438M",
+      "name": "O.I.S. DEVELOPMENT (FAR EAST) PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 40.8,
+      "industryCode": "81211",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198600912E",
+      "name": "KOSHEN RENOVATION PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 40.35,
+      "industryCode": "43301",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200202269C",
+      "name": "SPJC SINGAPORE PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 24.48,
+      "industryCode": "64202",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198601218E",
+      "name": "JIAN DA STEVEDORING PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 40.24,
+      "industryCode": "52224",
+      "relationCount": 20
+    },
+    {
+      "companyId": "201332167H",
+      "name": "SCHELLDEN GLOBAL PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "In Liquidation - Compulsory Winding Up (Insolvency)",
+      "ageYears": 12.78,
+      "industryCode": "62021",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200607039K",
+      "name": "ADVANCE SHIPMANAGEMENT PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 20.32,
+      "industryCode": "52226",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197000470Z",
+      "name": "S K DEVELOPMENT (PTE) LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 56.24,
+      "industryCode": "68101",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201734966C",
+      "name": "CRYPTOMOUSE PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 8.77,
+      "industryCode": "62021",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201218974D",
+      "name": "GL BUILDER PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "In Liquidation - Compulsory Winding Up (Insolvency)",
+      "ageYears": 14.11,
+      "industryCode": "41001",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197701396W",
+      "name": "WESTGATE ENTERPRISES PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 49.2,
+      "industryCode": "14101",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200104129E",
+      "name": "NWI RECYCLING PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 25.22,
+      "industryCode": "96099",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198905406R",
+      "name": "ROYAL ENTERTAINERS PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 36.76,
+      "industryCode": "90202",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200903921G",
+      "name": "S E SHIP MANAGEMENT PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "In Liquidation - Compulsory Winding Up",
+      "ageYears": 17.52,
+      "industryCode": "52226",
+      "relationCount": 0
+    },
+    {
+      "companyId": "197500995K",
+      "name": "SPEEDKLEEN MARINE SERVICES PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 51.25,
+      "industryCode": "52227",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198802545W",
+      "name": "PACIFIC CAN MANUFACTURING PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 38.12,
+      "industryCode": "68101",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201913727G",
+      "name": "KANADA-YA SG PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "In Liquidation - Creditors voluntary winding up",
+      "ageYears": 7.37,
+      "industryCode": "56111",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200604751C",
+      "name": "RIVERTON GROUP (S) PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 20.44,
+      "industryCode": "42901",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200700869N",
+      "name": "MERCATOR INTERNATIONAL PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "In Liquidation - Compulsory Winding Up (Insolvency)",
+      "ageYears": 19.65,
+      "industryCode": "50021",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198302935E",
+      "name": "CLEMENT D'CRUZ FOOD (S) PTE LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Compulsory Winding Up (Insolvency)",
+      "ageYears": 43.21,
+      "industryCode": "56111",
+      "relationCount": 0
+    },
+    {
+      "companyId": "201316483D",
+      "name": "SOPB PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 13.23,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "198200846W",
+      "name": "BUILDERS 2000 (PTE) LTD",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 44.52,
+      "industryCode": "46900",
+      "relationCount": 0
+    },
+    {
+      "companyId": "200807528G",
+      "name": "WEBNATICS PTE. LTD.",
+      "labelCategory": "distress",
+      "status": "Dissolved - Creditors Voluntary Winding Up",
+      "ageYears": 18.4,
+      "industryCode": "63112",
+      "relationCount": 0
+    }
+  ],
+  "quality": {
+    "labeledRate": 0.3005117705328512,
+    "distressRateWithinLabeled": 0.0210006838457975,
+    "ordinaryEdgeCoverageWithinLabeled": 0.037969198576844415,
+    "capitalCoverage": 0.0,
+    "litigationRows": 0
+  },
+  "warnings": [
+    "singapore_only_not_loan_default",
+    "administrative_terminations_unlabeled",
+    "age_time_confound",
+    "weak_address_graph",
+    "capital_litigation_unavailable"
+  ]
+}

@@ -10,6 +10,7 @@ from neo4j import AsyncGraphDatabase
 from sqlalchemy.dialects.postgresql import insert
 
 from risk_api.modules.company.model import Company
+from risk_api.modules.overview.model import OverviewSnapshot
 from risk_api.shared.config import settings
 from risk_api.shared.db import session_factory
 from risk_api.shared.logging import configure_logging
@@ -36,6 +37,23 @@ async def seed_company_rows(records: list[dict[str, Any]]) -> None:
                     summary=company,
                     profile=record["profile"],
                     scores=record["scores"],
+                )
+                .on_conflict_do_nothing(index_elements=["id"])
+            )
+        await session.commit()
+
+
+async def seed_overview_rows(records: list[dict[str, Any]]) -> None:
+    async with session_factory() as session:
+        for record in records:
+            dataset = record["dataset"]
+            await session.execute(
+                insert(OverviewSnapshot)
+                .values(
+                    id=dataset["id"],
+                    dataset_name=dataset["name"],
+                    source_sha256=dataset["sourceArchiveSha256"],
+                    payload=record,
                 )
                 .on_conflict_do_nothing(index_elements=["id"])
             )
@@ -103,12 +121,27 @@ def load_demo_records() -> list[dict[str, Any]]:
     return records
 
 
+def load_overview_records() -> list[dict[str, Any]]:
+    seed_dir = Path(__file__).resolve().parents[2] / "seed" / "overview"
+    return [
+        json.loads(path.read_text(encoding="utf-8")) for path in sorted(seed_dir.glob("*.json"))
+    ]
+
+
 async def main() -> None:
     records = load_demo_records()
-    logger.info("demo_seed.started", extra={"fixture_count": len(records)})
+    overview_records = load_overview_records()
+    logger.info(
+        "demo_seed.started",
+        extra={"fixture_count": len(records), "overview_count": len(overview_records)},
+    )
     await seed_company_rows(records)
+    await seed_overview_rows(overview_records)
     await seed_graph_rows(records)
-    logger.info("demo_seed.completed", extra={"fixture_count": len(records)})
+    logger.info(
+        "demo_seed.completed",
+        extra={"fixture_count": len(records), "overview_count": len(overview_records)},
+    )
 
 
 if __name__ == "__main__":
