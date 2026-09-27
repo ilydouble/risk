@@ -8,9 +8,9 @@
 - `contracts/openapi.json` 从 FastAPI 导出。修改 DTO 或接口后重新导出，再在 `frontend/` 运行 `npm run api:generate`；不得手改 `shared/api/generated/schema.ts` 或手写相同 DTO。
 - API 请求体使用 `RequestXxx`，响应 DTO 使用 `ResponseXxx`；业务响应始终为四字段信封，`code` 等于 HTTP 状态。模块定义稳定错误码，全局统一序列化；`X-Request-ID` 放响应头。
 - Alembic 文件按 `V0001_xxx.py` 顺序命名，修订号对应版本。修改已发布结构只能新增迁移，不改写旧迁移。
-- `gateway/vendor/` 是 Go 模块的生成快照，用于离线容器构建；升级 `go.mod` 后运行 `go mod tidy` 与 `go mod vendor`，不要手改第三方源码。
+- 网关通过 `go.mod`/`go.sum` 在线获取 Go 依赖；升级依赖后运行 `go mod tidy`，不提交 `gateway/vendor/`。容器构建可使用 `BUILD_*_PROXY` 或 `BUILD_GOPROXY`。
 - 演示种子只补缺失记录，不覆盖已有数据。评分、SHAP、报告、决策、模型和批量评估中的演示内容不得描述成真实在线模型结果。
-- Compose 项目名固定为 `risk`，服务键不再重复添加项目前缀；更改服务名时同步更新容器内地址和初始化脚本。构建代理只由 `BUILD_*_PROXY` 传入构建参数，不写入镜像环境。
+- Compose 项目名固定为 `risk`，服务键不再重复添加项目前缀；更改服务名时同步更新容器内地址和初始化脚本。HTTP 构建代理由 `BUILD_HTTP_PROXY`、`BUILD_HTTPS_PROXY`、`BUILD_NO_PROXY` 传入构建参数，Go 模块镜像由 `BUILD_GOPROXY` 指定，均不写入运行镜像环境。
 
 ## 代码与验证
 

@@ -70,7 +70,7 @@ docker compose logs -f backend demo-seed
 
 本机默认的 Origin 白名单随前端端口变化，浏览器预签名地址随 RustFS API 端口变化；独立运行的 Vite 仍监听 3000，其 API 代理会读取仓库根目录 `.env` 的网关端口。自定义域名可显式设置 `PUBLIC_ORIGINS`、`STORAGE_PUBLIC_ENDPOINT`，`VITE_API_PROXY` 仍可覆盖开发代理。旧 `.env` 如保留固定的 `PUBLIC_ORIGINS` 或 `STORAGE_PUBLIC_ENDPOINT`，需删除这两项旧默认值才能让端口自动联动；自定义值会继续覆盖默认值。
 
-镜像构建如需经过宿主机代理，在 `.env` 设置 `BUILD_HTTP_PROXY`、`BUILD_HTTPS_PROXY`，地址可使用 `host.docker.internal`；`BUILD_NO_PROXY` 用于排除直连地址。这些变量只用于源码镜像的构建步骤，不传给运行中的应用。RustFS 服务固定为 `rustfs/rustfs:1.0.0`，切换镜像前保留现有数据卷。
+镜像构建如需经过宿主机代理，在 `.env` 设置 `BUILD_HTTP_PROXY`、`BUILD_HTTPS_PROXY`，地址可使用 `host.docker.internal`；`BUILD_NO_PROXY` 用于排除直连地址。网关构建在线下载 Go 模块；需使用模块镜像时设置 `BUILD_GOPROXY`，留空则采用 Go 默认源。这些变量只用于构建步骤，不传给运行中的应用。RustFS 服务固定为 `rustfs/rustfs:1.0.0`，切换镜像前保留现有数据卷。
 
 后端与种子容器在本地默认输出易读的 `pretty` 日志；服务器有日志采集器时设置 `RISK_LOG_FORMAT=json`，输出单行 JSON。`RISK_LOG_LEVEL` 默认 `INFO`，只控制应用日志。业务请求的日志带 `X-Request-ID`，可以从响应头复制该值在容器日志中检索；成功的健康检查不产生日志。容器日志的保留期限取决于 Docker 配置。
 

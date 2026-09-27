@@ -1,10 +1,12 @@
 name: risk
 
+x-build-proxy-args: &build-proxy-args
+  HTTP_PROXY: ${BUILD_HTTP_PROXY:-}
+  HTTPS_PROXY: ${BUILD_HTTPS_PROXY:-}
+  NO_PROXY: ${BUILD_NO_PROXY:-}
+
 x-build-proxy: &build-proxy
-  args:
-    HTTP_PROXY: ${BUILD_HTTP_PROXY:-}
-    HTTPS_PROXY: ${BUILD_HTTPS_PROXY:-}
-    NO_PROXY: ${BUILD_NO_PROXY:-}
+  args: *build-proxy-args
   extra_hosts:
     - host.docker.internal=host-gateway
 
@@ -151,6 +153,9 @@ services:
     build:
       <<: *build-proxy
       context: ./gateway
+      args:
+        <<: *build-proxy-args
+        GOPROXY: ${BUILD_GOPROXY:-}
     ports:
       - "127.0.0.1:${GATEWAY_HOST_PORT:-18081}:8081"
     environment:

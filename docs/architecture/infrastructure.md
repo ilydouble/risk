@@ -2,7 +2,7 @@
 
 `compose.yaml` 启动固定镜像版本的 PostgreSQL 18、Redis、RustFS 1.0.0 GA、Neo4j Community、FastAPI、Go 网关及 Caddy 前端。项目名为 `risk`，服务键使用功能名；Compose 自动生成 `risk-rustfs-1` 等容器名。数据卷保存 PostgreSQL、RustFS 和 Neo4j；Redis 仅保存 Session，关闭持久化。首版不部署 MQ。
 
-Go 容器构建使用 `gateway/vendor/`，避免容器网络无法连接模块代理时失败。升级依赖时以 `go.mod`/`go.sum` 为准重新运行 `go mod vendor`。
+网关镜像构建根据 `go.mod`/`go.sum` 在线下载 Go 依赖，并在复制源码前缓存依赖层；构建阶段需要能访问模块代理。升级依赖后运行 `go mod tidy`，不提交 `gateway/vendor/`。
 
 ## 一次性初始化
 

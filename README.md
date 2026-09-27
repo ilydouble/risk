@@ -23,7 +23,7 @@ docker compose ps -a
 
 全容器模式默认打开 `http://localhost:18080`，本地 Vite 使用 `http://localhost:3000`。`.env` 可调整各宿主机端口，映射只绑定本机。登录页可自助注册，注册后再登录；新环境不预置账号。共享环境请先更换基础设施的示例凭据，并另行设计开放注册的准入与防滥用策略。
 
-Compose 启动 PostgreSQL 18、Redis、RustFS 1.0.0 GA、Neo4j Community、FastAPI 后端、Go 网关和 Caddy 前端；项目名固定为 `risk`，服务键使用 `postgres`、`backend` 等功能名，容器名如 `risk-rustfs-1`。一次性容器创建对象存储 Bucket/应用凭据、图谱约束，并为新环境补入八家精选演示企业；后端每次启动先执行 Alembic 迁移。数据存于命名卷，重复启动不清空；现有卷中的旧演示记录仍会保留。可选构建代理通过 `.env` 的 `BUILD_HTTP_PROXY`、`BUILD_HTTPS_PROXY`、`BUILD_NO_PROXY` 配置。
+Compose 启动 PostgreSQL 18、Redis、RustFS 1.0.0 GA、Neo4j Community、FastAPI 后端、Go 网关和 Caddy 前端；项目名固定为 `risk`，服务键使用 `postgres`、`backend` 等功能名，容器名如 `risk-rustfs-1`。一次性容器创建对象存储 Bucket/应用凭据、图谱约束，并为新环境补入八家精选演示企业；后端每次启动先执行 Alembic 迁移。数据存于命名卷，重复启动不清空；现有卷中的旧演示记录仍会保留。可选构建代理通过 `.env` 的 `BUILD_HTTP_PROXY`、`BUILD_HTTPS_PROXY`、`BUILD_NO_PROXY` 配置；网关的 Go 模块镜像源可用 `BUILD_GOPROXY` 指定。
 
 登录后从侧栏进入 **SMEsD 基准**，或直接访问 `/benchmark`；可按匿名编号检索，查看画像、预测与特征遮蔽敏感性、一跳有向关系及保存的评估指标。随 Git 提供 474 家测试样本；正式模型包需从本仓库 GitHub Release 下载并解压到 `com_risk_model/weights/<版本>/`，默认版本为 `smesd-v1`。缺少模型时工作台仍能启动，基准接口返回 `BENCHMARK_MODEL_UNAVAILABLE` 503。首次推理不需要训练集；完整重训仍需另外取得训练/验证数据。[基准说明](docs/architecture/benchmark.md)列出数据来源、验证命令与展示边界。
 
