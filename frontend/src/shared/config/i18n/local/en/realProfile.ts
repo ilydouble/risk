@@ -84,7 +84,7 @@ export default {
       subtitle: "Generated only after selecting a valid model artifact",
       notRun: "No company-level model output is available",
       description: "This page does not convert the business-status label into loan-default probability. Future model results must bind the training dataset, target definition, model version, and scope of use.",
-      openWorkbench: "Open modeling workbench",
+      openWorkbench: "Open model training workbench",
     },
     provenance: {
       title: "Data provenance and usage boundaries",

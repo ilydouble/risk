@@ -7,7 +7,7 @@ export default {
     retry: "Retry",
     actions: {
       benchmark: "Public benchmark",
-      modeling: "Modeling workbench",
+      modeling: "Model training workbench",
     },
     source: {
       real: "Real data snapshot",

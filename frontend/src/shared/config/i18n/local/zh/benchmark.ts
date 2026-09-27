@@ -1,7 +1,7 @@
 export default { benchmark: {
   title: "公开基准验证", home: "验证概览", search: "样本检索", model: "模型版本与指标",
   profile: "匿名企业画像", explanation: "评分与敏感性", graph: "一跳关系图",
-  subtitle: "当前验证集：SMEsD。用于复现固定测试协议，独立于业务数据和模型实验工作台。",
+  subtitle: "当前验证集：SMEsD。用于复现固定测试协议，独立于业务数据和模型训练工作台。",
   disclaimer: "基准为匿名 SMEsD 破产分类样本。预测来自已保存模型；评分是线性演示映射，不代表未来违约概率、授信结论或东南亚企业表现。",
   loading: "正在读取基准数据…", retry: "重试", errorUnavailable: "基准模型暂时不可用，请稍后重试", errorMissing: "未找到该基准企业编号",
   companies: "测试企业", savedMetric: "已保存的测试集评估指标", startHere: "开始探索",

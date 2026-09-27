@@ -11,7 +11,7 @@ export default {
       backToCurrent: "Back to current version",
     },
     archive: {
-      title: "Model Card",
+      title: "Model Versions",
       subtitle:
         "A unified archive of model identity, architecture, training data, feature importance, version history, drift monitoring and governance",
       backToOverview: "Back to overview",
@@ -151,7 +151,7 @@ export default {
     },
     governance: {
       title: "Model governance · limitations & compliance",
-      subtitle: "Essential notes for the model card, used for credit review and regulatory audit",
+      subtitle: "Essential notes for the model version record, used for credit review and regulatory audit",
       limitations: "Known limitations",
       limitationsSub: "Model boundaries to know before use",
       boundaries: "Usage boundaries",

@@ -43,22 +43,10 @@ export const NAV_GROUPS: NavGroup[] = [
         icon: "ri-function-line",
       },
       {
-        key: "benchmark",
-        labelKey: "nav.benchmark",
-        path: "/benchmark",
-        icon: "ri-flask-line",
-      },
-      {
         key: "model",
         labelKey: "nav.model",
         path: "/model-card",
         icon: "ri-file-info-line",
-      },
-      {
-        key: "batch",
-        labelKey: "nav.batch",
-        path: "/batch",
-        icon: "ri-stack-line",
       },
     ],
   },

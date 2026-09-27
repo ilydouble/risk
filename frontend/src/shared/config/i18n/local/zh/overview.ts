@@ -7,7 +7,7 @@ export default {
     retry: "重试",
     actions: {
       benchmark: "公开基准",
-      modeling: "模型试验工作台",
+      modeling: "模型训练工作台",
     },
     source: {
       real: "真实数据快照",

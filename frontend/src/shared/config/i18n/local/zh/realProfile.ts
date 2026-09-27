@@ -84,7 +84,7 @@ export default {
       subtitle: "仅在选定有效模型制品后生成",
       notRun: "当前没有企业级模型输出",
       description: "本页没有把经营状态标签转换成贷款违约概率。后续模型结果必须同时绑定训练数据集、目标定义、模型版本和适用范围。",
-      openWorkbench: "打开模型试验工作台",
+      openWorkbench: "打开模型训练工作台",
     },
     provenance: {
       title: "数据来源与使用边界",

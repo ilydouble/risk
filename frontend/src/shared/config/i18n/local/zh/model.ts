@@ -11,7 +11,7 @@ export default {
       backToCurrent: "切回当前版本",
     },
     archive: {
-      title: "模型档案",
+      title: "模型版本",
       subtitle:
         "模型身份、架构、训练数据、特征重要度、版本演进、漂移监控与治理说明的统一归档",
       backToOverview: "返回总览看板",
@@ -151,7 +151,7 @@ export default {
     },
     governance: {
       title: "模型治理 · 局限与合规",
-      subtitle: "模型档案的必备说明，用于授信复核与监管审计",
+      subtitle: "模型版本档案的必备说明，用于授信复核与监管审计",
       limitations: "已知局限",
       limitationsSub: "使用前需了解的模型边界",
       boundaries: "使用边界",
