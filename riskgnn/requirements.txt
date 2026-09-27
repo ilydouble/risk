@@ -1,8 +1,31 @@
+# Core model / graph stack
 torch==2.7.1
 torch-geometric==2.8.0
+
+# Numerics and dataframes
 numpy==2.3.3
 pandas==2.3.3
 scipy==1.16.2
+
+# Metrics, baselines and calibration (train.py, train_sg*.py, compute_metrics.py)
 scikit-learn==1.7.2
+
+# Parquet engine -- pandas.read_parquet() on the Singapore export needs this.
 pyarrow==23.0.1
+
+# Figures in utils.py
 matplotlib==3.10.6
+
+# train.py imports tqdm.utils at module level (progress bars).
+tqdm==4.67.3
+
+# run_metrics_batch.py reports free RAM before each run to make memory-pressure
+# failures visible.
+psutil==7.1.0
+
+# Optional: only needed to regenerate the SMEsD metapath2vec embeddings, since
+# sample.py imports torch_sparse at module level. It must be built against the
+# installed torch, so it is deliberately NOT part of the default install and is not
+# present in the environment this was developed in. Comment the line back in if you
+# run `python metapath2vec.py`.
+# torch-sparse
