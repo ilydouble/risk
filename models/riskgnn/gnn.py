@@ -73,7 +73,8 @@ class HeteGNN(MessagePassing):
         self.skip = nn.Parameter(torch.ones(1))
         self.bn=nn.BatchNorm1d(output_dim)
 
-    def forward(self,company_emb,person_emb,edge_index,edge_type,edge_weight,company_num,person_num):
+    def forward(self,company_emb,person_emb,edge_index,edge_type,edge_weight,company_num,person_num,
+                edge_confidence=None):
         company_emb=self.proj_com(company_emb)
         person_emb=self.proj_per(person_emb)
         emb=torch.cat((company_emb,person_emb),dim=0)
@@ -86,6 +87,14 @@ class HeteGNN(MessagePassing):
         edge_index = torch.as_tensor(edge_index, dtype=torch.long).transpose(0, 1).to(dev)
         edge_type = torch.as_tensor(edge_type, dtype=torch.long).to(dev)
         edge_weight = torch.as_tensor(edge_weight, dtype=torch.float32).unsqueeze(1).to(dev)
+        if edge_confidence is None:
+            edge_confidence = torch.ones_like(edge_weight)
+        else:
+            edge_confidence = torch.as_tensor(
+                edge_confidence, dtype=torch.float32, device=dev
+            ).reshape(-1, 1)
+        if edge_confidence.shape != edge_weight.shape:
+            raise ValueError("edge_confidence must have one value per directed edge")
 
         rs_list=[]
         rel_type=[]
@@ -94,8 +103,15 @@ class HeteGNN(MessagePassing):
             mask = (edge_type == i)
             sub_edge_index = edge_index[:, mask]
             sub_edge_weight=edge_weight[mask]
+            sub_edge_confidence=edge_confidence[mask]
             if mask.sum() !=0:
-                rs=F.leaky_relu((self.propagate(sub_edge_index, x=emb,edge_weight=sub_edge_weight,edge_type=i)),self.negative_slope)
+                rs=F.leaky_relu((self.propagate(
+                    sub_edge_index,
+                    x=emb,
+                    edge_weight=sub_edge_weight,
+                    edge_confidence=sub_edge_confidence,
+                    edge_type=i,
+                )),self.negative_slope)
                 rs_list+=[rs]
                 rel_type+=[i]
         com_att=[]
@@ -120,18 +136,18 @@ class HeteGNN(MessagePassing):
 
         return res_c,res_p
 
-    def message(self,edge_index, x_i,x_j, edge_weight, edge_type):
+    def message(self,edge_index, x_i,x_j, edge_weight, edge_confidence, edge_type):
         if torch.sum(edge_weight)!=edge_index.shape[1]:
             x_j=self.rel_wi[edge_type](x_j)
             edge_weight=softmax(edge_weight,edge_index[1])
-            rs=x_j*edge_weight
+            rs=x_j*edge_weight*edge_confidence
         else:
             node_f = torch.cat((x_i, x_j), 1)                                       #nx2d
             temp = self.rel_wi[edge_type](node_f).to(x_i.device)      #nx1
 
             alpha=softmax(temp,edge_index[1])
 
-            rs=x_j*alpha
+            rs=x_j*alpha*edge_confidence
         return rs
 
     def update(self, inputs):
@@ -238,7 +254,7 @@ class RiskGNN(nn.Module):
      device,com_initial_emb,person_initial_emb,
      court_type_num=4,category_num=4,time_label_num=5,num_heads=1,dropout=0.2,norm=True,
      use_hypergraph=True,use_edgegraph=True,n_company_attr_dims=3,hyper_impl='scipy',
-     hete_scalar_weights=None,
+     hete_scalar_weights=None,use_community_prior=True,
      ):
         super(RiskGNN,self).__init__()
         # Ablation switches: node-features-only (both False), +hypergraph, +edgegraph,
@@ -251,6 +267,7 @@ class RiskGNN(nn.Module):
         # tuples (built by utils.build_incidence) -- same math, no scipy, scales to
         # the full 634k-company Singapore graph.
         self.hyper_impl=hyper_impl
+        self.use_community_prior=use_community_prior
         self.input_dim=input_dim
         self.output_dim=output_dim
         self.company_num=company_num
@@ -288,7 +305,10 @@ class RiskGNN(nn.Module):
         # feature set) + 1 (community_prior slot, zeros if unused) + 20 (risk_info,
         # fixed by RiskInfo's lstm_hidden). Default n_company_attr_dims=3 reproduces
         # the original input_dim+24, so old callers are unaffected.
-        self.risk_proj=nn.Linear(input_dim+n_company_attr_dims+21,input_dim,bias=False)
+        prior_dims = 1 if use_community_prior else 0
+        self.risk_proj=nn.Linear(
+            input_dim+n_company_attr_dims+20+prior_dims,input_dim,bias=False
+        )
         self.info_proj=nn.Linear(output_dim,output_dim,bias=False)
 
         self.final_proj=nn.Sequential(nn.Linear(input_dim,output_dim,bias=False),nn.ReLU(),nn.Linear(output_dim,output_dim,bias=False))
@@ -296,7 +316,8 @@ class RiskGNN(nn.Module):
 
 
     def forward_batch(self, company_attr_all, edge_index_local, edge_type_local, edge_weight_local,
-                       n_id, batch_size, community_prior_all=None):
+                       n_id, batch_size, community_prior_all=None,
+                       edge_confidence_local=None):
         """Mini-batch forward for the edge-graph (HeteGNN) path via neighbor sampling
         (e.g. torch_geometric.loader.NeighborLoader), added to fix the full-batch OOM
         at 2.1M nodes / 6M edges without needing more GPU memory (Wang's diagnosis:
@@ -319,11 +340,15 @@ class RiskGNN(nn.Module):
         company_emb = self.company_proj(self.company_emb[n_id])
         person_emb = self.person_proj(self.person_emb)
         attr = torch.as_tensor(company_attr_all[n_id_np], dtype=torch.float32, device=self.device)
-        if community_prior_all is not None:
-            prior = torch.as_tensor(community_prior_all[n_id_np], dtype=torch.float32, device=self.device).unsqueeze(1)
-        else:
-            prior = torch.zeros((n, 1), device=self.device)
-        company_basic_info = torch.cat((attr, prior), dim=1)
+        company_basic_info = attr
+        if self.use_community_prior:
+            if community_prior_all is not None:
+                prior = torch.as_tensor(
+                    community_prior_all[n_id_np], dtype=torch.float32, device=self.device
+                ).reshape(-1, 1)
+            else:
+                prior = torch.zeros((n, 1), device=self.device)
+            company_basic_info = torch.cat((company_basic_info, prior), dim=1)
         company_emb = torch.cat((company_emb, company_basic_info), dim=1)
         risk_info = torch.zeros((n, 20), device=self.device)  # risk_data is an empty table for this dataset
         company_emb_info = self.risk_proj(torch.cat((company_emb, risk_info), dim=1))
@@ -332,7 +357,8 @@ class RiskGNN(nn.Module):
             for i in range(5):
                 src = company_emb_info if i == 0 else company_emb_hete
                 company_emb_hete, person_emb = self.hetegnn[i](
-                    src, person_emb, edge_index_local, edge_type_local, edge_weight_local, n, 0)
+                    src, person_emb, edge_index_local, edge_type_local, edge_weight_local,
+                    n, 0, edge_confidence_local)
         else:
             company_emb_hete = torch.zeros((n, self.output_dim), device=self.device)
 
@@ -356,10 +382,11 @@ class RiskGNN(nn.Module):
         # company, computed by utils.fit_bayesian_group_prior/build_group_prior_feature.
         # Defaults to zeros (neutral) if the caller doesn't supply one, so this stays
         # backward-compatible with any existing caller that doesn't pass it.
-        community_feat = torch.zeros((self.company_num, 1),device=self.device)
-        if community_prior is not None:
-            community_feat[idx] = torch.Tensor(community_prior).to(self.device)
-        company_basic_info = torch.cat((company_basic_info, community_feat), dim=1)
+        if self.use_community_prior:
+            community_feat = torch.zeros((self.company_num, 1),device=self.device)
+            if community_prior is not None:
+                community_feat[idx] = torch.Tensor(community_prior).to(self.device)
+            company_basic_info = torch.cat((company_basic_info, community_feat), dim=1)
 
         company_emb=torch.cat((company_emb,company_basic_info),dim=1)
         risk_info=self.riskinfo(risk_data)
@@ -371,12 +398,20 @@ class RiskGNN(nn.Module):
             company_emb_hyper=torch.zeros((self.company_num,self.output_dim),device=self.device)
 
         if self.use_edgegraph:
-            edge_index,edge_type,edge_weight=hete_graph
+            if len(hete_graph) == 4:
+                edge_index,edge_type,edge_weight,edge_confidence=hete_graph
+            else:
+                edge_index,edge_type,edge_weight=hete_graph
+                edge_confidence=None
             for i in range(5):
                 if i==0:
-                    company_emb_hete,person_emb=self.hetegnn[i](company_emb_info,person_emb,edge_index,edge_type,edge_weight,self.company_num,self.person_num)
+                    company_emb_hete,person_emb=self.hetegnn[i](
+                        company_emb_info,person_emb,edge_index,edge_type,edge_weight,
+                        self.company_num,self.person_num,edge_confidence)
                 else:
-                    company_emb_hete,person_emb=self.hetegnn[i](company_emb_hete,person_emb,edge_index,edge_type,edge_weight,self.company_num,self.person_num)
+                    company_emb_hete,person_emb=self.hetegnn[i](
+                        company_emb_hete,person_emb,edge_index,edge_type,edge_weight,
+                        self.company_num,self.person_num,edge_confidence)
         else:
             company_emb_hete=torch.zeros((self.company_num,self.output_dim),device=self.device)
         company_emb_final=self.info_proj(company_emb_hyper+company_emb_hete)
