@@ -83,6 +83,10 @@ Thumbs.db
 /com_risk_model/weights/*
 !/com_risk_model/weights/.gitkeep
 
+# Local competition datasets. Keep only the directory contract in Git.
+/datasets/*
+!/datasets/README.md
+
 # Backend local data, artifacts and docs
 /backend/artifacts/
 /backend/data/

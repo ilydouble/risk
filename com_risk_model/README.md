@@ -107,7 +107,7 @@ uv run python -m testing.cli evaluate --model weights/smesd-v1 \
 SMEsD 破产分类不等于固定未来窗口违约概率；线性演示分数不是评分卡，特征遮蔽不是 SHAP。
 上游数据与模型再分发许可尚未核实，保留历史来源不代表重新授权。
 
-根目录 `riskgnn/` 是早期百万节点扩展研究场，保留实验溯源但不被 Worker、runtime 或后端导入。
+`../models/riskgnn/` 是早期百万节点扩展研究场，保留实验溯源但不被 Worker、runtime 或后端导入。
 
 ## 开发检查
 

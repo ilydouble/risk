@@ -42,6 +42,8 @@ Compose 启动 PostgreSQL 18、Redis、RustFS 1.0.0 GA、Neo4j Community、FastA
 | `frontend/` | React + TypeScript + Vite；FSD `app/pages/features/entities/shared`；Caddy 镜像 |
 | `backend/` | Python 3.12 + uv；FastAPI、Dishka、SQLAlchemy、Alembic、异步基础设施适配 |
 | `com_risk_model/` | 独立 uv 模型工程；训练、本地测试、共享推理 runtime 和下载的只读权重 |
+| `models/` | 独立模型版本与研究实现；`baseline` 为上游 Git 原始基线，`riskgnn` 为历史增强实现 |
+| `datasets/` | 本地实验数据统一入口；大文件不提交 Git，目录约定见其中 README |
 | `gateway/` | Go 网关；Session 校验、可信身份注入、统一网关错误 |
 | `infra/` | RustFS 与 Neo4j 一次性初始化脚本 |
 | `contracts/openapi.json` | 后端导出的权威 HTTP 契约 |
