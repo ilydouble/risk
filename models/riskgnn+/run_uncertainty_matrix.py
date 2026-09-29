@@ -13,11 +13,12 @@ import time
 from pathlib import Path
 from typing import Any
 
-from uncertainty_protocol import VARIANTS
+from uncertainty_protocol import VARIANTS, embedding_graph_mode
 
 HERE = Path(__file__).resolve().parent
 SIMULATOR = HERE / "simulate_smesd_uncertainty.py"
 TRAINER = HERE / "train_smesd_uncertainty.py"
+PRETRAINER = HERE / "pretrain_smesd_metapath2vec.py"
 
 
 def file_sha256(path: Path) -> str:
@@ -85,6 +86,59 @@ def ensure_scenario(
     return json.loads(manifest_path.read_text(encoding="utf-8"))
 
 
+def ensure_embedding(
+    python: str,
+    data_dir: Path,
+    scenario_dir: Path,
+    output_dir: Path,
+    graph_mode: str,
+    threshold: float,
+    seed: int,
+    epochs: int,
+    device: str,
+    env: dict[str, str],
+) -> Path:
+    manifest_path = output_dir / "manifest.json"
+    embedding_path = output_dir / "meta_emb.pkl"
+    if manifest_path.exists() and embedding_path.exists():
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        expected = {
+            "graphMode": graph_mode,
+            "confidenceThreshold": threshold,
+            "seed": seed,
+            "epochs": epochs,
+        }
+        if any(manifest.get(key) != value for key, value in expected.items()):
+            raise ValueError(f"existing embedding does not match request: {output_dir}")
+        if file_sha256(embedding_path) != manifest["embeddingSha256"]:
+            raise ValueError(f"embedding hash differs from manifest: {embedding_path}")
+        return embedding_path
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    command = [
+        python,
+        str(PRETRAINER),
+        "--data-dir",
+        str(data_dir),
+        "--scenario-dir",
+        str(scenario_dir),
+        "--output-dir",
+        str(output_dir),
+        "--graph-mode",
+        graph_mode,
+        "--confidence-threshold",
+        str(threshold),
+        "--seed",
+        str(seed),
+        "--epochs",
+        str(epochs),
+        "--device",
+        device,
+    ]
+    run_logged(command, output_dir / "pretrain.log", env)
+    return embedding_path
+
+
 def collect_results(run_root: Path) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for path in sorted(run_root.glob("noise_*/sim_*/train_*/*/metrics.json")):
@@ -98,6 +152,8 @@ def collect_results(run_root: Path) -> list[dict[str, Any]]:
             "bestEpoch": result["bestEpoch"],
             "parameterCount": result["parameterCount"],
             "runtimeSeconds": result["runtimeSeconds"],
+            "device": result.get("device", "cpu"),
+            "embeddingSha256": result.get("embeddingSha256"),
         }
         for split in ("validation", "test"):
             for metric, value in result[split].items():
@@ -133,6 +189,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--epochs", type=int, default=500)
     parser.add_argument("--confidence-threshold", type=float, default=0.5)
+    parser.add_argument("--retrain-embeddings", action="store_true")
+    parser.add_argument("--embedding-epochs", type=int, default=20)
+    parser.add_argument("--device", choices=("auto", "cpu", "cuda"), default="cpu")
+    parser.add_argument(
+        "--hyper-impl", choices=("scipy", "vectorized"), default="scipy"
+    )
     parser.add_argument("--python", default=sys.executable)
     parser.add_argument("--threads", type=int, default=0)
     parser.add_argument("--rerun", action="store_true")
@@ -152,13 +214,17 @@ def main() -> None:
         env["MKL_NUM_THREADS"] = str(args.threads)
 
     runner_manifest: dict[str, Any] = {
-        "protocolVersion": 1,
+        "protocolVersion": 2,
         "dataDir": str(data_dir),
         "noiseRatios": args.noise_ratios,
         "pairedSeeds": args.seeds,
         "variants": args.variants,
         "epochs": args.epochs,
         "confidenceThreshold": args.confidence_threshold,
+        "retrainEmbeddings": args.retrain_embeddings,
+        "embeddingEpochs": args.embedding_epochs,
+        "device": args.device,
+        "hyperImpl": args.hyper_impl,
         "python": args.python,
         "threads": args.threads,
         "sourceSha256": {
@@ -166,6 +232,7 @@ def main() -> None:
             for path in (
                 Path(__file__).resolve(),
                 SIMULATOR,
+                PRETRAINER,
                 TRAINER,
                 HERE / "uncertainty_protocol.py",
                 HERE.parent / "riskgnn" / "gnn.py",
@@ -206,6 +273,36 @@ def main() -> None:
                     seed,
                     env,
                 )
+                embedding_paths: dict[str, Path] = {}
+                if args.retrain_embeddings:
+                    graph_modes = sorted(
+                        {embedding_graph_mode(variant) for variant in args.variants}
+                    )
+                    for graph_mode in graph_modes:
+                        embedding_dir = (
+                            work_dir
+                            / "embeddings"
+                            / noise_slug(noise_ratio)
+                            / f"seed_{seed}"
+                            / graph_mode
+                        )
+                        print(
+                            f"PRETRAIN noise={noise_ratio:.2f} seed={seed} "
+                            f"graph={graph_mode}",
+                            flush=True,
+                        )
+                        embedding_paths[graph_mode] = ensure_embedding(
+                            args.python,
+                            data_dir,
+                            scenario_dir,
+                            embedding_dir,
+                            graph_mode,
+                            args.confidence_threshold,
+                            seed,
+                            args.embedding_epochs,
+                            args.device,
+                            env,
+                        )
                 for variant in args.variants:
                     output_dir = (
                         work_dir
@@ -241,7 +338,18 @@ def main() -> None:
                         str(args.epochs),
                         "--confidence-threshold",
                         str(args.confidence_threshold),
+                        "--device",
+                        args.device,
+                        "--hyper-impl",
+                        args.hyper_impl,
                     ]
+                    if args.retrain_embeddings:
+                        command.extend(
+                            [
+                                "--embedding-path",
+                                str(embedding_paths[embedding_graph_mode(variant)]),
+                            ]
+                        )
                     run_logged(command, output_dir / "train.log", env)
                     result = json.loads(metrics_path.read_text(encoding="utf-8"))
                     print(

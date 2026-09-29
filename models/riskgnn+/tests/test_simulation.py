@@ -132,3 +132,36 @@ def test_oracle_is_identical_when_candidate_rows_and_false_edges_change() -> Non
 
     for first_array, second_array in zip(first_graph, second_graph, strict=True):
         np.testing.assert_array_equal(first_array, second_array)
+
+
+def test_metapath_edges_use_local_person_ids_at_exact_boundary() -> None:
+    scenario = {
+        "source": np.asarray([0, 4, 2]),
+        "target": np.asarray([4, 1, 3]),
+        "relation": np.asarray([0, 8, 6]),
+        "strength": np.ones(3, dtype=np.float32),
+        "confidence": np.asarray([1.0, 0.2, 0.5], dtype=np.float32),
+        "is_true": np.asarray([True, False, True]),
+    }
+
+    edges = protocol.build_metapath_edges(
+        {"train": scenario, "valid": scenario, "test": scenario},
+        graph_mode="all",
+        threshold=0.5,
+        company_count=4,
+        person_count=2,
+    )
+
+    assert edges[0].tolist() == [[0, 0]]
+    assert edges[1].tolist() == [[0, 0]]
+    assert edges[8].tolist() == [[0, 1]]
+    assert edges[9].tolist() == [[1, 0]]
+    assert edges[6].tolist() == [[2, 3]]
+    assert edges[7].tolist() == [[3, 2]]
+
+
+def test_embedding_graph_mode_matches_variant_topology() -> None:
+    assert protocol.embedding_graph_mode("comrisk_oracle") == "oracle"
+    assert protocol.embedding_graph_mode("comrisk_noisy") == "all"
+    assert protocol.embedding_graph_mode("riskgnn_gated") == "all"
+    assert protocol.embedding_graph_mode("riskgnn_filter") == "filter"

@@ -32,9 +32,17 @@
 
 `comrisk_*` 使用与原始 ComRisk 相同的输入宽度、无社区先验配置和原始 SMEsD 图/超图算子；正式运行前必须在共同 PyG 环境验证参数键、初始化和全 1 置信度输出与原始实现一致。
 
+## 场景化图嵌入
+
+- 每个场景先在 GPU 上按固定无监督 epoch 重训 MetaPath2Vec，再冻结嵌入训练下游 GNN；不再沿用与图不匹配的原始 `meta_emb.pkl`。
+- `oracle`、`all`、`filter` 三种拓扑分别生成嵌入。共享同一 `all` 图的 ComRisk/RiskGNN 变体复用同一嵌入，避免把预训练差异误当成算法收益。
+- 预训练合并 train/valid/test 的无标签拓扑，保持原始实现的转导设定；训练、验证、测试标签均不进入随机游走、loss 或 checkpoint 选择。该结果不能表述为严格时点外推。
+- 原脚本的 `> company_count` 边界已修正为 `>= company_count`。新入口只写实验目录，并记录原始数据、场景、源码、图和输出嵌入哈希，拒绝覆盖 `datasets/smesd/meta_emb.pkl`。
+- 固定最终无监督 epoch 作为嵌入 checkpoint，不再使用原脚本的验证标签准确率选择嵌入。
+
 ## 训练与评估
 
-- CPU 共同环境、Adam、学习率 0.01、CosineAnnealingLR、梯度裁剪 0.25，与上一轮同环境比较一致。
+- 共同 CUDA 环境、同一 GPU、Adam、学习率 0.01、CosineAnnealingLR、梯度裁剪 0.25；CPU 固定嵌入结果只保留为历史实验 A，不与 GPU 端到端实验 B 混合汇总。
 - 所有成对变体使用相同仿真 seed、训练 seed、初始化顺序、划分和 epoch 数。
 - 按验证集 ROC-AUC 选 checkpoint；并列时取验证损失更低者。测试集不参与选模或阈值选择。
 - 分类阈值只在验证集按最大 F1 选择，然后固定用于测试集。
@@ -58,10 +66,11 @@ python models/riskgnn+/simulate_smesd_uncertainty.py \
 ```bash
 python models/riskgnn+/run_uncertainty_matrix.py \
   --data-dir datasets/smesd --work-dir artifacts/uncertainty-pilot \
-  --noise-ratios 0.4 --seeds 14 --epochs 500
+  --noise-ratios 0.4 --seeds 14 --embedding-epochs 20 --epochs 500 \
+  --retrain-embeddings --device cuda --hyper-impl scipy
 ```
 
-每个组合独立保存 `train.log`、`metrics.json`、`predictions.npz` 和 `model.pt`；根目录持续刷新 `summary.json` 与 `summary.csv`。同一目录再次运行会跳过完整组合；协议配置或源码哈希变化时拒绝混合结果。
+每种图拓扑独立保存 `meta_emb.pkl`、`metapath2vec.pt`、`pretrain.log` 和嵌入清单；每个下游组合保存 `train.log`、`metrics.json`、`predictions.npz` 和 `model.pt`。根目录持续刷新 `summary.json` 与 `summary.csv`。同一目录再次运行会跳过完整组合；协议配置或源码哈希变化时拒绝混合结果。
 
 多个矩阵完成后，可按同 seed 汇总均值、标准差、配对差值与 bootstrap 95% 区间：
 

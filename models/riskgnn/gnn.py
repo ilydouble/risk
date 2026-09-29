@@ -168,7 +168,9 @@ class HyperGNN(nn.Module):
     def forward(self,company_emb,hyp_graph):
         outlist=[]
         for i in range(len(hyp_graph)):
-            laplacian=scipy_sparse_mat_to_torch_sparse_tensor(hyp_graph[i].laplacian())
+            laplacian=scipy_sparse_mat_to_torch_sparse_tensor(
+                hyp_graph[i].laplacian()
+            ).to(company_emb.device)
             rs= laplacian@self.proj(company_emb)
             outlist+=[rs]
            

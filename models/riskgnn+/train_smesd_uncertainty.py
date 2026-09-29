@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import copy
 import hashlib
 import json
 import sys
@@ -44,6 +43,7 @@ from utils import (
     Classifier,
     build_group_prior_feature,
     build_group_prior_feature_loo,
+    build_incidence,
     fit_bayesian_group_prior,
     gen_attribute_hg,
     set_random_seed,
@@ -117,11 +117,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--data-dir", type=Path, required=True)
     parser.add_argument("--scenario-dir", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--embedding-path", type=Path)
     parser.add_argument("--variant", choices=sorted(VARIANTS), required=True)
     parser.add_argument("--seed", type=int, default=14)
     parser.add_argument("--n-epoch", type=int, default=500)
     parser.add_argument("--confidence-threshold", type=float, default=0.5)
     parser.add_argument("--clip", type=float, default=0.25)
+    parser.add_argument("--device", choices=("auto", "cpu", "cuda"), default="cpu")
+    parser.add_argument(
+        "--hyper-impl", choices=("scipy", "vectorized"), default="scipy"
+    )
     return parser.parse_args()
 
 
@@ -131,6 +136,11 @@ def main() -> None:
     data_dir = args.data_dir.resolve()
     scenario_dir = args.scenario_dir.resolve()
     output_dir = args.output_dir.resolve()
+    embedding_path = (
+        args.embedding_path.resolve()
+        if args.embedding_path is not None
+        else data_dir / "meta_emb.pkl"
+    )
     output_dir.mkdir(parents=True, exist_ok=True)
     scenario_manifest = json.loads((scenario_dir / "manifest.json").read_text())
     for source in scenario_manifest["sourceFiles"].values():
@@ -150,7 +160,7 @@ def main() -> None:
     train_indices, valid_indices, test_indices = pd.read_pickle(
         data_dir / "split_data_idx.pkl"
     )
-    company_embedding, person_embedding = pd.read_pickle(data_dir / "meta_emb.pkl")
+    company_embedding, person_embedding = pd.read_pickle(embedding_path)
     company_count = len(company_embedding)
     person_count = len(person_embedding)
 
@@ -173,11 +183,13 @@ def main() -> None:
         )
         for split, scenario in scenarios.items()
     }
+    hypergraph_builder = (
+        (lambda raw: build_incidence(company_count, raw))
+        if args.hyper_impl == "vectorized"
+        else (lambda raw: gen_attribute_hg(company_count, raw, X=None))
+    )
     hypergraphs = {
-        split: [
-            gen_attribute_hg(company_count, raw[name], X=None)
-            for name in ("industry", "area", "qualify")
-        ]
+        split: [hypergraph_builder(raw[name]) for name in ("industry", "area", "qualify")]
         for split, raw in (
             ("train", train_hyper_raw),
             ("valid", valid_hyper_raw),
@@ -221,7 +233,12 @@ def main() -> None:
         }
 
     set_random_seed(args.seed)
-    device = torch.device("cpu")
+    requested_device = args.device
+    if requested_device == "auto":
+        requested_device = "cuda" if torch.cuda.is_available() else "cpu"
+    device = torch.device(requested_device)
+    if device.type == "cuda" and not torch.cuda.is_available():
+        raise RuntimeError("CUDA was requested but torch.cuda.is_available() is false")
     gnn = RiskGNN(
         16,
         12,
@@ -237,11 +254,11 @@ def main() -> None:
         5,
         use_hypergraph=True,
         use_edgegraph=True,
-        hyper_impl="scipy",
+        hyper_impl=args.hyper_impl,
         use_community_prior=use_prior,
     )
-    classifier = Classifier(12, 2).to(device)
-    model = torch.nn.Sequential(gnn, classifier)
+    classifier = Classifier(12, 2)
+    model = torch.nn.Sequential(gnn, classifier).to(device)
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, 20, eta_min=1e-6)
@@ -263,7 +280,10 @@ def main() -> None:
             train_indices,
             priors["train"],
         )
-        train_loss = criterion(train_log_probability, torch.as_tensor(labels["train"]))
+        train_loss = criterion(
+            train_log_probability,
+            torch.as_tensor(labels["train"], dtype=torch.long, device=device),
+        )
         optimizer.zero_grad()
         train_loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), args.clip)
@@ -284,7 +304,8 @@ def main() -> None:
             )
             valid_loss = float(
                 criterion(
-                    valid_log_probability, torch.as_tensor(labels["valid"])
+                    valid_log_probability,
+                    torch.as_tensor(labels["valid"], dtype=torch.long, device=device),
                 ).item()
             )
             valid_auc = float(roc_auc_score(labels["valid"], valid_probability))
@@ -295,7 +316,10 @@ def main() -> None:
             best_epoch = epoch
             best_auc = valid_auc
             best_loss = valid_loss
-            best_state = copy.deepcopy(model.state_dict())
+            best_state = {
+                name: value.detach().cpu().clone()
+                for name, value in model.state_dict().items()
+            }
         print(
             f"epoch={epoch} seconds={time.time() - epoch_started:.3f} "
             f"train_loss={train_loss.item():.6f} valid_loss={valid_loss:.6f} "
@@ -335,7 +359,7 @@ def main() -> None:
     )
     test_metrics = classification_metrics(labels["test"], test_probability, threshold)
     result = {
-        "protocolVersion": 1,
+        "protocolVersion": 2,
         "variant": args.variant,
         "variantConfig": VARIANTS[args.variant],
         "seed": args.seed,
@@ -343,8 +367,22 @@ def main() -> None:
         "bestEpoch": best_epoch,
         "selectionMetric": "validation_roc_auc",
         "confidenceThreshold": args.confidence_threshold,
+        "hyperImpl": args.hyper_impl,
         "parameterCount": sum(parameter.numel() for parameter in model.parameters()),
         "runtimeSeconds": time.time() - started,
+        "device": str(device),
+        "torchVersion": torch.__version__,
+        "cudaVersion": torch.version.cuda,
+        "cudaDevice": (
+            torch.cuda.get_device_name(device) if device.type == "cuda" else None
+        ),
+        "embeddingPath": str(embedding_path),
+        "embeddingSha256": file_sha256(embedding_path),
+        "embeddingManifestSha256": (
+            file_sha256(embedding_path.parent / "manifest.json")
+            if (embedding_path.parent / "manifest.json").exists()
+            else None
+        ),
         "sourceSha256": {
             name: file_sha256(path) for name, path in MODEL_SOURCE_FILES.items()
         },
