@@ -1,23 +1,8 @@
 from __future__ import annotations
 
-import importlib.util
-from pathlib import Path
-
 import numpy as np
 
-ROOT = Path(__file__).resolve().parents[1]
-
-
-def load_module(name: str, filename: str):
-    spec = importlib.util.spec_from_file_location(name, ROOT / filename)
-    assert spec is not None and spec.loader is not None
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
-
-
-simulator = load_module("smesd_uncertainty_simulator", "simulate_smesd_uncertainty.py")
-protocol = load_module("smesd_uncertainty_protocol", "uncertainty_protocol.py")
+from smesd_uncertainty import protocol, simulation
 
 
 def test_extract_logical_pairs_requires_and_preserves_reverse_edges() -> None:
@@ -27,7 +12,7 @@ def test_extract_logical_pairs_requires_and_preserves_reverse_edges() -> None:
         [1.0, 1.0, 25.0, 25.0],
     )
 
-    pairs = simulator.extract_logical_pairs(graph, company_count=5)
+    pairs = simulation.extract_logical_pairs(graph, company_count=5)
 
     assert pairs.source.tolist() == [0, 1]
     assert pairs.target.tolist() == [5, 2]
@@ -35,19 +20,65 @@ def test_extract_logical_pairs_requires_and_preserves_reverse_edges() -> None:
     assert pairs.strength.tolist() == [1.0, 25.0]
 
 
-def test_calibrated_confidence_matches_registered_truth_rates() -> None:
-    true_confidence, false_confidence = simulator.assign_calibrated_confidence(
-        true_count=10_000,
-        false_count=4_000,
+def test_observation_confidence_keeps_true_edges_and_marks_additions_low() -> None:
+    clean = simulation.LogicalPairs(
+        source=np.arange(100),
+        target=np.arange(100, 200),
+        relation=np.repeat([0, 2], 50),
+        strength=np.full(100, 25.0, dtype=np.float32),
+    )
+    false = simulation.LogicalPairs(
+        source=np.arange(20),
+        target=np.arange(200, 220),
+        relation=np.repeat([0, 2], 10),
+        strength=np.ones(20, dtype=np.float32),
+    )
+
+    true_confidence, false_confidence = simulation.assign_observation_confidence(
+        clean,
+        false,
         rng=np.random.default_rng(14),
     )
 
-    for confidence in simulator.CONFIDENCE_LEVELS:
-        true_count = int(np.isclose(true_confidence, confidence).sum())
-        false_count = int(np.isclose(false_confidence, confidence).sum())
-        empirical = true_count / (true_count + false_count)
-        assert abs(empirical - float(confidence)) < 0.002
-    assert np.isclose(true_confidence, 1.0).any()
+    assert np.all(true_confidence == 1.0)
+    assert np.all(false_confidence >= 0.05)
+    assert np.all(false_confidence <= 0.2)
+    assert np.unique(false_confidence).size > 2
+
+
+def test_scenario_adds_full_noise_ratio_without_deleting_true_edges() -> None:
+    clean = simulation.LogicalPairs(
+        source=np.arange(100),
+        target=np.arange(100, 200),
+        relation=np.repeat([0, 2], 50),
+        strength=np.full(100, 25.0, dtype=np.float32),
+    )
+
+    scenario = simulation.build_scenario(
+        clean, noise_ratio=0.4, rng=np.random.default_rng(14)
+    )
+
+    assert int(scenario["is_true"].sum()) == 100
+    assert int((~scenario["is_true"]).sum()) == 40
+    assert len(scenario["source"]) == 140
+    assert np.all(scenario["confidence"][scenario["is_true"]] == 1.0)
+    assert np.all(scenario["strength"][~scenario["is_true"]] == 1.0)
+
+
+def test_generated_false_pairs_have_neutral_strength() -> None:
+    clean = simulation.LogicalPairs(
+        source=np.arange(20),
+        target=np.arange(100, 120),
+        relation=np.repeat([0, 2], 10),
+        strength=np.arange(1, 21, dtype=np.float32),
+    )
+
+    false = simulation.generate_false_pairs(
+        clean, noise_ratio=0.4, rng=np.random.default_rng(14)
+    )
+
+    assert len(false) == 8
+    assert np.all(false.strength == 1.0)
 
 
 def test_directed_graph_keeps_pairs_and_separates_confidence_from_strength() -> None:
@@ -165,3 +196,62 @@ def test_embedding_graph_mode_matches_variant_topology() -> None:
     assert protocol.embedding_graph_mode("comrisk_noisy") == "all"
     assert protocol.embedding_graph_mode("riskgnn_gated") == "all"
     assert protocol.embedding_graph_mode("riskgnn_filter") == "filter"
+    assert protocol.embedding_spec("riskgnn_noisy") == ("all", "ignore")
+    assert protocol.embedding_spec("riskgnn_embed") == ("all", "gate")
+    assert protocol.embedding_spec("riskgnn_gated") == ("all", "gate")
+    assert protocol.embedding_spec("riskgnn_shuffled") == ("all", "shuffle")
+
+
+def test_metapath_graph_preserves_confidence_for_both_directions() -> None:
+    scenario = {
+        "source": np.asarray([0, 4]),
+        "target": np.asarray([4, 1]),
+        "relation": np.asarray([0, 8]),
+        "strength": np.ones(2, dtype=np.float32),
+        "confidence": np.asarray([0.2, 0.8], dtype=np.float32),
+        "is_true": np.asarray([False, True]),
+    }
+
+    edges, confidence = protocol.build_metapath_graph(
+        {"train": scenario},
+        graph_mode="all",
+        confidence_mode="gate",
+        seed=14,
+        threshold=0.5,
+        company_count=4,
+        person_count=2,
+    )
+
+    assert edges[0].tolist() == [[0, 0]]
+    assert edges[1].tolist() == [[0, 0]]
+    assert edges[8].tolist() == [[0, 1]]
+    assert edges[9].tolist() == [[1, 0]]
+    assert np.allclose(confidence[0], [0.2])
+    assert np.allclose(confidence[1], [0.2])
+    assert np.allclose(confidence[8], [0.8])
+    assert np.allclose(confidence[9], [0.8])
+
+
+def test_metapath_graph_uses_strongest_confidence_for_duplicate_edge() -> None:
+    base = {
+        "source": np.asarray([0]),
+        "target": np.asarray([4]),
+        "relation": np.asarray([0]),
+        "strength": np.ones(1, dtype=np.float32),
+        "is_true": np.asarray([True]),
+    }
+    first = {**base, "confidence": np.asarray([0.2], dtype=np.float32)}
+    second = {**base, "confidence": np.asarray([0.8], dtype=np.float32)}
+
+    _, confidence = protocol.build_metapath_graph(
+        {"train": first, "valid": second},
+        graph_mode="all",
+        confidence_mode="gate",
+        seed=14,
+        threshold=0.5,
+        company_count=4,
+        person_count=2,
+    )
+
+    assert np.allclose(confidence[0], [0.8])
+    assert np.allclose(confidence[1], [0.8])

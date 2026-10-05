@@ -79,7 +79,7 @@ Developed against Python 3.13, PyTorch 2.7.1 (CPU or CUDA), torch-geometric 2.8.
   [ComRisk repo](https://github.com/shaopengw/ComRisk) (`data/*.pkl`).
 - **Singapore ACRA/GLEIF export** (`data_sg_v7/comrisk_export/`, gitignored,
   ~150MB per version): a partner-provided parquet export, not redistributed here.
-  See `SMEsD.md` for the SMEsD schema; the Singapore export's schema/loader is
+  See `../baseline/SMEsD.md` for the SMEsD schema; the Singapore export's schema/loader is
   `data_sg_v7/comrisk_export/load_comrisk.py`.
 
 ## Running it

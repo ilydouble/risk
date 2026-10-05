@@ -1,21 +1,6 @@
 from __future__ import annotations
 
-import importlib.util
-from pathlib import Path
-
-ROOT = Path(__file__).resolve().parents[1]
-
-
-def load_summary_module():
-    path = ROOT / "summarize_uncertainty_results.py"
-    spec = importlib.util.spec_from_file_location("uncertainty_summary", path)
-    assert spec is not None and spec.loader is not None
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
-
-
-summary = load_summary_module()
+from smesd_uncertainty import summary
 
 
 def result(variant: str, seed: int, auc: float, brier: float) -> dict:

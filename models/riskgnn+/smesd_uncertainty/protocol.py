@@ -12,36 +12,49 @@ VARIANTS: dict[str, dict[str, Any]] = {
         "use_prior": False,
         "graph": "oracle",
         "confidence": "ignore",
+        "embedding_confidence": "ignore",
     },
     "comrisk_noisy": {
         "use_prior": False,
         "graph": "all",
         "confidence": "ignore",
+        "embedding_confidence": "ignore",
     },
     "riskgnn_noisy": {
         "use_prior": True,
         "graph": "all",
         "confidence": "ignore",
+        "embedding_confidence": "ignore",
     },
     "riskgnn_filter": {
         "use_prior": True,
         "graph": "filter",
         "confidence": "ignore",
+        "embedding_confidence": "ignore",
+    },
+    "riskgnn_embed": {
+        "use_prior": True,
+        "graph": "all",
+        "confidence": "ignore",
+        "embedding_confidence": "gate",
     },
     "riskgnn_gated": {
         "use_prior": True,
         "graph": "all",
         "confidence": "gate",
+        "embedding_confidence": "gate",
     },
     "riskgnn_shuffled": {
         "use_prior": True,
         "graph": "all",
         "confidence": "shuffle",
+        "embedding_confidence": "shuffle",
     },
     "riskgnn_inverted": {
         "use_prior": True,
         "graph": "all",
         "confidence": "invert",
+        "embedding_confidence": "invert",
     },
 }
 
@@ -66,6 +79,16 @@ def embedding_graph_mode(variant: str) -> str:
     return str(VARIANTS[variant]["graph"])
 
 
+def embedding_spec(variant: str) -> tuple[str, str]:
+    config = VARIANTS[variant]
+    return str(config["graph"]), str(config["embedding_confidence"])
+
+
+def embedding_key(variant: str) -> str:
+    graph_mode, confidence_mode = embedding_spec(variant)
+    return f"{graph_mode}_{confidence_mode}"
+
+
 def scenario_mask(
     scenario: dict[str, np.ndarray], graph_mode: str, threshold: float
 ) -> np.ndarray:
@@ -79,14 +102,16 @@ def scenario_mask(
     return mask
 
 
-def build_metapath_edges(
+def build_metapath_graph(
     scenarios: dict[str, dict[str, np.ndarray]],
     graph_mode: str,
+    confidence_mode: str,
+    seed: int,
     threshold: float,
     company_count: int,
     person_count: int,
-) -> dict[int, np.ndarray]:
-    """Build deduplicated local-index edge arrays for MetaPath2Vec.
+) -> tuple[dict[int, np.ndarray], dict[int, np.ndarray]]:
+    """Build local-index edges and confidence for MetaPath2Vec.
 
     Scenario files contain one logical direction (the even relation id) in global
     node ids. This function restores the paired reverse relation and converts
@@ -94,12 +119,21 @@ def build_metapath_edges(
     ``>= company_count`` at the company/person boundary.
     """
     by_relation: dict[int, list[np.ndarray]] = {relation: [] for relation in range(12)}
+    confidence_by_relation: dict[int, list[np.ndarray]] = {
+        relation: [] for relation in range(12)
+    }
     node_count = company_count + person_count
     for scenario in scenarios.values():
         mask = scenario_mask(scenario, graph_mode, threshold)
         source = scenario["source"][mask].astype(np.int64, copy=False)
         target = scenario["target"][mask].astype(np.int64, copy=False)
         relation = scenario["relation"][mask].astype(np.int64, copy=False)
+        confidence = transform_confidence(
+            scenario["confidence"][mask].astype(np.float32, copy=True),
+            relation,
+            confidence_mode,
+            seed,
+        )
         if ((source < 0) | (source >= node_count)).any() or (
             (target < 0) | (target >= node_count)
         ).any():
@@ -109,16 +143,24 @@ def build_metapath_edges(
             if not relation_mask.any():
                 continue
             forward_edges = np.column_stack((source[relation_mask], target[relation_mask]))
+            forward_confidence = confidence[relation_mask]
             by_relation[forward].append(forward_edges)
             by_relation[forward + 1].append(forward_edges[:, ::-1])
+            confidence_by_relation[forward].append(forward_confidence)
+            confidence_by_relation[forward + 1].append(forward_confidence)
 
     result: dict[int, np.ndarray] = {}
+    result_confidence: dict[int, np.ndarray] = {}
     for relation, chunks in by_relation.items():
-        edges = (
-            np.unique(np.concatenate(chunks, axis=0), axis=0)
-            if chunks
-            else np.empty((0, 2), dtype=np.int64)
-        )
+        if chunks:
+            raw_edges = np.concatenate(chunks, axis=0)
+            raw_confidence = np.concatenate(confidence_by_relation[relation])
+            edges, inverse = np.unique(raw_edges, axis=0, return_inverse=True)
+            confidence = np.zeros(len(edges), dtype=np.float32)
+            np.maximum.at(confidence, inverse, raw_confidence)
+        else:
+            edges = np.empty((0, 2), dtype=np.int64)
+            confidence = np.empty(0, dtype=np.float32)
         source_type, target_type = NODE_TYPES[relation]
         if source_type == "person":
             if (edges[:, 0] < company_count).any():
@@ -133,7 +175,27 @@ def build_metapath_edges(
         elif (edges[:, 1] >= company_count).any():
             raise ValueError(f"relation {relation} has a person in company target slot")
         result[relation] = edges
-    return result
+        result_confidence[relation] = confidence
+    return result, result_confidence
+
+
+def build_metapath_edges(
+    scenarios: dict[str, dict[str, np.ndarray]],
+    graph_mode: str,
+    threshold: float,
+    company_count: int,
+    person_count: int,
+) -> dict[int, np.ndarray]:
+    edges, _ = build_metapath_graph(
+        scenarios,
+        graph_mode,
+        "ignore",
+        0,
+        threshold,
+        company_count,
+        person_count,
+    )
+    return edges
 
 
 def load_scenario(path: Path) -> dict[str, np.ndarray]:
@@ -163,6 +225,20 @@ def _shuffle_confidence_within_relation(
     return shuffled
 
 
+def transform_confidence(
+    confidence: np.ndarray, relation: np.ndarray, mode: str, seed: int
+) -> np.ndarray:
+    if mode == "ignore":
+        confidence.fill(1.0)
+    elif mode == "shuffle":
+        confidence = _shuffle_confidence_within_relation(confidence, relation, seed)
+    elif mode == "invert":
+        confidence = np.clip(1.05 - confidence, 0.05, 1.0).astype(np.float32)
+    elif mode != "gate":
+        raise ValueError(f"unknown confidence mode {mode}")
+    return confidence
+
+
 def build_directed_graph(
     scenario: dict[str, np.ndarray], variant: str, seed: int, threshold: float
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
@@ -188,15 +264,7 @@ def build_directed_graph(
     strength = strength[order]
     confidence = confidence[order]
 
-    confidence_mode = config["confidence"]
-    if confidence_mode == "ignore":
-        confidence.fill(1.0)
-    elif confidence_mode == "shuffle":
-        confidence = _shuffle_confidence_within_relation(confidence, relation, seed)
-    elif confidence_mode == "invert":
-        confidence = np.clip(1.05 - confidence, 0.05, 1.0).astype(np.float32)
-    elif confidence_mode != "gate":
-        raise ValueError(f"unknown confidence mode {confidence_mode}")
+    confidence = transform_confidence(confidence, relation, config["confidence"], seed)
 
     edge_index = np.column_stack(
         (np.concatenate((source, target)), np.concatenate((target, source)))
