@@ -277,12 +277,13 @@ class JobStore:
                 text(
                     f"UPDATE {target} SET status=:status, error=:error, "
                     "progress=CAST(:progress AS jsonb), "
-                    "finished_at=CASE WHEN :status='failed' THEN now() ELSE NULL END "
+                    "finished_at=CASE WHEN :terminal THEN now() ELSE NULL END "
                     "WHERE id=:target_id"
                 ),
                 {
                     "target_id": target_id,
                     "status": status,
+                    "terminal": not retry,
                     "error": message,
                     "progress": json.dumps(
                         {"stage": "retrying" if retry else "failed", "percent": 0}
@@ -315,11 +316,14 @@ class ModelingWorker:
         return True
 
     async def _download(self, object_key: str) -> bytes:
+        payload = bytearray()
         async with self.storage.open_object(object_key) as stream:
-            payload = await stream.read(self.settings.max_bundle_bytes + 1)
-        if len(payload) > self.settings.max_bundle_bytes:
-            raise ValueError("bundle exceeds worker size limit")
-        return payload
+            # Network streams may return a short read before EOF, even for a large read size.
+            async for chunk in stream.iter_chunks():
+                if len(payload) + len(chunk) > self.settings.max_bundle_bytes:
+                    raise ValueError("bundle exceeds worker size limit")
+                payload.extend(chunk)
+        return bytes(payload)
 
     async def _analyze(self, job: Job) -> None:
         await self.store.progress(job, "downloading", 10)

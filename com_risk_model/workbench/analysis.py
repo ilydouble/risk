@@ -50,8 +50,12 @@ def _psi(train: pd.Series, other: pd.Series) -> float:
             train_bins, other_bins = train.astype(str), other.astype(str)
     else:
         train_bins, other_bins = train.astype(str), other.astype(str)
-    left = pd.Series(train_bins).fillna("__MISSING__").value_counts(normalize=True)
-    right = pd.Series(other_bins).fillna("__MISSING__").value_counts(normalize=True)
+    left = (
+        pd.Series(train_bins).astype("string").fillna("__MISSING__").value_counts(normalize=True)
+    )
+    right = (
+        pd.Series(other_bins).astype("string").fillna("__MISSING__").value_counts(normalize=True)
+    )
     categories = left.index.union(right.index)
     expected = left.reindex(categories, fill_value=0).clip(lower=1e-6)
     actual = right.reindex(categories, fill_value=0).clip(lower=1e-6)

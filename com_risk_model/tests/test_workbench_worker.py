@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import asyncio
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+from types import SimpleNamespace
 from typing import Any
 
 import pytest
@@ -115,3 +118,23 @@ def test_storage_failure_is_recorded_instead_of_crashing_worker() -> None:
     assert asyncio.run(worker.run_once()) is True
     assert len(worker.store.failed) == 1  # type: ignore[attr-defined]
     assert str(worker.store.failed[0][1]) == "RustFS unavailable"  # type: ignore[attr-defined]
+
+
+class _ChunkedStorage:
+    @asynccontextmanager
+    async def open_object(self, _: str) -> AsyncIterator[_ChunkedStorage]:
+        yield self
+
+    async def iter_chunks(self) -> AsyncIterator[bytes]:
+        for chunk in (b"PK", b"\x03\x04", b"complete payload"):
+            yield chunk
+
+
+def test_download_collects_short_network_chunks_and_enforces_total_limit() -> None:
+    worker = ModelingWorker.__new__(ModelingWorker)
+    worker.storage = _ChunkedStorage()  # type: ignore[assignment]
+    worker.settings = SimpleNamespace(max_bundle_bytes=100)  # type: ignore[assignment]
+    assert asyncio.run(worker._download("bundle.zip")) == b"PK\x03\x04complete payload"
+    worker.settings = SimpleNamespace(max_bundle_bytes=4)  # type: ignore[assignment]
+    with pytest.raises(ValueError, match="size limit"):
+        asyncio.run(worker._download("bundle.zip"))

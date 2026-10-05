@@ -9,9 +9,16 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from workbench.analysis import analyze_bundle
+from workbench.analysis import _psi, analyze_bundle
 from workbench.data import DataValidationError, load_bundle
 from workbench.demo import build_demo_bundle
+
+
+def test_numeric_psi_handles_interval_bins_and_values_outside_training_range() -> None:
+    train = pd.Series(range(100), dtype=float)
+    assert _psi(train, train) == pytest.approx(0)
+    shifted = pd.Series([*range(90), *([1000] * 10)], dtype=float)
+    assert _psi(train, shifted) > 0
 
 
 def test_analysis_uses_declared_splits_without_raw_preview(tmp_path: Path) -> None:
