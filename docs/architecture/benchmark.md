@@ -7,9 +7,9 @@
 启动时校验实际所选目录中的 manifest、metadata、metrics 和 weights，并预计算测试集预测。
 数据留在文件，不写入 PostgreSQL 企业表或 Neo4j 演示图。
 
-来源为 [ComRisk 项目](https://github.com/shaopengw/ComRisk) 固定提交
-`a80524b3b67436cd2f74755f6ffa08a554ff2d02` 的 SMEsD。转换去除跨划分重复企业，
-训练/验证/测试企业数为 2816/686/474；仓库只包含测试快照。训练与本地推理入口在
+来源为固定提交 `a80524b3b67436cd2f74755f6ffa08a554ff2d02` 的 SMEsD，去重后训练/验证/测试
+企业数为 2816/686/474，仓库只包含测试快照。下载校验、去重规则和字节保留迁移见
+[模型工程的来源说明](../../com_risk_model/docs/demo-bundle.md)；训练与本地推理入口在
 [模型工程](../../com_risk_model/README.md)，完整重训需另行取得训练与验证数据。
 
 ```bash

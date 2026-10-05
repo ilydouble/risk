@@ -16,19 +16,13 @@
 
 ## SMEsD 本地文件
 
-位置：`com_risk_model/data/raw/smesd/`（被 gitignore 排除，不提交到公共仓库）。
+原始 pickle 的本地位置、六个文件名与 SHA-256 见[数据集目录说明](../../datasets/README.md)；
+来源提交固定为 `a80524b3b67436cd2f74755f6ffa08a554ff2d02`。
 
-- `train_data.pkl`
-- `validate_data.pkl`
-- `test_data.pkl`
-- `split_data_idx.pkl`
-- `meta_emb.pkl`
-- `node2index.pkl`
-
-来源提交：`a80524b3b67436cd2f74755f6ffa08a554ff2d02`。
-原开发者在调研阶段验证过下载与 SHA-256，后续转换及训练结果见 first-run-results.md。当前自动下载入口只取得 train/validate/test/split 四个文件，不获取 meta_emb.pkl 或 node2index.pkl。
-上游按破产时间划分训练（2014–2018）、验证（2019）、测试（2020–2021）。实际划分成员和特征观察时点需在适配时核验，不能将三个快照直接拼成单一静态图，否则可能泄漏未来信息。
-上游未见明确 LICENSE 文件；公开可下载不等于无限制再分发授权。
+- 上游按破产时间划分训练（2014–2018）、验证（2019）、测试（2020–2021）。实际划分成员和特征观察时点需在适配时核验，不能将三个快照直接拼成单一静态图，否则可能泄漏未来信息。
+- 当前自动下载入口只取得 train/validate/test/split 四个文件，不获取 `meta_emb.pkl` 或 `node2index.pkl`。
+- 后续转换及训练结果见 [first-run-results.md](first-run-results.md)。
+- 上游未见明确 LICENSE 文件；公开可下载不等于无限制再分发授权。
 
 ## MSGraphFin 当前状态
 

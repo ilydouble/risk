@@ -47,6 +47,7 @@ Compose 启动 PostgreSQL 18、Redis、RustFS 1.0.0 GA、Neo4j Community、FastA
 | `gateway/` | Go 网关；Session 校验、可信身份注入、统一网关错误 |
 | `infra/` | RustFS 与 Neo4j 一次性初始化脚本 |
 | `contracts/openapi.json` | 后端导出的权威 HTTP 契约 |
+| `CONTEXT.md` | 企业事实、观察标签与模型风险的术语边界 |
 | `docs/architecture/` | 架构、模型研究记录与本地开发说明 |
 
 ## 验证与契约生成

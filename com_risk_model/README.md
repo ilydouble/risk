@@ -91,7 +91,7 @@ uv run python -m testing.cli evaluate --model weights/smesd-v1 \
 `validate --data ...` 可单独检查数据结构；指定 `--model` 后同时检查模型包与快照对应关系。
 推理/解释/评估使用已经导出的包，所选快照必须与包内清单一致。
 发布和挂载流程见[模型产物约定](../docs/architecture/model-artifacts.md)。
-历史实验及数据来源见 [docs/demo-bundle.md](docs/demo-bundle.md)。
+历史实验、数据来源与调研记录见 [docs/ 导览](docs/README.md)。
 
 ## 唯一共享模型内核
 
