@@ -25,14 +25,6 @@ export default function Overview() {
         <>
           <button
             type="button"
-            onClick={() => navigate("/benchmark")}
-            className="flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-background-300 px-3 py-2 text-xs text-foreground-700 transition-colors hover:border-background-400 hover:text-foreground-950"
-          >
-            <i className="ri-flask-line text-sm" />
-            {t("overview.actions.benchmark")}
-          </button>
-          <button
-            type="button"
             onClick={() => navigate("/modeling")}
             className="flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md bg-primary-500 px-3.5 py-2 text-xs font-medium text-background-50 transition-colors hover:bg-primary-600"
           >

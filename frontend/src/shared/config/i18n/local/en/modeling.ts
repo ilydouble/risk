@@ -1,19 +1,148 @@
 export default {
-  modeling: {
-    eyebrow: "Metadata-driven Risk Modeling", title: "Risk Modeling Workbench",
-    subtitle: "Upload a standard ZIP produced by an external adapter. A local worker analyzes data, selects features, trains RiskGNN, and evaluates ablations.",
-    retry: "Refresh", loading: "Loading…",
-    empty: "No standard bundles yet. Generate a Bundle v1 ZIP with an external adapter first.",
-    datasets: "Bundles", experiments: "Training experiments", runs: "{{count}} runs",
-    steps: { data: "Bundle", quality: "Analysis", build: "Build", evaluate: "Evaluation" },
-    task: { loan_application: "Loan application risk", entity_snapshot: "Entity operating risk", legacy_tabular: "Legacy tabular data" },
-    status: { pending_upload: "Waiting for upload", queued: "Queued", running: "Running", ready: "Analyzed", completed: "Completed", failed: "Failed", legacy: "Legacy read-only" },
-    welcome: { title: "Start with a standard bundle", subtitle: "The workbench does not map customer fields. It accepts Bundle v1 with materialized samples, target, splits, and graph snapshots." },
-    upload: { title: "Upload standard bundle", subtitle: "Direct RustFS upload and asynchronous validation", drop: "Drop a ZIP or click to choose", limit: "Bundle v1 · 512 MB · CSV / Parquet", name: "Dataset name", namePlaceholder: "Example: application risk sample v1", action: "Upload and queue analysis", uploading: "Uploading…", queueing: "Creating analysis job…" },
-    bundle: { title: "Bundle manifest", schema: "Contract", task: "Task semantics", status: "Status", rows: "Samples", target: "Target definition", positive: "Positive class", window: "Prediction window", files: "Files", staticWarning: "This bundle declares a static graph experiment and must not be described as strict future prediction." },
-    analysis: { views: { quality: "Quality", signal: "Feature signals", drift: "Split drift", graph: "Graph" }, rows: "Samples", columns: "Columns", duplicates: "Duplicate sample IDs", leakage: "Leakage hints", fields: "Field profiles", field: "Field", group: "Group", type: "Type", missing: "Missing", unique: "Unique", leakageHints: "Potential leakage", signalTitle: "Training-only univariate signals", graphTitle: "Graph profile", noGraph: "No valid graph components; only tabular models are available.", noRawPreview: "Raw customer rows are neither stored nor displayed." },
-    variant: { logistic_regression: "Logistic baseline", hist_gradient_boosting: "HGB baseline", graph_stats_hgb: "Graph-statistics HGB baseline", gnn_self_only: "RiskGNN · intra-risk only", gnn_no_hyper: "RiskGNN · relation contagion", gnn_full: "RiskGNN · relation and hypergraph" },
-    builder: { title: "Train RiskGNN", subtitle: "One shared model core; baselines and branches exist only for validation", name: "Experiment name", target: "Target", seed: "Random seed", featureMode: "Feature mode", recommended: "Recommended", manual: "Manual", trainingMode: "Training plan", execution: "This run", mode: { standard: { title: "Standard", description: "Train only the production RiskGNN configuration supported by this bundle." }, baseline: { title: "Baseline comparison", description: "Train RiskGNN with HGB as a reference; without a graph, run baseline diagnostics only." }, ablation: { title: "Full ablation", description: "Validate intra-risk, relation contagion and hypergraph branches with offline baselines." } }, events: "Event encoder", relations: "Relation propagation", hyperedges: "Hypergraph propagation", requiresGraph: "Requires valid nodes and relations", requiresHyper: "Requires hyperedges", method: "Imputation, scaling, vocabularies and selection fit only on train. Validation drives early stopping and thresholds; test is final reporting only. Baselines are never published as product models.", run: "Queue training", queueing: "Creating job…" },
-    result: { completed: "Experiment completed", comparison: "RiskGNN configurations and evaluation baselines", configuration: "Training configuration", duration: "Duration", threshold: "Threshold metrics", explainability: "Explainability", contagionGate: "Contagion-risk fusion weight", hyperWeights: "Hyperedge type weights", profile: { title: "Dataset training profile", dataset: "Dataset", samples: "Samples", entities: "Entities", features: "Features", relations: "Relations", hyperedges: "Hyperedges", seed: "Seed", fingerprint: "Data fingerprint", independent: "Shared method, independent training", independentDescription: "This experiment uses the shared RiskGNN core, while weights and embeddings are randomly initialized and learned only on the current dataset. No parameters are transferred from SMEsD, Singapore data, or another experiment.", fullProfile: "View full auditable profile", legacyUnavailable: "This historical experiment predates training profiles. Run it again to produce a complete profile." } },
-  },
+  "modeling": {
+    "title": "Model workbench",
+    "subtitle": "Upload data, inspect quality and splits, then train, test and publish an available model configuration.",
+    "disclaimer": "smoke-v1 real subset experiment: 2,000 labeled targets, a fixed static graph and CPU training. Scores reflect Singapore corporate distress labels, not credit default probability. Two epochs validate the workflow only.",
+    "refresh": "Refresh",
+    "loading": "Loading…",
+    "scope": "Only your datasets, runs and models are shown. Legacy Bundle records remain in the database and are not converted.",
+    "tabs": {
+      "dataset": "Datasets",
+      "run": "Experiments",
+      "model": "Model versions"
+    },
+    "errors": {
+      "unavailable": "Model service unavailable. Please retry later.",
+      "notReady": "Wait for dataset validation to complete.",
+      "state": "This action is unavailable in the current state.",
+      "missing": "Company or model resource not found.",
+      "file": "Invalid ZIP file or resource limits exceeded.",
+      "incompatible": "The selected model configuration does not support this dataset protocol."
+    },
+    "upload": {
+      "title": "Upload a training dataset",
+      "pick": "Choose a ZIP dataset",
+      "note": "Supports comrisk_export and Bundle v1, up to 512 MiB. The server validates the selected protocol; scripts in archives are never executed.",
+      "progress": "Uploading",
+      "action": "Upload and validate",
+      "verifiedFiles": "Server-verified file index"
+    },
+    "name": "Dataset name",
+    "epochs": "Epochs",
+    "train": "Create experiment",
+    "cancelling": "Cancelling",
+    "cancel": "Cancel experiment",
+    "rerun": "Run again",
+    "trainLoss": "Training loss",
+    "validationLoss": "Validation loss",
+    "attempt": "Attempt",
+    "report": "Independent test report",
+    "reportNote": "The chosen checkpoint is reloaded in a fresh process and evaluated on the frozen test split. Validation selects the checkpoint.",
+    "publish": "Publish immutable model version",
+    "events": "Execution events and diagnostics",
+    "emptyRun": "Select an experiment or create one from a validated dataset.",
+    "modelNote": "This version binds a tested model bundle and dataset fingerprint. Publishing does not switch a production model.",
+    "download": "Download complete model",
+    "predict": "Predict companies",
+    "predictNote": "Only IDs in the model graph are supported, up to 32 per request. Input order is preserved.",
+    "enterpriseIds": "Company IDs (newlines or commas)",
+    "fillExamples": "Use model company examples",
+    "probability": "Distress classification score",
+    "label": "Predicted label",
+    "emptyModel": "Publish a model after an experiment passes independent testing.",
+    "retired": "Legacy benchmark retired",
+    "retiredNote": "The SMEsD benchmark has been replaced by the independent RiskGNN workbench. Historical data and local artifacts are retained.",
+    "status": {
+      "pending_upload": "Awaiting upload",
+      "queued": "Queued",
+      "running": "Running",
+      "ready": "Validated",
+      "failed": "Failed",
+      "cancelled": "Cancelled",
+      "completed": "Completed",
+      "starting": "Starting",
+      "validating": "Full validation",
+      "preparing": "Preparing subset",
+      "training": "Training",
+      "testing": "Independent test",
+      "uploading": "Uploading artifacts",
+      "expired": "Lease expired",
+      "retrying": "Awaiting retry"
+    },
+    "metrics": {
+      "rocAuc": "ROC-AUC",
+      "prAuc": "PR-AUC",
+      "ks": "KS",
+      "brier": "Brier",
+      "f1": "F1",
+      "count": "Test samples",
+      "positiveCount": "Test positives",
+      "precision": "Precision",
+      "recall": "Recall"
+    },
+    "confusion": "Confusion matrix (rows: actual; columns: predicted)",
+    "modelChoice": "Model configuration",
+    "catalog": "Model capabilities",
+    "available": "Training and publication available",
+    "analysisOnly": "Analysis is complete. No training configuration is connected for this dataset protocol yet.",
+    "dataFormat": "Dataset protocol",
+    "models": {
+      "riskgnn-node-edge": "RiskGNN · node + edge",
+      "riskgnn-node-only": "RiskGNN · node only",
+      "comrisk-baseline": "ComRisk baseline",
+      "riskgnn-plus": "RiskGNN+"
+    },
+    "capabilityReasons": {
+      "ARTIFACT_ADAPTER_PENDING": "Artifact adapter pending",
+      "RESEARCH_VALIDATION_PENDING": "Research validation pending"
+    },
+    "analysis": {
+    "iv": "IV",
+    "mutualInformation": "Mutual information",
+      "title": "Dataset analysis",
+      "rows": "rows",
+      "driftSample": "Rows sampled for PSI",
+      "splitCounts": "Samples · positive rate",
+      "feature": "Feature",
+      "missing": "Missing rate",
+      "unique": "Distinct values",
+      "auc": "Training univariate AUC",
+      "validationPsi": "Validation PSI",
+      "testPsi": "Test PSI",
+      "constant": "constant",
+      "warnings": "Features to review",
+      "correlations": "Training feature correlations",
+      "graph": "Graph summary",
+      "scopes": {
+        "full": "Computed from all uploaded samples",
+        "full_quality_sampled_drift": "Full quality scan; PSI uses a fixed sample of up to 5,000 rows per split"
+      },
+      "splits": {
+        "train": "Training",
+        "validation": "Validation",
+        "test": "Test"
+      },
+      "warningCodes": {
+        "SUSPICIOUS_FEATURE_NAME": "Name may indicate an ID or post-outcome information",
+        "NEAR_PERFECT_TRAINING_SIGNAL": "Near-perfect training signal; review for leakage",
+        "REVIEW_FEATURE": "Review the feature definition"
+      }
+    },
+    "profile": {
+      "title": "Experiment profile",
+      "target": "Prediction target",
+      "sgTarget": "Singapore registration distress / liquidation proxy",
+      "selection": "Checkpoint selection",
+      "bestEpoch": "Selected epoch",
+      "features": "Actual features",
+      "preprocessing": "Preprocessing fit split",
+      "provenance": "Data and implementation versions",
+      "datasetHash": "Dataset SHA-256",
+      "sourceHash": "Model and adapter source SHA-256",
+      "dependencies": "Dependencies",
+      "criteria": {
+        "validation_loss": "Validation loss"
+      }
+    }
+  }
 };

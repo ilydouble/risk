@@ -45,7 +45,7 @@ export const NAV_GROUPS: NavGroup[] = [
       {
         key: "model",
         labelKey: "nav.model",
-        path: "/model-card",
+        path: "/modeling?tab=model",
         icon: "ri-file-info-line",
       },
     ],

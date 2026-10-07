@@ -1,110 +1,135 @@
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { analysisOf, type ModelingDataset } from "@/entities/modeling/model/types";
-import Card from "@/shared/ui/Card";
+import type { ResponseGetDataset } from "@/shared/api/generated/schema";
 
-interface DatasetAnalysisPanelProps {
-  dataset: ModelingDataset;
-}
-
-type View = "quality" | "signal" | "drift" | "graph";
-const percent = (value: number) => `${(value * 100).toFixed(1)}%`;
-const number = (value: number | null) => value == null ? "—" : value.toFixed(4);
-
-export default function DatasetAnalysisPanel({ dataset }: DatasetAnalysisPanelProps) {
+export function DatasetAnalysisPanel({
+  dataset,
+}: {
+  dataset: ResponseGetDataset["dataset"];
+}) {
   const { t } = useTranslation();
-  const [view, setView] = useState<View>("quality");
-  const analysis = analysisOf(dataset);
-  if (!analysis) return null;
-
+  const report = dataset.analysis;
+  const number = (value: number | null | undefined) =>
+    value == null ? "—" : value.toFixed(4);
+  if (!report) return null;
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap gap-2 rounded-lg border border-background-200 bg-background-100 p-2">
-        {(["quality", "signal", "drift", "graph"] as const).map((item) => (
-          <button
-            type="button"
-            key={item}
-            onClick={() => setView(item)}
-            className={`rounded-md px-4 py-2 text-xs font-medium ${view === item ? "bg-primary-500 text-white" : "text-foreground-600 hover:bg-background-50"}`}
+    <div className="space-y-4 border-t border-background-200 pt-4">
+      <h3 className="font-semibold">{t("modeling.analysis.title")}</h3>
+      <p className="text-xs text-foreground-500">
+        {t(`modeling.analysis.scopes.${report.scope}`)} ·{" "}
+        {report.totalRows.toLocaleString()} {t("modeling.analysis.rows")}
+      </p>
+      {Object.keys(report.driftSampleRows).length > 0 && (
+        <p className="text-xs text-foreground-500">
+          {t("modeling.analysis.driftSample")}:{" "}
+          {Object.entries(report.driftSampleRows)
+            .map(([name, count]) => `${name}: ${count.toLocaleString()}`)
+            .join(" · ")}
+        </p>
+      )}
+      <div className="grid gap-3 sm:grid-cols-3">
+        {report.splits.map((split) => (
+          <div
+            className="rounded-md bg-background-50 p-3 text-xs"
+            key={split.name}
           >
-            {t(`modeling.analysis.views.${item}`)}
-          </button>
+            <strong>
+              {t(`modeling.analysis.splits.${split.name}`, {
+                defaultValue: split.name,
+              })}
+            </strong>
+            <p className="mt-2 font-mono">
+              {split.rows.toLocaleString()} ·{" "}
+              {(split.positiveRate * 100).toFixed(2)}%
+            </p>
+            <p className="text-foreground-500">
+              {t("modeling.analysis.splitCounts")}
+            </p>
+          </div>
         ))}
       </div>
-
-      {view === "quality" && (
-        <>
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-            {[
-              [t("modeling.analysis.rows"), analysis.quality.rowCount.toLocaleString()],
-              [t("modeling.analysis.columns"), String(analysis.quality.columnCount)],
-              [t("modeling.analysis.duplicates"), String(analysis.quality.duplicateSampleIds)],
-              [t("modeling.analysis.leakage"), String(analysis.leakageWarnings.length)],
-            ].map(([label, value]) => (
-              <div key={label} className="rounded-lg border border-background-200 bg-background-100 p-4">
-                <p className="text-xs text-foreground-500">{label}</p>
-                <p className="mt-1 font-heading text-2xl font-semibold text-foreground-950">{value}</p>
-              </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-left text-xs">
+          <thead>
+            <tr>
+              {[
+                "feature",
+                "missing",
+                "unique",
+                "auc",
+                "iv",
+                "mutualInformation",
+                "validationPsi",
+                "testPsi",
+              ].map((key) => (
+                <th className="whitespace-nowrap p-2" key={key}>
+                  {t(`modeling.analysis.${key}`)}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {report.features.map((feature) => (
+              <tr className="border-t border-background-200" key={feature.name}>
+                <td className="p-2 font-mono">
+                  {feature.name}
+                  {feature.constant
+                    ? ` · ${t("modeling.analysis.constant")}`
+                    : ""}
+                </td>
+                <td className="p-2">
+                  {(feature.missingRate * 100).toFixed(2)}%
+                </td>
+                <td className="p-2">{feature.uniqueCount.toLocaleString()}</td>
+                <td className="p-2">{number(feature.univariateAuc)}</td>
+                <td className="p-2">{number(feature.iv)}</td>
+                <td className="p-2">{number(feature.mutualInformation)}</td>
+                <td className="p-2">
+                  {number(
+                    report.drift.find(
+                      (item) =>
+                        item.name === feature.name &&
+                        item.split === "validation",
+                    )?.psi,
+                  )}
+                </td>
+                <td className="p-2">
+                  {number(
+                    report.drift.find(
+                      (item) =>
+                        item.name === feature.name && item.split === "test",
+                    )?.psi,
+                  )}
+                </td>
+              </tr>
             ))}
-          </div>
-          <Card title={t("modeling.analysis.fields")} icon="ri-table-line" bodyClassName="overflow-x-auto">
-            <table className="w-full min-w-[680px] text-left text-xs">
-              <thead className="border-b border-background-200 bg-background-50 text-foreground-500">
-                <tr><th className="px-4 py-2.5">{t("modeling.analysis.field")}</th><th>{t("modeling.analysis.group")}</th><th>{t("modeling.analysis.type")}</th><th>{t("modeling.analysis.missing")}</th><th>{t("modeling.analysis.unique")}</th></tr>
-              </thead>
-              <tbody>
-                {analysis.quality.columns.map((column) => (
-                  <tr key={column.name} className="border-b border-background-200/60 last:border-0">
-                    <td className="px-4 py-3 font-mono text-foreground-900">{column.name}</td>
-                    <td className="py-3 text-foreground-600">{column.group}</td>
-                    <td className="py-3 text-foreground-600">{column.kind}</td>
-                    <td className="py-3 text-foreground-600">{percent(column.missingRate)}</td>
-                    <td className="py-3 text-foreground-600">{column.uniqueCount}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </Card>
-          {analysis.leakageWarnings.length > 0 && (
-            <Card title={t("modeling.analysis.leakageHints")} icon="ri-alarm-warning-line" bodyClassName="p-5">
-              <div className="space-y-2 text-xs text-warning-700">
-                {analysis.leakageWarnings.map((item) => <p key={`${item.feature}-${item.reason}`}><b className="font-mono">{item.feature}</b> · {item.reason}</p>)}
-              </div>
-            </Card>
-          )}
-        </>
-      )}
-
-      {view === "signal" && (
-        <Card title={t("modeling.analysis.signalTitle")} icon="ri-pulse-line" bodyClassName="overflow-x-auto">
-          <table className="w-full min-w-[640px] text-left text-xs">
-            <thead className="border-b border-background-200 bg-background-50 text-foreground-500"><tr><th className="px-4 py-2.5">{t("modeling.analysis.field")}</th><th>AUC</th><th>IV</th><th>MI</th><th>{t("modeling.analysis.group")}</th></tr></thead>
-            <tbody>{analysis.signals.map((item) => <tr key={item.name} className="border-b border-background-200/60"><td className="px-4 py-3 font-mono text-foreground-900">{item.name}</td><td>{number(item.univariateAuc)}</td><td>{number(item.iv)}</td><td>{number(item.mutualInformation)}</td><td>{item.group}</td></tr>)}</tbody>
-          </table>
-        </Card>
-      )}
-
-      {view === "drift" && (
-        <div className="grid gap-4 lg:grid-cols-2">
-          {["validation", "test"].map((split) => (
-            <Card key={split} title={`${split} PSI`} icon="ri-exchange-2-line" bodyClassName="p-5">
-              <div className="space-y-2">{(analysis.drift[split] ?? []).slice(0, 12).map((item) => <div key={item.name} className="flex justify-between text-xs"><span className="font-mono text-foreground-700">{item.name}</span><b className={(item.psi ?? 0) >= 0.25 ? "text-danger-500" : "text-foreground-900"}>{number(item.psi)}</b></div>)}</div>
-            </Card>
+          </tbody>
+        </table>
+      </div>
+      {report.warnings.length > 0 && (
+        <div className="rounded-md bg-accent-500/10 p-3 text-xs">
+          <strong>{t("modeling.analysis.warnings")}</strong>
+          {report.warnings.map((warning, index) => (
+            <p key={`${warning.feature}-${index}`} className="mt-1">
+              {warning.feature}:{" "}
+              {t(`modeling.analysis.warningCodes.${warning.code}`, {
+                defaultValue: warning.code,
+              })}
+            </p>
           ))}
         </div>
       )}
-
-      {view === "graph" && (
-        <Card title={t("modeling.analysis.graphTitle")} icon="ri-share-line" bodyClassName="p-5">
-          {!analysis.graph.available ? (
-            <p className="text-sm text-foreground-500">{t("modeling.analysis.noGraph")}</p>
-          ) : (
-            <pre className="overflow-x-auto rounded-md bg-background-50 p-4 text-xs leading-relaxed text-foreground-700">{JSON.stringify(analysis.graph, null, 2)}</pre>
-          )}
-        </Card>
+      {report.correlations.length > 0 && (
+        <details className="text-xs">
+          <summary className="cursor-pointer">
+            {t("modeling.analysis.correlations")}
+          </summary>
+          {report.correlations.slice(0, 10).map((pair) => (
+            <p key={`${pair.left}-${pair.right}`} className="mt-1 font-mono">
+              {pair.left} ↔ {pair.right}: {pair.correlation.toFixed(3)}
+            </p>
+          ))}
+        </details>
       )}
-
-      <p className="text-xs text-foreground-500">{t("modeling.analysis.noRawPreview")}</p>
     </div>
   );
 }

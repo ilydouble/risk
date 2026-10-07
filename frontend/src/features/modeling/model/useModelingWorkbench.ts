@@ -1,167 +1,256 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import * as ModelingApi from "@/entities/modeling/api/modelingApi";
-import type { ModelingDataset, ModelingExperiment } from "@/entities/modeling/model/types";
+import type {
+  ModelingDataset,
+  ModelingRun,
+  ModelingVersion,
+  ModelingEvent,
+} from "@/entities/modeling/model/types";
+import type {
+  ResponsePredictModel,
+  ResponseModelingCapabilities,
+} from "@/shared/api/generated/schema";
 import { handleApiError } from "@/shared/api/http";
-
-const ERRORS = {
-  MODELING_FILE_INVALID: "ZIP 数据包不符合 Bundle v1 契约",
-  MODELING_CONFIGURATION_INVALID: "实验配置与数据包能力不匹配",
-  MODELING_UPLOAD_INCOMPLETE: "数据包尚未成功上传",
-  MODELING_DATASET_NOT_READY: "数据集尚未完成分析",
-  MODELING_STORAGE_UNAVAILABLE: "对象存储暂时不可用",
-} as const;
-
-type BusyStage = "" | "uploading" | "queueing";
-type ModelName =
-  | "logistic_regression"
-  | "hist_gradient_boosting"
-  | "graph_stats_hgb"
-  | "gnn_self_only"
-  | "gnn_no_hyper"
-  | "gnn_full";
-
-export interface RunInput {
-  datasetId: string;
-  name: string;
-  targetName: string;
-  featureMode: "recommended" | "manual";
-  featureColumns: string[];
-  models: ModelName[];
-  useEvents: boolean;
-  useRelations: boolean;
-  useHyperedges: boolean;
-  enableGnnAblations: boolean;
-  seed: number;
-}
-
-const isActive = (status: string) => ["pending_upload", "queued", "running"].includes(status);
+import { uploadObject } from "@/shared/api/objectTransfer";
 
 export function useModelingWorkbench() {
+  const { t } = useTranslation();
+  const [params, setParams] = useSearchParams();
+  const datasetId = params.get("dataset") ?? "";
+  const runId = params.get("run") ?? "";
+  const modelId = params.get("model") ?? "";
+  const [capabilities, setCapabilities] = useState<
+    ResponseModelingCapabilities["items"]
+  >([]);
   const [datasets, setDatasets] = useState<ModelingDataset[]>([]);
-  const [experiments, setExperiments] = useState<ModelingExperiment[]>([]);
-  const [selectedDatasetId, setSelectedDatasetId] = useState("");
-  const [selectedExperimentId, setSelectedExperimentId] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [busy, setBusy] = useState<BusyStage>("");
+  const [runs, setRuns] = useState<ModelingRun[]>([]);
+  const [models, setModels] = useState<ModelingVersion[]>([]);
+  const [events, setEvents] = useState<ModelingEvent[]>([]);
+  const [predictionResult, setPredictionResult] = useState<{
+    modelId: string;
+    items: ResponsePredictModel["items"];
+  }>({ modelId: "", items: [] });
+  const predictions =
+    predictionResult.modelId === modelId ? predictionResult.items : [];
   const [error, setError] = useState("");
-
-  const refresh = useCallback(async (initial = false) => {
-    if (initial) setLoading(true);
-    try {
-      const [datasetResponse, experimentResponse] = await Promise.all([
-        ModelingApi.requestListDatasets({}),
-        ModelingApi.requestListExperiments({}),
-      ]);
-      setDatasets(datasetResponse.items);
-      setExperiments(experimentResponse.items);
-      setSelectedDatasetId((current) => current || datasetResponse.items[0]?.id || "");
-      setSelectedExperimentId((current) => current || experimentResponse.items[0]?.id || "");
-    } catch (reason) {
-      setError(handleApiError(reason, ERRORS));
-    } finally {
-      if (initial) setLoading(false);
-    }
-  }, []);
-
-  const load = useCallback(async () => {
-    setError("");
-    await refresh(true);
-  }, [refresh]);
-
+  const [listError, setListError] = useState("");
+  const [eventError, setEventError] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [uploadPercent, setUploadPercent] = useState(0);
+  const eventCursor = useRef({ runId: "", after: 0 });
+  const alive = useRef(true);
   useEffect(() => {
-    void load();
-  }, [load]);
-
-  const hasActiveJobs = useMemo(
-    () => datasets.some((item) => isActive(item.status)) || experiments.some((item) => isActive(item.status)),
-    [datasets, experiments],
+    alive.current = true;
+    return () => {
+      alive.current = false;
+    };
+  }, []);
+  const formatError = useCallback(
+    (reason: unknown) =>
+      handleApiError(reason, {
+        MODEL_SERVICE_UNAVAILABLE: t("modeling.errors.unavailable"),
+        MODELING_DATASET_NOT_READY: t("modeling.errors.notReady"),
+        MODELING_STATE_INVALID: t("modeling.errors.state"),
+        MODEL_RESOURCE_NOT_FOUND: t("modeling.errors.missing"),
+        MODELING_FILE_INVALID: t("modeling.errors.file"),
+        MODELING_MODEL_INCOMPATIBLE: t("modeling.errors.incompatible"),
+      }),
+    [t],
+  );
+  const select = useCallback(
+    (kind: string, id: string) => {
+      setParams((previous) => {
+        const next = new URLSearchParams(previous);
+        next.set(kind, id);
+        next.set("tab", kind);
+        return next;
+      });
+    },
+    [setParams],
   );
 
+  const refresh = useCallback(async () => {
+    const [data, experiments, versions, catalog] = await Promise.all([
+      ModelingApi.requestListDatasets({
+        pagination: { page: 1, pageSize: 100 },
+      }),
+      ModelingApi.requestListRuns({ pagination: { page: 1, pageSize: 100 } }),
+      ModelingApi.requestListModels({ pagination: { page: 1, pageSize: 100 } }),
+      ModelingApi.requestCapabilities({}),
+    ]);
+    if (alive.current) {
+      setCapabilities(catalog.items);
+      setDatasets(data.items);
+      setRuns(experiments.items);
+      setModels(versions.items);
+    }
+  }, []);
   useEffect(() => {
-    if (!hasActiveJobs) return;
-    const timer = window.setInterval(() => void refresh(false), 2000);
-    return () => window.clearInterval(timer);
-  }, [hasActiveJobs, refresh]);
+    let active = true;
+    let timer: ReturnType<typeof setTimeout>;
+    const poll = async () => {
+      try {
+        await refresh();
+        if (active) setListError("");
+      } catch (reason) {
+        if (active) setListError(formatError(reason));
+      } finally {
+        if (active) {
+          setLoading(false);
+          timer = setTimeout(() => void poll(), 2000);
+        }
+      }
+    };
+    void poll();
+    return () => {
+      active = false;
+      clearTimeout(timer);
+    };
+  }, [refresh, formatError]);
+  useEffect(() => {
+    eventCursor.current = { runId, after: 0 };
+    setEvents([]);
+    setEventError("");
+    if (!runId) return;
+    let active = true;
+    let timer: ReturnType<typeof setTimeout>;
+    const poll = async () => {
+      try {
+        const result = await ModelingApi.requestRunEvents({
+          runId,
+          after: eventCursor.current.after,
+        });
+        if (!active) return;
+        setEventError("");
+        if (result.items.length) {
+          eventCursor.current.after = result.items.at(-1)!.sequence;
+          setEvents((previous) => [...previous, ...result.items].slice(-2000));
+        }
+      } catch (reason) {
+        if (active) setEventError(formatError(reason));
+      } finally {
+        if (active) timer = setTimeout(() => void poll(), 2000);
+      }
+    };
+    void poll();
+    return () => {
+      active = false;
+      clearTimeout(timer);
+    };
+  }, [runId, formatError]);
 
-  const upload = useCallback(async (file: File, name: string) => {
+  const act = async (operation: () => Promise<void>) => {
+    setBusy(true);
     setError("");
-    setBusy("uploading");
     try {
-      const ticket = await ModelingApi.requestCreateDatasetUpload({
-        name,
-        filename: file.name,
-        contentType: file.type || "application/zip",
-        size: file.size,
-      });
-      const uploaded = await fetch(ticket.url, {
-        method: "PUT",
-        body: file,
-        headers: ticket.headers,
-      });
-      if (!uploaded.ok) throw new Error(`upload failed: ${uploaded.status}`);
-      setBusy("queueing");
-      const response = await ModelingApi.requestCompleteDatasetUpload({
-        datasetId: ticket.datasetId,
-      });
-      setDatasets((items) => [response.dataset, ...items.filter((item) => item.id !== response.dataset.id)]);
-      setSelectedDatasetId(response.dataset.id);
-      setSelectedExperimentId("");
+      await operation();
+      await refresh();
     } catch (reason) {
-      setError(handleApiError(reason, ERRORS));
+      setError(formatError(reason));
     } finally {
-      setBusy("");
+      if (alive.current) setBusy(false);
     }
-  }, []);
-
-  const run = useCallback(async (input: RunInput) => {
-    setError("");
-    setBusy("queueing");
-    try {
-      const response = await ModelingApi.requestRunExperiment(input);
-      setExperiments((items) => [response.experiment, ...items]);
-      setSelectedExperimentId(response.experiment.id);
-      return true;
-    } catch (reason) {
-      setError(handleApiError(reason, ERRORS));
-      return false;
-    } finally {
-      setBusy("");
-    }
-  }, []);
-
-  const selectedDataset = useMemo(
-    () => datasets.find((item) => item.id === selectedDatasetId) ?? null,
-    [datasets, selectedDatasetId],
-  );
-  const selectedExperiment = useMemo(
-    () => experiments.find((item) => item.id === selectedExperimentId) ?? null,
-    [experiments, selectedExperimentId],
-  );
-
-  const selectDataset = useCallback((dataset: ModelingDataset) => {
-    setSelectedDatasetId(dataset.id);
-    setSelectedExperimentId(
-      experiments.find((item) => item.datasetId === dataset.id)?.id ?? "",
-    );
-  }, [experiments]);
-
-  const selectExperiment = useCallback((experiment: ModelingExperiment) => {
-    setSelectedExperimentId(experiment.id);
-    setSelectedDatasetId(experiment.datasetId);
-  }, []);
-
+  };
+  const upload = (file: File, name: string) =>
+    act(async () => {
+      setUploading(true);
+      try {
+        setUploadPercent(0);
+        const ticket = await ModelingApi.requestCreateDatasetUpload({
+          name,
+          filename: file.name,
+          contentType: file.type || "application/zip",
+          size: file.size,
+        });
+        select("dataset", ticket.datasetId);
+        await uploadObject(ticket.url, ticket.headers, file, setUploadPercent);
+        await ModelingApi.requestCompleteDatasetUpload({
+          datasetId: ticket.datasetId,
+        });
+      } finally {
+        setUploading(false);
+      }
+    });
+  const create = (
+    id: string,
+    name: string,
+    epochs: number,
+    selectedModel: string,
+  ) =>
+    act(async () => {
+      const response = await ModelingApi.requestCreateRun({
+        datasetId: id,
+        runnerId: selectedModel,
+        name: name.slice(0, 128),
+        epochs,
+        requestKey: crypto.randomUUID(),
+      });
+      select("run", response.run.id);
+    });
+  const cancel = () =>
+    act(async () => {
+      await ModelingApi.requestCancelRun({ runId });
+    });
+  const rerun = () =>
+    act(async () => {
+      const response = await ModelingApi.requestRerun({
+        runId,
+        requestKey: crypto.randomUUID(),
+      });
+      select("run", response.run.id);
+    });
+  const publish = (name: string) =>
+    act(async () => {
+      const response = await ModelingApi.requestPublishModel({ runId, name });
+      select("model", response.model.id);
+    });
+  const download = () =>
+    act(async () => {
+      const response = await ModelingApi.requestDownloadModel({ modelId });
+      const link = document.createElement("a");
+      link.href = response.url;
+      link.download = "model.zip";
+      link.click();
+    });
+  const predict = (companyIds: string[]) =>
+    act(async () => {
+      const response = await ModelingApi.requestPredictModel({
+        modelId,
+        companyIds,
+      });
+      setPredictionResult({ modelId, items: response.items });
+    });
   return {
+    capabilities,
     datasets,
-    experiments,
-    selectedDataset,
-    selectedExperiment,
-    loading,
+    runs,
+    models,
+    events,
+    predictions,
+    // Poll recovery must not erase a failed user operation such as an unknown ID.
+    error: error || listError || eventError,
     busy,
-    error,
-    load,
+    loading,
+    uploading,
+    uploadPercent,
+    dataset: datasets.find((item) => item.id === datasetId),
+    run: runs.find((item) => item.id === runId),
+    model: models.find((item) => item.id === modelId),
+    datasetId,
+    runId,
+    modelId,
+    select,
+    refresh: () => act(async () => {}),
     upload,
-    run,
-    selectDataset,
-    selectExperiment,
+    create,
+    cancel,
+    rerun,
+    publish,
+    download,
+    predict,
   };
 }
