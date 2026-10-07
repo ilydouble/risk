@@ -31,38 +31,41 @@ service/
 
 ## 独立服务环境
 
-以下命令均在 `models/` 执行，避免改动研究用的 `.venv`：
+服务是独立 uv 项目，依赖、开发工具配置统一在 `pyproject.toml`，提交 `uv.lock`。
+默认 Python 3.12（`.python-version`；当前兼容范围 `>=3.12,<3.13`），
+锁定 Linux x86_64 CPU 环境；更高 Python 版本需先验证 Torch/PyG 兼容。
+
+以下命令在 `models/` 执行，`--project service` 选择服务的 `service/.venv`：
 
 ```bash
-uv venv service/.venv --python 3.12
-uv pip sync --python service/.venv/bin/python --torch-backend cpu service/requirements-dev.lock.txt
-source service/.venv/bin/activate
+uv sync --project service --locked
+uv run --project service python -m service.cli --help
 ```
 
-运行镜像使用 `requirements.lock.txt`；开发锁额外包含 Ruff、mypy、pytest、httpx。
-锁文件面向 Linux x86_64 / Python 3.12 / CPU，不用于覆盖研究者的 CUDA 环境。
-`requirements.in` 引用 ../riskgnn 的研究依赖，再补服务依赖；无需安装本项目为 Python 分发包。
-更新依赖时使用 uv 重新生成两个锁，已有锁作为约束可避免无关升级：
+服务使用源码应用模式（`package = false`）。命令工作目录保持 `models/`，
+由 Python 正常加载 `service` 和相邻研究包；不安装或改写研究工程。
+从仓库根目录执行时，可使用 `uv run --directory models --project service ...`。
 
-```bash
-uv pip compile service/requirements.in -c service/requirements.lock.txt --python-version 3.12 --python-platform x86_64-unknown-linux-gnu --torch-backend cpu --emit-index-url -o service/requirements.lock.txt
-uv pip compile service/requirements-dev.in -c service/requirements.lock.txt -c service/requirements-dev.lock.txt --python-version 3.12 --python-platform x86_64-unknown-linux-gnu --torch-backend cpu --emit-index-url -o service/requirements-dev.lock.txt
-```
-
-研究依赖升级与旧约束冲突时，明确更新对应约束并做模型回归，不覆盖研究依赖版本。
+- 开发依赖放在 `dependency-groups.dev`；镜像执行 `uv sync --frozen --no-dev`。
+- Torch 显式绑定 CPU 专用索引；该索引不会用于其他包。
+- 服务独立声明已验证的模型依赖版本，不再递归读取研究 requirements。
+  研究者调整依赖后，服务维护者核对兼容性、更新锁文件并执行模型回归。
+- 常规安装使用 `--locked`；有意改依赖时执行 `uv lock --project service`。
+  升级某个包可用 `uv lock --project service --upgrade-package <包名>`，并同步其直接版本约束。
+- 原研究 requirements、虚拟环境、CUDA 配置与训练命令保持各自管理。
 
 ## 本地训练、测试与导出
 
-激活服务环境后，无需启动 PostgreSQL、对象存储或 HTTP：
+以下命令仍在 `models/` 执行，无需启动 PostgreSQL、对象存储或 HTTP：
 
 ```bash
-python -m service.cli validate-data --input ~/Downloads/comrisk_export.zip --output runs/sg/validated
-python -m service.cli prepare --input runs/sg/validated --output runs/sg/prepared
-python -m service.cli train --input runs/sg/prepared --output runs/sg/model --epochs 2
-python -m service.cli test --input runs/sg/model
-python -m service.cli verify --input runs/sg/model
-python -m service.cli predict --input runs/sg/model --ids YOUR_UEN
-python -m service.cli export --input runs/sg/model --output runs/exports/model.zip
+uv run --project service python -m service.cli validate-data --input ~/Downloads/comrisk_export.zip --output runs/sg/validated
+uv run --project service python -m service.cli prepare --input runs/sg/validated --output runs/sg/prepared
+uv run --project service python -m service.cli train --input runs/sg/prepared --output runs/sg/model --epochs 2
+uv run --project service python -m service.cli test --input runs/sg/model
+uv run --project service python -m service.cli verify --input runs/sg/model
+uv run --project service python -m service.cli predict --input runs/sg/model --ids YOUR_UEN
+uv run --project service python -m service.cli export --input runs/sg/model --output runs/exports/model.zip
 ```
 
 `YOUR_UEN` 使用模型 `ids.json` 内的 ID。测试命令在新进程重载模型。
@@ -79,10 +82,10 @@ python -m service.cli export --input runs/sg/model --output runs/exports/model.z
 `STORAGE_ENDPOINT`、`MODELING_STORAGE_BUCKET`、`AWS_ACCESS_KEY_ID`、`AWS_SECRET_ACCESS_KEY`。
 
 ```bash
-alembic -c service/alembic.ini upgrade head
-python -m uvicorn service.api.app:create_app --factory --port 8001
+uv run --project service alembic -c service/alembic.ini upgrade head
+uv run --project service python -m uvicorn service.api.app:create_app --factory --port 8001
 # 另一个终端，相同环境和 models 工作目录：
-python -m service.execution.worker
+uv run --project service python -m service.execution.worker
 ```
 
 容器内固定 8000；两入口共用模型数据库、Bucket 和持久工作目录。
@@ -91,10 +94,10 @@ python -m service.execution.worker
 ## 检查
 
 ```bash
-ruff check service
-mypy --config-file service/mypy.ini service
-python -m pytest -c service/pytest.ini service/tests -q
-python -m service.export_openapi
+uv run --project service ruff check service
+uv run --project service mypy --config-file service/pyproject.toml service
+uv run --project service pytest service/tests -q
+uv run --project service python -m service.export_openapi
 ```
 
 数据库相关测试设置 `RISK_TEST_DATABASE_URL`，只使用随机临时 schema。

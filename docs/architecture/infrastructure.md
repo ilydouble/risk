@@ -30,5 +30,6 @@ riskgnn 和 riskgnn-worker 由 models/service/Dockerfile 构建，使用同一�
 Worker 单槽执行，业务后端通过 RISK_GNN_URL 与服务令牌访问，不挂载本地模型代码或权重。
 初始化容器可对已有卷重复运行；不使用 down -v。新凭据由 .env 的独立模型配置组提供。
 
-模型服务镜像以 requirements 锁安装 Python 3.12 CPU 依赖，源码运行在 riskgnn 工作目录。
+模型服务镜像以 service/pyproject.toml 与 uv.lock 执行 `uv sync --frozen --no-dev`，
+安装 Python 3.12 CPU 依赖到 /opt/venv，源码工作目录为 /app/models。
 原研究 requirements 与 Python/CUDA 环境独立，服务入口为 python -m service.cli / service.execution.worker。

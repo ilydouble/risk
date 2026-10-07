@@ -27,8 +27,7 @@ ComRisk v2 ZIP
 
 ```bash
 cd models
-source service/.venv/bin/activate
-python -m service.tools.sg_overview \
+uv run --project service python -m service.tools.sg_overview \
   --source /path/to/comrisk_export.zip \
   --output ../backend/seed/overview/sg-comrisk-v2-20260925.json \
   --sample-per-class 100

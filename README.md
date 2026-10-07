@@ -53,13 +53,11 @@ uv run mypy src/risk_api
 uv run pytest -q
 uv run python -m risk_api.export_openapi
 cd ../models
-uv venv service/.venv --python 3.12
-uv pip sync --python service/.venv/bin/python --torch-backend cpu service/requirements-dev.lock.txt
-source service/.venv/bin/activate
-ruff check service
-mypy --config-file service/mypy.ini service
-python -m pytest -c service/pytest.ini service/tests -q
-python -m service.export_openapi
+uv sync --project service --locked
+uv run --project service ruff check service
+uv run --project service mypy --config-file service/pyproject.toml service
+uv run --project service pytest service/tests -q
+uv run --project service python -m service.export_openapi
 cd ../frontend
 npm ci
 npm run api:generate

@@ -27,10 +27,9 @@ manifest 为每个文件记录长度及 SHA-256；只接受包内相对路径。
 
 ```bash
 cd models
-source service/.venv/bin/activate
-python -m service.cli verify --input /path/to/model
-python -m service.cli test --input /path/to/model
-python -m service.cli predict --input /path/to/model --ids YOUR_UEN
+uv run --project service python -m service.cli verify --input /path/to/model
+uv run --project service python -m service.cli test --input /path/to/model
+uv run --project service python -m service.cli predict --input /path/to/model --ids YOUR_UEN
 ```
 
 下载包包含图上下文和企业 ID，按数据集权限管理；本轮不自动公开发布。

@@ -44,3 +44,11 @@
 本次结果保存在忽略目录 `models/runs/models-service-acceptance/`，隔离数据卷保留。
 历史恢复与中断实测见 [首版验收](workbench-acceptance.md)，历史研究兼容见
 [研究入口兼容](research-compatibility.md)。本轮未重跑 GPU、全量训练或 RiskGNN+ 研究实验。
+
+## 服务环境切换为 uv 项目
+
+同日将服务切换为独立 pyproject.toml / uv.lock，Python 3.12；研究文件和 API 契约未改变。
+原锁定的 94 个依赖版本全部保留，Torch 保持 2.7.1+cpu；开发工具配置统一进入 pyproject。
+新 uv 环境的 26 项服务测试全部通过（含真实 PostgreSQL），Ruff/mypy 通过。
+新 Docker 镜像通过冻结锁安装 82 个生产依赖，不安装 Ruff/mypy/pytest；HTTP 与 Worker 健康。
+已发布模型包在新镜像加载，三家企业预测与迁移前保存结果完全一致。

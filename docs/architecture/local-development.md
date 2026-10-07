@@ -20,16 +20,14 @@ cd frontend && npm ci && npm run dev
 docker compose -f compose.yaml -f compose.infrastructure.override.yaml \
   up -d postgres redis rustfs rustfs-init model-db-init neo4j neo4j-init
 cd models
-uv venv service/.venv --python 3.12
-uv pip sync --python service/.venv/bin/python --torch-backend cpu service/requirements-dev.lock.txt
-source service/.venv/bin/activate
+uv sync --project service --locked
 export RISK_GNN_DATABASE_URL=postgresql+asyncpg://riskgnn:local-riskgnn-db-password@localhost:15432/riskgnn
 export RISK_GNN_API_TOKEN=local-riskgnn-change-me
 export STORAGE_ENDPOINT=http://localhost:19000 MODELING_STORAGE_BUCKET=risk-modeling
 export AWS_ACCESS_KEY_ID=RISKMODELINGAPP2026 AWS_SECRET_ACCESS_KEY=local-modeling-change-me
-alembic -c service/alembic.ini upgrade head
-python -m uvicorn service.api.app:create_app --factory --port 8001
-# 另一个终端使用相同环境与工作目录：python -m service.execution.worker
+uv run --project service alembic -c service/alembic.ini upgrade head
+uv run --project service python -m uvicorn service.api.app:create_app --factory --port 8001
+# 另一个终端使用相同环境与工作目录：uv run --project service python -m service.execution.worker
 ```
 
 本机业务 API 设置 RISK_GNN_URL=http://localhost:8001 及相同服务令牌，数据库用 risk 库，

@@ -21,7 +21,7 @@
 
 研究侧沿用 requirements.txt、原 Python/CUDA 环境及训练命令。
 服务代码集中在 models/service/，依赖并调用原研究模型；不要求研究者安装服务。
-服务单独使用 service/.venv 与 requirements 锁，安装及 CLI 见[服务说明](../../models/service/README.md)。
+服务单独使用 service/pyproject.toml、uv.lock 与 service/.venv，安装及 CLI 见[服务说明](../../models/service/README.md)。
 从上一版工作台切换时，原 riskgnn/.venv 可保留，但不再用于服务；使用新的独立环境。
 重新构建 riskgnn 与 riskgnn-worker 即可，数据库迁移历史、对象和已有模型包保持兼容。
 静态概览工具迁为 `python -m service.tools.sg_overview`，原快照内容不变。
@@ -36,3 +36,10 @@
 本机旧 riskgnn/runs、legacy-artifacts 不自动搬动；新环境工作目录为 models，
 重新创建 service/.venv，勿直接移动虚拟环境。已有模型包继续通过对象存储加载。
 此次只在已有 JSON 配置和结果中增加模型选择、分析及档案字段，无新增表结构迁移。
+
+## 服务环境迁移到 uv 项目
+
+研究目录继续保留 requirements 和原训练命令。服务的旧 requirements 输入/锁及分散工具配置
+已由 pyproject.toml 和 uv.lock 替代；在 models 执行 `uv sync --project service --locked`。
+已有 service/.venv 会被 uv 同步，原研究虚拟环境不受影响；不要在该服务环境手动 pip 安装。
+容器需重新构建模型镜像，HTTP/Worker 命令、数据库与持久卷保持不变。

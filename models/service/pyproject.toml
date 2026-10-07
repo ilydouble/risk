@@ -1,0 +1,67 @@
+[project]
+name = "risk-model-service"
+version = "0.1.0"
+description = "Internal model API, execution worker and portable model artifacts"
+# Python 3.12 is the validated deployment baseline for the current Torch/PyG stack.
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  # Model compatibility baseline; research environments remain independently managed.
+  "torch==2.7.1",
+  "torch-geometric==2.8.0",
+  "numpy==2.3.3",
+  "pandas==2.3.3",
+  "scipy==1.16.2",
+  "scikit-learn==1.7.2",
+  "pyarrow==23.0.1",
+  "matplotlib==3.10.6",
+  "tqdm==4.67.3",
+  "psutil==7.1.0",
+  "duckdb==1.5.6",
+  "fastapi==0.141.1",
+  "uvicorn[standard]==0.54.0",
+  "dishka==1.10.1",
+  "sqlalchemy[asyncio]==2.1.1",
+  "asyncpg==0.31.0",
+  "alembic==1.20.0",
+  "stellarmesh-logging==0.5.1",
+  "stellarmesh-objectstorage==0.1.0",
+]
+
+[dependency-groups]
+dev = ["ruff>=0.11", "mypy>=1.15", "pytest>=8.3", "httpx>=0.28"]
+
+[tool.uv]
+# Run from models/ so service and research packages resolve without installing research code.
+package = false
+# Keep the existing Linux x86_64 CPU deployment scope explicit.
+environments = ["sys_platform == 'linux' and platform_machine == 'x86_64'"]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.mypy]
+python_version = "3.12"
+files = ["service"]
+check_untyped_defs = true
+ignore_missing_imports = true
+exclude = '^service/(tests|alembic)/'
+
+[[tool.mypy.overrides]]
+module = ["torch_geometric.*", "pandas.*", "scipy.*", "sklearn.*", "pyarrow.*", "gnn", "utils", "train_sg_neighbor", "riskgnn.*"]
+follow_imports = "skip"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".."]
