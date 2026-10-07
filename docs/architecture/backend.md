@@ -16,9 +16,8 @@ backend/
     modules/{auth,company,graph,score,document,modeling}/
       api/{route,handler,schemas}.py
       model.py, service.py, repository.py, errors.py（按需）
-    modules/benchmark/
-      api/{route,handler,schemas}.py
-      service.py, errors.py
+    modules/modeling/
+      client.py, dispatch.py, workbench_model.py
 ```
 
 `route.py` 声明路径与响应模型；`handler.py` 处理 HTTP、依赖注入及 DTO 映射；`schemas.py` 是模块自己的请求/响应 DTO。`auth`、`company`、`document` 的 `model.py` 保存各自 SQLAlchemy 映射；图谱和评分不为凑目录建立模型文件。Service 处理认证、查询、文件流程，Repository 处理数据库/图谱。Service 和 Repository 不引用 HTTP DTO。公共分页请求为 `PageRequest`，列表响应继承 `Page[T]`。模块错误映射为 `AppError`，全局 handler 调用公共响应函数序列化；参数校验、路由错误与未处理错误也走同一信封。
@@ -27,13 +26,13 @@ backend/
 
 ## 数据与生命周期
 
-- PostgreSQL 的 `users`、`companies`、`documents` 保存账号、检索字段与文件状态；`modeling_datasets`、`modeling_experiments` 保存用户实验的元数据、质量分析和真实指标。画像及中英评分快照存 JSONB，读取时由 Pydantic DTO 校验。
+- PostgreSQL 的 `users`、`companies`、`documents` 保存账号、检索字段与文件状态；`workbench_*` 表保存新数据集归属、实验配置、模型版本和可靠投递记录；旧 `modeling_*` 表仅保留历史。画像及中英评分快照存 JSONB，读取时由 Pydantic DTO 校验。
 - 自助注册复用现有 `users` 表，无需迁移；密码由 Argon2 哈希后写入，用户名冲突由唯一约束原子判定。注册不写入 Redis，成功后用户单独登录。
 - Neo4j 保存演示关系节点和边，图谱查询接受 1–3 跳（默认 3），由后端返回对应范围的节点及范围内的边。图谱不从 PostgreSQL JSON 拷贝响应。
 - `V0001_initial_schema.py` 的 revision 是 `V0001`；后续迁移顺序递增。后端容器启动时先执行 `alembic upgrade head`，成功后启动 HTTP 服务。
 - `demo-seed` 是默认启动的一次性容器，在迁移与服务就绪后补入八家精选企业、快照和图谱，不创建账号，也不重置已有行或关系。已有数据卷中的旧演示账号与企业保留。
 - 演示种子由前端案例生成脚本按企业输出到 `seed/demo/`；在 `frontend/` 执行 `npm run demo:generate` 后检查 Git 差异。正式数据导入与演示种子分开处理。
-- 基准模块在应用启动时由 Dishka 装配，工作线程校验测试快照、清单和权重并预计算 474 家预测。加载失败只使基准接口返回 503，认证与原有业务接口继续运行；解释计算也限制在专用工作线程。后端仅通过本地路径安装 `com-risk-runtime`，不安装 scikit-learn 或训练模块。权重只读挂载，快照随镜像提供；只读快照不导入 PostgreSQL 或 Neo4j，详见[公开基准](benchmark.md)。
+- 模型功能通过 Dishka 管理的异步 HTTP 客户端访问独立 RiskGNN 服务；业务后端不安装 Torch，不读取模型服务的表。生命周期启动 Outbox 投递器；模型服务故障不阻止注册和原业务，相关请求返回 503。详见[模型工作台](modeling-workbench.md)。
 
 ## SDK 与验证
 

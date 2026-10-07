@@ -1,12 +1,14 @@
 # 基础设施与信任边界
 
-`compose.yaml` 启动固定镜像版本的 PostgreSQL 18、Redis、RustFS 1.0.0 GA、Neo4j Community、FastAPI、Go 网关及 Caddy 前端。项目名为 `risk`，服务键使用功能名；Compose 自动生成 `risk-rustfs-1` 等容器名。数据卷保存 PostgreSQL、RustFS 和 Neo4j；Redis 仅保存 Session，关闭持久化。首版不部署 MQ。
+`compose.yaml` 启动固定镜像版本的 PostgreSQL 18、Redis、RustFS 1.0.0 GA、Neo4j Community、FastAPI、Go 网关、RiskGNN HTTP/Worker 及 Caddy 前端。项目名为 `risk`，服务键使用功能名；Compose 自动生成 `risk-rustfs-1` 等容器名。数据卷保存 PostgreSQL、RustFS 和 Neo4j；Redis 仅保存 Session，关闭持久化。首版不部署 MQ。
 
 网关镜像构建根据 `go.mod`/`go.sum` 在线下载 Go 依赖，并在复制源码前缓存依赖层；构建阶段需要能访问模块代理。升级依赖后运行 `go mod tidy`，不提交 `gateway/vendor/`。
 
 ## 一次性初始化
 
 - `rustfs-init` 在 RustFS 健康后幂等创建专用 Bucket，写入浏览器直传 CORS，并创建仅限该 Bucket 的应用用户/策略。运行时 API 使用应用凭据，Root 凭据只给初始化容器。
+- `model-db-init` 幂等创建独立 riskgnn 数据库和账号；模型 HTTP 容器每次启动执行自己的 Alembic。
+- `rustfs-init` 同时创建 risk-modeling Bucket 与独立凭据，模型身份无权读取 risk-documents。
 - `neo4j-init` 幂等创建演示节点组合唯一约束。
 - `backend` 每次启动先迁移；默认启动的 `demo-seed` 之后补入缺失的八家精选演示企业及双语图谱。重复启动不清空已有数据，新旧卷可能保留不同数量的演示企业。
 
@@ -21,3 +23,12 @@
 浏览器先调用业务 API 获取 60 秒预签名 PUT，直传 RustFS 后调用完成接口。完成接口核对对象存在与大小，再将 PostgreSQL 元数据置为可见；下载经业务 API 获取 60 秒 GET URL。浏览器地址默认由 `RUSTFS_API_HOST_PORT` 生成，容器内 `STORAGE_ENDPOINT` 固定；自定义 `STORAGE_PUBLIC_ENDPOINT` 必须可由浏览器访问。Origin 默认由 `FRONTEND_HOST_PORT` 生成并用于 Bucket CORS；自定义 `PUBLIC_ORIGINS` 会同时传给网关、后端和 RustFS 初始化容器。
 
 Compose 默认凭据仅适合本机演示；共享或外网环境须换密码、配置 HTTPS 与 Cookie Secure，重新审视对外端口和 CORS。
+
+## 模型服务部署
+
+riskgnn 和 riskgnn-worker 由 models/service/Dockerfile 构建，使用同一镜像，共享 model-workspace 持久卷。模型 API 固定 8000、无宿主机映射，
+Worker 单槽执行，业务后端通过 RISK_GNN_URL 与服务令牌访问，不挂载本地模型代码或权重。
+初始化容器可对已有卷重复运行；不使用 down -v。新凭据由 .env 的独立模型配置组提供。
+
+模型服务镜像以 requirements 锁安装 Python 3.12 CPU 依赖，源码运行在 riskgnn 工作目录。
+原研究 requirements 与 Python/CUDA 环境独立，服务入口为 python -m service.cli / service.execution.worker。

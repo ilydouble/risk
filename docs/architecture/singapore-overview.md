@@ -15,7 +15,7 @@
 
 ```text
 ComRisk v2 ZIP
-  → workbench.sg_overview 离线校验与聚合
+  → service.tools.sg_overview 离线校验与聚合
   → backend/seed/overview/*.json
   → 幂等 seed
   → PostgreSQL overview_snapshots(JSONB)
@@ -26,8 +26,9 @@ ComRisk v2 ZIP
 生成命令：
 
 ```bash
-cd com_risk_model
-uv run python -m workbench.sg_overview \
+cd models
+source service/.venv/bin/activate
+python -m service.tools.sg_overview \
   --source /path/to/comrisk_export.zip \
   --output ../backend/seed/overview/sg-comrisk-v2-20260925.json \
   --sample-per-class 100

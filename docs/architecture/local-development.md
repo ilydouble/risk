@@ -1,48 +1,40 @@
 # 本地开发与验收
 
-## 推荐开发模式：基础设施容器，应用本地运行
-
-开发时不要执行全量 `docker compose up`。只启动四项基础设施和两个一次性初始化服务：
+## 推荐：容器运行服务，Vite 开发界面
 
 ```bash
 cp .env.example .env
-docker compose -f compose.yaml -f compose.infrastructure.override.yaml \
-  up -d postgres redis rustfs rustfs-init neo4j neo4j-init
-docker compose -f compose.yaml -f compose.infrastructure.override.yaml ps -a
+docker compose up --build -d backend gateway riskgnn riskgnn-worker
+cd frontend && npm ci && npm run dev
 ```
 
-覆盖文件只把基础设施端口绑定到 `127.0.0.1`。在四个终端分别启动应用：
+浏览器使用 http://localhost:3000 。模型服务仍在容器内部，不需要额外的对外端口。
+完整容器验收可启动 frontend；若 FRONTEND_HOST_PORT=3000，需先关闭 Vite 避免端口冲突。
+
+基础设施需单独暴露给本机应用时使用 compose.infrastructure.override.yaml。
+它只增加 PostgreSQL/Redis/Neo4j 的 loopback 映射，不改变容器内固定端口。
+
+## 本机运行模型服务（可选）
 
 ```bash
-# 终端 1：FastAPI（先迁移）
-cd backend
-export DATABASE_URL=postgresql+asyncpg://risk:local-risk-db-password@localhost:15432/risk
-export REDIS_URL=redis://localhost:16379/0 NEO4J_URI=bolt://localhost:17687
-export NEO4J_USER=neo4j NEO4J_PASSWORD=local-risk-graph-password
-export STORAGE_ENDPOINT=http://127.0.0.1:19000 STORAGE_PUBLIC_ENDPOINT=http://localhost:19000
-export STORAGE_BUCKET=risk-documents AWS_ACCESS_KEY_ID=RISKDOCUMENTSAPP2026
-export AWS_SECRET_ACCESS_KEY=local-rustfs-app-change-me-2026
-uv run alembic upgrade head
-uv run python -m risk_api
-
-# 终端 2：Go 网关
-cd gateway
-REDIS_URL=redis://localhost:16379/0 BACKEND_URL=http://localhost:8000 go run .
-
-# 终端 3：Vite 前端
-cd frontend && npm run dev
-
-# 终端 4：模型 Worker（环境与终端 1 的数据库/存储相同）
-cd com_risk_model
-export DATABASE_URL=postgresql+asyncpg://risk:local-risk-db-password@localhost:15432/risk
-export STORAGE_ENDPOINT=http://127.0.0.1:19000 STORAGE_BUCKET=risk-documents
-export STORAGE_ACCESS_KEY=RISKDOCUMENTSAPP2026
-export STORAGE_SECRET_KEY=local-rustfs-app-change-me-2026
-uv run python -m workbench.worker
+docker compose -f compose.yaml -f compose.infrastructure.override.yaml \
+  up -d postgres redis rustfs rustfs-init model-db-init neo4j neo4j-init
+cd models
+uv venv service/.venv --python 3.12
+uv pip sync --python service/.venv/bin/python --torch-backend cpu service/requirements-dev.lock.txt
+source service/.venv/bin/activate
+export RISK_GNN_DATABASE_URL=postgresql+asyncpg://riskgnn:local-riskgnn-db-password@localhost:15432/riskgnn
+export RISK_GNN_API_TOKEN=local-riskgnn-change-me
+export STORAGE_ENDPOINT=http://localhost:19000 MODELING_STORAGE_BUCKET=risk-modeling
+export AWS_ACCESS_KEY_ID=RISKMODELINGAPP2026 AWS_SECRET_ACCESS_KEY=local-modeling-change-me
+alembic -c service/alembic.ini upgrade head
+python -m uvicorn service.api.app:create_app --factory --port 8001
+# 另一个终端使用相同环境与工作目录：python -m service.execution.worker
 ```
 
-浏览器访问 `http://localhost:3000`。此拓扑中 Docker 里不应出现 `backend`、`gateway`、
-`frontend` 或模型 Worker；Worker 也不会加入 Compose。
+本机业务 API 设置 RISK_GNN_URL=http://localhost:8001 及相同服务令牌，数据库用 risk 库，
+不要复用模型数据库账号。其他基础设施配置参照 .env.example 和 compose.yaml。
+不要同时启动本机和容器 Worker 指向不同工作目录；恢复依赖相同持久目录。
 
 ## Compose
 
@@ -74,13 +66,11 @@ docker compose logs -f backend demo-seed
 
 后端与种子容器在本地默认输出易读的 `pretty` 日志；服务器有日志采集器时设置 `RISK_LOG_FORMAT=json`，输出单行 JSON。`RISK_LOG_LEVEL` 默认 `INFO`，只控制应用日志。业务请求的日志带 `X-Request-ID`，可以从响应头复制该值在容器日志中检索；成功的健康检查不产生日志。容器日志的保留期限取决于 Docker 配置。
 
-## 基准模型
+## 模型工作台
 
-474 家企业测试快照随 Git 与后端镜像提供，权重不进入镜像。手工下载 Release 模型包，
-解压到 `com_risk_model/weights/smesd-v1/`；该目录应含 weights、metadata、metrics 和 manifest 四个文件。
-没有权重也能启动及注册登录，只有基准接口返回 `BENCHMARK_MODEL_UNAVAILABLE` 503。
-`.env` 的 `BENCHMARK_MODEL_VERSION` 选择子目录，显式目录覆盖见[模型产物约定](model-artifacts.md)。
-切换版本后运行 `docker compose up -d --no-deps --force-recreate backend`，环境变量会重新加载。
+无需预下载旧权重。从 `/modeling` 上传 comrisk_export ZIP，等待校验，运行默认两轮子集实验，
+独立测试完成后发布和下载。模型服务未启动时登录与企业演示仍可使用。
+运行边界见[工作台](modeling-workbench.md)，命令行重放见[模型服务](../../models/service/README.md)。
 
 ## 组件命令
 
@@ -100,9 +90,10 @@ npm run lint && npm run type-check && npm run build
 
 ## 最小验收链路
 
-1. 空卷首次启动后 `postgres`、`redis`、`rustfs`、`neo4j`、`backend` 健康；三个 init/seed 容器正常退出。演示库有八家企业且无预置用户，重复运行 init/seed 不覆盖数据。
+1. 空卷首次启动后 `postgres`、`redis`、`rustfs`、`neo4j`、`backend`、`riskgnn` 健康；四个 init/seed 容器正常退出。演示库有八家企业且无预置用户，重复运行 init/seed 不覆盖数据。
 2. 登录后检索企业，打开画像、1–3 跳图谱及评分；评分与解释必须标记为演示快照。
 3. 在画像上传一个测试文件，经 RustFS 直传、确认登记、下载并核对字节。报告、决策、模型看板和批量评估仍能显示演示标识。
 4. 校验 401 会话过期、503 Redis 故障、伪造身份头、非法 Origin、参数 422 和不存在资源的统一信封。
-5. 下载并校验模型后，登录进入 `/benchmark`，检索 `C00010`，查看约 `0.726873` 的预测、一跳关系 16 条和测试 ROC-AUC 约 `0.793637`；核对其页头与说明未将演示分数描述为业务信用评分。
-6. 生成贷款申请与企业快照 ZIP，分别上传到 `/modeling`；Worker 完成分析后运行 RiskGNN 标准训练或完整消融。贷款包显示 `default_12m`，企业包显示经营风险语义；后者不得出现贷款违约概率文案。
+5. 从 `/modeling` 上传完整新加坡 ZIP，等待服务端校验；创建子集实验并查看 epoch、Attempt 和事件。
+6. 独立测试完成后发布版本，下载核对摘要，独立目录加载预测；未知 ID 返回 404。
+7. 取消实验或重启 Worker 后状态可恢复；不同用户无法访问彼此数据。原卷与旧记录始终保留。

@@ -1,71 +1,71 @@
 # 风控工作台
 
-面向海外企业信用评估的内部演示工作台。当前已接通自助注册、登录、企业检索、企业画像、Neo4j 关系图谱、评分及文件上传/下载。原工作台的八家企业、评分和解释仍为种子演示快照；报告、授信决策、模型看板和批量评估仍为前端演示。另有独立 `/benchmark` 专区，使用 SMEsD 匿名测试快照与已保存的模型权重展示真实预测和离线评估。两套企业编号互不映射，基准结果不代表正式征信数据或未来违约概率。界面沿用原视觉并支持中英文切换。
+React 工作台、Go Session 网关、FastAPI 业务 API 与独立 RiskGNN 模型服务组成的 Monorepo。
+保留注册登录、企业检索、画像、图谱及文件直传。八家企业的评分、解释、报告和授信决策仍是演示内容。
+`/overview` 是新加坡数据的静态统计；`/modeling` 执行真实数据校验、子集训练、独立测试与模型发布。
 
-## 本地启动
-
-推荐开发模式仅用 Docker 启动 PostgreSQL、Redis、RustFS 和 Neo4j，FastAPI、Go 网关、Vite 与模型
-Worker 都在宿主机启动：
-
-```bash
-cp .env.example .env
-docker compose -f compose.yaml -f compose.infrastructure.override.yaml \
-  up -d postgres redis rustfs rustfs-init neo4j neo4j-init
-```
-
-各本地进程的环境变量和命令见[本地开发](docs/architecture/local-development.md)。需要验收整套容器镜像时再执行：
+## 启动
 
 ```bash
 cp .env.example .env
+# 按本机需要设置端口、凭据和 BUILD_* 构建代理
 docker compose up --build -d
 docker compose ps -a
 ```
 
-全容器模式默认打开 `http://localhost:18080`，本地 Vite 使用 `http://localhost:3000`。`.env` 可调整各宿主机端口，映射只绑定本机。登录页可自助注册，注册后再登录；新环境不预置账号。共享环境请先更换基础设施的示例凭据，并另行设计开放注册的准入与防滥用策略。
+默认访问 http://localhost:18080 ，先自助注册再登录。已有 `.env` 可继续使用，新增配置有本地默认值。
+Compose 默认启动 `riskgnn` HTTP 服务和 `riskgnn-worker`；模型服务不发布宿主机端口。
+PostgreSQL 内独立创建 `riskgnn` 数据库与用户，RustFS 内创建 `risk-modeling` Bucket 和专用应用凭据。
+业务 API 不安装 Torch，不导入模型代码。原业务数据与对象不迁移、不删除。
 
-Compose 启动 PostgreSQL 18、Redis、RustFS 1.0.0 GA、Neo4j Community、FastAPI 后端、Go 网关和 Caddy 前端；项目名固定为 `risk`，服务键使用 `postgres`、`backend` 等功能名，容器名如 `risk-rustfs-1`。一次性容器创建对象存储 Bucket/应用凭据、图谱约束，并为新环境补入八家精选演示企业；后端每次启动先执行 Alembic 迁移。数据存于命名卷，重复启动不清空；现有卷中的旧演示记录仍会保留。可选构建代理通过 `.env` 的 `BUILD_HTTP_PROXY`、`BUILD_HTTPS_PROXY`、`BUILD_NO_PROXY` 配置；网关的 Go 模块镜像源可用 `BUILD_GOPROXY` 指定。
+## 第一条模型链路
 
-登录后从侧栏进入 **SMEsD 基准**，或直接访问 `/benchmark`；可按匿名编号检索，查看画像、预测与特征遮蔽敏感性、一跳有向关系及保存的评估指标。随 Git 提供 474 家测试样本；正式模型包需从本仓库 GitHub Release 下载并解压到 `com_risk_model/weights/<版本>/`，默认版本为 `smesd-v1`。缺少模型时工作台仍能启动，基准接口返回 `BENCHMARK_MODEL_UNAVAILABLE` 503。首次推理不需要训练集；完整重训仍需另外取得训练/验证数据。[基准说明](docs/architecture/benchmark.md)列出数据来源、验证命令与展示边界。
+1. 打开「模型训练工作台」，选择同事的 `comrisk_export` ZIP（上限 512 MiB）。
+2. 浏览器预览文件索引，直传对象存储；Worker 全量扫描并校验数据协议。
+3. 校验通过后选择 RiskGNN 自身特征或自身特征与图关系，默认 `smoke-v1`、2 轮、CPU。
+4. 查看阶段、epoch 曲线、Attempt 和增量事件；刷新页面可继续查看。
+5. 新进程独立测试结束后，发布不可变模型版本；下载模型包或预测该图内企业。
 
-模型开发命令、模型包校验和升级步骤见 [模型工程 README](com_risk_model/README.md) 与 [模型产物约定](docs/architecture/model-artifacts.md)。首次下载由开发者手工完成；仓库不会自动下载或训练。
+首版只训练固定 2,000 个有标签目标及其有限图上下文，不做全量训练。
+困境分类分数不是授信违约概率。发布不会切换生产模型，也不会上传 GitHub Release。
+旧 SMEsD 链接显示停用说明，旧 Bundle 记录和对象保留，不转换成新版本。
+Bundle v1 可重新上传做数据分析；原始基线和 RiskGNN+ 等待模型包与研究链路适配。
 
-`/modeling` 是另一条用户数据实验链：只接收外部适配器生成的 Bundle v1 ZIP，由本地 Worker
-异步完成数据画像、表格基线、图统计、门控异构 GNN 与超图消融。它与产品演示评分和 SMEsD
-基准严格隔离，详情见[元数据驱动风险建模工作台](docs/architecture/modeling-workbench.md)。
+## 目录
 
-后端业务请求及关键写入输出到容器日志，可用 `docker compose logs -f backend demo-seed` 查看，并按响应头的 `X-Request-ID` 关联请求。本地默认 `RISK_LOG_FORMAT=pretty`；服务器采集日志时设为 `json`。`RISK_LOG_LEVEL` 可调整应用日志级别；日志字段与保留边界见[后端架构文档](docs/architecture/backend.md)。
-
-## 仓库结构
-
-| 路径 | 用途 |
+| 目录 | 职责 |
 | --- | --- |
-| `frontend/` | React + TypeScript + Vite；FSD `app/pages/features/entities/shared`；Caddy 镜像 |
-| `backend/` | Python 3.12 + uv；FastAPI、Dishka、SQLAlchemy、Alembic、异步基础设施适配 |
-| `com_risk_model/` | 独立 uv 模型工程；训练、本地测试、共享推理 runtime 和下载的只读权重 |
-| `models/` | 独立模型版本与研究实现；`baseline` 为上游 Git 原始基线，`riskgnn` 为历史增强实现 |
-| `datasets/` | 本地实验数据统一入口；大文件不提交 Git，目录约定见其中 README |
-| `gateway/` | Go 网关；Session 校验、可信身份注入、统一网关错误 |
-| `infra/` | RustFS 与 Neo4j 一次性初始化脚本 |
-| `contracts/openapi.json` | 后端导出的权威 HTTP 契约 |
-| `CONTEXT.md` | 企业事实、观察标签与模型风险的术语边界 |
-| `docs/architecture/` | 架构、模型研究记录与本地开发说明 |
+| `frontend/` | React、FSD、SDK HTTP、OpenAPI 生成类型、G6、Recharts |
+| `backend/` | 用户权限、数据集归属、实验与模型版本、可靠投递 |
+| `models/` | 模型研究主线；`service/` 提供 HTTP、Worker、数据分析与模型包 |
+| `gateway/` | Go Session 鉴权、Origin 校验、请求 ID |
+| `infra/` | 数据库、Bucket、CORS、图谱约束初始化 |
+| `contracts/` | 业务和模型服务各自导出的 OpenAPI |
+| `docs/architecture/` | 服务边界、数据协议、运行状态与本地开发 |
 
-## 验证与契约生成
+## 检查
 
 ```bash
 cd backend
 uv sync --dev
 uv run ruff check src alembic tests
 uv run mypy src/risk_api
-uv run pytest -q tests
-# 下载模型后必须运行；缺少或损坏模型直接失败
-uv run pytest -q --require-model tests/test_benchmark_api.py tests/test_demo_bundle.py
+uv run pytest -q
 uv run python -m risk_api.export_openapi
-cd ../gateway && go test ./...
-cd ../frontend && npm ci
+cd ../models
+uv venv service/.venv --python 3.12
+uv pip sync --python service/.venv/bin/python --torch-backend cpu service/requirements-dev.lock.txt
+source service/.venv/bin/activate
+ruff check service
+mypy --config-file service/mypy.ini service
+python -m pytest -c service/pytest.ini service/tests -q
+python -m service.export_openapi
+cd ../frontend
+npm ci
 npm run api:generate
-npm run demo:generate
 npm run lint && npm run type-check && npm run build
 ```
 
-前端业务请求使用 `@stellarmesh/sdk`，DTO 从 OpenAPI 生成。更改接口时先修改后端并导出契约，再生成前端类型，不手写 DTO。演示企业种子由前端精选案例生成，输出到 `backend/seed/demo/`；生成后检查 Git 差异。详细边界与操作见 [架构导览](docs/architecture/README.md)，协作规则见 [AGENTS.md](AGENTS.md)。
+PostgreSQL 契约测试需设置 `RISK_TEST_DATABASE_URL`，在随机临时 schema 中执行后清理。
+详细命令见[模型服务](models/service/README.md)、[本地开发](docs/architecture/local-development.md)和
+[架构索引](docs/architecture/README.md)。每次提交前必须运行后端 Ruff、mypy。

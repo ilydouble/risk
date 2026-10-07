@@ -64,6 +64,9 @@ services:
       STORAGE_SECRET_KEY: ${STORAGE_SECRET_KEY:-local-rustfs-app-change-me-2026}
       STORAGE_BUCKET: ${STORAGE_BUCKET:-risk-documents}
       PUBLIC_ORIGINS: *public-origins
+      MODELING_STORAGE_BUCKET: ${MODELING_STORAGE_BUCKET:-risk-modeling}
+      MODELING_STORAGE_ACCESS_KEY: ${MODELING_STORAGE_ACCESS_KEY:-RISKMODELINGAPP2026}
+      MODELING_STORAGE_SECRET_KEY: ${MODELING_STORAGE_SECRET_KEY:-local-modeling-change-me}
     depends_on:
       rustfs:
         condition: service_healthy
@@ -92,6 +95,62 @@ services:
         condition: service_healthy
     restart: "no"
 
+  model-db-init:
+    image: postgres:18.0
+    entrypoint: ["/bin/sh", "/init.sh"]
+    volumes:
+      - ./infra/postgres/model-init.sh:/init.sh:ro
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-risk}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-risk-db-password}
+      POSTGRES_DB: ${POSTGRES_DB:-risk}
+      RISK_GNN_DB_PASSWORD: ${RISK_GNN_DB_PASSWORD:-local-riskgnn-db-password}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  riskgnn:
+    image: risk-riskgnn:local
+    build:
+      <<: *build-proxy
+      context: ./models
+      dockerfile: service/Dockerfile
+    environment: &model-environment
+      RISK_GNN_DATABASE_URL: postgresql+asyncpg://riskgnn:${RISK_GNN_DB_PASSWORD:-local-riskgnn-db-password}@postgres:5432/riskgnn
+      RISK_GNN_API_TOKEN: ${RISK_GNN_API_TOKEN:-local-riskgnn-change-me}
+      MODELING_STORAGE_BUCKET: ${MODELING_STORAGE_BUCKET:-risk-modeling}
+      STORAGE_ENDPOINT: http://rustfs:9000
+      AWS_ACCESS_KEY_ID: ${MODELING_STORAGE_ACCESS_KEY:-RISKMODELINGAPP2026}
+      AWS_SECRET_ACCESS_KEY: ${MODELING_STORAGE_SECRET_KEY:-local-modeling-change-me}
+      RISK_LOG_FORMAT: ${RISK_LOG_FORMAT:-pretty}
+    volumes:
+      - model-workspace:/workspace
+    depends_on:
+      model-db-init:
+        condition: service_completed_successfully
+      rustfs-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/health/live\")'"]
+      interval: 5s
+      retries: 20
+
+  riskgnn-worker:
+    image: risk-riskgnn:local
+    build:
+      <<: *build-proxy
+      context: ./models
+      dockerfile: service/Dockerfile
+    command: ["python", "-m", "service.execution.worker"]
+    environment: *model-environment
+    volumes:
+      - model-workspace:/workspace
+    depends_on:
+      riskgnn:
+        condition: service_healthy
+    restart: unless-stopped
+
   backend:
     build:
       <<: *build-proxy
@@ -112,11 +171,11 @@ services:
       COOKIE_SECURE: ${COOKIE_SECURE:-false}
       RISK_LOG_LEVEL: ${RISK_LOG_LEVEL:-INFO}
       RISK_LOG_FORMAT: ${RISK_LOG_FORMAT:-pretty}
-      BENCHMARK_MODEL_VERSION: ${BENCHMARK_MODEL_VERSION:-smesd-v1}
-      BENCHMARK_MODEL_DIR: ${BENCHMARK_MODEL_DIR:-/app/com_risk_model/weights/${BENCHMARK_MODEL_VERSION:-smesd-v1}}
-      BENCHMARK_DATA_PATH: ${BENCHMARK_DATA_PATH:-/app/com_risk_model/data/processed/smesd/test.json}
-    volumes:
-      - ./com_risk_model/weights:/app/com_risk_model/weights:ro
+      RISK_GNN_URL: http://riskgnn:8000
+      RISK_GNN_API_TOKEN: ${RISK_GNN_API_TOKEN:-local-riskgnn-change-me}
+      MODELING_STORAGE_BUCKET: ${MODELING_STORAGE_BUCKET:-risk-modeling}
+      MODELING_STORAGE_ACCESS_KEY: ${MODELING_STORAGE_ACCESS_KEY:-RISKMODELINGAPP2026}
+      MODELING_STORAGE_SECRET_KEY: ${MODELING_STORAGE_SECRET_KEY:-local-modeling-change-me}
     depends_on:
       postgres:
         condition: service_healthy
@@ -179,6 +238,7 @@ services:
         condition: service_started
 
 volumes:
+  model-workspace:
   postgres-data:
   rustfs-data:
   neo4j-data:

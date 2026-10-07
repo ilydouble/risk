@@ -10,7 +10,7 @@
 
 已接通 `auth/register|login|logout|me`、`company/search|get`、`graph/get`、`score/get`、`document/create-upload|complete-upload|list|create-download`。健康检查和 OpenAPI 保留 GET。每个路由在 FastAPI 声明成功响应及错误响应 DTO，`contracts/openapi.json` 由服务端导出并纳入版本控制。
 
-独立基准接口为 `/api/v1/benchmark/{search,get,predict,explain,graph,evaluation,model-card}`，均使用 POST、Session 鉴权与相同信封。检索复用公共分页类型；未知编号返回 404 `BENCHMARK_COMPANY_NOT_FOUND`，模型或快照不可用返回 503 `BENCHMARK_MODEL_UNAVAILABLE`，无效请求返回 422 `REQUEST_INVALID`。这组编号不映射到工作台演示企业。
+模型业务接口使用 `/api/v1/modeling/` 前缀；模型服务内部契约独立导出，后端通过 ModelClient 映射错误。跨用户资源返回 404，状态冲突 409，参数校验 422，模型服务不可用 503 `MODEL_SERVICE_UNAVAILABLE`。旧 benchmark 接口已停用，见[工作台](modeling-workbench.md)。
 
 `auth/register` 是公开演示入口，接收用户名、显示名称和密码；注册只创建账号，不颁发 Session，随后调用登录接口。用户名由数据库唯一约束处理并发冲突，已占用返回 409 `AUTH_USERNAME_TAKEN`；无效字段返回 422 `REQUEST_INVALID`。网关仍检查同源 Origin 并清除伪造身份头。
 

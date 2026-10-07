@@ -45,7 +45,7 @@ RiskGNN
 - 来源是什么；
 - 是否属于推断关系。
 
-当前代码会为每条关系生成独立的反向关系类型，例如 `ownership` 和 `reverse:ownership`，见 [gnn.py (line 169)](../../com_risk_model/workbench/gnn.py:169)。这比简单无向化更合理，但还缺少时间和证据来源。
+当前新加坡服务协议沿用研究 node_edge 的双向、单位边权约定，见[训练协议](training-profile.md)。独立反向关系类型属于后续建图协议设计，不能自动改变已训练模型的关系编码。
 
 ### 超图
 

@@ -1,92 +1,55 @@
-# 元数据驱动风险建模工作台
+# 模型工作台
 
-`/modeling` 是用户数据的真实离线实验链路，与产品演示评分和 `/benchmark` SMEsD
-公开基准互相隔离。它不发布模型、不接生产授信，也不会把企业经营风险称为贷款违约概率。
-
-## 输入契约
-
-系统只接收 ZIP Bundle v1，不提供字段映射。外部适配脚本负责把原始申请、还款、征信、
-工商及关系数据转换为：
-
-```text
-metadata.json                 必需
-samples.csv|parquet           必需
-nodes.csv|parquet             可选
-relations.csv|parquet         可选
-events.csv|parquet            可选
-hyperedges.csv|parquet        可选
-```
-
-`samples` 是唯一训练入口，一行是一笔贷款申请或一个企业观察时点。每行固定包含
-`sample_id`、`entity_id`、`observation_time`、`graph_snapshot_id`、`split`、`target`，
-其余训练字段必须在 metadata 中声明类型和 `application`、`bureau`、`financial`、
-`registry` 等特征组。metadata 同时声明任务语义、正类、预测窗口、文件大小与 SHA-256。
-
-图组件使用外部生成的 `graph_snapshot_id`。Worker 校验节点与端点引用、样本实体和事件时间；
-没有合法图快照时只允许表格模型。静态实验图会显示“不支持严格未来预测”的提示。
-
-## 异步数据流
+`/modeling` 分为数据集、实验、模型版本三个入口。
 
 ```mermaid
-sequenceDiagram
-  participant UI as 四阶段工作台
-  participant API as FastAPI
-  participant PG as PostgreSQL
-  participant S3 as RustFS
-  participant W as 本地 Worker
-  UI->>API: 创建 ZIP 上传票据
-  UI->>S3: 预签名 PUT
-  UI->>API: 确认上传
-  API->>PG: queued analyze_bundle
-  W->>PG: SKIP LOCKED 领取任务
-  W->>S3: 下载并安全校验 Bundle
-  W->>PG: 写入聚合画像，dataset=ready
-  UI->>API: 创建比较实验
-  API->>PG: queued train_experiment
-  W->>S3: 读取 Bundle、写入模型制品 ZIP
-  W->>PG: 写入变体指标，experiment=completed
-  UI->>API: 轮询进度和结果
+flowchart LR
+  UI[浏览器] --> API[业务 API]
+  UI -->|预签名 ZIP PUT| S3[RustFS risk-modeling]
+  API -->|事务投递| OUT[业务 Outbox]
+  OUT -->|内部 HTTP| M[RiskGNN HTTP]
+  M --> J[独立执行数据库]
+  W[RiskGNN Worker] --> J
+  W --> S3
+  W --> C[训练与独立测试子进程]
+  API -->|状态、事件、预测| M
 ```
 
-PostgreSQL只保存清单、聚合画像、状态与指标；不保存或返回客户原始行。ZIP 校验拒绝路径穿越、
-符号链接、加密包、重复文件、哈希错误及超限压缩。任务采用租约，过期可恢复，最多执行三次。
+## 用户链路
 
-## 分析、RiskGNN 与评估基线
+1. ZIP 本地预览只列目录，上传进度来自浏览器实际字节传输。
+2. 完成上传只代表对象就绪；后台全量校验通过后才能创建实验。
+3. Run 固定 smoke-v1 协议，可设 1–20 轮，默认 2；展示阶段、曲线、Attempt 和诊断日志。
+4. 可取消或在终态重新运行；URL 保存选中记录，刷新后继续轮询。
+5. 独立测试成功才允许发布；模型版本可下载并预测最多 32 个图内企业。
 
-分析阶段输出字段质量、标签/划分分布、单变量信号、相关性、PSI、泄漏提示，以及图节点、关系、
-度、孤立样本、连通分量和超边画像。推荐特征只在 train 划分计算；填补、缩放、类别词表和选择
-规则随实验制品保存。
+原演示企业、报告、评分、文件链路保持独立；新加坡静态概览不显示本工作台的训练结果。
+旧 /benchmark 链接进入停用说明；旧 Bundle 提交接口不再存在。
 
-正式模型只有 RiskGNN。数据包编码层把动态样本/节点/事件字段投影为节点表示，随后统一调用
-`com_risk_runtime.RiskGNNCore` 完成关系内/关系间注意力、超图拉普拉斯传播以及自身风险与传染
-风险门控融合。训练界面提供三种方案：标准训练、附带HGB基线、完整消融。
+## API 与生成类型
 
-RiskGNN内部配置为：
+业务前缀 `/api/v1/modeling/`，均为 POST：
 
-1. `gnn_self_only`：仅自身属性和事件，用于内部消融；
-2. `gnn_no_hyper`：增加门控异构关系传播；
-3. `gnn_full`：增加可学习超边传播。
+| 资源 | 操作 |
+| --- | --- |
+| 数据集 | create-upload、complete-upload、get-dataset、list-datasets |
+| 实验 | create-run、get-run、list-runs、cancel-run、rerun、run-events |
+| 模型 | publish-model、get-model、list-models、download-model、predict-model |
 
-`logistic_regression`、`hist_gradient_boosting` 和 `graph_stats_hgb` 仍可在对照/消融方案中运行，
-但被标记为评估基线，不属于模型家族，不自动发布，也不与 RiskGNN 共同组成集成模型。
+业务契约来自 `contracts/openapi.json`；内部模型服务契约为 `contracts/riskgnn-openapi.json`。
+后端 ModelClient 只依赖 HTTP 契约；前端从业务 OpenAPI 生成 DTO。
+公共分页、四字段信封、Origin、Session 和请求 ID 约定继续有效。
+模型服务不可用返回 503；资源跨用户访问返回 404；错误状态转换返回 409。
 
-RiskGNN 使用事件类别 Embedding、数值投影、时间衰减、关系类型和正边权，按验证集 BCE 早停。
-所有变体报告 ROC-AUC、PR-AUC、KS、Brier、Precision、Recall、F1、混淆矩阵和校准分箱。
-制品保存在 RustFS，`manifest.json` 对每个模型文件记录大小和 SHA-256，`autoPublished=false`。
-每次实验另生成一份稳定的训练配置档案，明确数据指纹、编码、图、训练与评估协议，以及不同
-数据集之间不迁移权重的边界，详见[数据集训练配置档案](training-profile.md)。
+更多：[执行与恢复](modeling-execution.md)、[训练协议](training-profile.md)、[模型包](model-artifacts.md)。
 
-## 本地命令
+## 统一模型服务与分析
 
-模型工程内生成两种可验收样例：
-
-```bash
-cd com_risk_model
-uv run python -m workbench.demo --output runs/loan.zip --task loan_application --with-graph
-uv run python -m workbench.demo --output runs/entity.zip --task entity_snapshot --with-graph
-uv run python -m workbench.worker          # 连续领取任务
-uv run python -m workbench.worker --once   # 最多领取一个任务
-```
-
-完整开发拓扑、环境变量和端到端步骤见[本地开发](local-development.md)，领域口径见
-[建模领域模型](modeling-domain.md)。
+代码位于 `models/service/`，与 baseline / riskgnn / riskgnn+ 并列。
+HTTP 与 Worker 保持同一镜像；业务后端只负责归属、实验与可靠投递。
+模型能力目录通过 POST `/api/v1/modeling/capabilities` 提供，已验收的模型配置才可提交。
+当前训练选择 `riskgnn-node-edge` 或 `riskgnn-node-only`；两者共用固定真实子集协议。
+Bundle v1 可上传、校验与分析，尚无匹配的可发布训练 runner；页面明确显示分析模式。
+已停用的旧 Bundle 训练记录与对象保留，不把旧 worker 或旧模型网络复制成第二套实现。
+数据集详情包含类型化分析报告；实验详情包含可追溯档案，均随 OpenAPI 生成前端类型。
+旧已完成记录可能没有新分析字段，不伪造报告；重新上传可生成新版分析。

@@ -1,3 +1,5 @@
+> 本文包含历史问题和后续设计。当前工作台仍采用已验收的单位边权协议，置信度实验尚未作为服务能力开放。
+
 # 关系强度与不确定性设计
 
 建图分层与超图/事件节点取舍见[建图设计](graph-construction-design.md)。本篇处理关系强度与存在
@@ -17,7 +19,7 @@ relation_type
 weight
 ```
 
-并且只校验 `weight > 0`，见 [data.py (line 137)](../../com_risk_model/workbench/data.py:137)。超边也只有类型、编号和成员，没有置信度，见 [data.py (line 168)](../../com_risk_model/workbench/data.py:168)。
+并且只校验 `weight > 0`，见 [data.py (line 137)](../../models/service/datasets/bundle/data.py)。超边也只有类型、编号和成员，没有置信度，见 [data.py (line 168)](../../models/service/datasets/bundle/data.py)。
 
 更重要的是，当前 RiskGNN 将 `weight` 放入注意力：
 
@@ -25,7 +27,7 @@ weight
 alpha = softmax(attention_logit + log(weight))
 ```
 
-见 [model.py (line 73)](../../com_risk_model/runtime/src/com_risk_runtime/model.py:73)。
+见 [model.py (line 73)](../../models/riskgnn/gnn.py)。
 
 这意味着当前 `weight` 表达的是“邻居之间的相对传播强度”，并不是“这条边存在的概率”。两者不能混用。例如一个节点只有一个邻居时，即使其 `weight=0.01`，softmax 后仍然可能得到接近 1 的注意力，它不会真正削弱这条低可信边的影响。
 

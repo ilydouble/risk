@@ -31,3 +31,13 @@ EOF
 rc admin policy create local risk-documents /tmp/policy.json
 rc admin user add local "$STORAGE_ACCESS_KEY" "$STORAGE_SECRET_KEY"
 rc admin policy attach local risk-documents --user "$STORAGE_ACCESS_KEY"
+
+# The model service and API use a dedicated bucket identity, never document credentials.
+rc bucket create "local/$MODELING_STORAGE_BUCKET" --ignore-existing
+rc bucket cors set "local/$MODELING_STORAGE_BUCKET" /tmp/cors.xml
+cat > /tmp/model-policy.json <<EOF
+{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":["s3:ListBucket"],"Resource":["arn:aws:s3:::$MODELING_STORAGE_BUCKET"]},{"Effect":"Allow","Action":["s3:GetObject","s3:PutObject","s3:DeleteObject"],"Resource":["arn:aws:s3:::$MODELING_STORAGE_BUCKET/*"]}]}
+EOF
+rc admin policy create local risk-modeling /tmp/model-policy.json
+rc admin user add local "$MODELING_STORAGE_ACCESS_KEY" "$MODELING_STORAGE_SECRET_KEY"
+rc admin policy attach local risk-modeling --user "$MODELING_STORAGE_ACCESS_KEY"

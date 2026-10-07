@@ -1,57 +1,45 @@
-# 数据集训练配置档案
+# 新加坡数据与训练协议
 
-建模工作台定位为 RiskGNN 专用的企业风险模型训练与验证平台，不是任意算法的通用 AutoML。
-平台复用一套模型方法，但每个数据集独立完成字段编码、图构建、参数训练和评估。
+## sg-comrisk-v1
 
-## 三层对象
+直接接收 comrisk_export ZIP，支持文件位于根目录或统一顶层目录。
+压缩包不超过 512 MiB，解压总量不超过 2 GiB，成员最多 128 个；拒绝路径穿越、重复文件、
+符号链接和加密成员。Parquet 分批读取；原始业务行不导入 PostgreSQL。
 
-1. **共享方法**：`RiskGNN-v1` 及 `com_risk_runtime.model.RiskGNNCore`，定义关系传播、
-   超图传播和自身/传染风险门控融合。
-2. **数据集训练配置**：Bundle 指纹、标签语义、划分、特征、编码、图本体和训练协议。
-3. **训练制品**：一次实验在当前数据集上独立得到的参数、类别词表、指标和解释结果。
+必需文件：company_attr.parquet、edges.parquet、label.parquet、id_map.parquet、
+splits_5seed.parquet、feature_config.json、export_meta.json。
+ID 映射使用 company_id_str / company_id_int；特征协议为 2.0 的 A_no_priors。
+扫描包内所有 Parquet row group，校验企业唯一性、行序索引、边端点、标签掩码与五组冻结划分，
+记录每个文件长度、SHA-256 和完整统计。其余脚本与说明保留为附件，不执行。
+校验后的 ZIP 按内容指纹另存到 datasets 前缀，后续任务只读取这一固定副本。
+本轮只用自带 edges.parquet，不混入 singapore_graph_data，不自动重建图或使用超边分支。
 
-因此，SMEsD 与新加坡数据可以使用相同代码验证方法通用性，但两次运行不共享权重。Embedding
-在各自实验中随机初始化并只用本数据集学习；一个数据集上的分数不能被描述为另一个数据集的效果。
+## sg-node-edge-train-fit-v1 / smoke-v1
 
-## 档案内容
+固定六特征：由适配器的 FEATURES 常量约束，必须与 A_no_priors 的声明一致。
+不使用标签来源、企业年龄、社区风险先验或其他列。
+缺失计数字段补 0；address_trust 的缺失填充值仅在训练划分拟合并保存。
+不把修改后的预处理结果声称为历史实验分数复现。
 
-每次完成实验后，Worker 生成 `profileVersion=1` 的 `trainingProfile`，同时写入 PostgreSQL
-实验结果和 RustFS 制品内的 `training-profile.json`。档案包含：
+- 使用 seed 0 的冻结划分，保留 train / val / test 身份。
+- 按原 split 和标签比例，稳定 SHA-256 排序选 2,000 个有标签目标。
+- 加入最多两跳、每节点四个邻居的确定性上下文；保存实际 ID、关系与划分。
+- 关系按研究 node_edge 入口双向化、单位权重；固定嵌入作为模型 buffer 保存。
+- 默认两轮、batch size 64、五层 fanout 2、一个采样进程、CPU 两线程。
+- 验证集损失选择检查点；测试集只在新进程独立加载后计算最终指标。
+- 预测使用逐目标确定性邻域，输入顺序和同批其他企业不改变结果。
 
-- 数据：数据集 ID、Bundle schema、ZIP SHA-256、文件清单、样本/企业/图快照数量；
-- 目标：任务类型、样本粒度、正类、预测窗口和业务定义；
-- 划分：train/validation/test 的样本、正例、正例率和企业数量；
-- 特征：选择模式、入模字段声明、排除原因和仅在 train 拟合的选择规则；
-- 编码：数值填补/缩放、类别未知值与随机 Embedding、节点和事件编码策略；
-- 图：快照定义、节点/关系/事件/超边数量与类型、静态图限制；
-- 训练：执行变体、随机种子、RiskGNN 超参数、早停和数据隔离协议；
-- 评估：各变体 validation/test 指标及其用途；
-- 溯源：核心实现、代码版本、Python/Torch/scikit-learn 版本和制品格式；
-- 限制：例如静态图不能声明严格未来预测、企业风险不能称为贷款违约概率。
+输出 ROC-AUC、PR-AUC、KS、Brier、Precision、Recall、F1、混淆矩阵及逐企业预测。
+0.5 是固定分类阈值，不基于测试集优化。少量正样本会使指标波动，不能用于生产授信决策。
+新加坡标签描述企业困境状态，静态图实验不等于严格的未来违约预测。
 
-类别词表、填补统计和模型参数留在模型文件中，不写入 PostgreSQL 档案；平台也不保存原始客户行。
+网络前向、邻居采样及优化步骤复用原 gnn.py / train_sg_neighbor.py；服务只固定
+本节实验协议和产物格式。原研究入口保留全量、GPU 与消融参数。
 
-## 独立训练协议
+## 数据分析
 
-档案固定记录以下可审计语义：
-
-```json
-{
-  "trainingScope": "current_dataset_only",
-  "weightsTransferred": false,
-  "externalPretrainedEmbeddings": false,
-  "embeddingInitialization": "random",
-  "preprocessingFitSplit": "train",
-  "earlyStoppingSplit": "validation",
-  "testUsedForSelection": false
-}
-```
-
-评估页将该协议显示为“共享算法，独立训练”。历史实验没有档案时仍可只读展示原结果，但必须
-重新运行才能获得完整训练配置档案。
-
-## 制品校验
-
-实验 ZIP 的 `manifest.json` 记录 `training-profile.json` 以及每个模型文件的路径、大小和
-SHA-256。外层实验记录继续保存整个 ZIP 的对象键、大小和 SHA-256，且 `autoPublished=false`。
-档案用于复现和审计，不代表模型已经通过上线审批或投入生产授信。
+新加坡质量指标扫描全部企业，PSI 使用 seed 0 中 train/val/test 各最多 5,000 行，
+按企业 ID 的 SHA-256 稳定抽样；抽样数随报告返回，分析不改变训练划分。
+Bundle v1 按原声明的 train/validation/test 分析；信号与相关性只在训练划分计算。
+样本、边、时间和摘要校验复用旧工作台契约；不恢复旧的 GNN 网络实现。
+node-only 配置将模型包中的训练图置为空，保留原图规模与实际使用规模的区别。
