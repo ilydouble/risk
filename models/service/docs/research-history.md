@@ -1,8 +1,10 @@
+> 以下保存拆分前的历史说明，旧运行路径已停用；当前入口见[服务说明](../README.md)。
+
 # RiskGNN
 
-> 本目录是 RiskGNN 研究主线，原 requirements、Python/CUDA 环境与脚本入口保持独立。
-> 工作台服务在 `../service/`，通过明确适配调用这里的网络、邻居采样和优化步骤。
-> 研究检查点需满足服务模型包协议后才能用于工作台发布。
+> **状态：历史研究实现。** 系统唯一可部署共享内核现位于
+> `com_risk_model/runtime/src/com_risk_runtime/model.py`，训练 Worker 与后端均不导入本目录。
+> 本目录只保留新加坡大规模实验、邻居采样和结果溯源；请勿把这里的 checkpoint 当作系统模型制品。
 
 Enterprise credit-risk / bankruptcy-prediction model, extended from the ComRisk
 paper's original code (see citation below) for Topic 18. Built and validated on
@@ -79,7 +81,7 @@ Developed against Python 3.13, PyTorch 2.7.1 (CPU or CUDA), torch-geometric 2.8.
   [ComRisk repo](https://github.com/shaopengw/ComRisk) (`data/*.pkl`).
 - **Singapore ACRA/GLEIF export** (`data_sg_v7/comrisk_export/`, gitignored,
   ~150MB per version): a partner-provided parquet export, not redistributed here.
-  See `../baseline/SMEsD.md` for the SMEsD schema; the Singapore export's schema/loader is
+  See `SMEsD.md` for the SMEsD schema; the Singapore export's schema/loader is
   `data_sg_v7/comrisk_export/load_comrisk.py`.
 
 ## Running it
@@ -159,15 +161,3 @@ run doesn't kill the batch.
   above); redistribution terms for the upstream code/data have not been
   independently verified. Keeping the citation/provenance here does not imply
   re-authorization.
-
-## Model workbench service
-
-The original research environment and commands above remain supported.
-`../service/` adds the HTTP API, Worker, validated input and portable model artifacts.
-It calls this directory's `gnn.py` and `train_sg_neighbor.py`; research scripts do
-not import the service. Local experiments do not need PostgreSQL or RustFS.
-
-Service deployment uses its own Python 3.12 CPU environment and requirements lock;
-it does not change your Python/CUDA environment. See [service setup](../service/README.md).
-The service's fixed `smoke-v1` subset profile is separate from the full-data research
-experiments and does not claim to reproduce the historical metrics above.

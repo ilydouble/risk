@@ -72,16 +72,8 @@ Thumbs.db
 
 *.egg-info/
 
-# Model workspace local data and artifacts
-/com_risk_model/data/*
-!/com_risk_model/data/processed/
-/com_risk_model/data/processed/*
-!/com_risk_model/data/processed/smesd/
-/com_risk_model/data/processed/smesd/*
-!/com_risk_model/data/processed/smesd/test.json
-/com_risk_model/runs/
-/com_risk_model/weights/*
-!/com_risk_model/weights/.gitkeep
+# Retired model workspace: preserve local data and artifacts without tracking them.
+/com_risk_model/
 
 # Local competition datasets. Keep only the directory contract in Git.
 /datasets/*
@@ -97,3 +89,10 @@ Thumbs.db
 /findings.md
 /progress.md
 /task_plan.md
+
+# Retired workspace may still contain local runs and archived artifacts.
+/riskgnn/
+
+# Independent model service local workspace
+/models/runs/
+/models/weights/

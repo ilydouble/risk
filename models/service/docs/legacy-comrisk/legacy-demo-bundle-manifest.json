@@ -1,0 +1,35 @@
+{
+  "bundle": "smesd-demo-v1",
+  "upstream": "https://github.com/shaopengw/ComRisk",
+  "upstream_commit": "a80524b3b67436cd2f74755f6ffa08a554ff2d02",
+  "dataset": "SMEsD-disjoint-test",
+  "company_count": 474,
+  "selected_model": "no_hyper-seed42",
+  "files": [
+    {
+      "path": "backend/data/processed/smesd/test.json",
+      "bytes": 832198,
+      "sha256": "5f9db7f71e2b3a797c0c6576207d2d5dc63ee9d188031f1320450b8b74492224"
+    },
+    {
+      "path": "backend/artifacts/smesd-v1/summary.json",
+      "bytes": 85161,
+      "sha256": "17141f8f09ba56d93d9367395fa0f2c89404d161c05d8da7ff24403e582bd754"
+    },
+    {
+      "path": "backend/artifacts/smesd-v1/no_hyper-seed42/weights.pt",
+      "bytes": 279159,
+      "sha256": "65a95b3960fcbfa1597fcc877e33594736d15a176d01261e2ef3ffb3cd674436"
+    },
+    {
+      "path": "backend/artifacts/smesd-v1/no_hyper-seed42/metadata.json",
+      "bytes": 108886,
+      "sha256": "ce1eb5ea2610799abf2ac2a4822f199c325332ec79bd0991a81c189960fd2361"
+    },
+    {
+      "path": "backend/artifacts/smesd-v1/no_hyper-seed42/metrics.json",
+      "bytes": 34795,
+      "sha256": "36f891b36cb77cbfb1695e2db4890e93200f1d89b132c2a773bcd00d362dfb1b"
+    }
+  ]
+}

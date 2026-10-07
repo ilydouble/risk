@@ -46,11 +46,15 @@ def _worker_init(indptr, dst, et, ew, fanouts):
 
 
 def _sample_task(seed_nodes, rng_seed):
+    return sample_neighbors(_W['indptr'], _W['dst'], _W['et'], _W['ew'],
+                            _W['fanouts'], seed_nodes, rng_seed)
+
+
+def sample_neighbors(indptr, dst, et, ew, fanouts, seed_nodes, rng_seed):
     """Runs inside a worker process. Mimics real neighbor-loader convention:
     n_id[0:batch_size] are the seed/target nodes; local edge_index has messages
     flowing neighbor->center (matches HeteGNN's propagate(), which aggregates at
     edge_index[1])."""
-    indptr, dst, et, ew, fanouts = _W['indptr'], _W['dst'], _W['et'], _W['ew'], _W['fanouts']
     rng = np.random.default_rng(rng_seed)
     node_map = {}
     # array('i') instead of list: 4 bytes per element instead of ~36 (8-byte pointer +
@@ -268,6 +272,16 @@ def to_batch_tensors(n_id_np, ei_local, et_local, ew_local, device):
     return n_id, ei, et, ew
 
 
+def optimize_batch(model, optimizer, criterion, scores, labels):
+    """Shared optimization step; service callers supply their own data/epoch protocol."""
+    loss = criterion(scores, labels)
+    optimizer.zero_grad()
+    loss.backward()
+    torch.nn.utils.clip_grad_norm_(model.parameters(), 0.25)
+    optimizer.step()
+    return loss.item()
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--variant', type=str, required=True, choices=['node_only', 'node_edge'])
@@ -413,11 +427,7 @@ def main():
             emb = gnn.forward_batch(X, ei, et_, ew_, n_id, bsz)
             res = classifier.forward(emb)
             label = torch.LongTensor(y[n_id_np[:bsz]].astype(int)).to(device)
-            loss = criterion(res, label)
-            optimizer.zero_grad(); loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.parameters(), 0.25)
-            optimizer.step()
-            ep_loss += loss.item(); n_batches += 1
+            ep_loss += optimize_batch(model, optimizer, criterion, res, label); n_batches += 1
         scheduler.step()
         if epoch % args.eval_every == 0 or epoch == args.n_epoch - 1:
             pred, score, true = run_eval(valid_idx_np, y, args.eval_batch_size)

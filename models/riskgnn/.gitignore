@@ -27,3 +27,5 @@ preds/
 # are not in this repo, so they are deliberately not shipped; the findings they produced
 # are in README.md instead.
 _*.py
+
+!__init__.py

@@ -11,7 +11,11 @@ from torch_geometric.nn.inits import glorot, uniform
 from torch_geometric.utils import softmax
 import math
 
-from utils import *
+# Support both the original script entrypoints and package consumers.
+if __package__:
+    from .utils import *
+else:
+    from utils import *
 # torch_sparse (SparseTensor, set_diag, tensor.to) and torch_scatter.scatter were imported
 # here but never called anywhere in this file (verified by grep) — dropped since neither
 # package ships a prebuilt wheel for this torch/Python combination.
