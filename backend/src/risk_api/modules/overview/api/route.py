@@ -25,9 +25,7 @@ router.add_api_route(
     handler.get_company,
     methods=["POST"],
     response_model=ApiEnvelope[ResponseGetOverviewCompany],
-    responses=(
-        COMMON_ERROR_RESPONSES | SESSION_ERRORS | UNAVAILABLE_RESPONSE | NOT_FOUND_RESPONSE
-    ),
+    responses=(COMMON_ERROR_RESPONSES | SESSION_ERRORS | UNAVAILABLE_RESPONSE | NOT_FOUND_RESPONSE),
 )
 router.add_api_route(
     "/search-companies",

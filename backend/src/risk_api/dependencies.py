@@ -1,5 +1,7 @@
 from collections.abc import AsyncIterator
 
+import aioboto3
+import httpx
 from dishka import Provider, Scope, provide
 from neo4j import AsyncDriver, AsyncGraphDatabase
 from redis.asyncio import Redis
@@ -8,15 +10,15 @@ from stellarmesh_objectstorage import AsyncClient, ClientConfig
 
 from risk_api.modules.auth.repository import UserRepository
 from risk_api.modules.auth.service import AuthService
-from risk_api.modules.benchmark.service import BenchmarkService
 from risk_api.modules.company.repository import CompanyRepository
 from risk_api.modules.company.service import CompanyService
 from risk_api.modules.document.repository import DocumentRepository
 from risk_api.modules.document.service import DocumentService
 from risk_api.modules.graph.repository import GraphRepository
 from risk_api.modules.graph.service import GraphService
+from risk_api.modules.modeling.client import ModelClient
 from risk_api.modules.modeling.repository import ModelingRepository
-from risk_api.modules.modeling.service import ModelingService
+from risk_api.modules.modeling.service import ModelingService, ModelingStorage
 from risk_api.modules.overview.repository import OverviewRepository
 from risk_api.modules.overview.service import OverviewService
 from risk_api.modules.score.service import ScoreService
@@ -25,14 +27,6 @@ from risk_api.shared.db import session_factory
 
 
 class InfrastructureProvider(Provider):
-    @provide(scope=Scope.APP)
-    async def benchmark(self) -> AsyncIterator[BenchmarkService]:
-        service = BenchmarkService()
-        try:
-            yield service
-        finally:
-            service.close()
-
     @provide(scope=Scope.APP)
     async def redis(self) -> AsyncIterator[Redis]:
         client: Redis = Redis.from_url(settings.redis_url, decode_responses=True)
@@ -113,9 +107,9 @@ class InfrastructureProvider(Provider):
 
     @provide(scope=Scope.REQUEST)
     def modeling_service(
-        self, repository: ModelingRepository, storage: AsyncClient
+        self, repository: ModelingRepository, storage: ModelingStorage, client: ModelClient
     ) -> ModelingService:
-        return ModelingService(repository, storage)
+        return ModelingService(repository, storage, client)
 
     @provide(scope=Scope.REQUEST)
     def overview_repository(self, session: AsyncSession) -> OverviewRepository:
@@ -124,3 +118,30 @@ class InfrastructureProvider(Provider):
     @provide(scope=Scope.REQUEST)
     def overview_service(self, repository: OverviewRepository) -> OverviewService:
         return OverviewService(repository)
+
+    @provide(scope=Scope.APP)
+    async def model_client(self) -> AsyncIterator[ModelClient]:
+        async with httpx.AsyncClient(
+            base_url=settings.model_service_url,
+            trust_env=False,
+            headers={"Authorization": f"Bearer {settings.model_service_token}"},
+        ) as http:
+            yield ModelClient(http)
+
+    @provide(scope=Scope.APP)
+    async def modeling_storage(self) -> AsyncIterator[ModelingStorage]:
+        credentials = aioboto3.Session(
+            aws_access_key_id=settings.model_storage_key,
+            aws_secret_access_key=settings.model_storage_secret,
+        )
+        async with AsyncClient(
+            ClientConfig(
+                bucket=settings.model_storage_bucket,
+                region=settings.storage_region,
+                endpoint=settings.storage_endpoint,
+                presign_endpoint=settings.storage_public_endpoint,
+                use_path_style=True,
+            ),
+            session=credentials,
+        ) as storage:
+            yield ModelingStorage(storage)

@@ -1,8 +1,5 @@
 from dataclasses import dataclass
 from os import getenv
-from pathlib import Path
-
-MODEL_ROOT = Path(__file__).resolve().parents[4] / "com_risk_model"
 
 
 @dataclass(frozen=True)
@@ -20,13 +17,11 @@ class Settings:
     allowed_origin: str = getenv("ALLOWED_ORIGIN", "http://localhost:18080,http://localhost:3000")
     log_level: str = getenv("RISK_LOG_LEVEL", "INFO")
     log_format: str = getenv("RISK_LOG_FORMAT", "json")
-    benchmark_model_version: str = getenv("BENCHMARK_MODEL_VERSION", "smesd-v1")
-    benchmark_model_dir: str = getenv(
-        "BENCHMARK_MODEL_DIR", str(MODEL_ROOT / "weights" / benchmark_model_version)
-    )
-    benchmark_data_path: str = getenv(
-        "BENCHMARK_DATA_PATH", str(MODEL_ROOT / "data/processed/smesd/test.json")
-    )
+    model_service_url: str = getenv("RISK_GNN_URL", "http://localhost:8001")
+    model_service_token: str = getenv("RISK_GNN_API_TOKEN", "local-riskgnn-change-me")
+    model_storage_bucket: str = getenv("MODELING_STORAGE_BUCKET", "risk-modeling")
+    model_storage_key: str = getenv("MODELING_STORAGE_ACCESS_KEY", "RISKMODELINGAPP2026")
+    model_storage_secret: str = getenv("MODELING_STORAGE_SECRET_KEY", "local-modeling-change-me")
 
 
 settings = Settings()

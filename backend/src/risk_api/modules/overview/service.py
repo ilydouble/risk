@@ -21,11 +21,7 @@ class OverviewService:
         payload = await self.get()
         all_samples: list[dict[str, Any]] = payload["sampleCompanies"]
         industry_codes = sorted(
-            {
-                str(item["industryCode"])
-                for item in all_samples
-                if item.get("industryCode")
-            }
+            {str(item["industryCode"]) for item in all_samples if item.get("industryCode")}
         )
         keyword = query.keyword.strip().casefold()
         samples = [
@@ -43,10 +39,7 @@ class OverviewService:
                 ).casefold()
             )
             and (query.category == "all" or item["labelCategory"] == query.category)
-            and (
-                query.industry_code == "all"
-                or item.get("industryCode") == query.industry_code
-            )
+            and (query.industry_code == "all" or item.get("industryCode") == query.industry_code)
         ]
         if query.sort == "age_desc":
             samples.sort(

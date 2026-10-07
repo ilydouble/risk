@@ -14,18 +14,9 @@ dependencies = [
   "argon2-cffi>=23.1",
   "stellarmesh-logging==0.5.1",
   "stellarmesh-objectstorage==0.1.0",
-  "com-risk-runtime",
-  "torch>=2.6,<3",
+  "httpx>=0.28",
+  "aioboto3>=15.5,<16",
 ]
-
-[[tool.uv.index]]
-name = "pytorch-cpu"
-url = "https://download.pytorch.org/whl/cpu"
-explicit = true
-
-[tool.uv.sources]
-com-risk-runtime = { path = "../com_risk_model/runtime", editable = true }
-torch = [{ index = "pytorch-cpu", marker = "sys_platform == 'linux' or sys_platform == 'win32'" }]
 
 [dependency-groups]
 dev = ["mypy>=1.15", "ruff>=0.11", "pytest>=8.3", "httpx>=0.28"]

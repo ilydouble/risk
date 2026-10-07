@@ -39,6 +39,58 @@
         "title": "AgeDistributionItemDTO",
         "type": "object"
       },
+      "AnalysisWarningDTO": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "feature": {
+            "title": "Feature",
+            "type": "string"
+          }
+        },
+        "required": [
+          "feature",
+          "code"
+        ],
+        "title": "AnalysisWarningDTO",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseCancelRun_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseCancelRun"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseCancelRun]",
+        "type": "object"
+      },
       "ApiEnvelope_ResponseCompleteDatasetUpload_": {
         "properties": {
           "code": {
@@ -175,6 +227,40 @@
         "title": "ApiEnvelope[ResponseCreateDownload]",
         "type": "object"
       },
+      "ApiEnvelope_ResponseCreateRun_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseCreateRun"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseCreateRun]",
+        "type": "object"
+      },
       "ApiEnvelope_ResponseCreateUpload_": {
         "properties": {
           "code": {
@@ -209,7 +295,7 @@
         "title": "ApiEnvelope[ResponseCreateUpload]",
         "type": "object"
       },
-      "ApiEnvelope_ResponseEvaluationBenchmark_": {
+      "ApiEnvelope_ResponseDownloadModel_": {
         "properties": {
           "code": {
             "title": "Code",
@@ -218,7 +304,7 @@
           "data": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/ResponseEvaluationBenchmark"
+                "$ref": "#/components/schemas/ResponseDownloadModel"
               },
               {
                 "type": "null"
@@ -240,75 +326,7 @@
           "message",
           "data"
         ],
-        "title": "ApiEnvelope[ResponseEvaluationBenchmark]",
-        "type": "object"
-      },
-      "ApiEnvelope_ResponseExplainBenchmark_": {
-        "properties": {
-          "code": {
-            "title": "Code",
-            "type": "integer"
-          },
-          "data": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ResponseExplainBenchmark"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "internal_code": {
-            "title": "Internal Code",
-            "type": "string"
-          },
-          "message": {
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code",
-          "internal_code",
-          "message",
-          "data"
-        ],
-        "title": "ApiEnvelope[ResponseExplainBenchmark]",
-        "type": "object"
-      },
-      "ApiEnvelope_ResponseGetBenchmark_": {
-        "properties": {
-          "code": {
-            "title": "Code",
-            "type": "integer"
-          },
-          "data": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ResponseGetBenchmark"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "internal_code": {
-            "title": "Internal Code",
-            "type": "string"
-          },
-          "message": {
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code",
-          "internal_code",
-          "message",
-          "data"
-        ],
-        "title": "ApiEnvelope[ResponseGetBenchmark]",
+        "title": "ApiEnvelope[ResponseDownloadModel]",
         "type": "object"
       },
       "ApiEnvelope_ResponseGetCompany_": {
@@ -379,40 +397,6 @@
         "title": "ApiEnvelope[ResponseGetDataset]",
         "type": "object"
       },
-      "ApiEnvelope_ResponseGetExperiment_": {
-        "properties": {
-          "code": {
-            "title": "Code",
-            "type": "integer"
-          },
-          "data": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ResponseGetExperiment"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "internal_code": {
-            "title": "Internal Code",
-            "type": "string"
-          },
-          "message": {
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code",
-          "internal_code",
-          "message",
-          "data"
-        ],
-        "title": "ApiEnvelope[ResponseGetExperiment]",
-        "type": "object"
-      },
       "ApiEnvelope_ResponseGetGraph_": {
         "properties": {
           "code": {
@@ -445,6 +429,40 @@
           "data"
         ],
         "title": "ApiEnvelope[ResponseGetGraph]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseGetModel_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseGetModel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseGetModel]",
         "type": "object"
       },
       "ApiEnvelope_ResponseGetOverviewCompany_": {
@@ -515,6 +533,40 @@
         "title": "ApiEnvelope[ResponseGetOverview]",
         "type": "object"
       },
+      "ApiEnvelope_ResponseGetRun_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseGetRun"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseGetRun]",
+        "type": "object"
+      },
       "ApiEnvelope_ResponseGetScore_": {
         "properties": {
           "code": {
@@ -547,40 +599,6 @@
           "data"
         ],
         "title": "ApiEnvelope[ResponseGetScore]",
-        "type": "object"
-      },
-      "ApiEnvelope_ResponseGraphBenchmark_": {
-        "properties": {
-          "code": {
-            "title": "Code",
-            "type": "integer"
-          },
-          "data": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ResponseGraphBenchmark"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "internal_code": {
-            "title": "Internal Code",
-            "type": "string"
-          },
-          "message": {
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code",
-          "internal_code",
-          "message",
-          "data"
-        ],
-        "title": "ApiEnvelope[ResponseGraphBenchmark]",
         "type": "object"
       },
       "ApiEnvelope_ResponseListDatasets_": {
@@ -651,7 +669,7 @@
         "title": "ApiEnvelope[ResponseListDocuments]",
         "type": "object"
       },
-      "ApiEnvelope_ResponseListExperiments_": {
+      "ApiEnvelope_ResponseListModels_": {
         "properties": {
           "code": {
             "title": "Code",
@@ -660,7 +678,7 @@
           "data": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/ResponseListExperiments"
+                "$ref": "#/components/schemas/ResponseListModels"
               },
               {
                 "type": "null"
@@ -682,7 +700,41 @@
           "message",
           "data"
         ],
-        "title": "ApiEnvelope[ResponseListExperiments]",
+        "title": "ApiEnvelope[ResponseListModels]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseListRuns_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseListRuns"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseListRuns]",
         "type": "object"
       },
       "ApiEnvelope_ResponseLogin_": {
@@ -787,7 +839,7 @@
         "title": "ApiEnvelope[ResponseMe]",
         "type": "object"
       },
-      "ApiEnvelope_ResponseModelCardBenchmark_": {
+      "ApiEnvelope_ResponseModelingCapabilities_": {
         "properties": {
           "code": {
             "title": "Code",
@@ -796,7 +848,7 @@
           "data": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/ResponseModelCardBenchmark"
+                "$ref": "#/components/schemas/ResponseModelingCapabilities"
               },
               {
                 "type": "null"
@@ -818,10 +870,10 @@
           "message",
           "data"
         ],
-        "title": "ApiEnvelope[ResponseModelCardBenchmark]",
+        "title": "ApiEnvelope[ResponseModelingCapabilities]",
         "type": "object"
       },
-      "ApiEnvelope_ResponsePredictBenchmark_": {
+      "ApiEnvelope_ResponsePredictModel_": {
         "properties": {
           "code": {
             "title": "Code",
@@ -830,7 +882,7 @@
           "data": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/ResponsePredictBenchmark"
+                "$ref": "#/components/schemas/ResponsePredictModel"
               },
               {
                 "type": "null"
@@ -852,7 +904,41 @@
           "message",
           "data"
         ],
-        "title": "ApiEnvelope[ResponsePredictBenchmark]",
+        "title": "ApiEnvelope[ResponsePredictModel]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponsePublishModel_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponsePublishModel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponsePublishModel]",
         "type": "object"
       },
       "ApiEnvelope_ResponseRegister_": {
@@ -889,7 +975,7 @@
         "title": "ApiEnvelope[ResponseRegister]",
         "type": "object"
       },
-      "ApiEnvelope_ResponseRunExperiment_": {
+      "ApiEnvelope_ResponseRerun_": {
         "properties": {
           "code": {
             "title": "Code",
@@ -898,7 +984,7 @@
           "data": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/ResponseRunExperiment"
+                "$ref": "#/components/schemas/ResponseRerun"
               },
               {
                 "type": "null"
@@ -920,10 +1006,10 @@
           "message",
           "data"
         ],
-        "title": "ApiEnvelope[ResponseRunExperiment]",
+        "title": "ApiEnvelope[ResponseRerun]",
         "type": "object"
       },
-      "ApiEnvelope_ResponseSearchBenchmark_": {
+      "ApiEnvelope_ResponseRunEvents_": {
         "properties": {
           "code": {
             "title": "Code",
@@ -932,7 +1018,7 @@
           "data": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/ResponseSearchBenchmark"
+                "$ref": "#/components/schemas/ResponseRunEvents"
               },
               {
                 "type": "null"
@@ -954,7 +1040,7 @@
           "message",
           "data"
         ],
-        "title": "ApiEnvelope[ResponseSearchBenchmark]",
+        "title": "ApiEnvelope[ResponseRunEvents]",
         "type": "object"
       },
       "ApiEnvelope_ResponseSearchCompany_": {
@@ -1025,272 +1111,51 @@
         "title": "ApiEnvelope[ResponseSearchOverviewCompany]",
         "type": "object"
       },
-      "BenchmarkCompany": {
+      "AttemptDTO": {
         "properties": {
-          "community": {
-            "title": "Community",
-            "type": "string"
-          },
-          "creditScore": {
-            "title": "Creditscore",
-            "type": "integer"
-          },
-          "eventCount": {
-            "title": "Eventcount",
-            "type": "integer"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "predictedLabel": {
-            "enum": [
-              0,
-              1
-            ],
-            "title": "Predictedlabel",
-            "type": "integer"
-          },
-          "riskProbability": {
-            "title": "Riskprobability",
-            "type": "number"
-          }
-        },
-        "required": [
-          "id",
-          "community",
-          "eventCount",
-          "riskProbability",
-          "creditScore",
-          "predictedLabel"
-        ],
-        "title": "BenchmarkCompany",
-        "type": "object"
-      },
-      "BenchmarkEvent": {
-        "properties": {
-          "age_months": {
-            "title": "Age Months",
-            "type": "number"
-          },
-          "cause": {
-            "title": "Cause",
-            "type": "integer"
-          },
-          "company": {
-            "title": "Company",
-            "type": "string"
-          },
-          "court": {
-            "title": "Court",
-            "type": "integer"
-          },
-          "result": {
-            "title": "Result",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "company",
-          "cause",
-          "court",
-          "result",
-          "age_months"
-        ],
-        "title": "BenchmarkEvent",
-        "type": "object"
-      },
-      "BenchmarkFeatureSensitivity": {
-        "properties": {
-          "feature": {
-            "title": "Feature",
-            "type": "string"
-          },
-          "probability_delta": {
-            "title": "Probability Delta",
-            "type": "number"
-          },
-          "probability_without_feature": {
-            "title": "Probability Without Feature",
-            "type": "number"
-          },
-          "value": {
+          "error": {
             "anyOf": [
               {
-                "type": "number"
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Value"
-          }
-        },
-        "required": [
-          "feature",
-          "value",
-          "probability_without_feature",
-          "probability_delta"
-        ],
-        "title": "BenchmarkFeatureSensitivity",
-        "type": "object"
-      },
-      "BenchmarkGraphEdge": {
-        "properties": {
-          "relation": {
-            "title": "Relation",
-            "type": "string"
+            "title": "Error"
           },
-          "source": {
-            "title": "Source",
-            "type": "string"
-          },
-          "target": {
-            "title": "Target",
-            "type": "string"
-          },
-          "weight": {
-            "title": "Weight",
-            "type": "number"
-          }
-        },
-        "required": [
-          "source",
-          "target",
-          "relation",
-          "weight"
-        ],
-        "title": "BenchmarkGraphEdge",
-        "type": "object"
-      },
-      "BenchmarkGraphNode": {
-        "properties": {
-          "community": {
-            "title": "Community",
-            "type": "string"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "kind": {
-            "enum": [
-              "company",
-              "person"
-            ],
-            "title": "Kind",
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "kind",
-          "community"
-        ],
-        "title": "BenchmarkGraphNode",
-        "type": "object"
-      },
-      "BenchmarkMetrics": {
-        "properties": {
-          "brier": {
-            "title": "Brier",
-            "type": "number"
-          },
-          "capture_at_5pct": {
+          "finishedAt": {
             "anyOf": [
               {
-                "type": "number"
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Capture At 5Pct"
+            "title": "Finishedat"
           },
-          "f1": {
-            "title": "F1",
-            "type": "number"
-          },
-          "ks": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Ks"
-          },
-          "lift_at_10pct": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Lift At 10Pct"
-          },
-          "n": {
-            "title": "N",
+          "number": {
+            "title": "Number",
             "type": "integer"
           },
-          "positives": {
-            "title": "Positives",
-            "type": "integer"
+          "startedAt": {
+            "title": "Startedat",
+            "type": "string"
           },
-          "pr_auc": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Pr Auc"
-          },
-          "precision": {
-            "title": "Precision",
-            "type": "number"
-          },
-          "recall": {
-            "title": "Recall",
-            "type": "number"
-          },
-          "roc_auc": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Roc Auc"
-          },
-          "threshold": {
-            "title": "Threshold",
-            "type": "number"
+          "status": {
+            "title": "Status",
+            "type": "string"
           }
         },
         "required": [
-          "n",
-          "positives",
-          "threshold",
-          "roc_auc",
-          "pr_auc",
-          "ks",
-          "brier",
-          "lift_at_10pct",
-          "capture_at_5pct",
-          "f1",
-          "precision",
-          "recall"
+          "number",
+          "status",
+          "error",
+          "startedAt",
+          "finishedAt"
         ],
-        "title": "BenchmarkMetrics",
+        "title": "AttemptDTO",
         "type": "object"
       },
       "CommunityBenchmark": {
@@ -1776,43 +1641,148 @@
         "title": "CompanyProfile",
         "type": "object"
       },
+      "CorrelationDTO": {
+        "properties": {
+          "correlation": {
+            "title": "Correlation",
+            "type": "number"
+          },
+          "left": {
+            "title": "Left",
+            "type": "string"
+          },
+          "right": {
+            "title": "Right",
+            "type": "string"
+          }
+        },
+        "required": [
+          "left",
+          "right",
+          "correlation"
+        ],
+        "title": "CorrelationDTO",
+        "type": "object"
+      },
+      "DatasetAnalysisDTO": {
+        "properties": {
+          "analyzedRows": {
+            "title": "Analyzedrows",
+            "type": "integer"
+          },
+          "correlations": {
+            "items": {
+              "$ref": "#/components/schemas/CorrelationDTO"
+            },
+            "title": "Correlations",
+            "type": "array"
+          },
+          "drift": {
+            "items": {
+              "$ref": "#/components/schemas/DriftAnalysisDTO"
+            },
+            "title": "Drift",
+            "type": "array"
+          },
+          "driftSampleRows": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Driftsamplerows",
+            "type": "object"
+          },
+          "duplicateSampleIds": {
+            "title": "Duplicatesampleids",
+            "type": "integer"
+          },
+          "features": {
+            "items": {
+              "$ref": "#/components/schemas/FeatureAnalysisDTO"
+            },
+            "title": "Features",
+            "type": "array"
+          },
+          "graph": {
+            "additionalProperties": true,
+            "title": "Graph",
+            "type": "object"
+          },
+          "scope": {
+            "title": "Scope",
+            "type": "string"
+          },
+          "splits": {
+            "items": {
+              "$ref": "#/components/schemas/SplitAnalysisDTO"
+            },
+            "title": "Splits",
+            "type": "array"
+          },
+          "totalRows": {
+            "title": "Totalrows",
+            "type": "integer"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/AnalysisWarningDTO"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "version",
+          "scope",
+          "totalRows",
+          "analyzedRows",
+          "duplicateSampleIds",
+          "features",
+          "splits",
+          "drift",
+          "correlations",
+          "warnings",
+          "graph"
+        ],
+        "title": "DatasetAnalysisDTO",
+        "type": "object"
+      },
       "DatasetDTO": {
         "properties": {
           "analysis": {
             "anyOf": [
               {
-                "additionalProperties": true,
-                "type": "object"
+                "$ref": "#/components/schemas/DatasetAnalysisDTO"
               },
               {
                 "type": "null"
               }
-            ],
-            "title": "Analysis"
+            ]
           },
-          "capabilities": {
-            "additionalProperties": true,
-            "title": "Capabilities",
+          "counts": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Counts",
             "type": "object"
-          },
-          "columnCount": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Columncount"
-          },
-          "contentType": {
-            "title": "Contenttype",
-            "type": "string"
           },
           "createdAt": {
             "title": "Createdat",
             "type": "string"
+          },
+          "dataFormat": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dataformat"
           },
           "error": {
             "anyOf": [
@@ -1829,43 +1799,18 @@
             "title": "Filename",
             "type": "string"
           },
-          "finishedAt": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Finishedat"
+          "files": {
+            "items": {
+              "$ref": "#/components/schemas/FileDTO"
+            },
+            "title": "Files",
+            "type": "array"
           },
           "id": {
             "title": "Id",
             "type": "string"
           },
-          "manifest": {
-            "anyOf": [
-              {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Manifest"
-          },
-          "name": {
-            "title": "Name",
-            "type": "string"
-          },
-          "progress": {
-            "additionalProperties": true,
-            "title": "Progress",
-            "type": "object"
-          },
-          "rowCount": {
+          "labeledCount": {
             "anyOf": [
               {
                 "type": "integer"
@@ -1874,41 +1819,46 @@
                 "type": "null"
               }
             ],
-            "title": "Rowcount"
+            "title": "Labeledcount"
           },
-          "sampleUnit": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "positiveCount": {
             "anyOf": [
               {
-                "enum": [
-                  "loan_application",
-                  "entity_snapshot"
-                ],
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Positivecount"
+          },
+          "profile": {
+            "additionalProperties": true,
+            "title": "Profile",
+            "type": "object"
+          },
+          "sha256": {
+            "anyOf": [
+              {
                 "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Sampleunit"
-          },
-          "schemaVersion": {
-            "title": "Schemaversion",
-            "type": "integer"
+            "title": "Sha256"
           },
           "size": {
             "title": "Size",
             "type": "integer"
           },
-          "startedAt": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Startedat"
+          "stage": {
+            "title": "Stage",
+            "type": "string"
           },
           "status": {
             "enum": [
@@ -1917,54 +1867,29 @@
               "running",
               "ready",
               "failed",
-              "legacy"
+              "cancelled"
             ],
             "title": "Status",
             "type": "string"
           },
-          "taskType": {
-            "anyOf": [
-              {
-                "enum": [
-                  "loan_application",
-                  "entity_snapshot",
-                  "legacy_tabular"
-                ],
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Tasktype"
-          },
-          "validation": {
-            "additionalProperties": true,
-            "title": "Validation",
-            "type": "object"
+          "supportedRunnerIds": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Supportedrunnerids",
+            "type": "array"
           }
         },
         "required": [
           "id",
           "name",
           "filename",
-          "contentType",
           "size",
-          "schemaVersion",
-          "taskType",
-          "sampleUnit",
           "status",
-          "rowCount",
-          "columnCount",
-          "manifest",
-          "capabilities",
-          "analysis",
-          "validation",
-          "progress",
-          "error",
-          "createdAt",
-          "startedAt",
-          "finishedAt"
+          "stage",
+          "files",
+          "counts",
+          "createdAt"
         ],
         "title": "DatasetDTO",
         "type": "object"
@@ -2029,6 +1954,36 @@
           "createdAt"
         ],
         "title": "DocumentDTO",
+        "type": "object"
+      },
+      "DriftAnalysisDTO": {
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "psi": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Psi"
+          },
+          "split": {
+            "title": "Split",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "split",
+          "psi"
+        ],
+        "title": "DriftAnalysisDTO",
         "type": "object"
       },
       "EdgeTypeItemDTO": {
@@ -2190,35 +2145,6 @@
         "title": "ErrorEnvelope[Literal[403], Literal['REQUEST_ORIGIN_INVALID']]",
         "type": "object"
       },
-      "ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___": {
-        "properties": {
-          "code": {
-            "const": 404,
-            "title": "Code",
-            "type": "integer"
-          },
-          "data": {
-            "$ref": "#/components/schemas/ErrorDetail"
-          },
-          "internal_code": {
-            "const": "BENCHMARK_COMPANY_NOT_FOUND",
-            "title": "Internal Code",
-            "type": "string"
-          },
-          "message": {
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code",
-          "internal_code",
-          "message",
-          "data"
-        ],
-        "title": "ErrorEnvelope[Literal[404], Literal['BENCHMARK_COMPANY_NOT_FOUND']]",
-        "type": "object"
-      },
       "ErrorEnvelope_Literal_404__Literal__COMPANY_NOT_FOUND___": {
         "properties": {
           "code": {
@@ -2306,7 +2232,7 @@
         "title": "ErrorEnvelope[Literal[404], Literal['GRAPH_NOT_FOUND']]",
         "type": "object"
       },
-      "ErrorEnvelope_Literal_404__Literal__MODELING_DATASET_NOT_FOUND___": {
+      "ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___": {
         "properties": {
           "code": {
             "const": 404,
@@ -2317,7 +2243,10 @@
             "$ref": "#/components/schemas/ErrorDetail"
           },
           "internal_code": {
-            "const": "MODELING_DATASET_NOT_FOUND",
+            "enum": [
+              "MODELING_RESOURCE_NOT_FOUND",
+              "MODEL_RESOURCE_NOT_FOUND"
+            ],
             "title": "Internal Code",
             "type": "string"
           },
@@ -2332,36 +2261,7 @@
           "message",
           "data"
         ],
-        "title": "ErrorEnvelope[Literal[404], Literal['MODELING_DATASET_NOT_FOUND']]",
-        "type": "object"
-      },
-      "ErrorEnvelope_Literal_404__Literal__MODELING_EXPERIMENT_NOT_FOUND___": {
-        "properties": {
-          "code": {
-            "const": 404,
-            "title": "Code",
-            "type": "integer"
-          },
-          "data": {
-            "$ref": "#/components/schemas/ErrorDetail"
-          },
-          "internal_code": {
-            "const": "MODELING_EXPERIMENT_NOT_FOUND",
-            "title": "Internal Code",
-            "type": "string"
-          },
-          "message": {
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code",
-          "internal_code",
-          "message",
-          "data"
-        ],
-        "title": "ErrorEnvelope[Literal[404], Literal['MODELING_EXPERIMENT_NOT_FOUND']]",
+        "title": "ErrorEnvelope[Literal[404], Literal['MODELING_RESOURCE_NOT_FOUND', 'MODEL_RESOURCE_NOT_FOUND']]",
         "type": "object"
       },
       "ErrorEnvelope_Literal_404__Literal__OVERVIEW_COMPANY_NOT_FOUND___": {
@@ -2480,7 +2380,7 @@
         "title": "ErrorEnvelope[Literal[409], Literal['DOCUMENT_UPLOAD_INCOMPLETE']]",
         "type": "object"
       },
-      "ErrorEnvelope_Literal_409__Literal__MODELING_UPLOAD_INCOMPLETE___": {
+      "ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___": {
         "properties": {
           "code": {
             "const": 409,
@@ -2491,7 +2391,12 @@
             "$ref": "#/components/schemas/ErrorDetail"
           },
           "internal_code": {
-            "const": "MODELING_UPLOAD_INCOMPLETE",
+            "enum": [
+              "MODELING_STATE_INVALID",
+              "MODELING_DATASET_NOT_READY",
+              "MODELING_UPLOAD_INCOMPLETE",
+              "MODEL_STATE_INVALID"
+            ],
             "title": "Internal Code",
             "type": "string"
           },
@@ -2506,65 +2411,7 @@
           "message",
           "data"
         ],
-        "title": "ErrorEnvelope[Literal[409], Literal['MODELING_UPLOAD_INCOMPLETE']]",
-        "type": "object"
-      },
-      "ErrorEnvelope_Literal_422__Literal__MODELING_CONFIGURATION_INVALID___": {
-        "properties": {
-          "code": {
-            "const": 422,
-            "title": "Code",
-            "type": "integer"
-          },
-          "data": {
-            "$ref": "#/components/schemas/ErrorDetail"
-          },
-          "internal_code": {
-            "const": "MODELING_CONFIGURATION_INVALID",
-            "title": "Internal Code",
-            "type": "string"
-          },
-          "message": {
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code",
-          "internal_code",
-          "message",
-          "data"
-        ],
-        "title": "ErrorEnvelope[Literal[422], Literal['MODELING_CONFIGURATION_INVALID']]",
-        "type": "object"
-      },
-      "ErrorEnvelope_Literal_422__Literal__MODELING_FILE_INVALID___": {
-        "properties": {
-          "code": {
-            "const": 422,
-            "title": "Code",
-            "type": "integer"
-          },
-          "data": {
-            "$ref": "#/components/schemas/ErrorDetail"
-          },
-          "internal_code": {
-            "const": "MODELING_FILE_INVALID",
-            "title": "Internal Code",
-            "type": "string"
-          },
-          "message": {
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code",
-          "internal_code",
-          "message",
-          "data"
-        ],
-        "title": "ErrorEnvelope[Literal[422], Literal['MODELING_FILE_INVALID']]",
+        "title": "ErrorEnvelope[Literal[409], Literal['MODELING_STATE_INVALID', 'MODELING_DATASET_NOT_READY', 'MODELING_UPLOAD_INCOMPLETE', 'MODEL_STATE_INVALID']]",
         "type": "object"
       },
       "ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___": {
@@ -2594,6 +2441,39 @@
           "data"
         ],
         "title": "ErrorEnvelope[Literal[422], Literal['REQUEST_INVALID']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___": {
+        "properties": {
+          "code": {
+            "const": 422,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "enum": [
+              "REQUEST_INVALID",
+              "MODELING_FILE_INVALID",
+              "MODELING_MODEL_INCOMPATIBLE"
+            ],
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[422], Literal['REQUEST_INVALID', 'MODELING_FILE_INVALID', 'MODELING_MODEL_INCOMPATIBLE']]",
         "type": "object"
       },
       "ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___": {
@@ -2683,35 +2563,6 @@
         "title": "ErrorEnvelope[Literal[503], Literal['AUTH_STORE_UNAVAILABLE']]",
         "type": "object"
       },
-      "ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___": {
-        "properties": {
-          "code": {
-            "const": 503,
-            "title": "Code",
-            "type": "integer"
-          },
-          "data": {
-            "$ref": "#/components/schemas/ErrorDetail"
-          },
-          "internal_code": {
-            "const": "BENCHMARK_MODEL_UNAVAILABLE",
-            "title": "Internal Code",
-            "type": "string"
-          },
-          "message": {
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code",
-          "internal_code",
-          "message",
-          "data"
-        ],
-        "title": "ErrorEnvelope[Literal[503], Literal['BENCHMARK_MODEL_UNAVAILABLE']]",
-        "type": "object"
-      },
       "ErrorEnvelope_Literal_503__Literal__DOCUMENT_STORAGE_UNAVAILABLE___": {
         "properties": {
           "code": {
@@ -2741,7 +2592,7 @@
         "title": "ErrorEnvelope[Literal[503], Literal['DOCUMENT_STORAGE_UNAVAILABLE']]",
         "type": "object"
       },
-      "ErrorEnvelope_Literal_503__Literal__MODELING_STORAGE_UNAVAILABLE___": {
+      "ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___": {
         "properties": {
           "code": {
             "const": 503,
@@ -2752,7 +2603,10 @@
             "$ref": "#/components/schemas/ErrorDetail"
           },
           "internal_code": {
-            "const": "MODELING_STORAGE_UNAVAILABLE",
+            "enum": [
+              "MODEL_SERVICE_UNAVAILABLE",
+              "MODELING_STORAGE_UNAVAILABLE"
+            ],
             "title": "Internal Code",
             "type": "string"
           },
@@ -2767,7 +2621,7 @@
           "message",
           "data"
         ],
-        "title": "ErrorEnvelope[Literal[503], Literal['MODELING_STORAGE_UNAVAILABLE']]",
+        "title": "ErrorEnvelope[Literal[503], Literal['MODEL_SERVICE_UNAVAILABLE', 'MODELING_STORAGE_UNAVAILABLE']]",
         "type": "object"
       },
       "ErrorEnvelope_Literal_503__Literal__OVERVIEW_DATA_UNAVAILABLE___": {
@@ -2799,91 +2653,106 @@
         "title": "ErrorEnvelope[Literal[503], Literal['OVERVIEW_DATA_UNAVAILABLE']]",
         "type": "object"
       },
-      "ExperimentDTO": {
+      "EventDTO": {
         "properties": {
-          "artifacts": {
-            "additionalProperties": true,
-            "title": "Artifacts",
-            "type": "object"
-          },
-          "configuration": {
-            "additionalProperties": true,
-            "title": "Configuration",
-            "type": "object"
+          "attempt": {
+            "title": "Attempt",
+            "type": "integer"
           },
           "createdAt": {
             "title": "Createdat",
             "type": "string"
           },
-          "datasetId": {
-            "title": "Datasetid",
-            "type": "string"
-          },
-          "error": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Error"
-          },
-          "featureColumns": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Featurecolumns",
-            "type": "array"
-          },
-          "finishedAt": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Finishedat"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "modelType": {
-            "enum": [
-              "comparison_suite",
-              "logistic_regression"
-            ],
-            "title": "Modeltype",
-            "type": "string"
-          },
-          "name": {
-            "title": "Name",
-            "type": "string"
-          },
-          "positiveValue": {
-            "title": "Positivevalue",
-            "type": "string"
-          },
-          "progress": {
+          "data": {
             "additionalProperties": true,
-            "title": "Progress",
+            "title": "Data",
             "type": "object"
           },
-          "requestedModels": {
-            "items": {
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "sequence": {
+            "title": "Sequence",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "sequence",
+          "attempt",
+          "kind",
+          "data",
+          "createdAt"
+        ],
+        "title": "EventDTO",
+        "type": "object"
+      },
+      "ExperimentProfileDTO": {
+        "properties": {
+          "artifactFormat": {
+            "default": "riskgnn-model-v1",
+            "title": "Artifactformat",
+            "type": "string"
+          },
+          "codeVersion": {
+            "title": "Codeversion",
+            "type": "string"
+          },
+          "datasetFormat": {
+            "title": "Datasetformat",
+            "type": "string"
+          },
+          "datasetSha256": {
+            "title": "Datasetsha256",
+            "type": "string"
+          },
+          "dependencies": {
+            "additionalProperties": {
               "type": "string"
             },
-            "title": "Requestedmodels",
-            "type": "array"
-          },
-          "results": {
-            "additionalProperties": true,
-            "title": "Results",
+            "title": "Dependencies",
             "type": "object"
+          },
+          "device": {
+            "default": "cpu",
+            "title": "Device",
+            "type": "string"
+          },
+          "epochs": {
+            "title": "Epochs",
+            "type": "integer"
+          },
+          "evaluationSplit": {
+            "const": "test",
+            "default": "test",
+            "title": "Evaluationsplit",
+            "type": "string"
+          },
+          "graph": {
+            "additionalProperties": true,
+            "title": "Graph",
+            "type": "object"
+          },
+          "preprocessing": {
+            "additionalProperties": true,
+            "title": "Preprocessing",
+            "type": "object"
+          },
+          "profile": {
+            "title": "Profile",
+            "type": "string"
+          },
+          "runnerId": {
+            "title": "Runnerid",
+            "type": "string"
+          },
+          "seed": {
+            "title": "Seed",
+            "type": "integer"
+          },
+          "selectedEpoch": {
+            "title": "Selectedepoch",
+            "type": "integer"
           },
           "selectedFeatures": {
             "items": {
@@ -2892,60 +2761,149 @@
             "title": "Selectedfeatures",
             "type": "array"
           },
-          "startedAt": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Startedat"
-          },
-          "status": {
-            "enum": [
-              "queued",
-              "running",
-              "completed",
-              "failed"
-            ],
-            "title": "Status",
+          "selectionMetric": {
+            "title": "Selectionmetric",
             "type": "string"
           },
-          "targetName": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Targetname"
+          "splits": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Splits",
+            "type": "object"
+          },
+          "target": {
+            "title": "Target",
+            "type": "string"
+          },
+          "taskType": {
+            "title": "Tasktype",
+            "type": "string"
+          },
+          "threshold": {
+            "default": 0.5,
+            "title": "Threshold",
+            "type": "number"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
           }
         },
         "required": [
-          "id",
-          "datasetId",
-          "name",
-          "modelType",
-          "status",
-          "targetName",
-          "positiveValue",
-          "featureColumns",
+          "version",
+          "runnerId",
+          "datasetFormat",
+          "datasetSha256",
+          "taskType",
+          "target",
+          "seed",
           "selectedFeatures",
-          "requestedModels",
-          "configuration",
-          "progress",
-          "results",
-          "artifacts",
-          "error",
-          "createdAt",
-          "startedAt",
-          "finishedAt"
+          "preprocessing",
+          "splits",
+          "profile",
+          "epochs",
+          "graph",
+          "selectionMetric",
+          "selectedEpoch",
+          "codeVersion",
+          "dependencies"
         ],
-        "title": "ExperimentDTO",
+        "title": "ExperimentProfileDTO",
+        "type": "object"
+      },
+      "FeatureAnalysisDTO": {
+        "properties": {
+          "constant": {
+            "title": "Constant",
+            "type": "boolean"
+          },
+          "iv": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Iv"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "missingCount": {
+            "title": "Missingcount",
+            "type": "integer"
+          },
+          "missingRate": {
+            "title": "Missingrate",
+            "type": "number"
+          },
+          "mutualInformation": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mutualinformation"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "uniqueCount": {
+            "title": "Uniquecount",
+            "type": "integer"
+          },
+          "univariateAuc": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Univariateauc"
+          }
+        },
+        "required": [
+          "name",
+          "kind",
+          "missingCount",
+          "missingRate",
+          "uniqueCount",
+          "constant"
+        ],
+        "title": "FeatureAnalysisDTO",
+        "type": "object"
+      },
+      "FileDTO": {
+        "properties": {
+          "path": {
+            "title": "Path",
+            "type": "string"
+          },
+          "sha256": {
+            "title": "Sha256",
+            "type": "string"
+          },
+          "size": {
+            "title": "Size",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "path",
+          "size",
+          "sha256"
+        ],
+        "title": "FileDTO",
         "type": "object"
       },
       "FiveCDimension": {
@@ -3210,6 +3168,106 @@
           "exposure"
         ],
         "title": "GraphNode",
+        "type": "object"
+      },
+      "ModelCapabilityDTO": {
+        "properties": {
+          "datasetFormats": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Datasetformats",
+            "type": "array"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "trainable": {
+            "title": "Trainable",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "datasetFormats",
+          "trainable",
+          "reason"
+        ],
+        "title": "ModelCapabilityDTO",
+        "type": "object"
+      },
+      "ModelVersionDTO": {
+        "properties": {
+          "companies": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Companies",
+            "type": "array"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "report": {
+            "additionalProperties": true,
+            "title": "Report",
+            "type": "object"
+          },
+          "runId": {
+            "title": "Runid",
+            "type": "string"
+          },
+          "runnerId": {
+            "default": "riskgnn-node-edge",
+            "title": "Runnerid",
+            "type": "string"
+          },
+          "sha256": {
+            "title": "Sha256",
+            "type": "string"
+          },
+          "size": {
+            "title": "Size",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "runId",
+          "sha256",
+          "size",
+          "report",
+          "companies",
+          "createdAt"
+        ],
+        "title": "ModelVersionDTO",
         "type": "object"
       },
       "OverviewCompanyFactsDTO": {
@@ -3816,6 +3874,29 @@
         "title": "PageRequest",
         "type": "object"
       },
+      "PredictionDTO": {
+        "properties": {
+          "companyId": {
+            "title": "Companyid",
+            "type": "string"
+          },
+          "predictedLabel": {
+            "title": "Predictedlabel",
+            "type": "integer"
+          },
+          "probability": {
+            "title": "Probability",
+            "type": "number"
+          }
+        },
+        "required": [
+          "companyId",
+          "probability",
+          "predictedLabel"
+        ],
+        "title": "PredictionDTO",
+        "type": "object"
+      },
       "RelatedParty": {
         "properties": {
           "exposure": {
@@ -3887,9 +3968,24 @@
         "title": "RelatedParty",
         "type": "object"
       },
+      "RequestCancelRun": {
+        "properties": {
+          "runId": {
+            "format": "uuid",
+            "title": "Runid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "runId"
+        ],
+        "title": "RequestCancelRun",
+        "type": "object"
+      },
       "RequestCompleteDatasetUpload": {
         "properties": {
           "datasetId": {
+            "format": "uuid",
             "title": "Datasetid",
             "type": "string"
           }
@@ -3930,6 +4026,7 @@
           "name": {
             "maxLength": 128,
             "minLength": 1,
+            "pattern": "\\S",
             "title": "Name",
             "type": "string"
           },
@@ -3960,6 +4057,48 @@
           "documentId"
         ],
         "title": "RequestCreateDownload",
+        "type": "object"
+      },
+      "RequestCreateRun": {
+        "properties": {
+          "datasetId": {
+            "format": "uuid",
+            "title": "Datasetid",
+            "type": "string"
+          },
+          "epochs": {
+            "default": 2,
+            "maximum": 20.0,
+            "minimum": 1.0,
+            "title": "Epochs",
+            "type": "integer"
+          },
+          "name": {
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "\\S",
+            "title": "Name",
+            "type": "string"
+          },
+          "requestKey": {
+            "format": "uuid",
+            "title": "Requestkey",
+            "type": "string"
+          },
+          "runnerId": {
+            "default": "riskgnn-node-edge",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Runnerid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "datasetId",
+          "name",
+          "requestKey"
+        ],
+        "title": "RequestCreateRun",
         "type": "object"
       },
       "RequestCreateUpload": {
@@ -3996,40 +4135,18 @@
         "title": "RequestCreateUpload",
         "type": "object"
       },
-      "RequestEvaluationBenchmark": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "RequestEvaluationBenchmark",
-        "type": "object"
-      },
-      "RequestExplainBenchmark": {
-        "additionalProperties": false,
+      "RequestDownloadModel": {
         "properties": {
-          "id": {
-            "minLength": 1,
-            "title": "Id",
+          "modelId": {
+            "format": "uuid",
+            "title": "Modelid",
             "type": "string"
           }
         },
         "required": [
-          "id"
+          "modelId"
         ],
-        "title": "RequestExplainBenchmark",
-        "type": "object"
-      },
-      "RequestGetBenchmark": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "minLength": 1,
-            "title": "Id",
-            "type": "string"
-          }
-        },
-        "required": [
-          "id"
-        ],
-        "title": "RequestGetBenchmark",
+        "title": "RequestDownloadModel",
         "type": "object"
       },
       "RequestGetCompany": {
@@ -4048,6 +4165,7 @@
       "RequestGetDataset": {
         "properties": {
           "datasetId": {
+            "format": "uuid",
             "title": "Datasetid",
             "type": "string"
           }
@@ -4056,19 +4174,6 @@
           "datasetId"
         ],
         "title": "RequestGetDataset",
-        "type": "object"
-      },
-      "RequestGetExperiment": {
-        "properties": {
-          "experimentId": {
-            "title": "Experimentid",
-            "type": "string"
-          }
-        },
-        "required": [
-          "experimentId"
-        ],
-        "title": "RequestGetExperiment",
         "type": "object"
       },
       "RequestGetGraph": {
@@ -4100,6 +4205,20 @@
         "title": "RequestGetGraph",
         "type": "object"
       },
+      "RequestGetModel": {
+        "properties": {
+          "modelId": {
+            "format": "uuid",
+            "title": "Modelid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "modelId"
+        ],
+        "title": "RequestGetModel",
+        "type": "object"
+      },
       "RequestGetOverview": {
         "properties": {},
         "title": "RequestGetOverview",
@@ -4128,6 +4247,20 @@
         "title": "RequestGetOverviewCompany",
         "type": "object"
       },
+      "RequestGetRun": {
+        "properties": {
+          "runId": {
+            "format": "uuid",
+            "title": "Runid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "runId"
+        ],
+        "title": "RequestGetRun",
+        "type": "object"
+      },
       "RequestGetScore": {
         "properties": {
           "companyId": {
@@ -4150,30 +4283,12 @@
         "title": "RequestGetScore",
         "type": "object"
       },
-      "RequestGraphBenchmark": {
-        "additionalProperties": false,
+      "RequestListDatasets": {
         "properties": {
-          "id": {
-            "minLength": 1,
-            "title": "Id",
-            "type": "string"
-          },
-          "limit": {
-            "default": 30,
-            "maximum": 100.0,
-            "minimum": 1.0,
-            "title": "Limit",
-            "type": "integer"
+          "pagination": {
+            "$ref": "#/components/schemas/PageRequest"
           }
         },
-        "required": [
-          "id"
-        ],
-        "title": "RequestGraphBenchmark",
-        "type": "object"
-      },
-      "RequestListDatasets": {
-        "properties": {},
         "title": "RequestListDatasets",
         "type": "object"
       },
@@ -4190,9 +4305,22 @@
         "title": "RequestListDocuments",
         "type": "object"
       },
-      "RequestListExperiments": {
-        "properties": {},
-        "title": "RequestListExperiments",
+      "RequestListModels": {
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/PageRequest"
+          }
+        },
+        "title": "RequestListModels",
+        "type": "object"
+      },
+      "RequestListRuns": {
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/PageRequest"
+          }
+        },
+        "title": "RequestListRuns",
         "type": "object"
       },
       "RequestLogin": {
@@ -4223,29 +4351,55 @@
         "title": "RequestMe",
         "type": "object"
       },
-      "RequestModelCardBenchmark": {
-        "additionalProperties": false,
+      "RequestModelingCapabilities": {
         "properties": {},
-        "title": "RequestModelCardBenchmark",
+        "title": "RequestModelingCapabilities",
         "type": "object"
       },
-      "RequestPredictBenchmark": {
-        "additionalProperties": false,
+      "RequestPredictModel": {
         "properties": {
           "companyIds": {
             "items": {
               "type": "string"
             },
-            "maxItems": 1000,
+            "maxItems": 32,
             "minItems": 1,
             "title": "Companyids",
             "type": "array"
+          },
+          "modelId": {
+            "format": "uuid",
+            "title": "Modelid",
+            "type": "string"
           }
         },
         "required": [
+          "modelId",
           "companyIds"
         ],
-        "title": "RequestPredictBenchmark",
+        "title": "RequestPredictModel",
+        "type": "object"
+      },
+      "RequestPublishModel": {
+        "properties": {
+          "name": {
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "\\S",
+            "title": "Name",
+            "type": "string"
+          },
+          "runId": {
+            "format": "uuid",
+            "title": "Runid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "runId",
+          "name"
+        ],
+        "title": "RequestPublishModel",
         "type": "object"
       },
       "RequestRegister": {
@@ -4279,109 +4433,44 @@
         "title": "RequestRegister",
         "type": "object"
       },
-      "RequestRunExperiment": {
+      "RequestRerun": {
         "properties": {
-          "datasetId": {
-            "title": "Datasetid",
+          "requestKey": {
+            "format": "uuid",
+            "title": "Requestkey",
             "type": "string"
           },
-          "enableGnnAblations": {
-            "default": true,
-            "title": "Enablegnnablations",
-            "type": "boolean"
-          },
-          "featureColumns": {
-            "items": {
-              "type": "string"
-            },
-            "maxItems": 200,
-            "title": "Featurecolumns",
-            "type": "array"
-          },
-          "featureMode": {
-            "default": "recommended",
-            "enum": [
-              "recommended",
-              "manual"
-            ],
-            "title": "Featuremode",
+          "runId": {
+            "format": "uuid",
+            "title": "Runid",
             "type": "string"
-          },
-          "models": {
-            "items": {
-              "enum": [
-                "logistic_regression",
-                "hist_gradient_boosting",
-                "graph_stats_hgb",
-                "gnn_self_only",
-                "gnn_no_hyper",
-                "gnn_full"
-              ],
-              "type": "string"
-            },
-            "maxItems": 6,
-            "minItems": 1,
-            "title": "Models",
-            "type": "array"
-          },
-          "name": {
-            "maxLength": 128,
-            "minLength": 1,
-            "title": "Name",
-            "type": "string"
-          },
-          "seed": {
-            "default": 42,
-            "maximum": 2147483647.0,
-            "minimum": 0.0,
-            "title": "Seed",
-            "type": "integer"
-          },
-          "targetName": {
-            "maxLength": 128,
-            "minLength": 1,
-            "title": "Targetname",
-            "type": "string"
-          },
-          "useEvents": {
-            "default": true,
-            "title": "Useevents",
-            "type": "boolean"
-          },
-          "useHyperedges": {
-            "default": true,
-            "title": "Usehyperedges",
-            "type": "boolean"
-          },
-          "useRelations": {
-            "default": true,
-            "title": "Userelations",
-            "type": "boolean"
           }
         },
         "required": [
-          "datasetId",
-          "name",
-          "targetName",
-          "models"
+          "runId",
+          "requestKey"
         ],
-        "title": "RequestRunExperiment",
+        "title": "RequestRerun",
         "type": "object"
       },
-      "RequestSearchBenchmark": {
-        "additionalProperties": false,
+      "RequestRunEvents": {
         "properties": {
-          "keyword": {
-            "default": "",
-            "maxLength": 100,
-            "title": "Keyword",
-            "type": "string"
+          "after": {
+            "default": 0,
+            "minimum": 0.0,
+            "title": "After",
+            "type": "integer"
           },
-          "pagination": {
-            "$ref": "#/components/schemas/PageRequest"
+          "runId": {
+            "format": "uuid",
+            "title": "Runid",
+            "type": "string"
           }
         },
-        "title": "RequestSearchBenchmark",
+        "required": [
+          "runId"
+        ],
+        "title": "RequestRunEvents",
         "type": "object"
       },
       "RequestSearchCompany": {
@@ -4476,6 +4565,18 @@
         "title": "RequestSearchOverviewCompany",
         "type": "object"
       },
+      "ResponseCancelRun": {
+        "properties": {
+          "run": {
+            "$ref": "#/components/schemas/RunDTO"
+          }
+        },
+        "required": [
+          "run"
+        ],
+        "title": "ResponseCancelRun",
+        "type": "object"
+      },
       "ResponseCompleteDatasetUpload": {
         "properties": {
           "dataset": {
@@ -4507,7 +4608,6 @@
             "type": "string"
           },
           "expiresIn": {
-            "default": 60,
             "title": "Expiresin",
             "type": "integer"
           },
@@ -4526,7 +4626,8 @@
         "required": [
           "datasetId",
           "url",
-          "headers"
+          "headers",
+          "expiresIn"
         ],
         "title": "ResponseCreateDatasetUpload",
         "type": "object"
@@ -4547,6 +4648,18 @@
           "url"
         ],
         "title": "ResponseCreateDownload",
+        "type": "object"
+      },
+      "ResponseCreateRun": {
+        "properties": {
+          "run": {
+            "$ref": "#/components/schemas/RunDTO"
+          }
+        },
+        "required": [
+          "run"
+        ],
+        "title": "ResponseCreateRun",
         "type": "object"
       },
       "ResponseCreateUpload": {
@@ -4580,186 +4693,27 @@
         "title": "ResponseCreateUpload",
         "type": "object"
       },
-      "ResponseEvaluationBenchmark": {
+      "ResponseDownloadModel": {
         "properties": {
-          "companyCount": {
-            "title": "Companycount",
+          "expiresIn": {
+            "title": "Expiresin",
             "type": "integer"
           },
-          "dataset": {
-            "title": "Dataset",
+          "sha256": {
+            "title": "Sha256",
             "type": "string"
           },
-          "metrics": {
-            "additionalProperties": {
-              "$ref": "#/components/schemas/BenchmarkMetrics"
-            },
-            "title": "Metrics",
-            "type": "object"
-          },
-          "mode": {
-            "title": "Mode",
+          "url": {
+            "title": "Url",
             "type": "string"
-          },
-          "model": {
-            "title": "Model",
-            "type": "string"
-          },
-          "notes": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Notes",
-            "type": "array"
-          },
-          "relationCount": {
-            "title": "Relationcount",
-            "type": "integer"
-          },
-          "threshold": {
-            "title": "Threshold",
-            "type": "number"
           }
         },
         "required": [
-          "model",
-          "mode",
-          "dataset",
-          "threshold",
-          "metrics",
-          "notes",
-          "companyCount",
-          "relationCount"
+          "url",
+          "sha256",
+          "expiresIn"
         ],
-        "title": "ResponseEvaluationBenchmark",
-        "type": "object"
-      },
-      "ResponseExplainBenchmark": {
-        "properties": {
-          "companyId": {
-            "title": "Companyid",
-            "type": "string"
-          },
-          "features": {
-            "items": {
-              "$ref": "#/components/schemas/BenchmarkFeatureSensitivity"
-            },
-            "title": "Features",
-            "type": "array"
-          },
-          "incomingEdgeCount": {
-            "title": "Incomingedgecount",
-            "type": "integer"
-          },
-          "interpretation": {
-            "title": "Interpretation",
-            "type": "string"
-          },
-          "method": {
-            "const": "feature_occlusion_to_training_mean",
-            "title": "Method",
-            "type": "string"
-          },
-          "riskProbability": {
-            "title": "Riskprobability",
-            "type": "number"
-          }
-        },
-        "required": [
-          "companyId",
-          "riskProbability",
-          "method",
-          "interpretation",
-          "features",
-          "incomingEdgeCount"
-        ],
-        "title": "ResponseExplainBenchmark",
-        "type": "object"
-      },
-      "ResponseGetBenchmark": {
-        "properties": {
-          "community": {
-            "title": "Community",
-            "type": "string"
-          },
-          "creditScore": {
-            "title": "Creditscore",
-            "type": "integer"
-          },
-          "dataset": {
-            "title": "Dataset",
-            "type": "string"
-          },
-          "eventCount": {
-            "title": "Eventcount",
-            "type": "integer"
-          },
-          "events": {
-            "items": {
-              "$ref": "#/components/schemas/BenchmarkEvent"
-            },
-            "title": "Events",
-            "type": "array"
-          },
-          "features": {
-            "additionalProperties": {
-              "anyOf": [
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "title": "Features",
-            "type": "object"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "observedLabel": {
-            "anyOf": [
-              {
-                "enum": [
-                  0,
-                  1
-                ],
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Observedlabel"
-          },
-          "predictedLabel": {
-            "enum": [
-              0,
-              1
-            ],
-            "title": "Predictedlabel",
-            "type": "integer"
-          },
-          "riskProbability": {
-            "title": "Riskprobability",
-            "type": "number"
-          }
-        },
-        "required": [
-          "id",
-          "community",
-          "eventCount",
-          "riskProbability",
-          "creditScore",
-          "predictedLabel",
-          "dataset",
-          "features",
-          "observedLabel",
-          "events"
-        ],
-        "title": "ResponseGetBenchmark",
+        "title": "ResponseDownloadModel",
         "type": "object"
       },
       "ResponseGetCompany": {
@@ -4796,18 +4750,6 @@
         "title": "ResponseGetDataset",
         "type": "object"
       },
-      "ResponseGetExperiment": {
-        "properties": {
-          "experiment": {
-            "$ref": "#/components/schemas/ExperimentDTO"
-          }
-        },
-        "required": [
-          "experiment"
-        ],
-        "title": "ResponseGetExperiment",
-        "type": "object"
-      },
       "ResponseGetGraph": {
         "properties": {
           "demo": {
@@ -4824,6 +4766,18 @@
           "graph"
         ],
         "title": "ResponseGetGraph",
+        "type": "object"
+      },
+      "ResponseGetModel": {
+        "properties": {
+          "model": {
+            "$ref": "#/components/schemas/ModelVersionDTO"
+          }
+        },
+        "required": [
+          "model"
+        ],
+        "title": "ResponseGetModel",
         "type": "object"
       },
       "ResponseGetOverview": {
@@ -4984,6 +4938,18 @@
         "title": "ResponseGetOverviewCompany",
         "type": "object"
       },
+      "ResponseGetRun": {
+        "properties": {
+          "run": {
+            "$ref": "#/components/schemas/RunDTO"
+          }
+        },
+        "required": [
+          "run"
+        ],
+        "title": "ResponseGetRun",
+        "type": "object"
+      },
       "ResponseGetScore": {
         "properties": {
           "company": {
@@ -5006,45 +4972,6 @@
         "title": "ResponseGetScore",
         "type": "object"
       },
-      "ResponseGraphBenchmark": {
-        "properties": {
-          "center": {
-            "title": "Center",
-            "type": "string"
-          },
-          "edges": {
-            "items": {
-              "$ref": "#/components/schemas/BenchmarkGraphEdge"
-            },
-            "title": "Edges",
-            "type": "array"
-          },
-          "nodes": {
-            "items": {
-              "$ref": "#/components/schemas/BenchmarkGraphNode"
-            },
-            "title": "Nodes",
-            "type": "array"
-          },
-          "totalEdges": {
-            "title": "Totaledges",
-            "type": "integer"
-          },
-          "truncated": {
-            "title": "Truncated",
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "center",
-          "totalEdges",
-          "truncated",
-          "nodes",
-          "edges"
-        ],
-        "title": "ResponseGraphBenchmark",
-        "type": "object"
-      },
       "ResponseListDatasets": {
         "properties": {
           "items": {
@@ -5053,10 +4980,29 @@
             },
             "title": "Items",
             "type": "array"
+          },
+          "page": {
+            "minimum": 1.0,
+            "title": "Page",
+            "type": "integer"
+          },
+          "pageSize": {
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Pagesize",
+            "type": "integer"
+          },
+          "total": {
+            "minimum": 0.0,
+            "title": "Total",
+            "type": "integer"
           }
         },
         "required": [
-          "items"
+          "items",
+          "total",
+          "page",
+          "pageSize"
         ],
         "title": "ResponseListDatasets",
         "type": "object"
@@ -5077,20 +5023,74 @@
         "title": "ResponseListDocuments",
         "type": "object"
       },
-      "ResponseListExperiments": {
+      "ResponseListModels": {
         "properties": {
           "items": {
             "items": {
-              "$ref": "#/components/schemas/ExperimentDTO"
+              "$ref": "#/components/schemas/ModelVersionDTO"
             },
             "title": "Items",
             "type": "array"
+          },
+          "page": {
+            "minimum": 1.0,
+            "title": "Page",
+            "type": "integer"
+          },
+          "pageSize": {
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Pagesize",
+            "type": "integer"
+          },
+          "total": {
+            "minimum": 0.0,
+            "title": "Total",
+            "type": "integer"
           }
         },
         "required": [
-          "items"
+          "items",
+          "total",
+          "page",
+          "pageSize"
         ],
-        "title": "ResponseListExperiments",
+        "title": "ResponseListModels",
+        "type": "object"
+      },
+      "ResponseListRuns": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RunDTO"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "page": {
+            "minimum": 1.0,
+            "title": "Page",
+            "type": "integer"
+          },
+          "pageSize": {
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Pagesize",
+            "type": "integer"
+          },
+          "total": {
+            "minimum": 0.0,
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "page",
+          "pageSize"
+        ],
+        "title": "ResponseListRuns",
         "type": "object"
       },
       "ResponseLogin": {
@@ -5157,102 +5157,48 @@
         "title": "ResponseMe",
         "type": "object"
       },
-      "ResponseModelCardBenchmark": {
+      "ResponseModelingCapabilities": {
         "properties": {
-          "bestEpoch": {
-            "title": "Bestepoch",
-            "type": "integer"
-          },
-          "calibrated": {
-            "title": "Calibrated",
-            "type": "boolean"
-          },
-          "companyCount": {
-            "title": "Companycount",
-            "type": "integer"
-          },
-          "dataset": {
-            "title": "Dataset",
-            "type": "string"
-          },
-          "featureNames": {
+          "items": {
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/ModelCapabilityDTO"
             },
-            "title": "Featurenames",
+            "title": "Items",
             "type": "array"
-          },
-          "hyperedgeTypes": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Hyperedgetypes",
-            "type": "array"
-          },
-          "mode": {
-            "title": "Mode",
-            "type": "string"
-          },
-          "model": {
-            "title": "Model",
-            "type": "string"
-          },
-          "relationNames": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Relationnames",
-            "type": "array"
-          },
-          "syntheticTraining": {
-            "title": "Synthetictraining",
-            "type": "boolean"
-          },
-          "targetDescription": {
-            "title": "Targetdescription",
-            "type": "string"
-          },
-          "threshold": {
-            "title": "Threshold",
-            "type": "number"
           }
         },
         "required": [
-          "model",
-          "dataset",
-          "targetDescription",
-          "featureNames",
-          "relationNames",
-          "hyperedgeTypes",
-          "mode",
-          "threshold",
-          "calibrated",
-          "bestEpoch",
-          "syntheticTraining",
-          "companyCount"
+          "items"
         ],
-        "title": "ResponseModelCardBenchmark",
+        "title": "ResponseModelingCapabilities",
         "type": "object"
       },
-      "ResponsePredictBenchmark": {
+      "ResponsePredictModel": {
         "properties": {
-          "predictions": {
+          "items": {
             "items": {
-              "$ref": "#/components/schemas/BenchmarkCompany"
+              "$ref": "#/components/schemas/PredictionDTO"
             },
-            "title": "Predictions",
+            "title": "Items",
             "type": "array"
-          },
-          "threshold": {
-            "title": "Threshold",
-            "type": "number"
           }
         },
         "required": [
-          "predictions",
-          "threshold"
+          "items"
         ],
-        "title": "ResponsePredictBenchmark",
+        "title": "ResponsePredictModel",
+        "type": "object"
+      },
+      "ResponsePublishModel": {
+        "properties": {
+          "model": {
+            "$ref": "#/components/schemas/ModelVersionDTO"
+          }
+        },
+        "required": [
+          "model"
+        ],
+        "title": "ResponsePublishModel",
         "type": "object"
       },
       "ResponseRegister": {
@@ -5278,51 +5224,32 @@
         "title": "ResponseRegister",
         "type": "object"
       },
-      "ResponseRunExperiment": {
+      "ResponseRerun": {
         "properties": {
-          "experiment": {
-            "$ref": "#/components/schemas/ExperimentDTO"
+          "run": {
+            "$ref": "#/components/schemas/RunDTO"
           }
         },
         "required": [
-          "experiment"
+          "run"
         ],
-        "title": "ResponseRunExperiment",
+        "title": "ResponseRerun",
         "type": "object"
       },
-      "ResponseSearchBenchmark": {
+      "ResponseRunEvents": {
         "properties": {
           "items": {
             "items": {
-              "$ref": "#/components/schemas/BenchmarkCompany"
+              "$ref": "#/components/schemas/EventDTO"
             },
             "title": "Items",
             "type": "array"
-          },
-          "page": {
-            "minimum": 1.0,
-            "title": "Page",
-            "type": "integer"
-          },
-          "pageSize": {
-            "maximum": 100.0,
-            "minimum": 1.0,
-            "title": "Pagesize",
-            "type": "integer"
-          },
-          "total": {
-            "minimum": 0.0,
-            "title": "Total",
-            "type": "integer"
           }
         },
         "required": [
-          "items",
-          "total",
-          "page",
-          "pageSize"
+          "items"
         ],
-        "title": "ResponseSearchBenchmark",
+        "title": "ResponseRunEvents",
         "type": "object"
       },
       "ResponseSearchCompany": {
@@ -5492,6 +5419,114 @@
         "title": "RiskFlag",
         "type": "object"
       },
+      "RunDTO": {
+        "properties": {
+          "attempts": {
+            "items": {
+              "$ref": "#/components/schemas/AttemptDTO"
+            },
+            "title": "Attempts",
+            "type": "array"
+          },
+          "cancelRequested": {
+            "title": "Cancelrequested",
+            "type": "boolean"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "datasetId": {
+            "title": "Datasetid",
+            "type": "string"
+          },
+          "epochs": {
+            "title": "Epochs",
+            "type": "integer"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "profile": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ExperimentProfileDTO"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "result": {
+            "additionalProperties": true,
+            "title": "Result",
+            "type": "object"
+          },
+          "retryOf": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Retryof"
+          },
+          "runnerId": {
+            "default": "riskgnn-node-edge",
+            "title": "Runnerid",
+            "type": "string"
+          },
+          "stage": {
+            "title": "Stage",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "queued",
+              "running",
+              "completed",
+              "failed",
+              "cancelled"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "datasetId",
+          "retryOf",
+          "status",
+          "stage",
+          "epochs",
+          "cancelRequested",
+          "attempts",
+          "result",
+          "error",
+          "createdAt"
+        ],
+        "title": "RunDTO",
+        "type": "object"
+      },
       "ScoreDetail": {
         "properties": {
           "baseValue": {
@@ -5617,6 +5652,34 @@
           "desc"
         ],
         "title": "ShapFeature",
+        "type": "object"
+      },
+      "SplitAnalysisDTO": {
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "positiveRate": {
+            "title": "Positiverate",
+            "type": "number"
+          },
+          "positives": {
+            "title": "Positives",
+            "type": "integer"
+          },
+          "rows": {
+            "title": "Rows",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "rows",
+          "positives",
+          "positiveRate"
+        ],
+        "title": "SplitAnalysisDTO",
         "type": "object"
       },
       "StatusDistributionItemDTO": {
@@ -6028,643 +6091,6 @@
         "summary": "Register",
         "tags": [
           "auth"
-        ]
-      }
-    },
-    "/api/v1/benchmark/evaluation": {
-      "post": {
-        "operationId": "evaluation_api_v1_benchmark_evaluation_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RequestEvaluationBenchmark"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiEnvelope_ResponseEvaluationBenchmark_"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
-                }
-              }
-            },
-            "description": "Unauthorized"
-          },
-          "403": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
-                }
-              }
-            },
-            "description": "Forbidden"
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___"
-                }
-              }
-            },
-            "description": "Not Found"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
-                }
-              }
-            },
-            "description": "Unprocessable Entity"
-          },
-          "500": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
-                }
-              }
-            },
-            "description": "Internal Server Error"
-          },
-          "503": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___"
-                }
-              }
-            },
-            "description": "Service Unavailable"
-          }
-        },
-        "summary": "Evaluation",
-        "tags": [
-          "benchmark"
-        ]
-      }
-    },
-    "/api/v1/benchmark/explain": {
-      "post": {
-        "operationId": "explain_api_v1_benchmark_explain_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RequestExplainBenchmark"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiEnvelope_ResponseExplainBenchmark_"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
-                }
-              }
-            },
-            "description": "Unauthorized"
-          },
-          "403": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
-                }
-              }
-            },
-            "description": "Forbidden"
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___"
-                }
-              }
-            },
-            "description": "Not Found"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
-                }
-              }
-            },
-            "description": "Unprocessable Entity"
-          },
-          "500": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
-                }
-              }
-            },
-            "description": "Internal Server Error"
-          },
-          "503": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___"
-                }
-              }
-            },
-            "description": "Service Unavailable"
-          }
-        },
-        "summary": "Explain",
-        "tags": [
-          "benchmark"
-        ]
-      }
-    },
-    "/api/v1/benchmark/get": {
-      "post": {
-        "operationId": "get_api_v1_benchmark_get_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RequestGetBenchmark"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiEnvelope_ResponseGetBenchmark_"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
-                }
-              }
-            },
-            "description": "Unauthorized"
-          },
-          "403": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
-                }
-              }
-            },
-            "description": "Forbidden"
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___"
-                }
-              }
-            },
-            "description": "Not Found"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
-                }
-              }
-            },
-            "description": "Unprocessable Entity"
-          },
-          "500": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
-                }
-              }
-            },
-            "description": "Internal Server Error"
-          },
-          "503": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___"
-                }
-              }
-            },
-            "description": "Service Unavailable"
-          }
-        },
-        "summary": "Get",
-        "tags": [
-          "benchmark"
-        ]
-      }
-    },
-    "/api/v1/benchmark/graph": {
-      "post": {
-        "operationId": "graph_api_v1_benchmark_graph_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RequestGraphBenchmark"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiEnvelope_ResponseGraphBenchmark_"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
-                }
-              }
-            },
-            "description": "Unauthorized"
-          },
-          "403": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
-                }
-              }
-            },
-            "description": "Forbidden"
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___"
-                }
-              }
-            },
-            "description": "Not Found"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
-                }
-              }
-            },
-            "description": "Unprocessable Entity"
-          },
-          "500": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
-                }
-              }
-            },
-            "description": "Internal Server Error"
-          },
-          "503": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___"
-                }
-              }
-            },
-            "description": "Service Unavailable"
-          }
-        },
-        "summary": "Graph",
-        "tags": [
-          "benchmark"
-        ]
-      }
-    },
-    "/api/v1/benchmark/model-card": {
-      "post": {
-        "operationId": "model_card_api_v1_benchmark_model_card_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RequestModelCardBenchmark"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiEnvelope_ResponseModelCardBenchmark_"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
-                }
-              }
-            },
-            "description": "Unauthorized"
-          },
-          "403": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
-                }
-              }
-            },
-            "description": "Forbidden"
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___"
-                }
-              }
-            },
-            "description": "Not Found"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
-                }
-              }
-            },
-            "description": "Unprocessable Entity"
-          },
-          "500": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
-                }
-              }
-            },
-            "description": "Internal Server Error"
-          },
-          "503": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___"
-                }
-              }
-            },
-            "description": "Service Unavailable"
-          }
-        },
-        "summary": "Model Card",
-        "tags": [
-          "benchmark"
-        ]
-      }
-    },
-    "/api/v1/benchmark/predict": {
-      "post": {
-        "operationId": "predict_api_v1_benchmark_predict_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RequestPredictBenchmark"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiEnvelope_ResponsePredictBenchmark_"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
-                }
-              }
-            },
-            "description": "Unauthorized"
-          },
-          "403": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
-                }
-              }
-            },
-            "description": "Forbidden"
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___"
-                }
-              }
-            },
-            "description": "Not Found"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
-                }
-              }
-            },
-            "description": "Unprocessable Entity"
-          },
-          "500": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
-                }
-              }
-            },
-            "description": "Internal Server Error"
-          },
-          "503": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___"
-                }
-              }
-            },
-            "description": "Service Unavailable"
-          }
-        },
-        "summary": "Predict",
-        "tags": [
-          "benchmark"
-        ]
-      }
-    },
-    "/api/v1/benchmark/search": {
-      "post": {
-        "operationId": "search_api_v1_benchmark_search_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RequestSearchBenchmark"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiEnvelope_ResponseSearchBenchmark_"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
-                }
-              }
-            },
-            "description": "Unauthorized"
-          },
-          "403": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
-                }
-              }
-            },
-            "description": "Forbidden"
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__BENCHMARK_COMPANY_NOT_FOUND___"
-                }
-              }
-            },
-            "description": "Not Found"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
-                }
-              }
-            },
-            "description": "Unprocessable Entity"
-          },
-          "500": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
-                }
-              }
-            },
-            "description": "Internal Server Error"
-          },
-          "503": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__BENCHMARK_MODEL_UNAVAILABLE___"
-                }
-              }
-            },
-            "description": "Service Unavailable"
-          }
-        },
-        "summary": "Search",
-        "tags": [
-          "benchmark"
         ]
       }
     },
@@ -7396,9 +6822,211 @@
         ]
       }
     },
+    "/api/v1/modeling/cancel-run": {
+      "post": {
+        "operationId": "cancel_run_api_v1_modeling_cancel_run_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestCancelRun"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseCancelRun_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Cancel Run",
+        "tags": [
+          "modeling"
+        ]
+      }
+    },
+    "/api/v1/modeling/capabilities": {
+      "post": {
+        "operationId": "capabilities_api_v1_modeling_capabilities_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestModelingCapabilities"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseModelingCapabilities_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Capabilities",
+        "tags": [
+          "modeling"
+        ]
+      }
+    },
     "/api/v1/modeling/complete-upload": {
       "post": {
-        "operationId": "complete_dataset_upload_api_v1_modeling_complete_upload_post",
+        "operationId": "complete_upload_api_v1_modeling_complete_upload_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -7444,7 +7072,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_DATASET_NOT_FOUND___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
                 }
               }
             },
@@ -7454,7 +7082,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_UPLOAD_INCOMPLETE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
                 }
               }
             },
@@ -7464,7 +7092,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__MODELING_FILE_INVALID___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
                 }
               }
             },
@@ -7484,14 +7112,115 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODELING_STORAGE_UNAVAILABLE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"
                 }
               }
             },
             "description": "Service Unavailable"
           }
         },
-        "summary": "Complete Dataset Upload",
+        "summary": "Complete Upload",
+        "tags": [
+          "modeling"
+        ]
+      }
+    },
+    "/api/v1/modeling/create-run": {
+      "post": {
+        "operationId": "create_run_api_v1_modeling_create_run_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestCreateRun"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseCreateRun_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Create Run",
         "tags": [
           "modeling"
         ]
@@ -7499,7 +7228,7 @@
     },
     "/api/v1/modeling/create-upload": {
       "post": {
-        "operationId": "create_dataset_upload_api_v1_modeling_create_upload_post",
+        "operationId": "create_upload_api_v1_modeling_create_upload_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -7541,11 +7270,31 @@
             },
             "description": "Forbidden"
           },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
           "422": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__MODELING_FILE_INVALID___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
                 }
               }
             },
@@ -7565,14 +7314,115 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODELING_STORAGE_UNAVAILABLE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"
                 }
               }
             },
             "description": "Service Unavailable"
           }
         },
-        "summary": "Create Dataset Upload",
+        "summary": "Create Upload",
+        "tags": [
+          "modeling"
+        ]
+      }
+    },
+    "/api/v1/modeling/download-model": {
+      "post": {
+        "operationId": "download_model_api_v1_modeling_download_model_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestDownloadModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseDownloadModel_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Download Model",
         "tags": [
           "modeling"
         ]
@@ -7626,17 +7476,27 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_DATASET_NOT_FOUND___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
                 }
               }
             },
             "description": "Not Found"
           },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
           "422": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
                 }
               }
             },
@@ -7656,15 +7516,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "anyOf": [
-                    {
-                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"
-                    },
-                    {
-                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"
-                    }
-                  ],
-                  "title": "Response 503 Get Dataset Api V1 Modeling Get Dataset Post"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"
                 }
               }
             },
@@ -7677,14 +7529,14 @@
         ]
       }
     },
-    "/api/v1/modeling/get-experiment": {
+    "/api/v1/modeling/get-model": {
       "post": {
-        "operationId": "get_experiment_api_v1_modeling_get_experiment_post",
+        "operationId": "get_model_api_v1_modeling_get_model_post",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RequestGetExperiment"
+                "$ref": "#/components/schemas/RequestGetModel"
               }
             }
           },
@@ -7695,7 +7547,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiEnvelope_ResponseGetExperiment_"
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseGetModel_"
                 }
               }
             },
@@ -7725,17 +7577,27 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_EXPERIMENT_NOT_FOUND___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
                 }
               }
             },
             "description": "Not Found"
           },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
           "422": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
                 }
               }
             },
@@ -7755,22 +7617,115 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "anyOf": [
-                    {
-                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"
-                    },
-                    {
-                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"
-                    }
-                  ],
-                  "title": "Response 503 Get Experiment Api V1 Modeling Get Experiment Post"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"
                 }
               }
             },
             "description": "Service Unavailable"
           }
         },
-        "summary": "Get Experiment",
+        "summary": "Get Model",
+        "tags": [
+          "modeling"
+        ]
+      }
+    },
+    "/api/v1/modeling/get-run": {
+      "post": {
+        "operationId": "get_run_api_v1_modeling_get_run_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestGetRun"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseGetRun_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Get Run",
         "tags": [
           "modeling"
         ]
@@ -7820,11 +7775,31 @@
             },
             "description": "Forbidden"
           },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
           "422": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
                 }
               }
             },
@@ -7844,15 +7819,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "anyOf": [
-                    {
-                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"
-                    },
-                    {
-                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"
-                    }
-                  ],
-                  "title": "Response 503 List Datasets Api V1 Modeling List Datasets Post"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"
                 }
               }
             },
@@ -7865,14 +7832,14 @@
         ]
       }
     },
-    "/api/v1/modeling/list-experiments": {
+    "/api/v1/modeling/list-models": {
       "post": {
-        "operationId": "list_experiments_api_v1_modeling_list_experiments_post",
+        "operationId": "list_models_api_v1_modeling_list_models_post",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RequestListExperiments"
+                "$ref": "#/components/schemas/RequestListModels"
               }
             }
           },
@@ -7883,96 +7850,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiEnvelope_ResponseListExperiments_"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
-                }
-              }
-            },
-            "description": "Unauthorized"
-          },
-          "403": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
-                }
-              }
-            },
-            "description": "Forbidden"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
-                }
-              }
-            },
-            "description": "Unprocessable Entity"
-          },
-          "500": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
-                }
-              }
-            },
-            "description": "Internal Server Error"
-          },
-          "503": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "anyOf": [
-                    {
-                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"
-                    },
-                    {
-                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"
-                    }
-                  ],
-                  "title": "Response 503 List Experiments Api V1 Modeling List Experiments Post"
-                }
-              }
-            },
-            "description": "Service Unavailable"
-          }
-        },
-        "summary": "List Experiments",
-        "tags": [
-          "modeling"
-        ]
-      }
-    },
-    "/api/v1/modeling/run-experiment": {
-      "post": {
-        "operationId": "run_experiment_api_v1_modeling_run_experiment_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RequestRunExperiment"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiEnvelope_ResponseRunExperiment_"
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseListModels_"
                 }
               }
             },
@@ -8002,7 +7880,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_DATASET_NOT_FOUND___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
                 }
               }
             },
@@ -8012,7 +7890,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_UPLOAD_INCOMPLETE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
                 }
               }
             },
@@ -8022,7 +7900,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__MODELING_CONFIGURATION_INVALID___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
                 }
               }
             },
@@ -8042,14 +7920,519 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODELING_STORAGE_UNAVAILABLE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"
                 }
               }
             },
             "description": "Service Unavailable"
           }
         },
-        "summary": "Run Experiment",
+        "summary": "List Models",
+        "tags": [
+          "modeling"
+        ]
+      }
+    },
+    "/api/v1/modeling/list-runs": {
+      "post": {
+        "operationId": "list_runs_api_v1_modeling_list_runs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestListRuns"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseListRuns_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "List Runs",
+        "tags": [
+          "modeling"
+        ]
+      }
+    },
+    "/api/v1/modeling/predict-model": {
+      "post": {
+        "operationId": "predict_model_api_v1_modeling_predict_model_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestPredictModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponsePredictModel_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Predict Model",
+        "tags": [
+          "modeling"
+        ]
+      }
+    },
+    "/api/v1/modeling/publish-model": {
+      "post": {
+        "operationId": "publish_model_api_v1_modeling_publish_model_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestPublishModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponsePublishModel_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Publish Model",
+        "tags": [
+          "modeling"
+        ]
+      }
+    },
+    "/api/v1/modeling/rerun": {
+      "post": {
+        "operationId": "rerun_api_v1_modeling_rerun_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestRerun"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseRerun_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Rerun",
+        "tags": [
+          "modeling"
+        ]
+      }
+    },
+    "/api/v1/modeling/run-events": {
+      "post": {
+        "operationId": "run_events_api_v1_modeling_run_events_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestRunEvents"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseRunEvents_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Run Events",
         "tags": [
           "modeling"
         ]

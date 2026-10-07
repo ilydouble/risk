@@ -32,16 +32,19 @@ def test_error_envelope_and_openapi_contract() -> None:
         "/api/v1/document/complete-upload",
         "/api/v1/document/list",
         "/api/v1/document/create-download",
+        "/api/v1/modeling/capabilities",
         "/api/v1/modeling/create-upload",
         "/api/v1/modeling/complete-upload",
         "/api/v1/modeling/list-datasets",
         "/api/v1/modeling/get-dataset",
-        "/api/v1/modeling/run-experiment",
-        "/api/v1/modeling/list-experiments",
-        "/api/v1/modeling/get-experiment",
+        "/api/v1/modeling/create-run",
+        "/api/v1/modeling/list-runs",
+        "/api/v1/modeling/get-run",
+        "/api/v1/modeling/publish-model",
+        "/api/v1/modeling/predict-model",
         "/api/v1/overview/get",
-    "/api/v1/overview/search-companies",
-    "/api/v1/overview/get-company",
+        "/api/v1/overview/search-companies",
+        "/api/v1/overview/get-company",
     ):
         assert "post" in routes[path]
         assert "422" in routes[path]["post"]["responses"]
@@ -122,9 +125,7 @@ def test_search_pagination_contract() -> None:
 
 def test_graph_depth_contract() -> None:
     app = create_app()
-    depth_schema = app.openapi()["components"]["schemas"]["RequestGetGraph"]["properties"][
-        "depth"
-    ]
+    depth_schema = app.openapi()["components"]["schemas"]["RequestGetGraph"]["properties"]["depth"]
     assert depth_schema["minimum"] == 1
     assert depth_schema["maximum"] == 3
     assert depth_schema["default"] == 3

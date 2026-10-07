@@ -98,3 +98,8 @@ def request_log_context(request_id: str) -> Generator[None, None, None]:
         yield
     finally:
         _request_id.reset(token)
+
+
+def current_request_id() -> str | None:
+    """Read the middleware-owned correlation value for downstream HTTP calls."""
+    return _request_id.get()

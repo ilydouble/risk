@@ -1,221 +1,265 @@
-import logging
 from dataclasses import dataclass
 from pathlib import PurePath
 from typing import Any
 from uuid import uuid4
 
-from stellarmesh_objectstorage import AsyncClient, NotFoundError, StorageError
+from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
+from stellarmesh_objectstorage import AsyncClient, StorageError
 
-from risk_api.modules.modeling.errors import ModelingError
-from risk_api.modules.modeling.model import ModelingDataset, ModelingExperiment, ModelingJob
+from risk_api.errors import AppError
+from risk_api.modules.modeling.client import ModelClient
 from risk_api.modules.modeling.repository import ModelingRepository
-
-logger = logging.getLogger(__name__)
-
-MAX_BUNDLE_BYTES = 512 * 1024 * 1024
-MODEL_NAMES = {
-    "logistic_regression",
-    "hist_gradient_boosting",
-    "graph_stats_hgb",
-    "gnn_self_only",
-    "gnn_no_hyper",
-    "gnn_full",
-}
+from risk_api.modules.modeling.workbench_model import Dataset, Dispatch, ModelVersion, Run
 
 
-@dataclass(frozen=True)
-class DatasetUploadTicket:
-    dataset_id: str
-    url: str
-    headers: dict[str, str]
+@dataclass
+class ModelingStorage:
+    client: AsyncClient
 
 
 class ModelingService:
-    def __init__(self, repository: ModelingRepository, storage: AsyncClient):
-        self.repository = repository
-        self.storage = storage
+    def __init__(
+        self, repository: ModelingRepository, storage: ModelingStorage, client: ModelClient
+    ):
+        self.repository, self.storage, self.client = repository, storage.client, client
+        self.session = repository.session
+
+    async def refresh(self, item: Dataset | Run) -> None:
+        if isinstance(item, Dataset) and not item.confirmed:
+            return
+        if item.execution.get("status") in {"completed", "failed", "cancelled"}:
+            return
+        try:
+            snapshot = await self.client.call("jobs/get", {"jobId": item.id})
+        except AppError as error:
+            if error.code == "MODEL_RESOURCE_NOT_FOUND":
+                return  # Transactional outbox is still delivering the initial submission.
+            raise
+        item.execution = snapshot
+        await self.session.commit()
+
+    def enqueue(self, identity: str, kind: str, payload: dict, request_id: str) -> None:
+        self.session.add(
+            Dispatch(
+                id=identity,
+                operation="submit",
+                request_id=request_id,
+                payload={"jobId": identity, "kind": kind, "payload": payload},
+            )
+        )
 
     async def create_upload(
-        self,
-        owner_id: str,
-        name: str,
-        filename: str,
-        content_type: str,
-        size: int,
-    ) -> DatasetUploadTicket:
-        name = name.strip()
-        if not name:
-            raise ModelingError("FILE_INVALID", field="name")
+        self, owner: str, name: str, filename: str, content_type: str, size: int
+    ) -> dict[str, Any]:
         filename = PurePath(filename.replace("\\", "/")).name
-        if filename in {"", ".", ".."} or not filename.casefold().endswith(".zip"):
-            raise ModelingError("FILE_INVALID", field="filename")
-        if size <= 0 or size > MAX_BUNDLE_BYTES:
-            raise ModelingError("FILE_INVALID", field="size")
-        dataset_id = str(uuid4())
-        key = f"modeling/{owner_id}/{dataset_id}/{filename}"
+        if not filename.lower().endswith(".zip") or not name.strip():
+            raise AppError(422, "MODELING_FILE_INVALID", "A named ZIP dataset is required")
+        identity = str(uuid4())
+        key = f"uploads/{owner}/{identity}.zip"
         try:
-            signed = await self.storage.presign_put(
+            ticket = await self.storage.presign_put(
                 key, size=size, content_type=content_type, expires_in=60
             )
         except StorageError as error:
-            raise ModelingError("STORAGE_UNAVAILABLE") from error
-        dataset = ModelingDataset(
-            id=dataset_id,
-            owner_id=owner_id,
-            name=name,
-            object_key=key,
-            filename=filename,
-            content_type=content_type,
-            size=size,
-            status="pending_upload",
-            schema_version=1,
-            capabilities={},
-            validation={},
-            progress={"stage": "upload", "percent": 0},
-        )
-        await self.repository.add_dataset(dataset)
-        return DatasetUploadTicket(dataset_id, signed.url, dict(signed.headers))
-
-    async def complete_upload(self, owner_id: str, dataset_id: str) -> ModelingDataset:
-        dataset = await self.get_dataset(owner_id, dataset_id)
-        if dataset.status in {"queued", "running", "ready"}:
-            return dataset
-        if dataset.status == "failed":
-            raise ModelingError("DATASET_NOT_READY")
-        try:
-            info = await self.storage.stat(dataset.object_key)
-        except NotFoundError as error:
-            raise ModelingError("UPLOAD_INCOMPLETE") from error
-        except StorageError as error:
-            raise ModelingError("STORAGE_UNAVAILABLE") from error
-        if info.size != dataset.size or info.size > MAX_BUNDLE_BYTES:
-            raise ModelingError("FILE_INVALID", field="size")
-        dataset.status = "queued"
-        dataset.progress = {"stage": "queued", "percent": 0}
-        dataset.error = None
-        await self.repository.add_job(
-            ModelingJob(
-                id=str(uuid4()),
-                owner_id=owner_id,
-                dataset_id=dataset.id,
-                kind="analyze_bundle",
-                status="queued",
-                payload={"objectKey": dataset.object_key},
-                progress={"stage": "queued", "percent": 0},
+            raise AppError(
+                503, "MODELING_STORAGE_UNAVAILABLE", "Object storage unavailable"
+            ) from error
+        self.session.add(
+            Dataset(
+                id=identity,
+                owner_id=owner,
+                name=name.strip(),
+                filename=filename,
+                object_key=key,
+                content_type=content_type,
+                size=size,
             )
         )
-        await self.repository.save_dataset(dataset)
+        await self.session.commit()
+        return {
+            "datasetId": identity,
+            "url": ticket.url,
+            "headers": ticket.headers,
+            "expiresIn": 60,
+        }
+
+    async def complete_upload(self, owner: str, identity: str, request_id: str) -> Dataset:
+        dataset = await self.repository.dataset(owner, identity, lock=True)
+        if not dataset.confirmed:
+            try:
+                info = await self.storage.stat(dataset.object_key)
+            except StorageError as error:
+                raise AppError(
+                    409, "MODELING_UPLOAD_INCOMPLETE", "Upload is not complete"
+                ) from error
+            if info.size != dataset.size:
+                raise AppError(409, "MODELING_UPLOAD_INCOMPLETE", "Uploaded size differs")
+            dataset.confirmed = True
+            self.enqueue(dataset.id, "validate", {"objectKey": dataset.object_key}, request_id)
+            await self.session.commit()
         return dataset
 
-    async def get_dataset(self, owner_id: str, dataset_id: str) -> ModelingDataset:
-        dataset = await self.repository.dataset(dataset_id, owner_id)
-        if dataset is None:
-            raise ModelingError("DATASET_NOT_FOUND")
-        return dataset
+    async def get_dataset(self, owner: str, identity: str) -> Dataset:
+        item = await self.repository.dataset(owner, identity)
+        await self.refresh(item)
+        return item
 
-    async def list_datasets(self, owner_id: str) -> list[ModelingDataset]:
-        return await self.repository.datasets(owner_id)
+    async def get_run(self, owner: str, identity: str) -> Run:
+        item = await self.repository.run(owner, identity)
+        await self.refresh(item)
+        return item
 
-    async def run_experiment(
+    async def capabilities(self) -> dict[str, Any]:
+        return await self.client.call("models/capabilities", {})
+
+    async def create_run(
         self,
-        owner_id: str,
+        owner: str,
         dataset_id: str,
         name: str,
-        target_name: str,
-        feature_mode: str,
-        feature_columns: list[str],
-        models: list[str],
-        use_events: bool,
-        use_relations: bool,
-        use_hyperedges: bool,
-        enable_gnn_ablations: bool,
-        seed: int,
-    ) -> ModelingExperiment:
-        name = name.strip()
-        if not name:
-            raise ModelingError("CONFIGURATION_INVALID", field="name")
-        dataset = await self.get_dataset(owner_id, dataset_id)
-        if dataset.status != "ready":
-            raise ModelingError("DATASET_NOT_READY")
-        if dataset.schema_version != 1 or dataset.manifest is None:
-            raise ModelingError("CONFIGURATION_INVALID", field="datasetId")
-        target = dataset.manifest.get("target", {})
-        if target_name != target.get("name"):
-            raise ModelingError("CONFIGURATION_INVALID", field="targetName")
-        requested_models = list(dict.fromkeys(models))
-        if not requested_models or not set(requested_models).issubset(MODEL_NAMES):
-            raise ModelingError("CONFIGURATION_INVALID", field="models")
-        features = {item["name"] for item in dataset.manifest.get("features", [])}
-        if feature_mode == "manual":
-            if not feature_columns or not set(feature_columns).issubset(features):
-                raise ModelingError("CONFIGURATION_INVALID", field="featureColumns")
-        elif feature_mode != "recommended":
-            raise ModelingError("CONFIGURATION_INVALID", field="featureMode")
-        self._validate_capabilities(dataset.capabilities, requested_models)
-        if not use_relations and any(
-            model in {"graph_stats_hgb", "gnn_no_hyper", "gnn_full"}
-            for model in requested_models
-        ):
-            raise ModelingError("CONFIGURATION_INVALID", field="useRelations")
-        if "gnn_full" in requested_models and not use_hyperedges:
-            raise ModelingError("CONFIGURATION_INVALID", field="useHyperedges")
-        configuration: dict[str, Any] = {
-            "seed": seed,
-            "featureMode": feature_mode,
-            "useEvents": use_events,
-            "useRelations": use_relations,
-            "useHyperedges": use_hyperedges,
-            "enableGnnAblations": enable_gnn_ablations,
-        }
-        experiment = ModelingExperiment(
+        request_key: str,
+        epochs: int,
+        request_id: str,
+        retry_of: str | None = None,
+        *,
+        runner_id: str = "riskgnn-node-edge",
+    ) -> Run:
+        config = {"profile": "smoke-v1", "epochs": epochs, "seed": 0, "runnerId": runner_id}
+        previous = await self.session.scalar(
+            select(Run).where(Run.owner_id == owner, Run.request_key == request_key)
+        )
+        if previous:
+            if (
+                previous.dataset_id,
+                previous.name,
+                {"runnerId": "riskgnn-node-edge", **previous.configuration},
+                previous.retry_of,
+            ) != (
+                dataset_id,
+                name,
+                config,
+                retry_of,
+            ):
+                raise AppError(
+                    409, "MODELING_STATE_INVALID", "Request key reused with different input"
+                )
+            return previous
+        source = await self.get_dataset(owner, dataset_id)
+        if source.execution.get("status") != "completed":
+            raise AppError(409, "MODELING_DATASET_NOT_READY", "Dataset is not ready")
+        result = source.execution.get("result", {})
+        supported = result.get("supportedRunnerIds", ["riskgnn-node-edge"])
+        if runner_id not in supported:
+            raise AppError(422, "MODELING_MODEL_INCOMPATIBLE", "Model cannot train this dataset")
+        item = Run(
             id=str(uuid4()),
+            owner_id=owner,
             dataset_id=dataset_id,
-            owner_id=owner_id,
             name=name,
-            model_type="comparison_suite",
-            status="queued",
-            target_column="target",
-            positive_value=str(target.get("positiveValue", "1")),
-            feature_columns=feature_columns,
-            configuration=configuration,
-            metrics={},
-            coefficients=[],
-            target_name=target_name,
-            selected_features=[],
-            requested_models=requested_models,
-            progress={"stage": "queued", "percent": 0},
-            results={},
-            artifacts={},
+            request_key=request_key,
+            configuration=config,
+            retry_of=retry_of,
         )
-        await self.repository.add_experiment(experiment)
-        await self.repository.add_job(
-            ModelingJob(
-                id=str(uuid4()),
-                owner_id=owner_id,
-                dataset_id=dataset_id,
-                experiment_id=experiment.id,
-                kind="train_experiment",
-                status="queued",
-                payload={"objectKey": dataset.object_key},
-                progress={"stage": "queued", "percent": 0},
+        self.session.add(item)
+        self.enqueue(
+            item.id,
+            "train",
+            {"sourceJobId": dataset_id, "epochs": epochs, "runnerId": runner_id},
+            request_id,
+        )
+        try:
+            await self.session.commit()
+        except IntegrityError:
+            await self.session.rollback()
+            existing = await self.session.scalar(
+                select(Run).where(Run.owner_id == owner, Run.request_key == request_key)
             )
+            if existing is None:
+                raise
+            return await self.create_run(
+                owner,
+                dataset_id,
+                name,
+                request_key,
+                epochs,
+                request_id,
+                retry_of,
+                runner_id=runner_id,
+            )
+        return item
+
+    async def rerun(self, owner: str, identity: str, key: str, request_id: str) -> Run:
+        previous = await self.get_run(owner, identity)
+        if previous.execution.get("status") not in {"failed", "completed", "cancelled"}:
+            raise AppError(409, "MODELING_STATE_INVALID", "Run is still active")
+        return await self.create_run(
+            owner,
+            previous.dataset_id,
+            previous.name,
+            key,
+            previous.configuration["epochs"],
+            request_id,
+            previous.id,
+            runner_id=previous.configuration.get("runnerId", "riskgnn-node-edge"),
         )
-        return experiment
 
-    @staticmethod
-    def _validate_capabilities(capabilities: dict[str, Any], models: list[str]) -> None:
-        if "graph_stats_hgb" in models and not capabilities.get("relations"):
-            raise ModelingError("CONFIGURATION_INVALID", field="models")
-        if any(model.startswith("gnn_") for model in models) and not capabilities.get("gnn"):
-            raise ModelingError("CONFIGURATION_INVALID", field="models")
-        if "gnn_full" in models and not capabilities.get("hyperedges"):
-            raise ModelingError("CONFIGURATION_INVALID", field="models")
+    async def cancel(self, owner: str, identity: str, request_id: str) -> Run:
+        item = await self.repository.run(owner, identity, lock=True)
+        if item.execution.get("status") not in {"completed", "failed", "cancelled"}:
+            self.session.add(
+                Dispatch(
+                    id=str(uuid4()),
+                    operation="cancel",
+                    payload={"jobId": item.id},
+                    request_id=request_id,
+                )
+            )
+            item.execution = {**item.execution, "cancelRequested": True}
+            await self.session.commit()
+        return item
 
-    async def get_experiment(self, owner_id: str, experiment_id: str) -> ModelingExperiment:
-        experiment = await self.repository.experiment(experiment_id, owner_id)
-        if experiment is None:
-            raise ModelingError("EXPERIMENT_NOT_FOUND")
-        return experiment
+    async def events(self, owner: str, identity: str, after: int) -> dict:
+        await self.repository.run(owner, identity)
+        try:
+            return await self.client.call("jobs/events", {"jobId": identity, "after": after})
+        except AppError as error:
+            if error.code == "MODEL_RESOURCE_NOT_FOUND":
+                return {"items": []}
+            raise
 
-    async def list_experiments(self, owner_id: str) -> list[ModelingExperiment]:
-        return await self.repository.experiments(owner_id)
+    async def publish(self, owner: str, identity: str, name: str) -> ModelVersion:
+        run = await self.get_run(owner, identity)
+        # The locked run makes concurrent publication a single immutable model version.
+        run = await self.repository.run(owner, identity, lock=True)
+        previous = await self.session.scalar(
+            select(ModelVersion).where(ModelVersion.run_id == identity)
+        )
+        if previous:
+            return previous
+        result = run.execution.get("result", {})
+        if (
+            run.execution.get("status") != "completed"
+            or not result.get("report", {}).get("independentReload")
+            or not result.get("sha256")
+        ):
+            raise AppError(
+                409, "MODELING_STATE_INVALID", "Independent test must complete before publication"
+            )
+        version = ModelVersion(
+            id=str(uuid4()), owner_id=owner, run_id=identity, name=name, artifact=result
+        )
+        self.session.add(version)
+        await self.session.commit()
+        return version
+
+    async def download(self, owner: str, identity: str) -> dict:
+        version = await self.repository.version(owner, identity)
+        ticket = await self.storage.presign_get(version.artifact["objectKey"], expires_in=60)
+        return {"url": ticket.url, "sha256": version.artifact["sha256"], "expiresIn": 60}
+
+    async def predict(self, owner: str, identity: str, ids: list[str], request_id: str) -> dict:
+        version = await self.repository.version(owner, identity)
+        return await self.client.call(
+            "models/predict", {"jobId": version.run_id, "companyIds": ids}, request_id
+        )
