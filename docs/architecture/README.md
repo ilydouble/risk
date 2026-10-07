@@ -28,6 +28,7 @@ flowchart LR
 | 命令与验收 | [本地开发](local-development.md) |
 | 旧模型迁移与停用 | [迁移说明](modeling-migration.md) |
 | 数据集、实验、独立测试与发布 | [模型实验工作台](modeling-workbench.md) |
+| 协作者交付数据 ZIP、自检与新增适配 | [数据集接入流程](dataset-zip-onboarding.md) |
 | 建模术语、不变量与适配边界 | [建模领域模型](modeling-domain.md) |
 | 新加坡企业聚合与调试样本 | [新加坡企业概览](singapore-overview.md) |
 

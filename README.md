@@ -31,6 +31,9 @@ PostgreSQL 内独立创建 `riskgnn` 数据库与用户，RustFS 内创建 `risk
 旧 SMEsD 链接显示停用说明，旧 Bundle 记录和对象保留，不转换成新版本。
 Bundle v1 可重新上传做数据分析；原始基线和 RiskGNN+ 等待模型包与研究链路适配。
 
+协作者准备新数据集时，先阅读[数据集 ZIP 接入流程](docs/architecture/dataset-zip-onboarding.md)，
+其中列出当前协议、交付材料、自检命令和新增模型适配的分工。
+
 ## 目录
 
 | 目录 | 职责 |
