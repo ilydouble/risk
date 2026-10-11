@@ -10,7 +10,7 @@ from model_service.files import write_json
 from riskgnn.dataset_adapters.sg_comrisk.preparation import prepare
 from riskgnn.dataset_adapters.sg_comrisk.validation import validate
 from riskgnn.workbench.artifacts import export_zip as pack
-from riskgnn.workbench.artifacts import read_json, verify
+from riskgnn.workbench.artifacts import read_json, seal, verify
 from riskgnn.workbench.network import EdgeRiskGNN
 from riskgnn.workbench.predictor import Predictor
 from riskgnn.workbench.training import evaluate, train
@@ -83,3 +83,23 @@ def test_node_edge_forward_matches_research_reference():
     with torch.inference_mode():
         actual = model(features, nodes, edges, types, 3)
     assert torch.allclose(actual, torch.tensor(expected["logProbabilities"]), atol=1e-7)
+
+
+def test_model_uses_prepared_feature_width_and_dataset_semantics(export_zip, tmp_path):
+    validated, prepared, model = [tmp_path / name for name in ("valid", "prepared", "model")]
+    validate(export_zip, validated)
+    prepare(validated, prepared)
+    context = dict(np.load(prepared / "context.npz", allow_pickle=False))
+    context["features"] = np.column_stack((context["features"], np.ones(len(context["labels"]))))
+    np.savez_compressed(prepared / "context.npz", **context)
+    metadata = read_json(prepared / "metadata.json")
+    metadata.update(datasetFormat="custom-example-v1", taskType="example", target="Example label")
+    metadata["features"].append("extra_attribute")
+    write_json(prepared / "metadata.json", metadata)
+    seal(prepared, kind="riskgnn-prepared-v1", metadata={"sourceSha256": metadata["sourceSha256"]})
+    profile = train(prepared, model, epochs=1)
+    assert profile["experimentProfile"]["target"] == "Example label"
+    assert profile["experimentProfile"]["datasetFormat"] == "custom-example-v1"
+    predictor = Predictor(model)
+    assert predictor.features.shape[1] == 7
+    assert len(predictor.predict(predictor.ids[:2])) == 2

@@ -105,6 +105,9 @@ def prepare(validated: Path, output: Path, *, target_count: int = 2000) -> dict[
     metadata = {
         "profile": "smoke-v1",
         "datasetContract": source["datasetContract"],
+        "datasetFormat": "sg-comrisk-v1",
+        "taskType": "entity_snapshot",
+        "target": "Singapore corporate distress proxy",
         "sourceSha256": source["sha256"],
         "seed": 0,
         "targetCount": len(selected),

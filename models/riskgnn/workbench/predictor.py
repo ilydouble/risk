@@ -19,7 +19,9 @@ class Predictor:
         self.context = dict(np.load(directory / "context.npz", allow_pickle=False))
         self.features = torch.tensor(self.context["features"])
         self.sampler = Sampler(self.context["edges"], len(self.ids))
-        self.model = EdgeRiskGNN(len(self.ids), len(self.meta["relations"]))
+        self.model = EdgeRiskGNN(
+            len(self.ids), len(self.meta["relations"]), features=len(self.meta["features"])
+        )
         self.model.load_state_dict(
             torch.load(directory / "weights.pt", map_location="cpu", weights_only=True)
         )

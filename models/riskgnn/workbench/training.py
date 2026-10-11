@@ -102,7 +102,7 @@ def train(
     validation = np.where(context["splits"] == "val")[0]
     ids = read_json(output / "ids.json")
     sampler = Sampler(context["edges"], len(ids))
-    model = EdgeRiskGNN(len(ids), len(meta["relations"]))
+    model = EdgeRiskGNN(len(ids), len(meta["relations"]), features=len(meta["features"]))
     optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, 20, eta_min=1e-6)
     best = float("inf")
@@ -176,10 +176,10 @@ def train(
         "artifactFormat": "riskgnn-model-v2",
         "device": "cpu",
         "runnerId": runner_id,
-        "datasetFormat": "sg-comrisk-v1",
+        "datasetFormat": meta["datasetFormat"],
         "datasetSha256": meta["sourceSha256"],
-        "taskType": "entity_snapshot",
-        "target": "Singapore corporate distress proxy",
+        "taskType": meta["taskType"],
+        "target": meta["target"],
         "seed": meta["seed"],
         "selectedFeatures": meta["features"],
         "preprocessing": meta["preprocessing"],
