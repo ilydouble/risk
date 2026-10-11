@@ -4,10 +4,10 @@ export default {
     "adapter": "Dataset adapter",
     "title": "Model workbench",
     "subtitle": "Upload data, inspect quality and splits, then train, test and publish an available model configuration.",
-    "disclaimer": "smoke-v1 real subset experiment: 2,000 labeled targets, a fixed static graph and CPU training. Scores reflect Singapore corporate distress labels, not credit default probability. Two epochs validate the workflow only.",
+    "disclaimer": "Real subset experiments on CPU preserve the dataset splits. Outputs reflect the dataset’s company status labels, not credit default probability. See the experiment profile for consumed inputs and inactive graph capabilities.",
     "refresh": "Refresh",
     "loading": "Loading…",
-    "scope": "Only your datasets, runs and models are shown. Legacy Bundle records remain in the database and are not converted.",
+    "scope": "Only your datasets, runs and models are shown. Retired protocol records remain stored and are not converted automatically.",
     "tabs": {
       "dataset": "Datasets",
       "run": "Experiments",
@@ -25,7 +25,7 @@ export default {
     "upload": {
       "title": "Upload a training dataset",
       "pick": "Choose a ZIP dataset",
-      "note": "Supports comrisk_export and Bundle v1, up to 512 MiB. The server validates the selected protocol; scripts in archives are never executed.",
+      "note": "Supports ACRA, SMEsD V5 JSON and UK v1, up to 512 MiB; risk_dataset_contract.json is required. The server validates all data; uploaded scripts are never executed.",
       "progress": "Uploading",
       "action": "Upload and validate",
       "verifiedFiles": "Server-verified file index"
@@ -133,6 +133,9 @@ export default {
       "selection": "Checkpoint selection",
       "bestEpoch": "Selected epoch",
       "features": "Actual features",
+      "usedInputs": "Inputs used by training",
+      "retainedInputs": "Retained evidence, not used by training",
+      "edgePolicy": "Relation policy",
       "preprocessing": "Preprocessing fit split",
       "provenance": "Data and implementation versions",
       "datasetHash": "Dataset SHA-256",

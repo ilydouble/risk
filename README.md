@@ -20,16 +20,17 @@ PostgreSQL 内独立创建 `riskgnn` 数据库与用户，RustFS 内创建 `risk
 
 ## 第一条模型链路
 
-1. 打开「模型训练工作台」，选择同事的 `comrisk_export` ZIP（上限 512 MiB）。
+1. 打开「模型训练工作台」，选择包含数据集契约的 ACRA、SMEsD JSON 或 UK ZIP（上限 512 MiB）。
 2. 浏览器预览文件索引，直传对象存储；Worker 全量扫描并校验数据协议。
-3. 校验通过后选择 RiskGNN 自身特征或自身特征与图关系，默认 `smoke-v1`、2 轮、CPU。
+3. 校验通过后创建 RiskGNN 实验，默认 2 轮、CPU；准备配置由数据适配器记录。
 4. 查看阶段、epoch 曲线、Attempt 和增量事件；刷新页面可继续查看。
 5. 新进程独立测试结束后，发布不可变模型版本；下载模型包或预测该图内企业。
 
-首版只训练固定 2,000 个有标签目标及其有限图上下文，不做全量训练。
+ACRA / UK 默认最多 2,000 个目标，SMEsD 默认最多 4,000 个，保留原划分和有限图上下文。
+当前 node_edge 不消费超边和事件，实验档案明确列出参与训练和仅保留的数据。
 困境分类分数不是授信违约概率。发布不会切换生产模型，也不会上传 GitHub Release。
 旧 SMEsD 链接显示停用说明，旧 Bundle 记录和对象保留，不转换成新版本。
-Bundle v1 可重新上传做数据分析；原始基线和 RiskGNN+ 等待模型包与研究链路适配。
+旧 Bundle 协议与合成数据生成器已删除；原始基线和 RiskGNN+ 研究入口保持独立。
 
 协作者准备新数据集时，先阅读[数据集 ZIP 接入流程](docs/architecture/dataset-zip-onboarding.md)，
 其中列出当前协议、交付材料、自检命令和新增模型适配的分工。
@@ -59,7 +60,7 @@ cd ../models
 uv sync --project service --locked
 uv run --project service ruff check service
 uv run --project service mypy --config-file service/pyproject.toml service
-uv run --project service pytest service/tests -q
+uv run --project service pytest service/tests -q --require-datasets
 uv run --project service python -m model_service.export_openapi
 cd ../frontend
 npm ci

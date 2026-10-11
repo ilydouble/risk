@@ -1,3 +1,6 @@
+> 历史整合记录：以下描述的是早期版本。Bundle/合成数据路径现已删除；当前实现见
+> [数据集适配器](../../../docs/architecture/dataset-adapters.md)。
+
 # models 主线集成验收
 
 日期：2026-10-07。研究基线为 dev `4cae79a`，隔离 Compose 项目 `risk-models-integration`。

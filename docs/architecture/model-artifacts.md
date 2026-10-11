@@ -8,8 +8,9 @@ model/
   manifest.json     formatVersion=1, kind=riskgnn-model-v2, files
   weights.pt        网络、分类器、固定嵌入和 alpha
   metadata.json     配置、特征顺序、预处理、划分、源码及依赖版本
-  ids.json          图内企业 ID 与索引
-  context.npz       特征、图、标签及测试划分
+  ids.json          公司在前、人物在后的图内索引；预测只接受公司
+  context.npz       特征、图、标签及测试划分；快照配置另存方向/权重/置信度
+  evidence.json     JSON 子集原始关系、超边和事件（仅保留证据）
 report/
   metrics.json      独立测试报告和被测模型摘要
   predictions.json 测试预测
@@ -44,3 +45,7 @@ verify(Path("/absolute/path/model"), "riskgnn-model-v2")
 
 完整模型包含数据上下文和企业 ID，沿用数据集归属与访问权限，不自动公开。
 原研究输出的预测 NPZ 不是可直接发布的完整模型包。
+
+architecture 区分既有 sg-node-edge-v2 与 dataset-node-edge-v1；保持旧 v2 产物可加载。
+快照人物嵌入也作为 buffer 保存，人物不接受预测请求；跨快照人物使用不同内部索引。
+完整源包仍由 datasetSha256 绑定，evidence.json 不替代全量来源文件。

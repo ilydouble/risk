@@ -4,10 +4,10 @@ export default {
     "adapter": "数据适配器",
     "title": "模型工作台",
     "subtitle": "上传数据、检查质量与划分，选择已接入的模型配置进行训练、测试和发布。",
-    "disclaimer": "当前为 smoke-v1 真实子集实验：2,000 个有标签目标、固定静态图、CPU 训练。输出反映新加坡企业困境标签，不是授信违约概率；两轮训练仅用于验证链路。",
+    "disclaimer": "当前为 CPU 真实数据子集实验，沿用数据集原有划分。输出反映对应数据集的企业状态标签，不是授信违约概率；训练使用的字段和未启用的图能力见实验档案。",
     "refresh": "刷新",
     "loading": "正在加载…",
-    "scope": "仅显示当前用户的数据集、实验与模型。旧 Bundle 实验保留在数据库中，不转换为新版本。",
+    "scope": "仅显示当前用户的数据集、实验与模型。旧协议记录保留，不自动转换为新版本。",
     "tabs": {
       "dataset": "数据集",
       "run": "实验",
@@ -25,7 +25,7 @@ export default {
     "upload": {
       "title": "上传训练数据包",
       "pick": "选择 ZIP 数据包",
-      "note": "支持 comrisk_export 与 Bundle v1，最大 512 MiB。服务端按协议校验文件与数据，包内脚本不会执行。",
+      "note": "支持 ACRA、SMEsD V5 JSON 和 UK v1，最大 512 MiB，需包含 risk_dataset_contract.json。服务端全量校验，包内脚本不会执行。",
       "progress": "上传处理中",
       "action": "上传并校验",
       "verifiedFiles": "服务端校验文件索引"
@@ -133,6 +133,9 @@ export default {
       "selection": "检查点选择",
       "bestEpoch": "选定轮次",
       "features": "实际特征",
+      "usedInputs": "实际参与训练",
+      "retainedInputs": "仅保留证据，未参与训练",
+      "edgePolicy": "关系处理方式",
       "preprocessing": "预处理拟合划分",
       "provenance": "数据与实现版本",
       "datasetHash": "数据包 SHA-256",

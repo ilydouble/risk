@@ -16,8 +16,9 @@
 
 | 数据 | 当前适配器 | 能力 |
 | --- | --- | --- |
-| comrisk_export | sg-comrisk / 1 | 校验、分析、子集训练、测试、发布、预测 |
-| Bundle v1 | bundle / 1 | 校验、分析，当前不可训练 |
+| comrisk_export_v5/acra | sg-comrisk / 1 | 校验、分析、子集训练、测试、发布、预测 |
+| comrisk_export_v5/smesd | smesd / 1 | JSON 快照校验、分析、训练、测试、发布、预测 |
+| uk_dataset_v1 | uk-dataset-v1 / 1 | JSON 快照校验、分析、训练、测试、发布、预测 |
 | 新加坡图数据、其他格式 | 需新增适配器 | 提交样本和语义说明后实现 |
 
 同一数据格式的新批次更新 dataset.version；语义改变时升级或新增适配器。
@@ -41,7 +42,6 @@ uv run --project service python -m riskgnn.tools.package_dataset \
 ```
 
 通用 ZIP 上限 512 MiB，解压上限 2 GiB、单文件 1 GiB，最多 128 个成员。
-Bundle 当前最多 7 个普通文件，含 metadata 和 risk_dataset_contract；具体见其文档。
 压缩体积不能代表训练内存。需要分片或更大数据时另行明确资源与传输策略。
 
 交付时同时说明：
@@ -62,7 +62,7 @@ Bundle 当前最多 7 个普通文件，含 metadata 和 risk_dataset_contract�
 6. 独立测试成功后发布、下载模型，并核对线上/离线预测和输入顺序。
 
 sg-comrisk 当前运行 smoke-v1 子集，完整校验不等于全量训练；结果不描述成授信违约概率。
-Bundle 校验成功也不意味着可以训练。UI 和服务端都会依据适配器能力拒绝。
+SMEsD / UK 当前使用 node_edge；超边和事件作为证据保留，未接入该配置的前向计算。
 
 ## 5. 接入完成标准
 
@@ -74,3 +74,14 @@ Bundle 校验成功也不意味着可以训练。UI 和服务端都会依据适�
 
 本轮旧工作台数据与模型全部失效，不自动补清单或转换；按新契约重新上传和训练。
 原研究 requirements、环境和训练命令继续可用。
+
+## 6. 本仓库三份数据
+
+适配器专用文档与可复制的目录打包命令：
+
+- [ACRA](../../models/riskgnn/dataset_adapters/acra/README.md)
+- [SMEsD JSON](../../models/riskgnn/dataset_adapters/smesd/README.md)
+- [UK Dataset V1](../../models/riskgnn/dataset_adapters/uk_dataset_v1/README.md)
+
+comrisk_export_v5 是包含两套数据的交付包，必须分别打包其 acra 和 smesd 子目录。
+原始 datasets/smesd Pickle 不直接上传；旧 Bundle 及合成演示协议已移除。

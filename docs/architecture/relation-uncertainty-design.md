@@ -1,4 +1,4 @@
-> 本文包含历史问题和后续设计。当前工作台仍采用已验收的单位边权协议，置信度实验尚未作为服务能力开放。
+> 本文保留问题背景与后续实验设计。当前 ACRA 仍使用单位边权；SMEsD/UK 的 node_edge 已传入源权重及独立置信度通道。三组消融与随机图区间尚未作为工作台能力开放。
 
 # 关系强度与不确定性设计
 
@@ -9,27 +9,14 @@
 
 这个问题目前确实没有被充分表达。
 
-当前 Bundle 的关系只有：
+早期 Bundle 仅有快照、端点、关系类型和 weight，现已停止支持。
+当前数据结构见 [snapshot_schema.py](../../models/riskgnn/dataset_adapters/snapshot_schema.py)：
+weight、strength、existence_confidence 分别保存，具体含义由数据适配器约定。
 
-```
-graph_snapshot_id
-source_id
-target_id
-relation_type
-weight
-```
-
-并且只校验 `weight > 0`，见 [data.py (line 137)](../../models/service/src/model_service/datasets/bundle/data.py)。超边也只有类型、编号和成员，没有置信度，见 [data.py (line 168)](../../models/service/src/model_service/datasets/bundle/data.py)。
-
-更重要的是，当前 RiskGNN 将 `weight` 放入注意力：
-
-```
-alpha = softmax(attention_logit + log(weight))
-```
-
-见 [model.py (line 73)](../../models/riskgnn/gnn.py)。
-
-这意味着当前 `weight` 表达的是“邻居之间的相对传播强度”，并不是“这条边存在的概率”。两者不能混用。例如一个节点只有一个邻居时，即使其 `weight=0.01`，softmax 后仍然可能得到接近 1 的注意力，它不会真正削弱这条低可信边的影响。
+源权重经过邻域归一化后只表达相对传播作用，不能因此解释为关系存在概率。
+例如只有一个邻居时，归一化权重可能接近 1；独立置信度需要在归一化之后作用于消息。
+当前研究实现见 [gnn.py](../../models/riskgnn/gnn.py)。UK 没有独立置信度时使用中性值 1，
+不能将其重标度后的 weight 再复制为概率。源文件中的 strength 也不能与 weight 无条件互换。
 
 ### 应当拆分的关系字段
 
@@ -133,7 +120,7 @@ is_inferred
 
 我建议优先顺序是：
 
-1. 先扩展 Bundle 契约，分离 `strength` 和 `confidence`。
+1. 由各数据适配器明确 `strength`、`weight` 和 `confidence` 的来源与语义。
 2. 为关系和超边增加来源、时间及推断标记。
 3. 建立“无图／高可信图／全图”三组对照。
 4. 再实现置信度感知传播。

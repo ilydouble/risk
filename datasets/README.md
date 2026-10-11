@@ -7,9 +7,10 @@
 ```text
 datasets/
 ├── smesd/                # 上游 ComRisk 原始 pickle 与预训练嵌入
-└── comrisk_export_v5/
+├── comrisk_export_v5/
     ├── acra/             # 新加坡 ACRA/GLEIF 横截面数据
     └── smesd/            # SMEsD 的 V5 JSON 转换快照
+└── uk_dataset_v1/        # 英国七维特征、三类超边 JSON 快照
 ```
 
 `models/baseline/data` 是指向 `datasets/smesd` 的符号链接。原始 SMEsD 文件固定来自 `shaopengw/ComRisk` 提交 `a80524b3b67436cd2f74755f6ffa08a554ff2d02`：
@@ -24,3 +25,8 @@ datasets/
 | `meta_emb.pkl` | `ee065231bf2f7801bfb72052a97ab77437e27120dacdf08648b3062ab649a42d` |
 
 pickle 可能执行任意代码，只允许加载固定来源且哈希匹配的文件。新加坡标签是登记困境/清算代理，不是贷款违约；该数据用于方法学对照和工程验证，不代表格兰德正式赛题数据。
+
+工作台必须按单个数据集打包并添加契约；原始 Pickle 不直接上传。
+专用说明见 [ACRA](../models/riskgnn/dataset_adapters/acra/README.md)、
+[SMEsD](../models/riskgnn/dataset_adapters/smesd/README.md)、
+[UK](../models/riskgnn/dataset_adapters/uk_dataset_v1/README.md)。

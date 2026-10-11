@@ -80,3 +80,13 @@ uv run --project service python -m model_service.export_openapi
 - [数据适配器与模型 CLI](../../docs/architecture/dataset-adapters.md)
 - [执行协议](../../docs/architecture/model-execution-contract.md)
 - [任务恢复](../../docs/architecture/modeling-execution.md)
+
+## 真实数据集适配
+
+模型侧支持 ACRA、SMEsD V5 JSON、UK v1；专用文档分别位于
+[acra](../riskgnn/dataset_adapters/acra/README.md)、
+[smesd](../riskgnn/dataset_adapters/smesd/README.md)、
+[uk_dataset_v1](../riskgnn/dataset_adapters/uk_dataset_v1/README.md)。
+服务不导入数据适配器。旧 Bundle 与合成演示包已停止支持。
+本地数据默认在仓库 datasets/，可用 RISK_DATASETS_ROOT 覆盖；
+完整验收运行 `uv run pytest --require-datasets`，缺少真实数据直接失败。

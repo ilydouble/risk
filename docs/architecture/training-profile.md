@@ -1,46 +1,59 @@
-# 新加坡数据与训练协议
+# 数据准备与训练配置
 
-## sg-comrisk-v1
+## 边界
 
-接收带 risk_dataset_contract.json 的 comrisk_export ZIP，支持文件位于根目录或统一顶层目录。
-压缩包不超过 512 MiB，解压总量不超过 2 GiB，成员最多 128 个；拒绝路径穿越、重复文件、
-符号链接和加密成员。Parquet 分批读取；原始业务行不导入 PostgreSQL。
+数据适配器负责读取、划分、语义校验和预处理；RiskGNN CLI 负责训练与模型产物。
+model-service 仅执行操作、监督进程、记录状态/事件、上传产物。
+专用字段和接入说明下沉到适配器目录，避免架构文档重复维护。
 
-必需文件：company_attr.parquet、edges.parquet、label.parquet、id_map.parquet、
-splits_5seed.parquet、feature_config.json、export_meta.json、risk_dataset_contract.json。
-ID 映射使用 company_id_str / company_id_int；特征协议为 2.0 的 A_no_priors。
-扫描包内所有 Parquet row group，校验企业唯一性、行序索引、边端点、标签掩码与五组冻结划分，
-记录每个文件长度、SHA-256 和完整统计。其余脚本与说明保留为附件，不执行。
-校验后的 ZIP 按内容指纹另存到 datasets 前缀，后续任务只读取这一固定副本。
-本轮只用自带 edges.parquet，不混入 singapore_graph_data，不自动重建图或使用超边分支。
+| 数据集 | 准备配置 | 默认目标上限 | 专用说明 |
+| --- | --- | --- | --- |
+| ACRA | sg-node-edge-train-fit-v1 / smoke-v1 | 2,000 | [ACRA](../../models/riskgnn/dataset_adapters/acra/README.md) |
+| SMEsD V5 JSON | smesd-json-v5-train-fit-v1 | 4,000 | [SMEsD](../../models/riskgnn/dataset_adapters/smesd/README.md) |
+| UK v1 | uk-dataset-v1-train-fit-v1 | 2,000 | [UK](../../models/riskgnn/dataset_adapters/uk_dataset_v1/README.md) |
 
-## sg-node-edge-train-fit-v1 / smoke-v1
+config.target_count 可设 6–20,000；校验始终覆盖整个包，不因子集训练降低校验范围。
+不生成合成演示样本，不重划分已有数据；数量不足时保留全部目标。
+旧 Bundle 协议、分析和生成器已经移除。
 
-固定六特征：由适配器的 FEATURES 常量约束，必须与 A_no_priors 的声明一致。
-不使用标签来源、企业年龄、社区风险先验或其他列。
-缺失计数字段补 0；address_trust 的缺失填充值仅在训练划分拟合并保存。
-不把修改后的预处理结果声称为历史实验分数复现。
+## 模型配置
 
-- 使用 seed 0 的冻结划分，保留 train / val / test 身份。
-- 按原 split 和标签比例，稳定 SHA-256 排序选 2,000 个有标签目标。
-- 加入最多两跳、每节点四个邻居的确定性上下文；保存实际 ID、关系与划分。
-- 关系按研究 node_edge 入口双向化、单位权重；固定嵌入作为模型 buffer 保存。
-- 默认两轮、batch size 64、五层 fanout 2、单计算进程、CPU 两线程。
-- 验证集损失选择检查点；测试集只在新进程独立加载后计算最终指标。
-- 预测使用逐目标确定性邻域，输入顺序和同批其他企业不改变结果。
+当前部署一个 RiskGNN，以 node_edge 作为工作台首版配置：
 
-输出 ROC-AUC、PR-AUC、KS、Brier、Precision、Recall、F1、混淆矩阵及逐企业预测。
-0.5 是固定分类阈值，不基于测试集优化。少量正样本会使指标波动，不能用于生产授信决策。
-新加坡标签描述企业困境状态，静态图实验不等于严格的未来违约预测。
+- ACRA 维持双向、单位边权的原配置，便于原结果回归。
+- SMEsD / UK 保留方向及原 weight；显式 confidence 独立传入，不从权重猜测。
+- SMEsD 人物采用人物投影并保留固定嵌入，仅企业参与监督与预测。
+- 两个 JSON 数据集保留 isolated_snapshots；即使人物 ID 重复也不跨快照合并。
+- 超图及事件分支未启用；JSON 子集证据保存在 evidence.json，完整数据绑定上传包。
+- 实验档案列出 usedInputs、retainedOnlyInputs 和 edgePolicy，页面展示使用范围。
 
-网络和采样复用原 gnn.py / train_sg_neighbor.py，epoch/优化循环共用 training_engine.py。
-本节数据准备配置由模型侧 sg-comrisk 适配器负责；服务只执行 CLI，不固定这些规则。
-原研究入口保留全量、GPU 与消融参数。输入维度与数据语义从准备元数据读取。
+权重、置信度和人物的处理复用 gnn.py；采样复用 train_sg_neighbor.py，
+epoch / 优化循环共用 training_engine.py。原研究脚本的命令与默认行为保持兼容。
+固定张量及真实 ACRA 子集的改动前后预测用于验证研究入口未漂移。
 
-## 数据分析
+## 训练与评估
 
-新加坡质量指标扫描全部企业，PSI 使用 seed 0 中 train/val/test 各最多 5,000 行，
-按企业 ID 的 SHA-256 稳定抽样；抽样数随报告返回，分析不改变训练划分。
-Bundle v1 按原声明的 train/validation/test 分析；信号与相关性只在训练划分计算。
-样本、边、时间和摘要校验复用旧工作台契约；不恢复旧的 GNN 网络实现。
-当前工作台固定 RiskGNN node_edge；node_only 等研究实验继续使用原研究命令。
+- CPU 两线程，单计算进程；默认两轮，允许 1–20 轮。
+- batch size 64，五层 fanout 2；节点准备默认两跳、每个中心四个邻居。
+- 验证集损失选择检查点；测试集只在独立进程重载后计算最终报告。
+- 当前使用未加权交叉熵、固定阈值 0.5，不通过测试集调阈值。
+- 预测为逐目标确定性邻域，输入顺序或同批其他企业不改变结果。
+- 报告 ROC-AUC、PR-AUC、KS、Brier、Precision、Recall、F1、混淆矩阵及逐企业预测。
+
+固定子集、类别不平衡和小测试集都会影响指标；本版证明链路可重放，不宣称完整研究复现。
+新加坡/英国是登记困境状态，SMEsD 是破产状态；都不自动等同于未来授信违约概率。
+
+## 数据分析与验收
+
+ACRA 质量扫描全部企业，PSI 使用每个划分最多 5,000 行确定性样本。
+SMEsD / UK 按公司分析质量、划分和漂移，人物不算监督样本。
+校验与准备不执行 ZIP 中脚本，也不在上传阶段加载 Pickle。
+
+```bash
+cd models
+uv run --project service pytest service/tests --require-datasets -q
+```
+
+测试使用本地真实数据或其固定子集，可设 RISK_DATASETS_ROOT。
+普通无数据环境明确跳过数据集集成测试；--require-datasets 模式缺文件直接失败。
+数据库恢复测试另外需要 RISK_TEST_DATABASE_URL，不影响模型侧独立验收。

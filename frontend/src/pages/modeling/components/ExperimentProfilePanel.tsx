@@ -46,6 +46,18 @@ export function ExperimentProfilePanel({
           </span>
         ))}
       </div>
+      {(["usedInputs", "retainedOnlyInputs"] as const).map((key) => {
+        const values = profile.graph[key];
+        return Array.isArray(values) && values.length > 0 ? (
+          <p key={key}>
+            {t(`modeling.profile.${key === "usedInputs" ? "usedInputs" : "retainedInputs"}`)}:
+            {" "}<span className="font-mono">{values.map(String).join(", ")}</span>
+          </p>
+        ) : null;
+      })}
+      {typeof profile.graph.edgePolicy === "string" && (
+        <p>{t("modeling.profile.edgePolicy")}: <span className="font-mono">{profile.graph.edgePolicy}</span></p>
+      )}
       <details>
         <summary className="cursor-pointer">
           {t("modeling.profile.provenance")}

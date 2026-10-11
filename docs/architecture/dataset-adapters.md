@@ -12,9 +12,12 @@ models/riskgnn/
     base.py                DatasetAdapter 抽象类
     contract.py            读取外层契约
     registry.py            显式登记数据适配器
-    sg_comrisk/            新加坡校验、准备和语义
-    bundle/                Bundle 校验与分析
-    analysis/              数据分析实现
+    acra/                  ACRA 校验、分析、准备和静态概览
+    smesd/                 SMEsD V5 JSON、人物与隔离快照
+    uk_dataset_v1/         英国七维特征与三类超边
+    snapshot_*.py          两个 JSON 数据集共用的结构与编码函数
+    statistics.py          已复用的统计函数
+    report.py              分析报告展示结构
   workbench/               模型包、训练配置、评估和预测
 ```
 
@@ -32,7 +35,15 @@ inspect 负责该数据的语义校验及描述；prepare 负责 load、split、
 5. 数据提供方加入 risk_dataset_contract.json，指向该适配器及配置。
 6. 完成小数据短训练、新进程测试/预测、失败场景和完整数据校验，再交付工作台使用。
 
-当前 sg-comrisk 使用 smoke-v1；研究 CLI 的全量训练、GPU 和消融命令保持原样。
+各适配器的字段、配置、打包和训练范围见目录内说明：
+
+- [ACRA](../../models/riskgnn/dataset_adapters/acra/README.md)
+- [SMEsD](../../models/riskgnn/dataset_adapters/smesd/README.md)
+- [UK](../../models/riskgnn/dataset_adapters/uk_dataset_v1/README.md)
+
+ACRA 使用 smoke-v1；SMEsD/UK 使用 snapshot-node-edge-v1。
+研究 CLI 的全量训练、GPU 和消融命令保持原样。
+旧 Bundle 协议与合成演示生成器已移除，验收使用本地真实数据的固定子集。
 训练策略属于模型侧：现有研究配置和工作台 smoke 配置可以不同，并在档案中明确记录。
 未来确定使用 RiskGNN+ 时，再切换模型 CLI；不保证它自动兼容 RiskGNN 的输入与产物。
 
@@ -86,3 +97,6 @@ operation-result.json、events.jsonl 或 error.json。
 - 共用训练核心已有原 CLI 的固定输入预测回归；参数和输出含义变化需明确版本化。
 - 工作台产物保存配置、数据指纹、预处理和必要上下文；模型源码变化更新对应测试。
 - 数据合同版本、数据版本、适配器版本、执行协议版本分别管理，不能互相替代。
+
+测试可设 RISK_DATASETS_ROOT，默认为仓库 datasets/；完整验收使用 pytest --require-datasets。
+缺数据的普通环境明确跳过数据集集成测试；要求数据的验收模式直接失败。

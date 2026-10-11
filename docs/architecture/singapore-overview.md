@@ -6,7 +6,7 @@
 
 页面数据分成两层：
 
-- 全量聚合：从 2,111,884 家企业和 3,006,200 条关系直接计算统计值；
+- 全量聚合：从源包直接计算统计值；既有页面快照保持原数据版本，V5 含 3,859,484 条关系；
 - 调试样本：按困境、正常、未标注各固定抽取 100 家，共 300 家，用于页面、API 和后续模型链路测试。
 
 分层样本为人为均衡，不代表总体类别比例。系统不把 211 万企业逐行复制到 PostgreSQL，也不污染现有八家产品演示企业。
@@ -14,8 +14,8 @@
 ## 数据流
 
 ```text
-ComRisk v2 ZIP
-  → riskgnn.tools.sg_overview 离线校验与聚合
+带契约的 ACRA ZIP
+  → riskgnn.tools.sg_overview 薄 CLI → acra/ 校验、聚合与抽样
   → backend/seed/overview/*.json
   → 幂等 seed
   → PostgreSQL overview_snapshots(JSONB)
@@ -33,7 +33,7 @@ uv run --project service python -m riskgnn.tools.sg_overview \
   --sample-per-class 100
 ```
 
-适配器要求 v2 ZIP 中存在企业属性、标签、普通关系、三个高阶分组、风险表和导出元数据；它拒绝缺文件、重复成员与加密成员。输出记录源 ZIP 的 SHA-256，便于确认快照来源。
+适配器要求 ACRA ZIP 中存在企业属性、标签、普通关系、三个高阶分组、风险表和导出元数据；它拒绝缺文件、重复成员与加密成员。输出记录源 ZIP 的 SHA-256，便于确认快照来源。
 
 ## 持久化和接口
 
@@ -69,3 +69,6 @@ uv run --project service python -m riskgnn.tools.sg_overview \
 - 企业年龄存在明显观察时间混杂，年龄分布只能描述数据，不能作因果解释。
 
 因此页面只展示数据集统计、图能力、质量和真实抽样行，不展示虚构的实时评估量、平均信用分、PD、模型指标或服务运行状态。
+
+专用实现和输入说明见 [acra/README.md](../../models/riskgnn/dataset_adapters/acra/README.md)。
+CLI 先完成适配器校验，概览函数只读取已校验目录，不再绑定固定 ZIP 前缀。

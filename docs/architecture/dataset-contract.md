@@ -37,13 +37,13 @@
 权威 JSON Schema：`models/risk_dataset_contract.schema.json`。
 未知顶层字段、不支持的格式版本、重复或缺失清单均拒绝。
 清单不能指定 Python 模块、脚本路径或 shell 命令。
-当前 sg-comrisk 和 bundle 的 v1 适配器只接受空 config。
+三个适配器接受空 config，或 target_count（整数 6–20,000）；其他配置字段拒绝。
 
 ## 文件位置与完整性
 
 清单在 ZIP 根目录，或统一的单层顶层目录内；最大 64 KiB。
 例如 `comrisk_export/risk_dataset_contract.json` 与同目录的 Parquet 文件一起打包。
-外层允许单层目录，具体适配器可以更严格：Bundle 当前要求 ZIP 根目录。
+当前三个适配器均支持根目录或统一单层目录；清单与数据文件必须同目录。
 
 ZIP 上限 512 MiB，安全解压上限 2 GiB；拒绝路径越界、链接和重复成员。
 模型侧进一步校验所需文件、类型、ID、标签、划分和数据内容。
@@ -57,14 +57,15 @@ ZIP 上限 512 MiB，安全解压上限 2 GiB；拒绝路径越界、链接和�
 | 适配器 | 数据格式 | 能力 |
 | --- | --- | --- |
 | sg-comrisk / 1 | 同事的 comrisk_export 数据 | 校验、分析、smoke-v1 准备、训练 |
-| bundle / 1 | 现有 Bundle v1 | 校验、分析；当前 RiskGNN 不训练该格式 |
+| smesd / 1 | SMEsD V5 JSON | 校验、分析、隔离快照准备、训练 |
+| uk-dataset-v1 / 1 | UK 七维 JSON | 校验、分析、隔离快照准备、训练 |
 
 同一格式更新数据通常只需新 dataset.version；语义发生变化时升级或新增适配器。
 不存在“增加清单就能训练任意数据集”的承诺。
 
 ## 生成一个新包
 
-模型侧提供打包工具，不会修改或覆盖原 ZIP：
+模型侧提供打包工具，支持目录或 ZIP 输入，不会修改或覆盖原数据：
 
 ```bash
 cd models
@@ -79,3 +80,5 @@ uv run --project service python -m riskgnn.tools.package_dataset \
 
 本轮为破坏性升级：旧工作台数据、任务和模型不再兼容；不自动转换历史对象。
 新数据重新按契约上传。详见[升级说明](modeling-migration.md)。
+
+专用字段与使用范围见[适配器索引](dataset-adapters.md)。旧 bundle / 1 不再登记。
