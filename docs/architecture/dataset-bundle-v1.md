@@ -97,15 +97,15 @@ cd models
 uv sync --project service --locked
 mkdir -p runs
 BUNDLE_CHECK_DIR="$(mktemp -d "$PWD/runs/bundle-check.XXXXXX")"
-uv run --project service python -m service.tools.bundle_demo \
+uv run --project service python -m model_service.tools.bundle_demo \
   --output "$BUNDLE_CHECK_DIR/example.zip" --task entity_snapshot --with-graph
-uv run --project service python -m service.cli validate-data \
+uv run --project service python -m model_service.cli validate-data \
   --input "$BUNDLE_CHECK_DIR/example.zip" --output "$BUNDLE_CHECK_DIR/validated"
 ```
 
 解压查看生成的 metadata 和各表；替换为真实数据时重新生成摘要、核对任务含义与划分。
 校验成功后可上传工作台查看分析；要训练还需完成[新增 runner 流程](dataset-zip-onboarding.md#5-新数据协议或新模型需要补哪些代码)。
 
-权威字段定义：[schema.py](../../models/service/datasets/bundle/schema.py)；
-文件校验：[bundle.py](../../models/service/datasets/bundle/bundle.py)；
-数据约束：[data.py](../../models/service/datasets/bundle/data.py)。
+权威字段定义：[schema.py](../../models/service/src/model_service/datasets/bundle/schema.py)；
+文件校验：[bundle.py](../../models/service/src/model_service/datasets/bundle/bundle.py)；
+数据约束：[data.py](../../models/service/src/model_service/datasets/bundle/data.py)。

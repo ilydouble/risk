@@ -24,7 +24,7 @@
 服务单独使用 service/pyproject.toml、uv.lock 与 service/.venv，安装及 CLI 见[服务说明](../../models/service/README.md)。
 从上一版工作台切换时，原 riskgnn/.venv 可保留，但不再用于服务；使用新的独立环境。
 重新构建 riskgnn 与 riskgnn-worker 即可，数据库迁移历史、对象和已有模型包保持兼容。
-静态概览工具迁为 `python -m service.tools.sg_overview`，原快照内容不变。
+静态概览工具迁为 `python -m model_service.tools.sg_overview`，原快照内容不变。
 不要继续启动旧工作台 Worker，也不要把旧检查点直接放入新模型包。
 
 ## 跟进 dev 的 models 主线

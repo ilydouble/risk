@@ -7,7 +7,8 @@ import zipfile
 from pathlib import Path
 
 import pandas as pd
-from service.tools.sg_overview import build_singapore_overview
+
+from model_service.tools.sg_overview import build_singapore_overview
 
 
 def _parquet(frame: pd.DataFrame) -> bytes:

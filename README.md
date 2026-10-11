@@ -60,7 +60,7 @@ uv sync --project service --locked
 uv run --project service ruff check service
 uv run --project service mypy --config-file service/pyproject.toml service
 uv run --project service pytest service/tests -q
-uv run --project service python -m service.export_openapi
+uv run --project service python -m model_service.export_openapi
 cd ../frontend
 npm ci
 npm run api:generate

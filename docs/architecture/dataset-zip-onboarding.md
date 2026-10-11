@@ -65,7 +65,7 @@ cd models
 uv sync --project service --locked
 mkdir -p runs
 DATASET_CHECK_DIR="$(mktemp -d "$PWD/runs/dataset-check.XXXXXX")"
-uv run --project service python -m service.cli validate-data \
+uv run --project service python -m model_service.cli validate-data \
   --input /path/to/dataset.zip --output "$DATASET_CHECK_DIR/validated"
 ```
 
@@ -77,13 +77,13 @@ Bundle 当前的 `supportedRunnerIds` 为空列表，表示仅支持分析。
 仅对已适配的新加坡数据继续执行训练冒烟检查：
 
 ```bash
-uv run --project service python -m service.cli prepare \
+uv run --project service python -m model_service.cli prepare \
   --input "$DATASET_CHECK_DIR/validated" --output "$DATASET_CHECK_DIR/prepared"
-uv run --project service python -m service.cli train \
+uv run --project service python -m model_service.cli train \
   --input "$DATASET_CHECK_DIR/prepared" --output "$DATASET_CHECK_DIR/model" \
   --runner-id riskgnn-node-edge --epochs 2
-uv run --project service python -m service.cli test --input "$DATASET_CHECK_DIR/model"
-uv run --project service python -m service.cli export \
+uv run --project service python -m model_service.cli test --input "$DATASET_CHECK_DIR/model"
+uv run --project service python -m model_service.cli export \
   --input "$DATASET_CHECK_DIR/model" --output "$DATASET_CHECK_DIR/model.zip"
 ```
 
@@ -116,7 +116,7 @@ uv run --project service python -m service.cli export \
 | `model/`、`training/`、`runtime/` | 调用研究模型、保存必要状态、独立重载与批量推理 |
 | API 与前端 | 复用现有 DTO；需要新字段或错误码时更新 OpenAPI、生成类型和中英文界面 |
 
-表中路径相对 `models/service/`。**只在能力目录里增加模型名称不足以完成接入**：
+表中路径相对 `models/service/src/model_service/`。**只在能力目录里增加模型名称不足以完成接入**：
 当前准备与训练流程仍有新加坡协议约束，必须同步完成执行路由和模型包适配。
 预处理只在训练划分拟合；验证集选择检查点；测试集用于最终独立报告。
 模型包需包含权重、模型配置、预处理、特征顺序、ID/关系编码和推理所需上下文，

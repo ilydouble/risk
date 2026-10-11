@@ -9,7 +9,12 @@
 **/model_save/
 **/weights/
 **/runs/
-**/artifacts/
+# Output directories only: service/src/model_service/modules/artifacts is source code.
+/artifacts/
+baseline/artifacts/
+riskgnn/artifacts/
+riskgnn+/artifacts/
+service/artifacts/
 **/*.pt
 **/*.pkl
 **/*.npz

@@ -4,13 +4,14 @@ import shutil
 from uuid import uuid4
 
 import pytest
-from service.adapters.singapore import validate
-from service.config import Settings
-from service.execution.model import Base
-from service.execution.store import Store
-from service.execution.worker import Worker
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import create_async_engine
+
+from model_service.adapters.singapore import validate
+from model_service.execution.worker import Worker
+from model_service.modules.jobs.model import Base
+from model_service.modules.jobs.repository import Store
+from model_service.shared.config import Settings
 
 
 def test_artifact_upload_retry_reuses_independently_tested_checkpoint(export_zip, tmp_path):

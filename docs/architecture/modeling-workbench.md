@@ -53,3 +53,17 @@ Bundle v1 可上传、校验与分析，尚无匹配的可发布训练 runner；
 已停用的旧 Bundle 训练记录与对象保留，不把旧 worker 或旧模型网络复制成第二套实现。
 数据集详情包含类型化分析报告；实验详情包含可追溯档案，均随 OpenAPI 生成前端类型。
 旧已完成记录可能没有新分析字段，不伪造报告；重新上传可生成新版分析。
+
+## Python 包与 HTTP 分层
+
+服务项目仍位于 `models/service/`，源码包为 `src/model_service/`，由 uv 安装。
+`app.py` 只负责应用生命周期、Dishka、中间件、错误处理与路由装配。
+`dependencies.py` 管理基础设施 Provider；公共配置、数据库和 HTTP 处理位于 `shared/`。
+
+- `modules/jobs/`：submit/get/cancel/events，拥有任务 DTO、ORM 和 Repository。
+- `modules/artifacts/`：产物查询路由与 Handler；现有接口复用 jobs 快照 DTO。
+- `modules/models/`：predict/capabilities，各自 DTO、Handler 及运行时服务。
+- `api/route.py` 声明路径和响应；`handler.py` 做 HTTP/DTO 转换；持久化与计算不导入 HTTP DTO。
+
+现有数据适配、训练和模型包装随包迁移，算法与产物契约保持原样。
+适配器抽象类和执行契约尚未定义，本次目录整理不意味着已经完成执行器与模型适配的解耦。

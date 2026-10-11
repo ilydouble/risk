@@ -142,7 +142,7 @@ services:
       <<: *build-proxy
       context: ./models
       dockerfile: service/Dockerfile
-    command: ["python", "-m", "service.execution.worker"]
+    command: ["python", "-m", "model_service.execution.worker"]
     environment: *model-environment
     volumes:
       - model-workspace:/workspace

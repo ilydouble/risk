@@ -5,12 +5,13 @@ import zipfile
 
 import numpy as np
 import pytest
-from service.adapters.prepare import prepare
-from service.adapters.singapore import validate
-from service.files import export_zip as pack
-from service.files import read_json, verify
-from service.runtime.predictor import Predictor
-from service.training.pipeline import train
+from model_service.files import export_zip as pack
+from model_service.files import read_json, verify
+
+from model_service.adapters.prepare import prepare
+from model_service.adapters.singapore import validate
+from model_service.runtime.predictor import Predictor
+from model_service.training.pipeline import train
 
 
 def test_archive_train_reload_predict(export_zip, tmp_path):
@@ -23,7 +24,7 @@ def test_archive_train_reload_predict(export_zip, tmp_path):
     ids = read_json(model / "ids.json")[:3]
     before = Predictor(model).predict(ids)
     result = subprocess.run(
-        [sys.executable, "-m", "service.cli", "test", "--input", str(model)],
+        [sys.executable, "-m", "model_service.cli", "test", "--input", str(model)],
         check=True,
         text=True,
         capture_output=True,
@@ -47,7 +48,7 @@ def test_archive_train_reload_predict(export_zip, tmp_path):
 
 
 def test_manifest_path_and_format_rejected(tmp_path):
-    from service.files import write_json
+    from model_service.files import write_json
 
     for manifest in (
         {"formatVersion": 99},
@@ -79,7 +80,8 @@ def test_node_edge_forward_matches_research_reference():
     from pathlib import Path
 
     import torch
-    from service.model.network import EdgeRiskGNN
+
+    from model_service.model.network import EdgeRiskGNN
 
     # Reference uses dev's full RiskGNN constructor followed by utils.Classifier.
     expected = read_json(Path(__file__).parent / "fixtures/node-edge-forward.json")

@@ -2,13 +2,14 @@ import json
 
 import numpy as np
 import pytest
-from service.adapters.prepare import prepare
-from service.datasets.dispatch import validate
-from service.files import read_json, verify
-from service.runners.registry import require_model
-from service.runtime.predictor import Predictor
-from service.tools.bundle_demo import build_demo_bundle
-from service.training.pipeline import evaluate, train
+from model_service.files import read_json, verify
+
+from model_service.adapters.prepare import prepare
+from model_service.datasets.dispatch import validate
+from model_service.runners.registry import require_model
+from model_service.runtime.predictor import Predictor
+from model_service.tools.bundle_demo import build_demo_bundle
+from model_service.training.pipeline import evaluate, train
 
 
 def test_bundle_analysis_has_real_file_index_and_declared_capabilities(tmp_path):

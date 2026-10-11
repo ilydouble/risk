@@ -9,24 +9,31 @@
 - `../riskgnn/gnn.py` 是网络实现；服务的模型包装调用 `RiskGNN.forward_batch`。
 - `../riskgnn/train_sg_neighbor.py` 提供共同的邻居采样、张量转换与优化步骤。
 - 服务维护固定子集、train-only 预处理、检查点选择及可重载产物协议。
-- 研究代码不导入 `service`，原脚本参数和默认值保持兼容。
+- 研究代码不导入 `model_service`，原脚本参数和默认值保持兼容。
 - 当前工作台只开放 `smoke-v1`，全量/GPU/消融实验继续使用原研究命令。
 
 ```text
 service/
-  api/             内部 HTTP 与 DTO
-  execution/       Job、Attempt、租约、事件与子进程监督
-  adapters/        ZIP、数据校验、固定子集准备
-  datasets/        数据协议识别与 Bundle 校验
-  analysis/        质量、分布漂移及特征信号
-  runners/         可用模型及数据兼容能力
-  model/           原网络与采样的薄包装，不另写前向算法
-  training/        工作台实验编排与独立测试
-  runtime/         模型包加载、图内企业预测
-  tools/           静态新加坡概览
-  alembic/         执行数据库迁移
-  tests/           自动化测试
-  docs/            验收与历史来源
+  src/model_service/
+    app.py             应用工厂、生命周期与装配
+    dependencies.py    Dishka 基础设施装配
+    shared/            配置、数据库、日志、API 信封/响应/中间件/错误
+    modules/
+      jobs/            任务与事件 API、ORM 和 Repository
+      artifacts/api/   产物查询 API；当前复用 jobs 的快照 DTO
+      models/          能力与预测 API、运行时服务
+    execution/         Worker、租约监督与计算子进程
+    adapters/          现有 ZIP 校验与新加坡准备流程
+    datasets/          现有数据协议识别与 Bundle 校验
+    analysis/          数据质量、漂移及特征信号
+    runners/           当前可用模型配置
+    model/             原研究网络与采样的薄包装
+    training/          当前训练与独立测试
+    runtime/           模型包加载和预测实现
+    tools/             数据示例与静态概览工具
+  alembic/             执行数据库迁移
+  tests/               自动化测试
+  docs/                验收与历史来源
 ```
 
 ## 独立服务环境
@@ -39,11 +46,12 @@ service/
 
 ```bash
 uv sync --project service --locked
-uv run --project service python -m service.cli --help
+uv run --project service python -m model_service.cli --help
 ```
 
-服务使用源码应用模式（`package = false`）。命令工作目录保持 `models/`，
-由 Python 正常加载 `service` 和相邻研究包；不安装或改写研究工程。
+服务通过 Hatchling 安装 `src/model_service`；本地 uv 默认使用可编辑安装，镜像使用普通安装。
+模型命令的工作目录继续保持 `models/`，让 Python 按现有方式加载相邻研究包。
+本次只整理包和 HTTP 分层，数据/训练流程仍是现有实现；适配器抽象类及方法另行设计。
 从仓库根目录执行时，可使用 `uv run --directory models --project service ...`。
 
 - 开发依赖放在 `dependency-groups.dev`；镜像执行 `uv sync --frozen --no-dev`。
@@ -59,13 +67,13 @@ uv run --project service python -m service.cli --help
 以下命令仍在 `models/` 执行，无需启动 PostgreSQL、对象存储或 HTTP：
 
 ```bash
-uv run --project service python -m service.cli validate-data --input ~/Downloads/comrisk_export.zip --output runs/sg/validated
-uv run --project service python -m service.cli prepare --input runs/sg/validated --output runs/sg/prepared
-uv run --project service python -m service.cli train --input runs/sg/prepared --output runs/sg/model --epochs 2
-uv run --project service python -m service.cli test --input runs/sg/model
-uv run --project service python -m service.cli verify --input runs/sg/model
-uv run --project service python -m service.cli predict --input runs/sg/model --ids YOUR_UEN
-uv run --project service python -m service.cli export --input runs/sg/model --output runs/exports/model.zip
+uv run --project service python -m model_service.cli validate-data --input ~/Downloads/comrisk_export.zip --output runs/sg/validated
+uv run --project service python -m model_service.cli prepare --input runs/sg/validated --output runs/sg/prepared
+uv run --project service python -m model_service.cli train --input runs/sg/prepared --output runs/sg/model --epochs 2
+uv run --project service python -m model_service.cli test --input runs/sg/model
+uv run --project service python -m model_service.cli verify --input runs/sg/model
+uv run --project service python -m model_service.cli predict --input runs/sg/model --ids YOUR_UEN
+uv run --project service python -m model_service.cli export --input runs/sg/model --output runs/exports/model.zip
 ```
 
 `YOUR_UEN` 使用模型 `ids.json` 内的 ID。测试命令在新进程重载模型。
@@ -83,9 +91,9 @@ uv run --project service python -m service.cli export --input runs/sg/model --ou
 
 ```bash
 uv run --project service alembic -c service/alembic.ini upgrade head
-uv run --project service python -m uvicorn service.api.app:create_app --factory --port 8001
+uv run --project service python -m uvicorn model_service.app:create_app --factory --port 8001
 # 另一个终端，相同环境和 models 工作目录：
-uv run --project service python -m service.execution.worker
+uv run --project service python -m model_service.execution.worker
 ```
 
 容器内固定 8000；两入口共用模型数据库、Bucket 和持久工作目录。
@@ -95,9 +103,9 @@ uv run --project service python -m service.execution.worker
 
 ```bash
 uv run --project service ruff check service
-uv run --project service mypy --config-file service/pyproject.toml service
+uv run --project service mypy --config-file service/pyproject.toml service/src/model_service
 uv run --project service pytest service/tests -q
-uv run --project service python -m service.export_openapi
+uv run --project service python -m model_service.export_openapi
 ```
 
 数据库相关测试设置 `RISK_TEST_DATABASE_URL`，只使用随机临时 schema。

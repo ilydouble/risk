@@ -1,7 +1,8 @@
 import zipfile
 
 import pytest
-from service.adapters.archive import unpack
+
+from model_service.adapters.archive import unpack
 
 
 @pytest.mark.parametrize(

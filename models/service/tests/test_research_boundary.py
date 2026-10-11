@@ -12,7 +12,8 @@ import importlib.abc
 import sys
 class ResearchOnly(importlib.abc.MetaPathFinder):
     def find_spec(self, fullname, path=None, target=None):
-        if fullname.split('.')[0] in {'service', 'fastapi', 'sqlalchemy', 'dishka', 'asyncpg'}:
+        blocked = {'service', 'model_service', 'fastapi', 'sqlalchemy', 'dishka', 'asyncpg'}
+        if fullname.split('.')[0] in blocked:
             raise ImportError('Research cannot depend on service: ' + fullname)
 sys.meta_path.insert(0, ResearchOnly())
 import gnn

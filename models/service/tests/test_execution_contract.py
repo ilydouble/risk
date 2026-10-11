@@ -6,10 +6,11 @@ from datetime import UTC, datetime, timedelta
 from uuid import uuid4
 
 import pytest
-from service.execution.model import Base, Job
-from service.execution.store import LostLease, Store
 from sqlalchemy import text, update
 from sqlalchemy.ext.asyncio import create_async_engine
+
+from model_service.modules.jobs.model import Base, Job
+from model_service.modules.jobs.repository import LostLease, Store
 
 
 def test_idempotency_fencing_retry_cancellation_and_event_replay():

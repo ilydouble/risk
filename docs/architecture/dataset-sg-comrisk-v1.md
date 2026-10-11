@@ -96,5 +96,5 @@ export_meta.json 是必需的有效 JSON。适配器原样记录其中的来源�
 现有 `comrisk_export.zip` 是已跑通的参考输入；`新加坡图数据.zip` 的
 nodes/edges/hyperedges 结构缺少本协议要求的标签、划分和特征配置，不能直接代替。
 自检命令见[主流程](dataset-zip-onboarding.md#3-按协议打包并本地自检)。
-实际校验代码：[singapore.py](../../models/service/adapters/singapore.py)；
-准备代码：[prepare.py](../../models/service/adapters/prepare.py)。
+实际校验代码：[singapore.py](../../models/service/src/model_service/adapters/singapore.py)；
+准备代码：[prepare.py](../../models/service/src/model_service/adapters/prepare.py)。

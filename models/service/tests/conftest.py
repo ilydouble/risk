@@ -4,7 +4,8 @@ import zipfile
 import numpy as np
 import pandas as pd
 import pytest
-from service.adapters.singapore import FEATURES
+
+from model_service.adapters.singapore import FEATURES
 
 
 @pytest.fixture

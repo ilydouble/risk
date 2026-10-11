@@ -8,9 +8,10 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
-from service.analysis.bundle import _psi, analyze_bundle
-from service.datasets.bundle.data import DataValidationError, load_bundle
-from service.tools.bundle_demo import build_demo_bundle
+
+from model_service.analysis.bundle import _psi, analyze_bundle
+from model_service.datasets.bundle.data import DataValidationError, load_bundle
+from model_service.tools.bundle_demo import build_demo_bundle
 
 
 def test_numeric_psi_handles_interval_bins_and_values_outside_training_range() -> None:

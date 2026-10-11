@@ -7,8 +7,13 @@ import zipfile
 from pathlib import Path
 
 import pytest
-from service.datasets.bundle.bundle import BundleLimits, BundleValidationError, validate_bundle
-from service.tools.bundle_demo import build_demo_bundle
+
+from model_service.datasets.bundle.bundle import (
+    BundleLimits,
+    BundleValidationError,
+    validate_bundle,
+)
+from model_service.tools.bundle_demo import build_demo_bundle
 
 
 def test_demo_bundle_satisfies_v1_contract(tmp_path: Path) -> None:

@@ -26,8 +26,8 @@ export RISK_GNN_API_TOKEN=local-riskgnn-change-me
 export STORAGE_ENDPOINT=http://localhost:19000 MODELING_STORAGE_BUCKET=risk-modeling
 export AWS_ACCESS_KEY_ID=RISKMODELINGAPP2026 AWS_SECRET_ACCESS_KEY=local-modeling-change-me
 uv run --project service alembic -c service/alembic.ini upgrade head
-uv run --project service python -m uvicorn service.api.app:create_app --factory --port 8001
-# 另一个终端使用相同环境与工作目录：uv run --project service python -m service.execution.worker
+uv run --project service python -m uvicorn model_service.app:create_app --factory --port 8001
+# 另一个终端使用相同环境与工作目录：uv run --project service python -m model_service.execution.worker
 ```
 
 本机业务 API 设置 RISK_GNN_URL=http://localhost:8001 及相同服务令牌，数据库用 risk 库，

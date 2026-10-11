@@ -19,7 +19,7 @@ relation_type
 weight
 ```
 
-并且只校验 `weight > 0`，见 [data.py (line 137)](../../models/service/datasets/bundle/data.py)。超边也只有类型、编号和成员，没有置信度，见 [data.py (line 168)](../../models/service/datasets/bundle/data.py)。
+并且只校验 `weight > 0`，见 [data.py (line 137)](../../models/service/src/model_service/datasets/bundle/data.py)。超边也只有类型、编号和成员，没有置信度，见 [data.py (line 168)](../../models/service/src/model_service/datasets/bundle/data.py)。
 
 更重要的是，当前 RiskGNN 将 `weight` 放入注意力：
 
