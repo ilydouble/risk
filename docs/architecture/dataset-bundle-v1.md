@@ -17,7 +17,7 @@ hyperedges.parquet   # 可选
 ```
 
 每个表可选 CSV 或 Parquet，文件名通过 metadata 的 files 声明，扩展名须匹配 format。
-metadata.json 不超过 1 MiB；ZIP 最多 6 个成员，其余容量限制见[主流程](dataset-zip-onboarding.md#3-按协议打包并本地自检)。
+metadata.json 不超过 1 MiB；ZIP 最多 7 个成员，其余容量限制见[主流程](dataset-zip-onboarding.md#3-按协议打包并本地自检)。
 建议选 Parquet 保留字符串 ID 和时间/数值类型；交付说明、脚本等单独提供。
 
 ## metadata.json
@@ -97,10 +97,9 @@ cd models
 uv sync --project service --locked
 mkdir -p runs
 BUNDLE_CHECK_DIR="$(mktemp -d "$PWD/runs/bundle-check.XXXXXX")"
-uv run --project service python -m model_service.tools.bundle_demo \
+uv run --project service python -m riskgnn.tools.bundle_demo \
   --output "$BUNDLE_CHECK_DIR/example.zip" --task entity_snapshot --with-graph
-uv run --project service python -m model_service.cli validate-data \
-  --input "$BUNDLE_CHECK_DIR/example.zip" --output "$BUNDLE_CHECK_DIR/validated"
+# 使用模型 CLI inspect 检查新包，完整请求示例见 dataset-adapters.md
 ```
 
 解压查看生成的 metadata 和各表；替换为真实数据时重新生成摘要、核对任务含义与划分。
@@ -109,3 +108,5 @@ uv run --project service python -m model_service.cli validate-data \
 权威字段定义：[schema.py](../../models/service/src/model_service/datasets/bundle/schema.py)；
 文件校验：[bundle.py](../../models/service/src/model_service/datasets/bundle/bundle.py)；
 数据约束：[data.py](../../models/service/src/model_service/datasets/bundle/data.py)。
+
+工作台上传包另需 risk_dataset_contract.json，adapter 为 bundle / 1。示例生成器已包含该清单；数据语义仍由模型侧 Bundle 适配器负责。

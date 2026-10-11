@@ -1,136 +1,76 @@
 # 数据集 ZIP 接入工作台流程
 
-适用对象：数据提供方、模型开发者、工作台维护者。
-本流程描述当前两个已接入格式的交付方式，不是全部数据集必须遵守的训练 Schema。
-新接入统一遵守[适配器执行契约](model-adapter-contract.md)，具体字段、load/split 和训练由适配器定义。
+## 1. 分工
 
-## 1. 先确定接入目标
-
-| 输入与目标 | 当前支持情况 | 接入方式 |
-| --- | --- | --- |
-| 现有 `comrisk_export.zip` | 校验、分析、训练、测试、发布、下载、预测 | 遵循 [sg-comrisk-v1](dataset-sg-comrisk-v1.md) |
-| 通用二分类样本及可选图数据 | 校验和分析 | 遵循 [Bundle v1](dataset-bundle-v1.md)，训练需另接 runner |
-| `新加坡图数据.zip`：nodes/edges/hyperedges | 暂无直接适配 | 交付字段与图语义说明，按第 5 节新增适配 |
-| 新数据源、新特征或新模型 | 不会自动接入 | 先确认协议，再实现数据适配和模型调用 |
-
-当前只有 `riskgnn-node-edge`、`riskgnn-node-only` 支持新加坡 `smoke-v1` 训练。
-ComRisk 原始基线和 RiskGNN+ 源码已进入镜像，但工作台尚未开放其训练与发布。
-**ZIP 校验通过、模型能训练、模型包能独立推理，是三个分别验收的结果。**
-
-新数据的含义如果与现有协议不同，应定义新协议或协议版本；不要只改表名、补假标签，
-或把任意六个字段改名成新加坡特征来通过校验。
-
-## 2. 明确分工与交付材料
-
-| 负责人 | 负责交付 |
+| 负责人 | 交付内容 |
 | --- | --- |
-| 数据提供方 | 抽取/清洗脚本、ZIP、字段字典、标签与划分定义、数据来源及版本 |
-| 模型开发者/适配器维护者 | 数据语义校验、load/split、可调用模型入口、训练与测试、可重载产物 |
-| 工作台维护者 | 上传安全、适配器注册、执行协议、任务状态、事件与产物管理、HTTP/页面接入 |
+| 数据提供方 | 数据文件、字段/标签/关系说明、数据版本、来源与使用范围、risk_dataset_contract.json |
+| 模型开发者 | dataset_adapters、数据准备、训练/测试/预测、可重载产物及必要测试 |
+| 工作台维护者 | 上传安全、进程与队列、状态/事件、权限、产物管理、页面和部署 |
 
-研究者继续使用自己模型目录的 requirements、Python/CUDA 环境和训练脚本。
-服务侧独立维护 uv 环境；数据 ZIP 内的 Python 文件不会被工作台执行。
-需要执行的适配代码应进入仓库，由维护者审核、测试后随服务镜像发布。
+工作台没有统一业务大表，也不决定 load、split、构图或模型算法。
+新数据格式可以需要额外适配；具体数据语义由模型侧实现。
+当前模型固定为 RiskGNN，未来确定 RiskGNN+ 后再切换。
 
-每次交付请附一份说明，可使用下面的清单；**说明文件可单独交付**，不要违反协议的包内文件限制。
+## 2. 确定适配器
 
-- 数据集名称、版本、协议版本、生成日期、来源、可使用/共享范围、已知缺口。
-- ZIP 文件名、字节数、SHA-256；各表行数、字段类型、单位、缺失值含义。
-- 样本粒度与稳定 ID；标签定义、正例含义、标签观察窗口、正负例数量。
-- train/validation/test 的划分方法、随机种子、各类数量、避免时间或主体泄漏的方法。
-- 图的节点类型、边方向/类型/权重、快照时点、构图方法；有无人物、事件和超边。
-- 可复现的数据生成命令；一份小型有效样本和完整数据包；目标模型及希望开放的能力。
-
-数据内容改变后交付新版本、新 ZIP 和新摘要；服务按上传内容指纹绑定实验。
-原始数据保存在对象存储，PostgreSQL 保存归属、任务及结果元数据，无需导入业务大表。
-
-## 3. 按协议打包并本地自检
-
-| 限制 | sg-comrisk-v1 | Bundle v1 |
+| 数据 | 当前适配器 | 能力 |
 | --- | --- | --- |
-| 压缩包大小 | 最大 512 MiB | 最大 512 MiB |
-| 解压总量 / 单个成员 | 最大 2 GiB / 1 GiB | 最大 2 GiB / 1 GiB |
-| 单个成员压缩比 | 不超过 200 倍 | 不超过 200 倍 |
-| ZIP 成员数量 | 最多 128，含目录项 | 最多 6 个普通文件 |
-| 目录结构 | 根目录或一层统一目录 | 全部文件直接位于 ZIP 根目录 |
+| comrisk_export | sg-comrisk / 1 | 校验、分析、子集训练、测试、发布、预测 |
+| Bundle v1 | bundle / 1 | 校验、分析，当前不可训练 |
+| 新加坡图数据、其他格式 | 需新增适配器 | 提交样本和语义说明后实现 |
 
-两种协议都拒绝重复文件、加密成员和链接。使用普通 ZIP；不要夹带虚拟环境、权重或嵌套压缩包。
-优先用 Parquet 明确字段类型，尤其是带前导零的企业 ID。容量超限时先协商分片/流式协议，
-当前工作台不会自动合并多个 ZIP；压缩体积也不能代表分析或训练所需内存。
+同一数据格式的新批次更新 dataset.version；语义改变时升级或新增适配器。
+不能仅改文件名、补假标签或重命名特征来通过现有校验。
+新增适配器步骤见[模型侧数据适配器](dataset-adapters.md)。
 
-以下命令使用服务的 Python 3.12 / Linux x86_64 CPU 环境，从仓库根目录开始，
-不依赖数据库或对象存储；服务环境不会改动研究环境。环境详情见[服务说明](../../models/service/README.md#独立服务环境)。
+## 3. 制作清单与 ZIP
+
+每个新包必须有唯一的 risk_dataset_contract.json，见[完整契约](dataset-contract.md)。
+清单在 ZIP 根目录或统一单层目录；具体布局以适配器要求为准。
+包内 Python 不执行；需要的加载代码必须进入仓库，经测试后随模型镜像发布。
+
+现有 comrisk_export 可以生成一个新的交付包，原包不会改变：
 
 ```bash
 cd models
 uv sync --project service --locked
-mkdir -p runs
-DATASET_CHECK_DIR="$(mktemp -d "$PWD/runs/dataset-check.XXXXXX")"
-uv run --project service python -m model_service.cli validate-data \
-  --input /path/to/dataset.zip --output "$DATASET_CHECK_DIR/validated"
+uv run --project service python -m riskgnn.tools.package_dataset \
+  --input /path/to/comrisk_export.zip --output /path/to/dataset-v1.zip \
+  --dataset-id singapore-company --dataset-version 2026-10-11 --adapter sg-comrisk
 ```
 
-将输入路径替换为待交付 ZIP。每次使用新的输出目录，避免旧文件影响校验。
-成功后检查 `validated/validation.json`：`protocol`、`sha256`、`files`、`counts`、
-`analysis`、`supportedRunnerIds`。进程非零退出表示未通过；保存完整错误供维护者定位。
-Bundle 当前的 `supportedRunnerIds` 为空列表，表示仅支持分析。
+通用 ZIP 上限 512 MiB，解压上限 2 GiB、单文件 1 GiB，最多 128 个成员。
+Bundle 当前最多 7 个普通文件，含 metadata 和 risk_dataset_contract；具体见其文档。
+压缩体积不能代表训练内存。需要分片或更大数据时另行明确资源与传输策略。
 
-仅对已适配的新加坡数据继续执行训练冒烟检查：
+交付时同时说明：
 
-```bash
-uv run --project service python -m model_service.cli prepare \
-  --input "$DATASET_CHECK_DIR/validated" --output "$DATASET_CHECK_DIR/prepared"
-uv run --project service python -m model_service.cli train \
-  --input "$DATASET_CHECK_DIR/prepared" --output "$DATASET_CHECK_DIR/model" \
-  --runner-id riskgnn-node-edge --epochs 2
-uv run --project service python -m model_service.cli test --input "$DATASET_CHECK_DIR/model"
-uv run --project service python -m model_service.cli export \
-  --input "$DATASET_CHECK_DIR/model" --output "$DATASET_CHECK_DIR/model.zip"
-```
+- 数据 ID/版本、文件摘要、日期、来源、可使用范围和已知缺口。
+- 样本粒度、稳定 ID、字段类型与单位、缺失含义、标签定义及观察窗口。
+- 图节点/边/超边的类型、方向、权重、快照时点和构建方法。
+- 划分方法、随机种子、防泄漏约束；可复现的数据准备命令。
+- 小型有效样本与完整数据，拟使用的适配器及配置。
 
-`test` 在新进程加载模型。当前准备阶段使用 seed 0，要求训练/验证/测试各含两类标签；
-最多抽取 2,000 个有标签目标并加入有限图上下文。校验扫描全量数据，训练不是全量训练。
-两轮冒烟结果用于证明链路可运行，模型效果需要另行评估。
+## 4. 本地与工作台验收
 
-## 4. 在工作台完成一次验收
+1. 模型开发者用[模型 CLI](dataset-adapters.md#模型-cli-本地调用)执行 inspect。
+2. 核对文件索引、数据集契约、完整校验与数据统计。
+3. 用小样本 train，再以新进程 evaluate/predict，检查产物能够独立加载。
+4. 用户在 /modeling 上传新 ZIP，等待服务端校验，创建 RiskGNN 实验。
+5. 查看阶段、指标和事件，确认刷新恢复、取消、重试行为。
+6. 独立测试成功后发布、下载模型，并核对线上/离线预测和输入顺序。
 
-1. 上传 ZIP，等待服务端校验；核对协议、文件摘要、统计、划分和分析报告。
-2. 选择可用模型配置并创建实验，核对所选数据集和参数；无可用 runner 时先做第 5 节。
-3. 查看阶段、epoch 指标、Attempt 和事件；刷新页面后状态与记录应仍可读取。
-4. 独立测试成功后发布模型版本，核对数据指纹和实验档案。
-5. 下载完整模型包，校验摘要并在独立目录加载；参考[离线使用](model-artifacts.md#下载和离线使用)。
-6. 使用“填入模型内企业”测试预测，核对 HTTP 与离线结果、输入顺序和未知 ID 的行为。
+sg-comrisk 当前运行 smoke-v1 子集，完整校验不等于全量训练；结果不描述成授信违约概率。
+Bundle 校验成功也不意味着可以训练。UI 和服务端都会依据适配器能力拒绝。
 
-由维护者另外验证跨用户权限、失败重试与取消。当前推理只接受模型绑定图内的企业。
-发布只创建不可变模型版本，不会切换生产模型或自动上传 GitHub Release。
+## 5. 接入完成标准
 
-## 5. 新数据或模型的适配
+- 外层清单有效；模型侧校验真实字段、ID、标签、图和划分。
+- 训练、测试和预测来自模型代码；服务没有复制算法或新建数据分支。
+- 模型包包含重载所需全部信息，测试不改写训练产物。
+- 缺清单、不兼容版本、非法配置、损坏文件和未知预测 ID 明确失败。
+- 数据提供方与模型开发者的变更各自可追溯，文档说明实际使用的配置与资源。
 
-先确认已有适配器能否处理该数据；能处理时只需配置和验收。
-否则在 `models/service/src/model_service/adapters/<名称>/` 增加适配器，
-由模型开发者定义数据识别、语义校验、load/split、训练和评估。
-工作台不要求把数据改成新加坡字段，也不在 Worker 中增加另一套训练分支。
-
-适配器实现 `describe()` 和 `execute()`，按需提供 inspect/train/evaluate/predict；
-参数和结果用 JSON Schema 声明，大型结果作为文件产物返回。
-在 `adapters/registry.py` 注册精确版本，随模型源码打包；详细步骤和 CLI 示例见
-[适配器开发](model-adapter-development.md)。当前页面仍是 RiskGNN 专属流程，
-通用 Schema 表单尚未实现；新产品场景的权限、DTO 和页面展示需另外接入。
-
-只在能力目录添加模型名称不足以完成接入。必须验证新进程可加载产物，
-训练与测试使用的数据范围、随机种子、预处理、划分和评估方法可追溯。
-这些模型语义由适配器报告，工作台负责保存和呈现，不根据名称猜测。
-原研究环境与脚本保留，不另外复制一套研究算法。
-
-## 6. 接入完成的交付标准
-
-- 数据集：小型样本与完整包通过校验，来源、版本、标签、划分和统计可追溯。
-- 模型：有效样本完成准备、短训练、新进程测试、导出和独立加载预测。
-- 失败情况：缺文件、错误摘要、非法 ID/划分、不兼容版本及未知预测 ID 能明确报错。
-- 工作台：上传至发布/下载/预测真实跑通；无兼容 runner 的数据只标为可分析。
-- 代码：协议说明、适配实现及必要测试随同提交；契约有变化时重新导出 OpenAPI。
-- 记录：交付 ZIP 摘要、测试命令、服务提交号、runner/模型版本和验收结果。
-
-常见问题：找不到 company_attr → 检查协议和目录深度；ID 映射错误 → 检查行序；
-特征顺序错误 → 检查 feature_config；无法创建实验 → 检查 supportedRunnerIds；
-模型服务不可用 → 先检查 HTTP/Worker/基础设施状态，再判断数据是否有问题。
+本轮旧工作台数据与模型全部失效，不自动补清单或转换；按新契约重新上传和训练。
+原研究 requirements、环境和训练命令继续可用。

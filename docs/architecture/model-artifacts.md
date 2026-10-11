@@ -1,48 +1,46 @@
-# 模型包与发布
+# RiskGNN 模型产物与发布
 
-## 当前 RiskGNN 适配器的完整产物
-
-以下是 `riskgnn-model-v1`，其他适配器可以声明自己的格式和加载方式。
+当前固定使用 riskgnn-model-v2；旧 v1 包不再兼容此次工作台升级。
+产物格式由模型代码负责，服务只校验声明、文件安全和内容摘要。
 
 ```text
 model/
-  manifest.json    formatVersion=1, kind=riskgnn-model-v1, sourceSha256, files
-  weights.pt       网络、分类器、固定嵌入及 alpha
-  metadata.json    协议、特征顺序、预处理、关系编码、划分统计、依赖与源码摘要
-  ids.json         图内企业 ID 与张量索引
-  context.npz      特征、图、标签和冻结测试划分
-report/            独立 evaluate 操作产物
-  metrics.json     独立重载测试报告，含被测模型目录摘要
-  predictions.json 逐测试企业预测
+  manifest.json     formatVersion=1, kind=riskgnn-model-v2, files
+  weights.pt        网络、分类器、固定嵌入和 alpha
+  metadata.json     配置、特征顺序、预处理、划分、源码及依赖版本
+  ids.json          图内企业 ID 与索引
+  context.npz       特征、图、标签及测试划分
+report/
+  metrics.json      独立测试报告和被测模型摘要
+  predictions.json 测试预测
 ```
 
-manifest 为每个文件记录长度及 SHA-256；只接受包内相对路径。
-加载时校验格式版本、必需文件、网络版本和摘要，Torch 使用 weights_only=True。
-模型只能预测该包绑定的图内企业；未知 ID 明确返回 404，不推断新节点。
+manifest 为每个文件记录长度和 SHA-256，仅接受包内相对路径。
+模型 CLI 验证格式、权重及必需状态，Torch 使用 weights_only=True。
+模型当前只接受绑定图内企业，不自动接收新节点。
 
-训练产物在 Attempt 的持久目录封存，独立测试不再改写它。
-模型和报告分别上传到 `artifacts/<任务>/<attempt>/<产物序号>/<sha256>`；对象为目录 ZIP。
-任务结果记录两份产物的摘要、大小、格式与角色；工作台当前下载入口提供模型 ZIP。
-业务发布创建不可变版本，绑定模型 ZIP 摘要，重复发布同一 Run
-返回同一版本。发布不更改生产默认模型，不创建 Release。
+训练完成即封存模型；evaluate 在新进程重载并输出独立报告，不能改写模型。
+服务封存操作回执，绑定运行时版本、输入、参数、资源和产物清单。
+上传对象位于 artifacts/<任务>/<attempt>/<序号>/<sha256>，目录打包成 ZIP。
 
-## 下载和离线使用
+业务发布创建不可变模型版本，绑定通过独立测试的模型 ZIP 摘要；重复发布幂等。
+发布不切换生产默认模型，也不自动上传 GitHub Release。
+当前用户下载入口提供模型 ZIP；报告保存在任务结果和独立对象中。
 
-业务 API 在权限校验后返回 60 秒预签名地址及 SHA-256。下载完整 ZIP，核对摘要、解压后：
+## 离线重载
 
-```bash
-cd models
-uv run --project service python -m model_service.cli verify --input /path/to/model
-uv run --project service python -m model_service.cli test --input /path/to/model
-uv run --project service python -m model_service.cli predict --input /path/to/model --ids YOUR_UEN
+下载地址有效期 60 秒。校验 ZIP 摘要并解压后：
+
+```python
+from pathlib import Path
+from riskgnn.workbench.artifacts import verify
+
+verify(Path("/absolute/path/model"), "riskgnn-model-v2")
 ```
 
-以上旧 CLI `test` 仍会写入本地模型目录；需要保持原件时使用副本，或使用新 adapter evaluate。
-旧模型包中已有的 metrics/predictions 仍可加载，不重写历史对象。
+随后按[模型 CLI 示例](dataset-adapters.md#模型-cli-本地调用)提交 evaluate 或 predict：
+输入角色为 model，format 为 riskgnn-model-v2，sha256 使用模型侧 asset_digest 计算目录摘要。
+预测参数为 company_ids，按输入顺序返回结果；未知 ID 明确失败。
 
-下载包包含图上下文和企业 ID，按数据集权限管理；本轮不自动公开发布。
-源代码、训练配置、数据指纹共同标识一次可重放实验；旧研究检查点不自动转换为本协议。
-旧 com_risk_model 的本机产物备份见[迁移说明](modeling-migration.md)。
-
-服务直接调用研究网络，包装层将固定嵌入和 alpha 纳入 v1 状态。旧 v1 包继续可加载；
-新训练的初始化沿用原 RiskGNN，不能仅凭相同 seed 宣称复现早期服务训练分数。
+完整模型包含数据上下文和企业 ID，沿用数据集归属与访问权限，不自动公开。
+原研究输出的预测 NPZ 不是可直接发布的完整模型包。

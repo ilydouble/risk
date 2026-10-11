@@ -29,6 +29,9 @@ flowchart LR
 | 旧模型迁移与停用 | [迁移说明](modeling-migration.md) |
 | 数据集、实验、独立测试与发布 | [模型实验工作台](modeling-workbench.md) |
 | 协作者交付数据 ZIP、自检与新增适配 | [数据集接入流程](dataset-zip-onboarding.md) |
+| 上传包身份、版本与适配器选择 | [数据集 ZIP 契约](dataset-contract.md) |
+| 模型侧数据扩展与本地 CLI | [数据适配器](dataset-adapters.md) |
+| 单模型 CLI 输入输出、事件与产物 | [模型执行协议](model-execution-contract.md) |
 | 建模术语、不变量与适配边界 | [建模领域模型](modeling-domain.md) |
 | 新加坡企业聚合与调试样本 | [新加坡企业概览](singapore-overview.md) |
 

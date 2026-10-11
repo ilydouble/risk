@@ -17,9 +17,9 @@ flowchart LR
 
 ## 用户链路
 
-1. ZIP 本地预览只列目录，上传进度来自浏览器实际字节传输。
+1. ZIP 本地预览列目录并检查契约文件存在，上传进度来自浏览器实际字节传输。
 2. 完成上传只代表对象就绪；后台全量校验通过后才能创建实验。
-3. Run 固定 smoke-v1 协议，可设 1–20 轮，默认 2；展示阶段、曲线、Attempt 和诊断日志。
+3. 当前 sg-comrisk 适配器使用 smoke-v1，可设 1–20 轮，默认 2；展示阶段、曲线、Attempt 和诊断日志。
 4. 可取消或在终态重新运行；URL 保存选中记录，刷新后继续轮询。
 5. 独立测试成功才允许发布；模型版本可下载并预测最多 32 个图内企业。
 
@@ -48,11 +48,11 @@ flowchart LR
 代码位于 `models/service/`，与 baseline / riskgnn / riskgnn+ 并列。
 HTTP 与 Worker 保持同一镜像；业务后端只负责归属、实验与可靠投递。
 模型能力目录通过 POST `/api/v1/modeling/capabilities` 提供，已验收的模型配置才可提交。
-当前训练选择 `riskgnn-node-edge` 或 `riskgnn-node-only`；两者共用固定真实子集协议。
+当前仅部署 `riskgnn`，页面不提供多个模型选择；数据准备策略由适配器负责。
 Bundle v1 可上传、校验与分析，尚无匹配的可发布训练 runner；页面明确显示分析模式。
 已停用的旧 Bundle 训练记录与对象保留，不把旧 worker 或旧模型网络复制成第二套实现。
 数据集详情包含类型化分析报告；实验详情包含可追溯档案，均随 OpenAPI 生成前端类型。
-旧已完成记录可能没有新分析字段，不伪造报告；重新上传可生成新版分析。
+旧协议记录本轮全部失效，不伪造分析或训练结果。
 
 ## Python 包与 HTTP 分层
 
@@ -62,10 +62,11 @@ Bundle v1 可上传、校验与分析，尚无匹配的可发布训练 runner；
 
 - `modules/jobs/`：submit/get/cancel/events，拥有任务 DTO、ORM 和 Repository。
 - `modules/artifacts/`：产物查询路由与 Handler；现有接口复用 jobs 快照 DTO。
-- `modules/models/`：predict/capabilities，各自 DTO、Handler 及运行时服务。
+- `modules/models/`：predict/capabilities/runtime，各自 DTO、Handler 及运行时服务。
 - `api/route.py` 声明路径和响应；`handler.py` 做 HTTP/DTO 转换；持久化与计算不导入 HTTP DTO。
 
-现有 RiskGNN 流程通过适配器接入，原研究脚本与算法保持兼容。
+RiskGNN 模型侧 CLI 直接接入工作台；数据适配器由模型调用，原研究入口保持兼容。
 通用框架只执行声明的操作、管理状态与产物；训练数据语义由适配器负责。
-见[执行契约](model-adapter-contract.md)及[开发与 CLI](model-adapter-development.md)。
-适配器抽象类和执行契约尚未定义，本次目录整理不意味着已经完成执行器与模型适配的解耦。
+见[执行契约](model-execution-contract.md)及[开发与 CLI](dataset-adapters.md)。
+
+新 ZIP 必须含 [risk_dataset_contract.json](dataset-contract.md)。本轮旧工作台记录及模型全部失效，按新协议重新上传；研究数据和静态概览保留。

@@ -1,140 +1,82 @@
-# RiskGNN 工作台服务
+# 单模型工作台服务
 
-此目录为原研究工程增加 HTTP、Worker、数据适配和模型包能力。
-研究开发继续使用`../riskgnn/requirements.txt`、原 Python/CUDA 环境与 `train_*.py` 命令。
-服务单独使用 Python 3.12 CPU 环境，不要求研究开发者安装数据库或服务依赖。
+服务负责 HTTP、任务队列、租约、取消、事件与产物管理。
+当前部署 RiskGNN，通过 `python -m riskgnn.workbench_cli` 启动模型侧进程。
+数据适配、load/split、训练、测试和预测均位于 `../riskgnn/`，服务不导入模型代码。
 
-## 依赖方向
-
-- `../riskgnn/gnn.py` 是网络实现；服务的模型包装调用 `RiskGNN.forward_batch`。
-- `../riskgnn/train_sg_neighbor.py` 提供共同的邻居采样、张量转换与优化步骤。
-- RiskGNN 适配器维护现有固定子集、train-only 预处理、检查点选择及可重载产物；通用执行器不解释这些规则。
-- 研究代码不导入 `model_service`，原脚本参数和默认值保持兼容。
-- 当前工作台只开放 `smoke-v1`，全量/GPU/消融实验继续使用原研究命令。
+## 目录
 
 ```text
-service/
-  src/model_service/
-    app.py             应用工厂、生命周期与装配
-    dependencies.py    Dishka 基础设施装配
-    shared/            配置、数据库、日志、API 信封/响应/中间件/错误
-    modules/
-      jobs/            任务与事件 API、ORM 和 Repository
-      artifacts/api/   产物查询 API；当前复用 jobs 的快照 DTO
-      models/          能力与预测 API、运行时服务
-    execution/         Worker、租约监督与计算子进程
-    adapters/
-      contracts/       按职责拆分的抽象类、能力、I/O、事件、上下文与错误
-      riskgnn/         现有 RiskGNN 操作实现及参数/结果 schema
-      registry.py      部署时显式注册适配器
-      *.py             现有 ZIP 校验与新加坡准备流程
-    datasets/          现有数据协议识别与 Bundle 校验
-    analysis/          数据质量、漂移及特征信号
-    runners/           当前可用模型配置
-    model/             原研究网络与采样的薄包装
-    training/          当前训练与独立测试
-    runtime/           模型包加载和预测实现
-    tools/             数据示例与静态概览工具
-  alembic/             执行数据库迁移
-  tests/               自动化测试
-  docs/                验收与历史来源
+src/model_service/
+  app.py / dependencies.py   应用装配和生命周期
+  shared/                   配置、数据库、日志、HTTP 与上传外层契约
+  modules/
+    jobs/                   任务 API、执行记录及页面流程组合
+    artifacts/              产物记录查询
+    models/                 当前运行时声明与预测 API
+  execution/
+    contracts/              执行请求、结果、事件与错误，按职责分文件
+    runtime.py              固定模型 CLI 的根目录与声明文件
+    process.py              启动模型 CLI、采集事件、终止进程组
+    executor.py             操作恢复和产物上传
+    worker.py               领取任务与租约监督
 ```
 
-## 独立服务环境
+没有 ModelAdapter 抽象或可执行插件注册；数据适配抽象在模型目录的 dataset_adapters/base.py。
+上传包必须含 risk_dataset_contract.json，服务只解释外层身份与版本。
 
-服务是独立 uv 项目，依赖、开发工具配置统一在 `pyproject.toml`，提交 `uv.lock`。
-默认 Python 3.12（`.python-version`；当前兼容范围 `>=3.12,<3.13`），
-锁定 Linux x86_64 CPU 环境；更高 Python 版本需先验证 Torch/PyG 兼容。
+## 环境与运行
 
-以下命令在 `models/` 执行，`--project service` 选择服务的 `service/.venv`：
+服务使用 Python 3.12、uv 和 CPU Torch，原研究 requirements 与 Python/CUDA 环境独立。
+镜像同时 COPY 服务和全部模型源码；HTTP 与 Worker 共用镜像、数据库和持久工作目录。
+HTTP 进程不导入 Torch，模型运算仅在子进程中执行。
+
+以下命令在 models/ 下执行：
 
 ```bash
 uv sync --project service --locked
-uv run --project service python -m model_service.cli --help
-```
-
-服务通过 Hatchling 安装 `src/model_service`；本地 uv 默认使用可编辑安装，镜像使用普通安装。
-模型命令的工作目录继续保持 `models/`，让 Python 按现有方式加载相邻研究包。
-协议位于服务包内部；通过 `ModelAdapter.describe/execute` 和 CLI 执行操作，未增加独立协议包。
-从仓库根目录执行时，可使用 `uv run --directory models --project service ...`。
-
-- 开发依赖放在 `dependency-groups.dev`；镜像执行 `uv sync --frozen --no-dev`。
-- Torch 显式绑定 CPU 专用索引；该索引不会用于其他包。
-- 服务独立声明已验证的模型依赖版本，不再递归读取研究 requirements。
-  研究者调整依赖后，服务维护者核对兼容性、更新锁文件并执行模型回归。
-- 常规安装使用 `--locked`；有意改依赖时执行 `uv lock --project service`。
-  升级某个包可用 `uv lock --project service --upgrade-package <包名>`，并同步其直接版本约束。
-- 原研究 requirements、虚拟环境、CUDA 配置与训练命令保持各自管理。
-
-## 本地训练、测试与导出
-
-以下命令仍在 `models/` 执行，无需启动 PostgreSQL、对象存储或 HTTP：
-
-```bash
-uv run --project service python -m model_service.cli validate-data --input ~/Downloads/comrisk_export.zip --output runs/sg/validated
-uv run --project service python -m model_service.cli prepare --input runs/sg/validated --output runs/sg/prepared
-uv run --project service python -m model_service.cli train --input runs/sg/prepared --output runs/sg/model --epochs 2
-uv run --project service python -m model_service.cli test --input runs/sg/model
-uv run --project service python -m model_service.cli verify --input runs/sg/model
-uv run --project service python -m model_service.cli predict --input runs/sg/model --ids YOUR_UEN
-uv run --project service python -m model_service.cli export --input runs/sg/model --output runs/exports/model.zip
-```
-
-`YOUR_UEN` 使用模型 `ids.json` 内的 ID。测试命令在新进程重载模型。
-导出 ZIP 包含权重、固定嵌入、预处理、图与特征、ID、划分及文件摘要。
-下载解压后可直接 `verify`、`test`、`predict`；不执行上传 ZIP 里的 Python 脚本。
-旧 CLI 的 `test` 为兼容继续写入模型目录；新工作台的 evaluate 写独立报告，保持模型产物不变。
-既有工作台 v1 模型包可继续加载。新实验使用原 RiskGNN 的构造顺序，随机种子相同
-也不保证与早期服务独立实现的初始化相同；元数据记录研究代码和服务代码的共同摘要。
-本地研究 `.pkl`/预测 `.npz` 不会自动转换或发布，需按完整产物协议接入。
-
-## HTTP 与 Worker
-
-仓库根目录 `docker compose up --build -d` 启动相同镜像的 HTTP 和 Worker。
-本机运行需设置 `RISK_GNN_DATABASE_URL`、`RISK_GNN_API_TOKEN`、`RISK_GNN_WORKSPACE`、
-`STORAGE_ENDPOINT`、`MODELING_STORAGE_BUCKET`、`AWS_ACCESS_KEY_ID`、`AWS_SECRET_ACCESS_KEY`。
-
-```bash
 uv run --project service alembic -c service/alembic.ini upgrade head
-uv run --project service python -m uvicorn model_service.app:create_app --factory --port 8001
-# 另一个终端，相同环境和 models 工作目录：
+uv run --project service python -m model_service.cli serve
+# 另一终端，同一环境：
 uv run --project service python -m model_service.execution.worker
 ```
 
-容器内固定 8000；两入口共用模型数据库、Bucket 和持久工作目录。
-研究训练不读执行数据库；Alembic 只管理服务的任务、尝试和事件。
+本机需设置 RISK_GNN_DATABASE_URL、RISK_GNN_API_TOKEN、RISK_GNN_WORKSPACE、
+STORAGE_ENDPOINT、MODELING_STORAGE_BUCKET 及对象存储凭据。
+MODEL_CODE_ROOT 指向 models/；仓库可编辑安装自动使用源码位置，镜像设置为 /app/models。
+协议中的本地路径均规范为绝对路径，不依赖子进程工作目录恰好与父进程相同。
 
-## 适配器入口
+业务后端通过内部 HTTP 调用，模型服务只在 Compose 内部监听 8000，不发布宿主机端口。
+研究 CLI 使用自己的本地数据，不需要启动数据库、对象存储或 HTTP。
 
-协议与接入说明见[执行契约](../../docs/architecture/model-adapter-contract.md)、
-[开发与 CLI](../../docs/architecture/model-adapter-development.md)。
-`python -m model_service.execution.adapter_cli --request /path/to/request.json` 可独立执行操作。
-内部 `/models/adapters` 返回能力；`jobs/submit` 的 `kind=execute` 接收精确适配器版本与输入。
-原页面继续使用 validate/train 兼容流程；新数据由适配器处理，不要求统一字段或划分。
+## 协议与破坏性升级
+
+- 当前模型 runtime_id=riskgnn、runtime_version=2，执行 contract_version=2。
+- 数据包清单 contract_version=1，与执行协议独立。
+- 模型产物为 riskgnn-model-v2；测试报告独立输出。
+- 业务 V0007 将已有记录标记为旧代次并停止旧投递，新记录使用代次 2。
+- 模型库 V0002 取消原型阶段的待执行/运行任务，清除旧租约。
+- 不兼容旧 ZIP、旧任务或旧模型；历史记录和对象不物理删除。
+
+部署用仓库根目录的 docker compose up --build -d。升级时需重建并重启后端、模型 HTTP 和 Worker。
+不使用 down -v 清理历史卷。
 
 ## 检查
 
 ```bash
-uv run --project service ruff check service
+uv run --project service ruff check --config service/pyproject.toml service
 uv run --project service mypy --config-file service/pyproject.toml service/src/model_service
 uv run --project service pytest service/tests -q
 uv run --project service python -m model_service.export_openapi
 ```
 
-数据库相关测试设置 `RISK_TEST_DATABASE_URL`，只使用随机临时 schema。
-研究脚本不纳入服务格式重写；兼容检查覆盖原入口、采样、前向及完整模型重载。
-详见[训练协议](../../docs/architecture/training-profile.md)、
-[执行协议](../../docs/architecture/modeling-execution.md)、[模型包](../../docs/architecture/model-artifacts.md)。
+数据库相关测试设置 RISK_TEST_DATABASE_URL，使用随机临时 schema。
+研究 CLI 的数值回归确保共用训练循环没有改变原命令的输出。
+新服务和模型接入模块统一使用顶部 import；不使用延迟导入规避模块边界。
 
-历史研究兼容检查见[兼容验收](docs/research-compatibility.md)；本轮迁移见[集成验收](docs/models-integration.md)。
+更多文档：
 
-## 数据分析与模型选择
-
-- 上传自动识别 `sg-comrisk-v1` 或 `bundle-v1`，两种协议分别校验，脚本不执行。
-- 新加坡全量扫描质量；PSI 按 seed 0 划分各取至多 5,000 行稳定样本，报告注明范围。
-- Bundle 复用旧工作台的样本、关系和时间约束、特征信号、PSI 及泄漏提示。
-- `/models/capabilities` 返回明确能力；训练输入指定 runnerId。新加坡支持
-  `riskgnn-node-edge` / `riskgnn-node-only`，Bundle 目前只提供分析。
-- 实验档案保存模型、数据摘要、目标、实际特征、预处理、划分、检查点及实现摘要。
-- Docker 构建上下文为 models，复制全部模型源码，排除本地数据、权重、环境与缓存。
-  原始基线需要额外编译依赖；RiskGNN+ 真实入口仍需验收，均不静默开放训练。
+- [数据集 ZIP 契约](../../docs/architecture/dataset-contract.md)
+- [数据适配器与模型 CLI](../../docs/architecture/dataset-adapters.md)
+- [执行协议](../../docs/architecture/model-execution-contract.md)
+- [任务恢复](../../docs/architecture/modeling-execution.md)

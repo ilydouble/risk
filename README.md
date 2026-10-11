@@ -71,6 +71,8 @@ PostgreSQL 契约测试需设置 `RISK_TEST_DATABASE_URL`，在随机临时 sche
 详细命令见[模型服务](models/service/README.md)、[本地开发](docs/architecture/local-development.md)和
 [架构索引](docs/architecture/README.md)。每次提交前必须运行后端 Ruff、mypy。
 
-模型/数据接入：参见[适配器执行契约](docs/architecture/model-adapter-contract.md)和
-[适配器开发与 CLI](docs/architecture/model-adapter-development.md)。协议位于 `model_service` 内，
+模型/数据接入：参见[模型执行协议](docs/architecture/model-execution-contract.md)和
+[数据适配器与 CLI](docs/architecture/dataset-adapters.md)。执行消息类型位于 `model_service` 内，数据适配器位于 `models/riskgnn/dataset_adapters/`，
 模型研究脚本保持原使用方式；工作台不统一规定数据集的 load、split 或训练算法。
+
+新数据包必须包含 [risk_dataset_contract.json](docs/architecture/dataset-contract.md)。此次升级使旧工作台记录和模型失效，需按新契约重新上传；原研究脚本及企业演示功能保留。

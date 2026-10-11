@@ -98,3 +98,5 @@ nodes/edges/hyperedges 结构缺少本协议要求的标签、划分和特征配
 自检命令见[主流程](dataset-zip-onboarding.md#3-按协议打包并本地自检)。
 实际校验代码：[singapore.py](../../models/service/src/model_service/adapters/singapore.py)；
 准备代码：[prepare.py](../../models/service/src/model_service/adapters/prepare.py)。
+
+工作台上传包必须含 [risk_dataset_contract.json](dataset-contract.md)，adapter 为 sg-comrisk / 1。上述规则由模型侧 dataset_adapters/sg_comrisk 执行，工作台不将这些字段设为全局要求。

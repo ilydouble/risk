@@ -171,3 +171,11 @@ Service deployment uses its own Python 3.12 CPU environment and requirements loc
 it does not change your Python/CUDA environment. See [service setup](../service/README.md).
 The service's fixed `smoke-v1` subset profile is separate from the full-data research
 experiments and does not claim to reproduce the historical metrics above.
+
+## 工作台接入
+
+新增 `dataset_adapters/` 管理数据格式和语义，`workbench_cli.py` 提供独立的训练/测试/预测入口。
+原研究脚本参数与默认行为保持不变，epoch/优化循环与工作台入口共用 `training_engine.py`。
+工作台入口可使用服务 uv 环境，或安装可选 `workbench-requirements.txt`；原 requirements 不变。
+数据 ZIP 必须带 risk_dataset_contract.json，包内 Python 不执行。
+详见[数据集契约](../../docs/architecture/dataset-contract.md)与[数据适配器及 CLI](../../docs/architecture/dataset-adapters.md)。
