@@ -8,6 +8,7 @@ from model_service.modules.jobs.api.schemas import (
     ResponseEvents,
     ResponseJob,
 )
+from model_service.modules.jobs.operations import ExecuteInput, validate_submission
 from model_service.modules.jobs.repository import Store
 from model_service.shared.api.envelope import Envelope
 from model_service.shared.api.response import success_response
@@ -16,6 +17,8 @@ from model_service.shared.api.response import success_response
 async def submit(
     body: RequestSubmitJob, request: Request, store: FromDishka[Store]
 ) -> Envelope[ResponseJob]:
+    if isinstance(body.payload, ExecuteInput):
+        validate_submission(body.payload)
     await store.submit(
         str(body.jobId),
         body.kind,

@@ -1,12 +1,17 @@
-"""Bounded artifact loading and inference, independent of HTTP DTOs."""
+"""Bounded artifact transport and adapter inference, independent of model files."""
 
 import asyncio
+import shutil
+from uuid import uuid4
 
 from stellarmesh_objectstorage import AsyncClient
 
 from model_service.adapters.archive import unpack
-from model_service.execution.process import ComputationFailed, run_cli
-from model_service.files import digest, verify
+from model_service.adapters.contracts import AssetInput, Operation, OperationRequest
+from model_service.execution.artifacts import fingerprint
+from model_service.execution.invocation import Invocation
+from model_service.execution.process import ComputationFailed, run_adapter
+from model_service.files import digest
 from model_service.modules.jobs.repository import Store
 from model_service.shared.config import Settings
 
@@ -16,7 +21,7 @@ class Runtime:
         self.store, self.storage, self.settings = store, storage, settings
         self.slot = asyncio.Semaphore(1)
 
-    async def predict(self, job_id: str, ids: list[str]) -> list[dict]:
+    async def predict(self, job_id: str, ids: list[str], request_id: str = "") -> list[dict]:
         if self.slot.locked():
             raise RuntimeError("Inference slot is busy")
         async with self.slot:
@@ -31,18 +36,50 @@ class Runtime:
                 await self.storage.download_file(result["objectKey"], archive)
                 if await asyncio.to_thread(digest, archive) != result["sha256"]:
                     raise ValueError("Model download checksum mismatch")
-                await asyncio.to_thread(unpack, archive, directory)
-            await asyncio.to_thread(verify, directory, "riskgnn-model-v1")
+                temporary = directory.with_name(directory.name + ".partial")
+                shutil.rmtree(temporary, ignore_errors=True)
+                await asyncio.to_thread(unpack, archive, temporary)
+                temporary.rename(directory)
+            call_directory = self.settings.workspace / "inference" / uuid4().hex
+            # Old published records predate adapter identity. Keep this mapping at
+            # the existing RiskGNN endpoint, not in the generic execution protocol.
+            invocation = Invocation(
+                adapter_id=result.get(
+                    "adapterId", job["payload"].get("runnerId", "riskgnn-node-edge")
+                ),
+                adapter_version=result.get("adapterVersion", "1.0.0"),
+                request=OperationRequest(
+                    operation=Operation.PREDICT,
+                    inputs={
+                        "model": AssetInput(
+                            path=directory,
+                            sha256=await asyncio.to_thread(fingerprint, directory),
+                            format=result.get("format", "riskgnn-model-v1"),
+                        )
+                    },
+                    parameters={"company_ids": [item for item in ids]},
+                ),
+                run_id=job_id,
+                attempt_id=uuid4().hex,
+                request_id=request_id or job["requestId"],
+                directory=call_directory,
+            )
 
             async def ignore(_kind: str, _data: dict) -> None:
                 pass
 
             try:
                 async with asyncio.timeout(60):
-                    return await run_cli(
-                        ["predict", "--input", str(directory), "--ids", *ids], ignore
-                    )
+                    result_data = (await run_adapter(invocation, ignore)).result.data
+                    items = result_data["items"]
+                    if not isinstance(items, list) or not all(
+                        isinstance(item, dict) for item in items
+                    ):
+                        raise ValueError("Adapter prediction result has invalid shape")
+                    return [dict(item) for item in items if isinstance(item, dict)]
             except ComputationFailed as error:
-                if "Unknown bound-graph enterprise" in str(error):
-                    raise KeyError("Unknown bound-graph enterprise") from error
+                if error.detail.code == "RISKGNN_COMPANY_NOT_FOUND":
+                    raise KeyError(error.detail.message) from error
                 raise
+            finally:
+                shutil.rmtree(call_directory, ignore_errors=True)

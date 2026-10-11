@@ -1496,11 +1496,15 @@ export interface components {
             data: {
                 [key: string]: unknown;
             };
-            /** Kind */
-            kind: string;
+            kind: components["schemas"]["ExecutionEventKind"];
             /** Sequence */
             sequence: number;
         };
+        /**
+         * ExecutionEventKind
+         * @enum {string}
+         */
+        ExecutionEventKind: "state" | "stage" | "progress" | "log" | "metric";
         /** ExperimentProfileDTO */
         ExperimentProfileDTO: {
             /**

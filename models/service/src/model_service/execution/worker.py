@@ -1,16 +1,15 @@
 import argparse
 import asyncio
 import logging
-import shutil
 import signal
 
 from sqlalchemy import text
 from stellarmesh_objectstorage import AsyncClient, ClientConfig
 
-from model_service.execution.process import ComputationFailed, run_cli
-from model_service.files import digest, export_zip, read_json, verify, write_json
+from model_service.adapters.contracts import AdapterError
+from model_service.modules.jobs.operations import execute_operation
 from model_service.modules.jobs.repository import LostLease, Store
-from model_service.runners.registry import DEFAULT_MODEL, require_model
+from model_service.modules.jobs.workflows import execute_workflow
 from model_service.shared.config import Settings
 from model_service.shared.db import create_engine
 from model_service.shared.logging import configure_logging
@@ -22,111 +21,10 @@ class Worker:
     def __init__(self, settings: Settings, store: Store, storage: AsyncClient):
         self.settings, self.store, self.storage = settings, store, storage
 
-    async def phase(self, job: dict, name: str, args: list[str]):
-        async def event(kind: str, data: dict):
-            await self.store.event(job["id"], job["owner"], kind, data)
-
-        await event("state", {"stage": name})
-        return await run_cli(args, event)
-
     async def execute(self, job: dict) -> dict:
-        base = self.settings.workspace / "jobs" / job["id"]
-        directory = base / str(job["attempt"])
-        directory.mkdir(parents=True, exist_ok=True)
-        if job["kind"] == "validate":
-            archive = directory / "source.zip"
-            await self.storage.download_file(job["payload"]["objectKey"], archive)
-            result = await self.phase(
-                job,
-                "validating",
-                [
-                    "validate-data",
-                    "--input",
-                    str(archive),
-                    "--output",
-                    str(directory / "validated"),
-                ],
-            )
-            key = f"datasets/{job['id']}/{result['sha256']}/source.zip"
-            await self.storage.upload_file(key, archive, content_type="application/zip")
-            result["objectKey"] = key
-            return result
-
-        source = await self.store.get(job["payload"]["sourceJobId"])
-        if source["kind"] != "validate" or source["status"] != "completed":
-            raise ValueError("Dataset validation is not complete")
-        source_result = source["result"]
-        runner_id = job["payload"].get("runnerId") or DEFAULT_MODEL
-        require_model(runner_id, source_result["protocol"])
-        model = directory / "model"
-        # A sealed checkpoint in a prior attempt can resume only this immutable job.
-        # Copy it into the new attempt so a stale worker cannot overwrite this output.
-        for number in range(job["attempt"] - 1, 0, -1):
-            previous = base / str(number) / "model"
-            try:
-                manifest = await asyncio.to_thread(verify, previous, "riskgnn-model-v1")
-                if manifest["sourceSha256"] == source_result["sha256"]:
-                    await asyncio.to_thread(shutil.copytree, previous, model, dirs_exist_ok=True)
-                    await asyncio.to_thread(verify, model, "riskgnn-model-v1")
-                    await self.store.event(
-                        job["id"],
-                        job["owner"],
-                        "log",
-                        {"message": "Resumed sealed training result"},
-                    )
-                    break
-            except (OSError, ValueError, KeyError):
-                continue
-        if not (model / "manifest.json").exists():
-            cached = self.settings.workspace / "datasets" / source_result["sha256"]
-            if not (cached / "validation.json").exists():
-                archive = directory / "source.zip"
-                await self.storage.download_file(source_result["objectKey"], archive)
-                if await asyncio.to_thread(digest, archive) != source_result["sha256"]:
-                    raise ValueError("Dataset checksum mismatch")
-                await self.phase(
-                    job,
-                    "validating",
-                    ["validate-data", "--input", str(archive), "--output", str(cached)],
-                )
-            prepared = directory / "prepared"
-            await self.phase(
-                job, "preparing", ["prepare", "--input", str(cached), "--output", str(prepared)]
-            )
-            await self.phase(
-                job,
-                "training",
-                [
-                    "train",
-                    "--input",
-                    str(prepared),
-                    "--output",
-                    str(model),
-                    "--runner-id",
-                    runner_id,
-                    "--epochs",
-                    str(job["payload"].get("epochs", 2)),
-                ],
-            )
-        if not (model / "metrics.json").exists():
-            await self.phase(job, "testing", ["test", "--input", str(model)])
-        report, metadata = read_json(model / "metrics.json"), read_json(model / "metadata.json")
-        await self.store.event(job["id"], job["owner"], "state", {"stage": "uploading"})
-        archive = directory / "model.zip"
-        await asyncio.to_thread(export_zip, model, archive)
-        sha = await asyncio.to_thread(digest, archive)
-        key = f"artifacts/{job['id']}/{job['attempt']}/{sha}.zip"
-        await self.storage.upload_file(key, archive, content_type="application/zip")
-        result = {
-            "objectKey": key,
-            "sha256": sha,
-            "size": archive.stat().st_size,
-            "report": report,
-            "profile": metadata,
-            "companies": read_json(model / "ids.json")[:100],
-        }
-        write_json(directory / "uploaded.json", result)
-        return result
+        if job["kind"] == "execute":
+            return await execute_operation(job, self.settings, self.store, self.storage)
+        return await execute_workflow(job, self.settings, self.store, self.storage)
 
     async def run_job(self, job: dict) -> None:
         logger.info(
@@ -149,9 +47,23 @@ class Worker:
             # finish is fenced: it closes that cancellation, but cannot touch a new owner.
             await self.store.finish(job["id"], job["owner"], error="Execution interrupted")
             logger.warning("job.lease_lost", extra={"job_id": job["id"]})
-        except (ComputationFailed, ValueError) as error:
+        except (AdapterError, ValueError) as error:
             message = str(error)
-            retryable = isinstance(error, ComputationFailed) and error.retryable
+            if isinstance(error, AdapterError):
+                try:
+                    await self.store.event(
+                        job["id"],
+                        job["owner"],
+                        "log",
+                        {
+                            "level": "error",
+                            "message": message,
+                            "error": error.detail.model_dump(mode="json"),
+                        },
+                    )
+                except LostLease:
+                    pass  # finish below is fenced and can only close this owner's attempt.
+            retryable = isinstance(error, AdapterError) and error.detail.retryable
             await self.store.finish(job["id"], job["owner"], error=message, retryable=retryable)
         except asyncio.CancelledError:
             raise

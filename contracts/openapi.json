@@ -2669,8 +2669,7 @@
             "type": "object"
           },
           "kind": {
-            "title": "Kind",
-            "type": "string"
+            "$ref": "#/components/schemas/ExecutionEventKind"
           },
           "sequence": {
             "title": "Sequence",
@@ -2686,6 +2685,17 @@
         ],
         "title": "EventDTO",
         "type": "object"
+      },
+      "ExecutionEventKind": {
+        "enum": [
+          "state",
+          "stage",
+          "progress",
+          "log",
+          "metric"
+        ],
+        "title": "ExecutionEventKind",
+        "type": "string"
       },
       "ExperimentProfileDTO": {
         "properties": {

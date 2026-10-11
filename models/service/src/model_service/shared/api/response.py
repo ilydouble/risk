@@ -14,13 +14,15 @@ def success_response[T](data: T) -> Envelope[T]:
     return Envelope(data=data)
 
 
-def error_response(request: Request, status: int, code: str, message: str) -> JSONResponse:
+def error_response(
+    request: Request, status: int, code: str, message: str, *, field: str | None = None
+) -> JSONResponse:
     return JSONResponse(
         {
             "code": status,
             "internal_code": code,
             "message": message,
-            "data": {"field": None, "reason": message},
+            "data": {"field": field, "reason": message},
         },
         status_code=status,
         headers={"X-Request-ID": request.state.request_id},

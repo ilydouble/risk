@@ -154,7 +154,7 @@ class Store:
                 or job.cancel_requested
             ):
                 raise LostLease()
-            if kind == "state":
+            if kind in {"state", "stage"} and "stage" in data:
                 job.stage = data["stage"]
             self._event(session, job, kind, data)
 

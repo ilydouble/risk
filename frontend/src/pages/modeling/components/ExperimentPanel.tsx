@@ -27,17 +27,31 @@ export function ExperimentPanel({ work }: { work: Workbench }) {
   const confusion = Array.isArray(metrics.confusionMatrix)
     ? metrics.confusionMatrix
     : [];
-  const points = work.events
-    .filter(
-      (event) =>
-        event.kind === "metric" &&
-        event.attempt === work.run?.attempts.at(-1)?.number,
-    )
-    .map((event) => ({
-      epoch: event.data.epoch,
-      trainLoss: event.data.trainLoss,
-      validationLoss: event.data.validationLoss,
-    }));
+  const metricAttempt = work.events.reduce(
+    (latest, event) => event.kind === "metric" ? Math.max(latest, event.attempt) : latest,
+    0,
+  );
+  const series = new Map<
+    number,
+    { epoch: number; trainLoss?: number; validationLoss?: number }
+  >();
+  for (const event of work.events) {
+    if (event.kind !== "metric" || event.attempt !== metricAttempt) continue;
+    const data = event.data;
+    // Older persisted runs have one epoch row; adapter events carry one named metric.
+    const step = typeof data.step === "number" ? data.step : data.epoch;
+    if (typeof step !== "number") continue;
+    const point = series.get(step) ?? { epoch: step };
+    if (data.name === "loss" && typeof data.value === "number") {
+      if (data.group === "train") point.trainLoss = data.value;
+      if (data.group === "validation") point.validationLoss = data.value;
+    } else {
+      if (typeof data.trainLoss === "number") point.trainLoss = data.trainLoss;
+      if (typeof data.validationLoss === "number") point.validationLoss = data.validationLoss;
+    }
+    series.set(step, point);
+  }
+  const points = [...series.values()].sort((a, b) => a.epoch - b.epoch);
 
   return work.run ? (
     <>
@@ -83,6 +97,9 @@ export function ExperimentPanel({ work }: { work: Workbench }) {
         )}
         {points.length > 0 && (
           <div className="h-64">
+            <p className="text-xs text-foreground-500">
+              {t("modeling.attempt")} {metricAttempt}
+            </p>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={points}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#94a3b833" />

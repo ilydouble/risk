@@ -1,7 +1,10 @@
+from enum import StrEnum
 from typing import Any, Literal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
+
+from model_service.modules.jobs.operations import ExecuteInput
 
 
 class ValidateInput(BaseModel):
@@ -18,12 +21,14 @@ class TrainInput(BaseModel):
 
 class RequestSubmitJob(BaseModel):
     jobId: UUID
-    kind: Literal["validate", "train"]
-    payload: ValidateInput | TrainInput
+    kind: Literal["validate", "train", "execute"]
+    payload: ValidateInput | TrainInput | ExecuteInput
 
     @model_validator(mode="after")
     def matching_payload(self):
-        expected = ValidateInput if self.kind == "validate" else TrainInput
+        expected = {"validate": ValidateInput, "train": TrainInput, "execute": ExecuteInput}[
+            self.kind
+        ]
         if not isinstance(self.payload, expected):
             raise ValueError("Payload does not match job kind")
         return self
@@ -47,7 +52,7 @@ class AttemptDTO(BaseModel):
 
 class ResponseJob(BaseModel):
     id: str
-    kind: Literal["validate", "train"]
+    kind: Literal["validate", "train", "execute"]
     status: Literal["queued", "running", "completed", "failed", "cancelled"]
     stage: str
     attempt: int
@@ -57,10 +62,18 @@ class ResponseJob(BaseModel):
     attempts: list[AttemptDTO]
 
 
+class ExecutionEventKind(StrEnum):
+    STATE = "state"
+    STAGE = "stage"
+    PROGRESS = "progress"
+    LOG = "log"
+    METRIC = "metric"
+
+
 class EventDTO(BaseModel):
     sequence: int
     attempt: int
-    kind: str
+    kind: ExecutionEventKind
     data: dict[str, Any]
     createdAt: str
 

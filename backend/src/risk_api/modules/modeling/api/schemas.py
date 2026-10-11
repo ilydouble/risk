@@ -1,3 +1,4 @@
+from enum import StrEnum
 from typing import Any, Literal
 from uuid import UUID
 
@@ -144,10 +145,18 @@ class ModelVersionDTO(BaseModel):
     createdAt: str
 
 
+class ExecutionEventKind(StrEnum):
+    STATE = "state"
+    STAGE = "stage"
+    PROGRESS = "progress"
+    LOG = "log"
+    METRIC = "metric"
+
+
 class EventDTO(BaseModel):
     sequence: int
     attempt: int
-    kind: str
+    kind: ExecutionEventKind
     data: dict[str, Any]
     createdAt: str
 

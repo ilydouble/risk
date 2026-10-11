@@ -2,6 +2,7 @@ import hashlib
 import json
 import platform
 import shutil
+from collections.abc import Callable
 from importlib.metadata import version
 from pathlib import Path
 from typing import Any
@@ -38,7 +39,7 @@ def code_version() -> str:
     # Keep local virtual environments, tests and deployment-only files out of model identity.
     files = [source / "files.py"]
     for name in ("adapters", "model", "runtime", "training", "runners"):
-        files.extend((source / name).glob("*.py"))
+        files.extend((source / name).rglob("*.py"))
     for file in sorted(files):
         digest.update(str(file.relative_to(source)).encode())
         digest.update(file.read_bytes())
@@ -67,7 +68,12 @@ def metrics(y: np.ndarray, score: np.ndarray) -> dict[str, Any]:
 
 
 def train(
-    prepared: Path, output: Path, epochs: int = 2, *, runner_id: str = DEFAULT_MODEL
+    prepared: Path,
+    output: Path,
+    epochs: int = 2,
+    *,
+    runner_id: str = DEFAULT_MODEL,
+    metric_callback: Callable[[dict[str, Any]], None] | None = None,
 ) -> dict[str, Any]:
     require_model(runner_id)
     verify(prepared, "riskgnn-prepared-v1")
@@ -130,7 +136,10 @@ def train(
             "validationLoss": validation_loss,
         }
         history.append(row)
-        emit("metric", **row)
+        if metric_callback is None:
+            emit("metric", **row)
+        else:
+            metric_callback(row)
         if validation_loss < best:
             best = validation_loss
             torch.save(model.state_dict(), output / "weights.pt")
@@ -182,7 +191,7 @@ def train(
     return meta
 
 
-def evaluate(model_dir: Path) -> dict[str, Any]:
+def evaluate(model_dir: Path, *, output: Path | None = None) -> dict[str, Any]:
     torch.set_num_threads(2)
     predictor = Predictor(model_dir)
     indices = np.where(predictor.context["splits"] == "test")[0]
@@ -194,11 +203,14 @@ def evaluate(model_dir: Path) -> dict[str, Any]:
         "metrics": metrics(predictor.context["labels"][indices], scores),
         "sourceSha256": predictor.meta["sourceSha256"],
     }
-    write_json(model_dir / "metrics.json", report)
-    write_json(model_dir / "predictions.json", rows)
-    seal(
-        model_dir,
-        kind="riskgnn-model-v1",
-        metadata={"sourceSha256": predictor.meta["sourceSha256"]},
-    )
+    destination = output if output is not None else model_dir
+    write_json(destination / "metrics.json", report)
+    write_json(destination / "predictions.json", rows)
+    if output is None:
+        # Preserve the original CLI; adapter evaluations write separate immutable reports.
+        seal(
+            model_dir,
+            kind="riskgnn-model-v1",
+            metadata={"sourceSha256": predictor.meta["sourceSha256"]},
+        )
     return report

@@ -1,6 +1,84 @@
 {
   "components": {
     "schemas": {
+      "AdapterSpec": {
+        "additionalProperties": false,
+        "properties": {
+          "adapter_id": {
+            "pattern": "^[a-z][a-z0-9-]{0,63}$",
+            "title": "Adapter Id",
+            "type": "string"
+          },
+          "adapter_version": {
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Adapter Version",
+            "type": "string"
+          },
+          "contract_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Contract Version",
+            "type": "integer"
+          },
+          "description": {
+            "default": "",
+            "title": "Description",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "operations": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/OperationSpec"
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/Operation"
+            },
+            "title": "Operations",
+            "type": "object"
+          }
+        },
+        "required": [
+          "adapter_id",
+          "adapter_version",
+          "name",
+          "operations"
+        ],
+        "title": "AdapterSpec",
+        "type": "object"
+      },
+      "ArtifactSpec": {
+        "additionalProperties": false,
+        "properties": {
+          "format": {
+            "minLength": 1,
+            "title": "Format",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "file",
+              "directory"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "required": {
+            "default": true,
+            "title": "Required",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "format",
+          "kind"
+        ],
+        "title": "ArtifactSpec",
+        "type": "object"
+      },
       "AttemptDTO": {
         "properties": {
           "error": {
@@ -89,6 +167,33 @@
           "reason"
         ],
         "title": "CapabilityDTO",
+        "type": "object"
+      },
+      "Envelope_ResponseAdapters_": {
+        "properties": {
+          "code": {
+            "default": 200,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ResponseAdapters"
+          },
+          "internal_code": {
+            "default": "SUCCESS",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "default": "OK",
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "Envelope[ResponseAdapters]",
         "type": "object"
       },
       "Envelope_ResponseCapabilities_": {
@@ -274,8 +379,7 @@
             "type": "object"
           },
           "kind": {
-            "title": "Kind",
-            "type": "string"
+            "$ref": "#/components/schemas/ExecutionEventKind"
           },
           "sequence": {
             "title": "Sequence",
@@ -290,6 +394,157 @@
           "createdAt"
         ],
         "title": "EventDTO",
+        "type": "object"
+      },
+      "ExecuteInput": {
+        "additionalProperties": false,
+        "properties": {
+          "adapter_id": {
+            "title": "Adapter Id",
+            "type": "string"
+          },
+          "adapter_version": {
+            "title": "Adapter Version",
+            "type": "string"
+          },
+          "inputs": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ObjectInput"
+            },
+            "title": "Inputs",
+            "type": "object"
+          },
+          "operation": {
+            "$ref": "#/components/schemas/Operation"
+          },
+          "parameters": {
+            "$ref": "#/components/schemas/JsonObject"
+          }
+        },
+        "required": [
+          "adapter_id",
+          "adapter_version",
+          "operation",
+          "inputs"
+        ],
+        "title": "ExecuteInput",
+        "type": "object"
+      },
+      "ExecutionEventKind": {
+        "enum": [
+          "state",
+          "stage",
+          "progress",
+          "log",
+          "metric"
+        ],
+        "title": "ExecutionEventKind",
+        "type": "string"
+      },
+      "InputSpec": {
+        "additionalProperties": false,
+        "properties": {
+          "formats": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Formats",
+            "type": "array"
+          },
+          "kind": {
+            "enum": [
+              "file",
+              "directory"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "required": {
+            "default": true,
+            "title": "Required",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "title": "InputSpec",
+        "type": "object"
+      },
+      "JsonObject": {
+        "additionalProperties": {
+          "$ref": "#/components/schemas/JsonValue"
+        },
+        "type": "object"
+      },
+      "JsonValue": {},
+      "ObjectInput": {
+        "additionalProperties": false,
+        "properties": {
+          "format": {
+            "title": "Format",
+            "type": "string"
+          },
+          "object_key": {
+            "pattern": "^(uploads|datasets|artifacts)/[a-zA-Z0-9_./-]+$",
+            "title": "Object Key",
+            "type": "string"
+          },
+          "sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Sha256",
+            "type": "string"
+          }
+        },
+        "required": [
+          "object_key",
+          "sha256",
+          "format"
+        ],
+        "title": "ObjectInput",
+        "type": "object"
+      },
+      "Operation": {
+        "enum": [
+          "inspect",
+          "train",
+          "evaluate",
+          "predict"
+        ],
+        "title": "Operation",
+        "type": "string"
+      },
+      "OperationSpec": {
+        "additionalProperties": false,
+        "properties": {
+          "artifacts": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ArtifactSpec"
+            },
+            "title": "Artifacts",
+            "type": "object"
+          },
+          "default_parameters": {
+            "$ref": "#/components/schemas/JsonObject"
+          },
+          "inputs": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/InputSpec"
+            },
+            "title": "Inputs",
+            "type": "object"
+          },
+          "parameters_schema": {
+            "$ref": "#/components/schemas/JsonObject"
+          },
+          "result_schema": {
+            "$ref": "#/components/schemas/JsonObject"
+          },
+          "ui_schema": {
+            "$ref": "#/components/schemas/JsonObject"
+          }
+        },
+        "title": "OperationSpec",
         "type": "object"
       },
       "PredictionDTO": {
@@ -388,7 +643,8 @@
           "kind": {
             "enum": [
               "validate",
-              "train"
+              "train",
+              "execute"
             ],
             "title": "Kind",
             "type": "string"
@@ -400,6 +656,9 @@
               },
               {
                 "$ref": "#/components/schemas/TrainInput"
+              },
+              {
+                "$ref": "#/components/schemas/ExecuteInput"
               }
             ],
             "title": "Payload"
@@ -411,6 +670,22 @@
           "payload"
         ],
         "title": "RequestSubmitJob",
+        "type": "object"
+      },
+      "ResponseAdapters": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/AdapterSpec"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "ResponseAdapters",
         "type": "object"
       },
       "ResponseCapabilities": {
@@ -480,7 +755,8 @@
           "kind": {
             "enum": [
               "validate",
-              "train"
+              "train",
+              "execute"
             ],
             "title": "Kind",
             "type": "string"
@@ -982,6 +1258,84 @@
           }
         },
         "summary": "Submit"
+      }
+    },
+    "/internal/v1/models/adapters": {
+      "post": {
+        "operationId": "adapters_internal_v1_models_adapters_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestCapabilities"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_ResponseAdapters_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Adapters"
       }
     },
     "/internal/v1/models/capabilities": {

@@ -37,6 +37,19 @@ def test_service_auth_validation_envelope_and_schema(monkeypatch):
         models = {item["id"]: item for item in catalog.json()["data"]["items"]}
         assert models["riskgnn-node-only"]["trainable"] is True
         assert models["riskgnn-plus"]["trainable"] is False
+        adapters = client.post(
+            "/internal/v1/models/adapters",
+            json={},
+            headers={"Authorization": "Bearer contract-test-token"},
+        ).json()["data"]["items"]
+        assert adapters[0]["adapter_version"] == "1.0.0"
+        assert set(adapters[0]["operations"]) == {"inspect", "train", "evaluate", "predict"}
+        assert (
+            adapters[0]["operations"]["train"]["parameters_schema"]["properties"]["epochs"][
+                "maximum"
+            ]
+            == 20
+        )
         assert client.get("/health/live").status_code == 200
         assert client.get("/unknown").json()["code"] == 404
     for path, operations in app.openapi()["paths"].items():
@@ -91,6 +104,33 @@ def test_job_artifact_and_prediction_routes_share_dishka_store(monkeypatch):
                 assert response.json()["code"] == expected
                 return response.json()
 
+            generic = {
+                "jobId": str(uuid4()),
+                "kind": "execute",
+                "payload": {
+                    "adapter_id": "riskgnn-node-edge",
+                    "adapter_version": "1.0.0",
+                    "operation": "inspect",
+                    "inputs": {
+                        "dataset": {
+                            "object_key": "uploads/source/data.zip",
+                            "sha256": "a" * 64,
+                            "format": "zip",
+                        }
+                    },
+                    "parameters": {},
+                },
+            }
+            accepted = post("jobs/submit", generic)["data"]
+            assert accepted["kind"] == "execute" and accepted["status"] == "queued"
+            assert post("jobs/submit", generic)["data"] == accepted
+            unsupported = {
+                **generic,
+                "jobId": str(uuid4()),
+                "payload": {**generic["payload"], "adapter_version": "absent"},
+            }
+            assert post("jobs/submit", unsupported, 422)["internal_code"] == "ADAPTER_NOT_AVAILABLE"
+            post("jobs/cancel", {"jobId": generic["jobId"]})
             identity = str(uuid4())
             body = {
                 "jobId": identity,

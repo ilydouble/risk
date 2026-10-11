@@ -70,3 +70,7 @@ npm run lint && npm run type-check && npm run build
 PostgreSQL 契约测试需设置 `RISK_TEST_DATABASE_URL`，在随机临时 schema 中执行后清理。
 详细命令见[模型服务](models/service/README.md)、[本地开发](docs/architecture/local-development.md)和
 [架构索引](docs/architecture/README.md)。每次提交前必须运行后端 Ruff、mypy。
+
+模型/数据接入：参见[适配器执行契约](docs/architecture/model-adapter-contract.md)和
+[适配器开发与 CLI](docs/architecture/model-adapter-development.md)。协议位于 `model_service` 内，
+模型研究脚本保持原使用方式；工作台不统一规定数据集的 load、split 或训练算法。

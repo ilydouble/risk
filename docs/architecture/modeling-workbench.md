@@ -65,5 +65,7 @@ Bundle v1 可上传、校验与分析，尚无匹配的可发布训练 runner；
 - `modules/models/`：predict/capabilities，各自 DTO、Handler 及运行时服务。
 - `api/route.py` 声明路径和响应；`handler.py` 做 HTTP/DTO 转换；持久化与计算不导入 HTTP DTO。
 
-现有数据适配、训练和模型包装随包迁移，算法与产物契约保持原样。
+现有 RiskGNN 流程通过适配器接入，原研究脚本与算法保持兼容。
+通用框架只执行声明的操作、管理状态与产物；训练数据语义由适配器负责。
+见[执行契约](model-adapter-contract.md)及[开发与 CLI](model-adapter-development.md)。
 适配器抽象类和执行契约尚未定义，本次目录整理不意味着已经完成执行器与模型适配的解耦。

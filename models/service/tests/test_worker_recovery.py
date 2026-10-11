@@ -11,6 +11,7 @@ from model_service.adapters.singapore import validate
 from model_service.execution.worker import Worker
 from model_service.modules.jobs.model import Base
 from model_service.modules.jobs.repository import Store
+from model_service.modules.models.service import Runtime
 from model_service.shared.config import Settings
 
 
@@ -21,15 +22,20 @@ def test_artifact_upload_retry_reuses_independently_tested_checkpoint(export_zip
 
     class Storage:
         failures = 1
+        objects = {}
 
         async def download_file(self, _key, target):
-            shutil.copy2(export_zip, target)
+            shutil.copy2(self.objects.get(_key, export_zip), target)
 
         async def upload_file(self, key, source, **_kwargs):
             if self.failures:
                 self.failures -= 1
                 raise OSError("transient upload failure")
-            shutil.copy2(source, tmp_path / "downloaded-model.zip")
+            target = tmp_path / (
+                "downloaded-model.zip" if "/train/" in str(source) else "downloaded-report.zip"
+            )
+            shutil.copy2(source, target)
+            self.objects[key] = target
 
     async def exercise():
         schema = "test_worker_" + uuid4().hex
@@ -52,7 +58,13 @@ def test_artifact_upload_retry_reuses_independently_tested_checkpoint(export_zip
             await worker.run_job(await store.claim())
             assert (await store.get(run_id))["status"] == "queued"
             first_events = await store.events(run_id, 0)
-            assert sum(event["kind"] == "metric" for event in first_events) == 1
+            assert (
+                sum(
+                    event["kind"] == "metric" and event["data"].get("group") == "train"
+                    for event in first_events
+                )
+                == 1
+            )
             # A new Worker instance uses the persisted attempt checkpoint, without training again.
             await Worker(worker.settings, Store(engine), worker.storage).run_job(
                 await store.claim()
@@ -61,9 +73,44 @@ def test_artifact_upload_retry_reuses_independently_tested_checkpoint(export_zip
             assert final["status"] == "completed" and final["attempt"] == 2
             assert final["result"]["report"]["independentReload"] is True
             events = await store.events(run_id, 0)
-            assert sum(event["kind"] == "metric" for event in events) == 1
+            assert (
+                sum(
+                    event["kind"] == "metric" and event["data"].get("group") == "train"
+                    for event in events
+                )
+                == 1
+            )
             assert any("Resumed sealed" in str(event["data"]) for event in events)
             assert (tmp_path / "downloaded-model.zip").is_file()
+            runtime = Runtime(store, worker.storage, worker.settings)
+            ids = final["result"]["companies"][:2]
+            predictions = await runtime.predict(run_id, ids, "prediction-request")
+            assert [item["companyId"] for item in predictions] == ids
+            with pytest.raises(KeyError):
+                await runtime.predict(run_id, ["unknown"], "prediction-request")
+            generic_id = str(uuid4())
+            await store.submit(
+                generic_id,
+                "execute",
+                {
+                    "adapter_id": "riskgnn-node-edge",
+                    "adapter_version": "1.0.0",
+                    "operation": "inspect",
+                    "inputs": {
+                        "dataset": {
+                            "object_key": "uploads/test/source.zip",
+                            "sha256": result["sha256"],
+                            "format": "zip",
+                        }
+                    },
+                    "parameters": {},
+                },
+                "generic-request",
+            )
+            await worker.run_job(await store.claim())
+            inspected = await store.get(generic_id)
+            assert inspected["status"] == "completed"
+            assert inspected["result"]["data"]["compatibility"] == "compatible"
             cancelled_id = str(uuid4())
             await store.submit(cancelled_id, "train", {}, "cancel-during-event")
 

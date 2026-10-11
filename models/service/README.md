@@ -8,7 +8,7 @@
 
 - `../riskgnn/gnn.py` 是网络实现；服务的模型包装调用 `RiskGNN.forward_batch`。
 - `../riskgnn/train_sg_neighbor.py` 提供共同的邻居采样、张量转换与优化步骤。
-- 服务维护固定子集、train-only 预处理、检查点选择及可重载产物协议。
+- RiskGNN 适配器维护现有固定子集、train-only 预处理、检查点选择及可重载产物；通用执行器不解释这些规则。
 - 研究代码不导入 `model_service`，原脚本参数和默认值保持兼容。
 - 当前工作台只开放 `smoke-v1`，全量/GPU/消融实验继续使用原研究命令。
 
@@ -23,7 +23,11 @@ service/
       artifacts/api/   产物查询 API；当前复用 jobs 的快照 DTO
       models/          能力与预测 API、运行时服务
     execution/         Worker、租约监督与计算子进程
-    adapters/          现有 ZIP 校验与新加坡准备流程
+    adapters/
+      contracts/       按职责拆分的抽象类、能力、I/O、事件、上下文与错误
+      riskgnn/         现有 RiskGNN 操作实现及参数/结果 schema
+      registry.py      部署时显式注册适配器
+      *.py             现有 ZIP 校验与新加坡准备流程
     datasets/          现有数据协议识别与 Bundle 校验
     analysis/          数据质量、漂移及特征信号
     runners/           当前可用模型配置
@@ -51,7 +55,7 @@ uv run --project service python -m model_service.cli --help
 
 服务通过 Hatchling 安装 `src/model_service`；本地 uv 默认使用可编辑安装，镜像使用普通安装。
 模型命令的工作目录继续保持 `models/`，让 Python 按现有方式加载相邻研究包。
-本次只整理包和 HTTP 分层，数据/训练流程仍是现有实现；适配器抽象类及方法另行设计。
+协议位于服务包内部；通过 `ModelAdapter.describe/execute` 和 CLI 执行操作，未增加独立协议包。
 从仓库根目录执行时，可使用 `uv run --directory models --project service ...`。
 
 - 开发依赖放在 `dependency-groups.dev`；镜像执行 `uv sync --frozen --no-dev`。
@@ -79,6 +83,7 @@ uv run --project service python -m model_service.cli export --input runs/sg/mode
 `YOUR_UEN` 使用模型 `ids.json` 内的 ID。测试命令在新进程重载模型。
 导出 ZIP 包含权重、固定嵌入、预处理、图与特征、ID、划分及文件摘要。
 下载解压后可直接 `verify`、`test`、`predict`；不执行上传 ZIP 里的 Python 脚本。
+旧 CLI 的 `test` 为兼容继续写入模型目录；新工作台的 evaluate 写独立报告，保持模型产物不变。
 既有工作台 v1 模型包可继续加载。新实验使用原 RiskGNN 的构造顺序，随机种子相同
 也不保证与早期服务独立实现的初始化相同；元数据记录研究代码和服务代码的共同摘要。
 本地研究 `.pkl`/预测 `.npz` 不会自动转换或发布，需按完整产物协议接入。
@@ -98,6 +103,14 @@ uv run --project service python -m model_service.execution.worker
 
 容器内固定 8000；两入口共用模型数据库、Bucket 和持久工作目录。
 研究训练不读执行数据库；Alembic 只管理服务的任务、尝试和事件。
+
+## 适配器入口
+
+协议与接入说明见[执行契约](../../docs/architecture/model-adapter-contract.md)、
+[开发与 CLI](../../docs/architecture/model-adapter-development.md)。
+`python -m model_service.execution.adapter_cli --request /path/to/request.json` 可独立执行操作。
+内部 `/models/adapters` 返回能力；`jobs/submit` 的 `kind=execute` 接收精确适配器版本与输入。
+原页面继续使用 validate/train 兼容流程；新数据由适配器处理，不要求统一字段或划分。
 
 ## 检查
 
