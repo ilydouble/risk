@@ -36,6 +36,11 @@ def test_service_auth_validation_envelope_and_schema(monkeypatch):
         assert catalog.status_code == 200
         models = {item["id"]: item for item in catalog.json()["data"]["items"]}
         assert models["riskgnn"]["trainable"] is True
+        assert models["riskgnn"]["datasetFormats"] == [
+            "sg-comrisk-v1",
+            "smesd-json-v5",
+            "uk-dataset-v1",
+        ]
         assert list(models) == ["riskgnn"]
         adapters = client.post(
             "/internal/v1/models/runtime",

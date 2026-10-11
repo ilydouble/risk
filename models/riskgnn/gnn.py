@@ -141,7 +141,11 @@ class HeteGNN(MessagePassing):
         return res_c,res_p
 
     def message(self,edge_index, x_i,x_j, edge_weight, edge_confidence, edge_type):
-        if torch.sum(edge_weight)!=edge_index.shape[1]:
+        # Explicit scalar mode must also hold in a batch whose sampled weights are all 1.
+        # Legacy callers without a mode keep the original relation convention.
+        weighted = (torch.sum(edge_weight)!=edge_index.shape[1]
+                    if self.use_scalar_weights is None else self.use_scalar_weights)
+        if weighted:
             x_j=self.rel_wi[edge_type](x_j)
             edge_weight=softmax(edge_weight,edge_index[1])
             rs=x_j*edge_weight*edge_confidence
@@ -341,10 +345,22 @@ class RiskGNN(nn.Module):
         This makes the comparison node_only vs node_edge (this method), which is
         exactly the exogenous-graph question Wang's message asked to isolate.
         """
+        # Company targets remain first. Snapshot adapters may also supply person context;
+        # keep its projection separate and remap local edges after partitioning the batch.
+        if self.person_num:
+            company_mask = n_id < self.company_num
+            order = torch.cat((torch.where(company_mask)[0], torch.where(~company_mask)[0]))
+            remap = torch.empty_like(order)
+            remap[order] = torch.arange(len(order), device=order.device)
+            edge_index_local = remap[torch.as_tensor(edge_index_local, device=order.device)]
+            person_ids = n_id[~company_mask] - self.company_num
+            n_id = n_id[company_mask]
+            person_emb = self.person_proj(self.person_emb[person_ids])
+        else:
+            person_emb = self.person_proj(self.person_emb)
         n = len(n_id)
         n_id_np = n_id.detach().cpu().numpy()
         company_emb = self.company_proj(self.company_emb[n_id])
-        person_emb = self.person_proj(self.person_emb)
         attr = torch.as_tensor(company_attr_all[n_id_np], dtype=torch.float32, device=self.device)
         company_basic_info = attr
         if self.use_community_prior:
@@ -364,7 +380,7 @@ class RiskGNN(nn.Module):
                 src = company_emb_info if i == 0 else company_emb_hete
                 company_emb_hete, person_emb = self.hetegnn[i](
                     src, person_emb, edge_index_local, edge_type_local, edge_weight_local,
-                    n, 0, edge_confidence_local)
+                    n, len(person_emb), edge_confidence_local)
         else:
             company_emb_hete = torch.zeros((n, self.output_dim), device=self.device)
 

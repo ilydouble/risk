@@ -7,7 +7,8 @@ import duckdb
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from riskgnn.dataset_adapters.archive import data_root, unpack
+from riskgnn.dataset_adapters.acra.paths import data_root
+from riskgnn.dataset_adapters.archive import unpack
 from riskgnn.dataset_adapters.contract import read_contract
 from riskgnn.workbench.artifacts import digest, read_json, write_json
 
@@ -85,6 +86,19 @@ def validate(source: Path, destination: Path) -> dict[str, Any]:
         def require_empty(query: str, message: str) -> None:
             if db.execute(query).fetchone():
                 raise ValueError(message)
+
+        evidence_columns = {"strength", "existence_confidence", "is_inferred"}
+        available = set(pq.read_schema(root / "edges.parquet").names)
+        if available & evidence_columns:
+            if not evidence_columns <= available:
+                raise ValueError("Incomplete ACRA V5 edge evidence")
+            require_empty(
+                "SELECT 1 FROM edges WHERE strength IS NULL OR NOT isfinite(strength) "
+                "OR strength<0 OR existence_confidence IS NULL "
+                "OR NOT isfinite(existence_confidence) OR existence_confidence NOT BETWEEN 0 AND 1 "
+                "OR is_inferred IS NULL LIMIT 1",
+                "Invalid ACRA edge strength/confidence",
+            )
 
         for table in ("company_attr", "label", "id_map"):
             require_empty(
@@ -177,6 +191,12 @@ def validate(source: Path, destination: Path) -> dict[str, Any]:
         "splits": splits,
         "relations": relations,
         "features": FEATURES,
+        "edgeFile": "edges.parquet",
+        "edgeEvidence": {
+            "separateStrengthAndConfidence": evidence_columns <= available,
+            "trainingPolicy": "bidirectional-unit-weights",
+            "retainedOnly": sorted(available & evidence_columns),
+        },
         "source": export,
         "limitations": [
             "Singapore corporate distress proxy",

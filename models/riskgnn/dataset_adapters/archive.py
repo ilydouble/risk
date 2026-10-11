@@ -58,11 +58,3 @@ def unpack(source: Path, target: Path) -> list[dict[str, Any]]:
                 shutil.copyfileobj(src, dst, length=1024 * 1024)
             files.append({"path": name, "size": entry.file_size, "sha256": digest(destination)})
     return files
-
-
-def data_root(directory: Path) -> Path:
-    candidates = list(directory.glob("company_attr.parquet"))
-    candidates += list(directory.glob("*/company_attr.parquet"))
-    if len(candidates) != 1:
-        raise ValueError("Expected one comrisk_export directory")
-    return candidates[0].parent

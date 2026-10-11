@@ -39,7 +39,7 @@ def test_original_research_cli_predictions(export_zip, tmp_path):
     trusted = tmp_path / "research-input"
     shutil.copytree(tmp_path / "source", trusted)
     # This repository-owned loader is explicitly used for the original research CLI.
-    # The uploaded ZIP keeps its raising attachment and is never used as Python code.
+    # Uploaded attachments are never used as Python code.
     shutil.copy2(fixtures / "research_loader.py", trusted / "load_comrisk.py")
     output = tmp_path / "predictions.npz"
     arguments = [

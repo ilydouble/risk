@@ -54,19 +54,22 @@ def test_contract_selects_data_adapter_not_uploaded_code(export_zip, tmp_path):
     assert read_dataset_contract(source) == changed
     with pytest.raises(ValueError, match="not supported"):
         resolve(source)
-    assert "raise RuntimeError" in (tmp_path / "source/load_comrisk.py").read_text()
+    assert (tmp_path / "source/load_comrisk.py").is_file()
 
 
-def test_packaging_creates_new_zip_and_preserves_bytes(tmp_path):
+def test_packaging_creates_new_zip_and_preserves_bytes(tmp_path, acra_source):
     source = tmp_path / "raw.zip"
     with ZipFile(source, "w") as archive:
-        archive.writestr("data/company_attr.parquet", b"example")
+        archive.write(acra_source / "company_attr.parquet", "data/company_attr.parquet")
     before = source.read_bytes()
     output = tmp_path / "dataset.zip"
     package(source, output, "example", "1", "sg-comrisk")
     assert source.read_bytes() == before
     assert read_dataset_contract(output)["dataset"] == {"id": "example", "version": "1"}
     with ZipFile(output) as archive:
-        assert archive.read("data/company_attr.parquet") == b"example"
+        assert (
+            archive.read("data/company_attr.parquet")
+            == (acra_source / "company_attr.parquet").read_bytes()
+        )
     with pytest.raises(ValueError):
         package(source, output, "example", "1", "sg-comrisk")

@@ -70,7 +70,9 @@ def execute(request: dict, directory: Path, emit) -> dict:
         return {
             "data": {
                 "profile": profile,
-                "companies": read_json(output / "model/ids.json")[:100],
+                "companies": read_json(output / "model/ids.json")[
+                    : min(100, profile.get("companyCount", profile["nodeCount"]))
+                ],
             },
             "artifacts": {"model": {"path": "model", "format": "riskgnn-model-v2"}},
             "effective_config": parameters,

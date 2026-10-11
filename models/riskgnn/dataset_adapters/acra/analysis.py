@@ -5,9 +5,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from riskgnn.dataset_adapters.analysis.bundle import _psi, _safe_number
-from riskgnn.dataset_adapters.analysis.report import normalize
-from riskgnn.dataset_adapters.sg_comrisk.validation import FEATURES, connect
+from riskgnn.dataset_adapters.acra.validation import FEATURES, connect
+from riskgnn.dataset_adapters.report import normalize
+from riskgnn.dataset_adapters.statistics import psi, safe_number
 
 
 def analyze(root: Path, manifest: dict) -> dict:
@@ -46,8 +46,8 @@ def analyze(root: Path, manifest: dict) -> dict:
         drift[output_name] = [
             {
                 "name": name,
-                "psi": _safe_number(
-                    _psi(
+                "psi": safe_number(
+                    psi(
                         pd.to_numeric(train[name]).astype(float),
                         pd.to_numeric(other[name]).astype(float),
                     )

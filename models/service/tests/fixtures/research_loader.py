@@ -14,10 +14,24 @@ class ComRiskExport:
         return self
 
     def build_labels(self):
-        self.y = pd.read_parquet(self.path / "label.parquet").label.to_numpy()
+        labels = pd.read_parquet(self.path / "label.parquet").set_index("company_id")
+        self.y = labels.loc[self.ca.company_id, "label"].to_numpy()
 
     def build_features(self, mode):
-        return self.ca.drop(columns="company_id").to_numpy(dtype=np.float32)
+        return (
+            self.ca[
+                [
+                    "officers",
+                    "name_change_count",
+                    "has_unit",
+                    "related_company_count",
+                    "related_company_weighted",
+                    "address_trust",
+                ]
+            ]
+            .fillna(0)
+            .to_numpy(dtype=np.float32)
+        )
 
     def load_frozen_splits(self, seed):
         s = pd.read_parquet(self.path / "splits_5seed.parquet")

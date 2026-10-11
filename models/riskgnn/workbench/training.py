@@ -22,9 +22,10 @@ from sklearn.metrics import (
 
 from riskgnn.training_engine import run_epochs
 from riskgnn.workbench.artifacts import read_json, seal, verify, write_json
-from riskgnn.workbench.network import EdgeRiskGNN
+from riskgnn.workbench.network import create_model
 from riskgnn.workbench.predictor import Predictor
 from riskgnn.workbench.sampling import Sampler
+from riskgnn.workbench.sampling import forward as sampled_forward
 
 
 def emit(kind: str, **data: Any) -> None:
@@ -91,6 +92,8 @@ def train(
     output.mkdir(parents=True, exist_ok=True)
     for name in ("context.npz", "ids.json", "metadata.json"):
         shutil.copy2(prepared / name, output / name)
+    if (prepared / "evidence.json").is_file():
+        shutil.copy2(prepared / "evidence.json", output / "evidence.json")
     meta = read_json(output / "metadata.json")
     context = dict(np.load(output / "context.npz", allow_pickle=False))
     meta["runnerId"] = runner_id
@@ -101,8 +104,8 @@ def train(
     train_nodes = np.where(context["splits"] == "train")[0]
     validation = np.where(context["splits"] == "val")[0]
     ids = read_json(output / "ids.json")
-    sampler = Sampler(context["edges"], len(ids))
-    model = EdgeRiskGNN(len(ids), len(meta["relations"]), features=len(meta["features"]))
+    sampler = Sampler(context["edges"], len(ids), context.get("weights"), context.get("confidence"))
+    model = create_model(meta, len(ids))
     optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, 20, eta_min=1e-6)
     best = float("inf")
@@ -113,10 +116,9 @@ def train(
         return [nodes[start : start + 64] for start in range(0, len(nodes), 64)]
 
     def forward(epoch, batch):
-        n, edges, types = sampler.sample(batch.tolist(), epoch * 100 + int(batch[0]))
-        if len(n) < 2:
-            raise ValueError("Training requires at least two nodes per batch")
-        return model(x, n, edges, types, len(batch)), labels[batch]
+        return sampled_forward(
+            model, x, sampler, batch.tolist(), epoch * 100 + int(batch[0])
+        ), labels[batch]
 
     def on_epoch(epoch, loss, _count, _duration):
         nonlocal best
@@ -124,8 +126,8 @@ def train(
         with torch.inference_mode():
             probabilities = []
             for node in validation:
-                n, edges, types = sampler.sample([int(node)], int(node) + 999999)
-                probabilities.append(float(model(x, n, edges, types, 1)[0, 1].exp()))
+                prediction = sampled_forward(model, x, sampler, [int(node)], int(node) + 999999)
+                probabilities.append(float(prediction[0, 1].exp()))
         p = np.clip(probabilities, 1e-7, 1 - 1e-7)
         y = context["labels"][validation]
         validation_loss = float(np.mean(-y * np.log(p) - (1 - y) * np.log(1 - p)))
@@ -159,7 +161,7 @@ def train(
             "epochs": epochs,
             "history": history,
             "threshold": 0.5,
-            "architecture": "sg-node-edge-v2",
+            "architecture": meta.get("architecture", "sg-node-edge-v2"),
             "python": platform.python_version(),
             "torch": torch.__version__,
             "codeVersion": code_version(),
@@ -190,6 +192,10 @@ def train(
             "enabled": True,
             "nodes": len(ids),
             "edges": len(context["edges"]),
+            "edgePolicy": meta["edgePolicy"],
+            "usedInputs": meta.get("usedInputs", []),
+            "retainedOnlyInputs": meta.get("retainedOnlyInputs", []),
+            "evaluation": meta.get("evaluation", "static_transductive"),
         },
         "selectionMetric": "validation_loss",
         "selectedEpoch": meta["selectedEpoch"],

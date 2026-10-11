@@ -7,10 +7,29 @@ from model_service.execution.artifacts import fingerprint, inventory, pack
 from model_service.execution.contracts import AssetInput, Operation, OperationRequest
 from model_service.execution.invocation import Invocation
 from model_service.execution.process import ComputationFailed, run_model
+from riskgnn.tools.package_dataset import package
 from riskgnn.workbench.predictor import Predictor
 
 
-def test_registered_riskgnn_cli_train_independent_test_predict(export_zip, tmp_path):
+@pytest.fixture(params=["acra", "smesd", "uk-dataset-v1"])
+def real_training_zip(request, export_zip, datasets, tmp_path):
+    if request.param == "acra":
+        return export_zip
+    folder = "comrisk_export_v5/smesd" if request.param == "smesd" else "uk_dataset_v1"
+    path = tmp_path / "real-json.zip"
+    package(
+        datasets / folder,
+        path,
+        request.param,
+        "real-local",
+        request.param,
+        config={"target_count": 60},
+    )
+    return path
+
+
+def test_registered_riskgnn_cli_train_independent_test_predict(real_training_zip, tmp_path):
+    export_zip = real_training_zip
     events = []
 
     async def event(kind, data):
@@ -36,7 +55,7 @@ def test_registered_riskgnn_cli_train_independent_test_predict(export_zip, tmp_p
     async def exercise():
         _, inspected = await operation(Operation.INSPECT, "dataset", export_zip, "zip")
         assert inspected.data["compatibility"] == "compatible"
-        assert inspected.data["counts"]["company_attr"] == 90
+        assert inspected.data["counts"]["company_attr"] > 48
         call, trained = await operation(
             Operation.TRAIN, "dataset", export_zip, "zip", {"epochs": 1}
         )

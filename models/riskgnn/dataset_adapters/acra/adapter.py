@@ -1,11 +1,12 @@
 from pathlib import Path
 
-from riskgnn.dataset_adapters.analysis.singapore import analyze
-from riskgnn.dataset_adapters.archive import data_root
+from riskgnn.dataset_adapters.acra.analysis import analyze
+from riskgnn.dataset_adapters.acra.paths import data_root
+from riskgnn.dataset_adapters.acra.preparation import prepare
+from riskgnn.dataset_adapters.acra.validation import validate
 from riskgnn.dataset_adapters.base import DatasetAdapter
 from riskgnn.dataset_adapters.contract import read_contract
-from riskgnn.dataset_adapters.sg_comrisk.preparation import prepare
-from riskgnn.dataset_adapters.sg_comrisk.validation import validate
+from riskgnn.dataset_adapters.snapshot_preparation import target_count
 
 
 class SingaporeAdapter(DatasetAdapter):
@@ -14,8 +15,7 @@ class SingaporeAdapter(DatasetAdapter):
     trainable = True
 
     def inspect(self, archive: Path, workspace: Path, config: dict) -> dict:
-        if config:
-            raise ValueError("sg-comrisk v1 does not accept additional configuration")
+        target_count(config, 2000)
         _, relative = read_contract(archive)
         result = validate(archive, workspace)
         root = data_root(workspace)
@@ -33,6 +33,4 @@ class SingaporeAdapter(DatasetAdapter):
         return result
 
     def prepare(self, validated: Path, output: Path, config: dict) -> dict:
-        if config:
-            raise ValueError("sg-comrisk v1 does not accept additional configuration")
-        return prepare(validated, output)
+        return prepare(validated, output, target_count=target_count(config, 2000))

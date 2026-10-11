@@ -61,7 +61,7 @@ async def execute_workflow(job, settings, store, storage) -> dict:
             Operation.INSPECT, {"dataset": AssetInput(path=archive, sha256=sha, format="zip")}
         )
         result = await execute(call)
-        # Analysis-only Bundle remains visible, but a corrupt upload must not be
+        # Analysis-only results can remain visible, but a corrupt upload must not be
         # marked ready merely because inspect successfully returned diagnostics.
         if not result.data.get("protocol"):
             raise ExecutionError("DATASET_INCOMPATIBLE", str(result.data.get("issues", [])))

@@ -5,8 +5,8 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from riskgnn.dataset_adapters.archive import data_root
-from riskgnn.dataset_adapters.sg_comrisk.validation import (
+from riskgnn.dataset_adapters.acra.paths import data_root
+from riskgnn.dataset_adapters.acra.validation import (
     FEATURES,
     connect,
     verify_validated,
@@ -120,6 +120,14 @@ def prepare(validated: Path, output: Path, *, target_count: int = 2000) -> dict[
         "splitCounts": {name: int(np.sum(split == name)) for name in ("train", "val", "test")},
         "preprocessing": {"fitSplit": "train", "fillValues": statistics},
         "edgePolicy": "bidirectional-unit-weights",
+        "usedInputs": ["company_features", "bidirectional_edges"],
+        "retainedOnlyInputs": [
+            "source_edge_weight",
+            "strength",
+            "existence_confidence",
+            "hyperedges",
+            "events",
+        ],
         "protocol": "sg-node-edge-train-fit-v1",
     }
     write_json(output / "metadata.json", metadata)

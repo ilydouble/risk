@@ -12,7 +12,7 @@ from model_service.modules.jobs.model import Base
 from model_service.modules.jobs.repository import Store
 from model_service.modules.models.service import Runtime
 from model_service.shared.config import Settings
-from riskgnn.dataset_adapters.sg_comrisk.validation import validate
+from riskgnn.dataset_adapters.acra.validation import validate
 
 
 def test_artifact_upload_retry_reuses_independently_tested_checkpoint(export_zip, tmp_path):

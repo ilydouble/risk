@@ -768,6 +768,13 @@
             "title": "Contract Version",
             "type": "integer"
           },
+          "dataset_formats": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Dataset Formats",
+            "type": "array"
+          },
           "description": {
             "default": "",
             "title": "Description",

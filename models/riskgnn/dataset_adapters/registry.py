@@ -1,13 +1,15 @@
 from pathlib import Path
 
+from riskgnn.dataset_adapters.acra.adapter import SingaporeAdapter
 from riskgnn.dataset_adapters.base import DatasetAdapter
-from riskgnn.dataset_adapters.bundle.adapter import BundleAdapter
 from riskgnn.dataset_adapters.contract import read_contract
-from riskgnn.dataset_adapters.sg_comrisk.adapter import SingaporeAdapter
+from riskgnn.dataset_adapters.smesd.adapter import SMEsDAdapter
+from riskgnn.dataset_adapters.uk_dataset_v1.adapter import UKAdapter
 from riskgnn.workbench.artifacts import write_json
 
 _ADAPTERS: dict[tuple[str, str], DatasetAdapter] = {
-    (adapter.id, adapter.version): adapter for adapter in (SingaporeAdapter(), BundleAdapter())
+    (adapter.id, adapter.version): adapter
+    for adapter in (SingaporeAdapter(), SMEsDAdapter(), UKAdapter())
 }
 
 

@@ -44,4 +44,5 @@ class RuntimeSpec(Contract):
     contract_version: Literal[2] = 2
     name: str
     description: str = ""
+    dataset_formats: list[str] = Field(default_factory=list)
     operations: dict[Operation, OperationSpec]

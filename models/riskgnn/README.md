@@ -179,3 +179,11 @@ experiments and does not claim to reproduce the historical metrics above.
 工作台入口可使用服务 uv 环境，或安装可选 `workbench-requirements.txt`；原 requirements 不变。
 数据 ZIP 必须带 risk_dataset_contract.json，包内 Python 不执行。
 详见[数据集契约](../../docs/architecture/dataset-contract.md)与[数据适配器及 CLI](../../docs/architecture/dataset-adapters.md)。
+
+## 真实数据集适配器
+
+当前工作台接入 [ACRA](dataset_adapters/acra/README.md)、
+[SMEsD V5 JSON](dataset_adapters/smesd/README.md)、
+[UK Dataset V1](dataset_adapters/uk_dataset_v1/README.md)。
+专用说明与实现同目录；旧 Bundle 和合成演示生成器已删除。
+当前 node_edge 配置没有启用超图/事件分支，保留的数据不代表已参与训练。
