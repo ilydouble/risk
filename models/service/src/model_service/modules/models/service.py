@@ -20,6 +20,48 @@ class Runtime:
     def __init__(self, store: Store, storage: AsyncClient, settings: Settings):
         self.store, self.storage, self.settings = store, storage, settings
         self.slot = asyncio.Semaphore(1)
+        self.configuration_slot = asyncio.Semaphore(1)
+
+    async def configuration(
+        self,
+        job_id: str,
+        parameters: dict,
+        expected_digest: str | None,
+        request_id: str,
+    ) -> dict:
+        job = await self.store.get(job_id)
+        if job["kind"] != "validate" or job["status"] != "completed":
+            raise ValueError("Dataset validation is not complete")
+        # Reuse the immutable contract from inspection; do not scan the dataset for a form.
+        if self.configuration_slot.locked():
+            raise RuntimeError("Configuration slot is busy")
+        async with self.configuration_slot:
+            directory = self.settings.workspace / "configuration" / uuid4().hex
+            invocation = Invocation(
+                runtime_id="riskgnn",
+                runtime_version="2",
+                request=OperationRequest(
+                    operation=Operation.CONFIGURE,
+                    parameters={
+                        "dataset_contract": job["result"]["datasetContract"],
+                        "requested_parameters": parameters,
+                        "expected_digest": expected_digest,
+                    },
+                ),
+                run_id=job_id,
+                attempt_id=uuid4().hex,
+                request_id=request_id,
+                directory=directory,
+            )
+
+            async def ignore(_kind: str, _data: dict) -> None:
+                pass
+
+            try:
+                async with asyncio.timeout(60):
+                    return dict((await run_model(invocation, ignore)).result.data)
+            finally:
+                shutil.rmtree(directory, ignore_errors=True)
 
     async def predict(self, job_id: str, ids: list[str], request_id: str = "") -> list[dict]:
         if self.slot.locked():

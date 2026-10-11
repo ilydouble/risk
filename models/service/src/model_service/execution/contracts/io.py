@@ -28,6 +28,7 @@ class OperationRequest(Contract):
     operation: Operation
     inputs: dict[str, AssetInput] = Field(default_factory=dict)
     parameters: JsonObject = Field(default_factory=dict)
+    configuration: JsonObject = Field(default_factory=dict)
 
 
 class Artifact(Contract):

@@ -7,6 +7,7 @@ from .common import Contract, JsonObject
 
 
 class Operation(StrEnum):
+    CONFIGURE = "configure"
     INSPECT = "inspect"
     TRAIN = "train"
     EVALUATE = "evaluate"

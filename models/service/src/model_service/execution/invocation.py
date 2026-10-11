@@ -41,6 +41,9 @@ class Invocation(Contract):
         # Paths/attempt IDs change on retry. Content, exact adapter version and
         # parameters must remain identical before sealed output can be reused.
         value = self.model_dump(mode="json", exclude={"directory", "attempt_id", "request_id"})
+        # Preserve bindings of legacy receipts that predate optional configuration snapshots.
+        if not value["request"]["configuration"]:
+            value["request"].pop("configuration")
         for asset in value["request"]["inputs"].values():
             asset.pop("path")
         return hashlib.sha256(json.dumps(value, sort_keys=True).encode()).hexdigest()

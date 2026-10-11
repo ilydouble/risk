@@ -48,7 +48,13 @@ def test_service_auth_validation_envelope_and_schema(monkeypatch):
             headers={"Authorization": "Bearer contract-test-token"},
         ).json()["data"]["runtime"]
         assert adapters["runtime_version"] == "2"
-        assert set(adapters["operations"]) == {"inspect", "train", "evaluate", "predict"}
+        assert set(adapters["operations"]) == {
+            "configure",
+            "inspect",
+            "train",
+            "evaluate",
+            "predict",
+        }
         assert (
             adapters["operations"]["train"]["parameters_schema"]["properties"]["epochs"]["maximum"]
             == 20

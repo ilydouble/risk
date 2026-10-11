@@ -12,6 +12,8 @@ from jsonschema.exceptions import ValidationError as SchemaValidationError
 
 from riskgnn.dataset_adapters.registry import inspect, resolve
 from riskgnn.workbench.artifacts import asset_digest, read_json, write_json
+from riskgnn.workbench.configuration import ConfigurationError, merge, validate_frozen
+from riskgnn.workbench.configuration import resolve as resolve_configuration
 from riskgnn.workbench.predictor import Predictor
 from riskgnn.workbench.training import evaluate, train
 
@@ -28,6 +30,13 @@ def execute(request: dict, directory: Path, emit) -> dict:
     work, output = directory / "work", directory / "output"
     work.mkdir(parents=True, exist_ok=True)
     output.mkdir(parents=True, exist_ok=True)
+    if operation == "configure":
+        configuration = resolve_configuration(
+            parameters["dataset_contract"],
+            parameters.get("requested_parameters", {}),
+            parameters.get("expected_digest"),
+        )
+        return {"data": configuration}
     if operation == "inspect":
         emit({"kind": "stage", "stage": "validating", "message": ""})
         data = inspect(Path(inputs["dataset"]["path"]), work / "validated")
@@ -35,6 +44,12 @@ def execute(request: dict, directory: Path, emit) -> dict:
     if operation == "train":
         source = Path(inputs["dataset"]["path"])
         adapter, contract = resolve(source)
+        configuration = (
+            validate_frozen(contract, parameters, request["configuration"])
+            if request.get("configuration")
+            else resolve_configuration(contract, parameters)
+        )
+        parameters = configuration["resolvedParameters"]
         if not adapter.trainable:
             raise OperationFailure(
                 "DATASET_ANALYSIS_ONLY",
@@ -43,7 +58,7 @@ def execute(request: dict, directory: Path, emit) -> dict:
         emit({"kind": "stage", "stage": "validating", "message": ""})
         inspect(source, work / "validated")
         emit({"kind": "stage", "stage": "preparing", "message": ""})
-        adapter.prepare(work / "validated", work / "prepared", contract["adapter"]["config"])
+        adapter.prepare(work / "validated", work / "prepared", parameters["dataset"])
         emit({"kind": "stage", "stage": "training", "message": ""})
 
         def metric(row):
@@ -64,8 +79,9 @@ def execute(request: dict, directory: Path, emit) -> dict:
         profile = train(
             work / "prepared",
             output / "model",
-            parameters.get("epochs", 2),
+            parameters["epochs"],
             metric_callback=metric,
+            configuration=configuration,
         )
         return {
             "data": {
@@ -133,10 +149,11 @@ def main() -> None:
                     raise OperationFailure("MODEL_INPUT_INVALID", "Input asset checksum mismatch")
             descriptor = read_json(Path(__file__).with_name("runtime.json"))
             operation = descriptor["operations"][command["request"]["operation"]]
-            command["request"]["parameters"] = {
-                **operation["default_parameters"],
-                **command["request"].get("parameters", {}),
-            }
+            if not command["request"].get("configuration"):
+                command["request"]["parameters"] = merge(
+                    operation["default_parameters"],
+                    command["request"].get("parameters", {}),
+                )
             Draft202012Validator(operation["parameters_schema"]).validate(
                 command["request"]["parameters"]
             )
@@ -146,17 +163,16 @@ def main() -> None:
                 raise OperationFailure("EXECUTION_CANCELLED", "Operation cancelled")
             write_json(directory / "operation-result.json", result)
         except Exception as error:
-            code = (
-                error.code
-                if isinstance(error, OperationFailure)
-                else (
-                    "MODEL_INPUT_INVALID"
-                    if isinstance(
-                        error, (ValueError, KeyError, FileNotFoundError, SchemaValidationError)
-                    )
-                    else "MODEL_EXECUTION_FAILED"
-                )
-            )
+            if isinstance(error, OperationFailure):
+                code = error.code
+            elif isinstance(error, ConfigurationError):
+                code = "MODELING_CONFIG_STALE" if error.stale else "EXECUTION_PARAMETERS_INVALID"
+            elif isinstance(
+                error, (ValueError, KeyError, FileNotFoundError, SchemaValidationError)
+            ):
+                code = "MODEL_INPUT_INVALID"
+            else:
+                code = "MODEL_EXECUTION_FAILED"
             write_json(
                 directory / "error.json",
                 {"code": code, "message": str(error), "retryable": False},

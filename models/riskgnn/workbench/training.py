@@ -79,6 +79,7 @@ def train(
     *,
     runner_id: str = "riskgnn",
     metric_callback: Callable[[dict[str, Any]], None] | None = None,
+    configuration: dict | None = None,
 ) -> dict[str, Any]:
     if runner_id != "riskgnn":
         raise ValueError("Only RiskGNN is deployed in this workbench")
@@ -95,6 +96,9 @@ def train(
     if (prepared / "evidence.json").is_file():
         shutil.copy2(prepared / "evidence.json", output / "evidence.json")
     meta = read_json(output / "metadata.json")
+    if configuration is not None:
+        meta["configuration"] = configuration
+        meta["effectiveConfig"] = configuration["resolvedParameters"]
     context = dict(np.load(output / "context.npz", allow_pickle=False))
     meta["runnerId"] = runner_id
     meta["sourceEdgeCount"] = meta["edgeCount"]
@@ -171,6 +175,12 @@ def train(
             },
         }
     )
+    meta["actualCounts"] = {
+        "targets": meta["targetCount"],
+        "train": meta["splitCounts"]["train"],
+        "validation": meta["splitCounts"]["val"],
+        "test": meta["splitCounts"]["test"],
+    }
     meta["experimentProfile"] = {
         "version": 1,
         "threshold": 0.5,

@@ -1,3 +1,5 @@
+from typing import Any, Literal
+
 from pydantic import BaseModel, Field
 
 from model_service.execution.contracts import RuntimeSpec
@@ -36,3 +38,20 @@ class ResponseCapabilities(BaseModel):
 
 class ResponseRuntime(BaseModel):
     runtime: RuntimeSpec
+
+
+class RequestConfiguration(RequestJob):
+    parameters: dict[str, Any] = Field(default_factory=dict)
+    expectedDigest: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
+
+
+class ResponseConfiguration(BaseModel):
+    configVersion: Literal[1]
+    schemaDigest: str
+    dataset: dict[str, Any]
+    adapter: dict[str, Any]
+    parameterSchema: dict[str, Any]
+    defaultParameters: dict[str, Any]
+    uiSchema: dict[str, Any]
+    requestedParameters: dict[str, Any]
+    resolvedParameters: dict[str, Any]

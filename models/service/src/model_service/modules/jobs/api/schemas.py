@@ -16,7 +16,9 @@ class TrainInput(BaseModel):
     model_config = ConfigDict(extra="forbid")
     sourceJobId: UUID
     runnerId: Literal["riskgnn"] = "riskgnn"
-    epochs: int = Field(default=2, ge=1, le=20)
+    configuration: dict[str, Any] | None = None
+    # Already queued legacy jobs remain executable; new submissions carry a frozen snapshot.
+    epochs: int | None = Field(default=None, ge=1, le=20)
 
 
 class RequestSubmitJob(BaseModel):

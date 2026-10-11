@@ -102,13 +102,18 @@
             "minimum": 1,
             "title": "Epochs",
             "type": "integer"
+          },
+          "dataset": {
+            "type": "object",
+            "default": {}
           }
         },
         "title": "TrainParameters",
         "type": "object"
       },
       "default_parameters": {
-        "epochs": 2
+        "epochs": 2,
+        "dataset": {}
       },
       "result_schema": {
         "$defs": {
@@ -147,7 +152,32 @@
           "required": true
         }
       },
-      "ui_schema": {}
+      "ui_schema": {
+        "fields": [
+          {
+            "path": "dataset.target_count",
+            "label": {
+              "zh": "目标企业总数",
+              "en": "Target companies"
+            },
+            "description": {
+              "zh": "训练、验证、测试目标的总数，保留已有划分；不足时使用可用目标。",
+              "en": "Total training, validation and test targets; preserves existing splits and uses available targets if fewer."
+            }
+          },
+          {
+            "path": "epochs",
+            "label": {
+              "zh": "训练轮数",
+              "en": "Training epochs"
+            },
+            "description": {
+              "zh": "在固定数据子集上执行的训练轮数。",
+              "en": "Training epochs on the prepared subset."
+            }
+          }
+        ]
+      }
     },
     "evaluate": {
       "inputs": {
@@ -275,6 +305,51 @@
         ],
         "title": "PredictionSummary",
         "type": "object"
+      },
+      "artifacts": {},
+      "ui_schema": {}
+    },
+    "configure": {
+      "inputs": {},
+      "parameters_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "dataset_contract"
+        ],
+        "properties": {
+          "dataset_contract": {
+            "type": "object"
+          },
+          "requested_parameters": {
+            "type": "object",
+            "default": {}
+          },
+          "expected_digest": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      },
+      "default_parameters": {
+        "requested_parameters": {}
+      },
+      "result_schema": {
+        "type": "object",
+        "required": [
+          "configVersion",
+          "schemaDigest",
+          "parameterSchema",
+          "defaultParameters",
+          "uiSchema",
+          "requestedParameters",
+          "resolvedParameters",
+          "dataset",
+          "adapter"
+        ]
       },
       "artifacts": {},
       "ui_schema": {}

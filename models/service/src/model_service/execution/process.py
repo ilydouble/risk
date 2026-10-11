@@ -36,9 +36,10 @@ async def run_model(
         (directory / name).unlink(missing_ok=True)
     request = directory / "request.json"
     payload = invocation.model_dump(mode="json")
-    payload["request"]["parameters"] = parameters_for(
-        spec, invocation.request.operation, invocation.request.parameters
-    )
+    if not invocation.request.configuration:
+        payload["request"]["parameters"] = parameters_for(
+            spec, invocation.request.operation, invocation.request.parameters
+        )
     write_json(request, payload)
     process = await asyncio.create_subprocess_exec(
         sys.executable,

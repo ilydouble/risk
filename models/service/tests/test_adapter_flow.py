@@ -8,6 +8,7 @@ from model_service.execution.contracts import AssetInput, Operation, OperationRe
 from model_service.execution.invocation import Invocation
 from model_service.execution.process import ComputationFailed, run_model
 from riskgnn.dataset_adapters.packaging import package
+from riskgnn.workbench.artifacts import read_json
 from riskgnn.workbench.predictor import Predictor
 
 
@@ -34,14 +35,19 @@ def test_registered_riskgnn_cli_train_independent_test_predict(real_training_zip
     async def event(kind, data):
         events.append((kind, data))
 
-    async def operation(name, role, path, format, parameters=None):
+    async def operation(
+        name, role=None, path=None, format=None, parameters=None, configuration=None
+    ):
         call = Invocation(
             runtime_id="riskgnn",
             runtime_version="2",
             request=OperationRequest(
                 operation=name,
-                inputs={role: AssetInput(path=path, sha256=fingerprint(path), format=format)},
+                inputs={role: AssetInput(path=path, sha256=fingerprint(path), format=format)}
+                if role
+                else {},
                 parameters=parameters or {},
+                configuration=configuration or {},
             ),
             run_id="flow",
             attempt_id="1",
@@ -55,10 +61,27 @@ def test_registered_riskgnn_cli_train_independent_test_predict(real_training_zip
         _, inspected = await operation(Operation.INSPECT, "dataset", export_zip, "zip")
         assert inspected.data["compatibility"] == "compatible"
         assert inspected.data["counts"]["company_attr"] > 48
+        _, configured = await operation(
+            Operation.CONFIGURE,
+            parameters={
+                "dataset_contract": inspected.data["datasetContract"],
+                "requested_parameters": {"epochs": 1, "dataset": {"target_count": 30}},
+            },
+        )
         call, trained = await operation(
-            Operation.TRAIN, "dataset", export_zip, "zip", {"epochs": 1}
+            Operation.TRAIN,
+            "dataset",
+            export_zip,
+            "zip",
+            configured.data["resolvedParameters"],
+            configured.data,
         )
         model = call.directory / "output" / trained.artifacts["model"].path
+        metadata = read_json(model / "metadata.json")
+        assert metadata["configuration"] == configured.data
+        assert trained.effective_config == configured.data["resolvedParameters"]
+        assert metadata["actualCounts"]["targets"] == 30
+        assert sum(metadata["actualCounts"][key] for key in ("train", "validation", "test")) == 30
         before = inventory(model)
         _, tested = await operation(Operation.EVALUATE, "model", model, "riskgnn-model-v2")
         assert tested.data["report"]["independentReload"] is True

@@ -12,7 +12,7 @@ from model_service.modules.jobs.model import Base
 from model_service.modules.jobs.repository import Store
 from model_service.modules.models.service import Runtime
 from model_service.shared.config import Settings
-from riskgnn.dataset_adapters.acra.validation import validate
+from riskgnn.dataset_adapters.registry import inspect
 
 
 def test_artifact_upload_retry_reuses_independently_tested_checkpoint(export_zip, tmp_path):
@@ -48,13 +48,31 @@ def test_artifact_upload_retry_reuses_independently_tested_checkpoint(export_zip
                 await connection.run_sync(Base.metadata.create_all)
             store = Store(engine)
             dataset_id, run_id = str(uuid4()), str(uuid4())
-            result = validate(export_zip, tmp_path / "validated")
+            result = inspect(export_zip, tmp_path / "validated")
             result["objectKey"] = "validated/source.zip"
             await store.submit(dataset_id, "validate", {}, "source")
             job = await store.claim()
             await store.finish(dataset_id, job["owner"], result=result)
-            await store.submit(run_id, "train", {"sourceJobId": dataset_id, "epochs": 1}, "train")
             worker = Worker(Settings(workspace=tmp_path / "workspace"), store, Storage())
+            runtime = Runtime(store, worker.storage, worker.settings)
+            snapshot = await runtime.configuration(
+                dataset_id,
+                {
+                    "epochs": 1,
+                    "dataset": {"target_count": 30},
+                },
+                None,
+                "configuration-request",
+            )
+            await store.submit(
+                run_id,
+                "train",
+                {
+                    "sourceJobId": dataset_id,
+                    "configuration": snapshot,
+                },
+                "train",
+            )
             await worker.run_job(await store.claim())
             assert (await store.get(run_id))["status"] == "queued"
             first_events = await store.events(run_id, 0)
@@ -72,6 +90,8 @@ def test_artifact_upload_retry_reuses_independently_tested_checkpoint(export_zip
             final = await store.get(run_id)
             assert final["status"] == "completed" and final["attempt"] == 2
             assert final["result"]["report"]["independentReload"] is True
+            assert final["result"]["effectiveConfig"] == snapshot["resolvedParameters"]
+            assert final["result"]["actualCounts"]["targets"] == 30
             events = await store.events(run_id, 0)
             assert (
                 sum(

@@ -33,17 +33,21 @@ async def unexpected(request: Request, exc: Exception):
 
 async def execution_error(request: Request, exc: ExecutionError):
     status = (
-        422
-        if exc.detail.code
-        in {
-            "MODEL_RUNTIME_INCOMPATIBLE",
-            "EXECUTION_OPERATION_UNSUPPORTED",
-            "EXECUTION_PARAMETERS_INVALID",
-            "EXECUTION_INPUT_INVALID",
-            "EXECUTION_INPUT_INCOMPATIBLE",
-            "MODEL_INPUT_INVALID",
-        }
-        else 503
+        409
+        if exc.detail.code == "MODELING_CONFIG_STALE"
+        else (
+            422
+            if exc.detail.code
+            in {
+                "MODEL_RUNTIME_INCOMPATIBLE",
+                "EXECUTION_OPERATION_UNSUPPORTED",
+                "EXECUTION_PARAMETERS_INVALID",
+                "EXECUTION_INPUT_INVALID",
+                "EXECUTION_INPUT_INCOMPATIBLE",
+                "MODEL_INPUT_INVALID",
+            }
+            else 503
+        )
     )
     return error_response(
         request, status, exc.detail.code, exc.detail.message, field=exc.detail.path

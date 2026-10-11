@@ -147,6 +147,33 @@
         "title": "Envelope[ResponseCapabilities]",
         "type": "object"
       },
+      "Envelope_ResponseConfiguration_": {
+        "properties": {
+          "code": {
+            "default": 200,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ResponseConfiguration"
+          },
+          "internal_code": {
+            "default": "SUCCESS",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "default": "OK",
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "Envelope[ResponseConfiguration]",
+        "type": "object"
+      },
       "Envelope_ResponseEvents_": {
         "properties": {
           "code": {
@@ -457,6 +484,7 @@
       },
       "Operation": {
         "enum": [
+          "configure",
           "inspect",
           "train",
           "evaluate",
@@ -524,6 +552,37 @@
       "RequestCapabilities": {
         "properties": {},
         "title": "RequestCapabilities",
+        "type": "object"
+      },
+      "RequestConfiguration": {
+        "properties": {
+          "expectedDigest": {
+            "anyOf": [
+              {
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expecteddigest"
+          },
+          "jobId": {
+            "format": "uuid",
+            "title": "Jobid",
+            "type": "string"
+          },
+          "parameters": {
+            "additionalProperties": true,
+            "title": "Parameters",
+            "type": "object"
+          }
+        },
+        "required": [
+          "jobId"
+        ],
+        "title": "RequestConfiguration",
         "type": "object"
       },
       "RequestEvents": {
@@ -637,6 +696,67 @@
           "items"
         ],
         "title": "ResponseCapabilities",
+        "type": "object"
+      },
+      "ResponseConfiguration": {
+        "properties": {
+          "adapter": {
+            "additionalProperties": true,
+            "title": "Adapter",
+            "type": "object"
+          },
+          "configVersion": {
+            "const": 1,
+            "title": "Configversion",
+            "type": "integer"
+          },
+          "dataset": {
+            "additionalProperties": true,
+            "title": "Dataset",
+            "type": "object"
+          },
+          "defaultParameters": {
+            "additionalProperties": true,
+            "title": "Defaultparameters",
+            "type": "object"
+          },
+          "parameterSchema": {
+            "additionalProperties": true,
+            "title": "Parameterschema",
+            "type": "object"
+          },
+          "requestedParameters": {
+            "additionalProperties": true,
+            "title": "Requestedparameters",
+            "type": "object"
+          },
+          "resolvedParameters": {
+            "additionalProperties": true,
+            "title": "Resolvedparameters",
+            "type": "object"
+          },
+          "schemaDigest": {
+            "title": "Schemadigest",
+            "type": "string"
+          },
+          "uiSchema": {
+            "additionalProperties": true,
+            "title": "Uischema",
+            "type": "object"
+          }
+        },
+        "required": [
+          "configVersion",
+          "schemaDigest",
+          "dataset",
+          "adapter",
+          "parameterSchema",
+          "defaultParameters",
+          "uiSchema",
+          "requestedParameters",
+          "resolvedParameters"
+        ],
+        "title": "ResponseConfiguration",
         "type": "object"
       },
       "ResponseEvents": {
@@ -818,12 +938,30 @@
       "TrainInput": {
         "additionalProperties": false,
         "properties": {
+          "configuration": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Configuration"
+          },
           "epochs": {
-            "default": 2,
-            "maximum": 20.0,
-            "minimum": 1.0,
-            "title": "Epochs",
-            "type": "integer"
+            "anyOf": [
+              {
+                "maximum": 20.0,
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Epochs"
           },
           "runnerId": {
             "const": "riskgnn",
@@ -1332,6 +1470,84 @@
           }
         },
         "summary": "Model Capabilities"
+      }
+    },
+    "/internal/v1/models/configuration": {
+      "post": {
+        "operationId": "configuration_internal_v1_models_configuration_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestConfiguration"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_ResponseConfiguration_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Configuration"
       }
     },
     "/internal/v1/models/predict": {

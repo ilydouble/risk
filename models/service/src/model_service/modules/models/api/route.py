@@ -4,6 +4,7 @@ from fastapi import APIRouter
 from model_service.modules.models.api import handler
 from model_service.modules.models.api.schemas import (
     ResponseCapabilities,
+    ResponseConfiguration,
     ResponsePredict,
     ResponseRuntime,
 )
@@ -23,4 +24,10 @@ router.add_api_route(
 
 router.add_api_route(
     "/runtime", handler.runtime, methods=["POST"], response_model=Envelope[ResponseRuntime]
+)
+router.add_api_route(
+    "/configuration",
+    handler.configuration,
+    methods=["POST"],
+    response_model=Envelope[ResponseConfiguration],
 )

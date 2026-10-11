@@ -33,12 +33,15 @@ async def execute_workflow(job, settings, store, storage) -> dict:
     runtime_id = "riskgnn"
     version = runtime_spec().runtime_version
 
-    def invocation(operation, inputs, parameters=None):
+    def invocation(operation, inputs, parameters=None, configuration=None):
         return Invocation(
             runtime_id=runtime_id,
             runtime_version=version,
             request=OperationRequest(
-                operation=operation, inputs=inputs, parameters=parameters or {}
+                operation=operation,
+                inputs=inputs,
+                parameters=parameters or {},
+                configuration=configuration or {},
             ),
             run_id=job["id"],
             attempt_id=str(job["attempt"]),
@@ -74,10 +77,14 @@ async def execute_workflow(job, settings, store, storage) -> dict:
         raise ValueError("Dataset validation is not complete")
     data = source["result"]
     await storage.download_file(data["objectKey"], archive)
+    configuration = job["payload"].get("configuration")
     train_call = invocation(
         Operation.TRAIN,
         {"dataset": AssetInput(path=archive, sha256=data["sha256"], format="zip")},
-        {"epochs": job["payload"].get("epochs", 2)},
+        configuration["resolvedParameters"]
+        if configuration
+        else {"epochs": job["payload"].get("epochs") or 2},
+        configuration,
     )
     await asyncio.to_thread(read_dataset_contract, archive)
     trained = await execute(train_call)
@@ -104,4 +111,5 @@ async def execute_workflow(job, settings, store, storage) -> dict:
         "runtimeVersion": version,
         "artifacts": artifacts,
         "effectiveConfig": trained.effective_config,
+        "actualCounts": trained.data["profile"].get("actualCounts", {}),
     }

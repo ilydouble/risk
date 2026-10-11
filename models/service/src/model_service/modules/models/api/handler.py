@@ -4,8 +4,10 @@ from fastapi import Request
 from model_service.execution.runtime import runtime_spec
 from model_service.modules.models.api.schemas import (
     RequestCapabilities,
+    RequestConfiguration,
     RequestPredict,
     ResponseCapabilities,
+    ResponseConfiguration,
     ResponsePredict,
     ResponseRuntime,
 )
@@ -35,3 +37,12 @@ async def model_capabilities(body: RequestCapabilities) -> Envelope[ResponseCapa
 
 async def runtime(body: RequestCapabilities) -> Envelope[ResponseRuntime]:
     return success_response(ResponseRuntime(runtime=runtime_spec()))
+
+
+async def configuration(
+    body: RequestConfiguration, request: Request, runtime: FromDishka[Runtime]
+) -> Envelope[ResponseConfiguration]:
+    result = await runtime.configuration(
+        str(body.jobId), body.parameters, body.expectedDigest, request.state.request_id
+    )
+    return success_response(ResponseConfiguration.model_validate(result))
