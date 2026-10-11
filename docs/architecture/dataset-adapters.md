@@ -12,6 +12,8 @@ models/riskgnn/
     base.py                DatasetAdapter 抽象类
     contract.py            读取外层契约
     registry.py            显式登记数据适配器
+    package_dataset.py     轻量打包 CLI
+    delivery.py            读取各适配器的绑定预设与交付规则
     acra/                  ACRA 校验、分析、准备和静态概览
     smesd/                 SMEsD V5 JSON、人物与隔离快照
     uk_dataset_v1/         英国七维特征与三类超边
@@ -103,3 +105,6 @@ operation-result.json、events.jsonl 或 error.json。
 
 测试可设 RISK_DATASETS_ROOT，默认为仓库 datasets/；完整验收使用 pytest --require-datasets。
 缺数据的普通环境明确跳过数据集集成测试；要求数据的验收模式直接失败。
+
+日常数据交付参见[预设打包指南](../../models/riskgnn/dataset_adapters/PACKAGING.md)，
+只需选择预设、根目录、数据版本与输出，不要求安装模型环境或编写清单。

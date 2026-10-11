@@ -48,13 +48,16 @@ export_meta.json
 
 ## 打包
 
+预设与规则见 [delivery.json](delivery.json)，轻量环境及校验选项见 [打包指南](../PACKAGING.md)。
+
 从 `models/` 执行：
 
 ```bash
-uv run --project service python -m riskgnn.tools.package_dataset \
-  --input ../datasets/uk_dataset_v1 --output /tmp/uk-v1.zip \
-  --dataset-id uk-companies --dataset-version v1-20261010 --adapter uk-dataset-v1
+python -m riskgnn.dataset_adapters.package_dataset \
+  --data-dir ../datasets/uk_dataset_v1 --output /tmp/uk-v1.zip \
+  --preset uk-companies --dataset-version v1-20261010
 ```
 
-输出文件不能预先存在。可以加 `--target-count 60` 快速验收；全量结构/哈希校验仍然执行。
+输出文件不能预先存在。可加 `--set target_count=60` 准备小样本实验；默认打包只做基本检查，
+显式 `--validate` 或上传后的 Worker 才执行全量结构/哈希校验。
 模型结果记录数据摘要、预处理、划分和实际使用的数据能力，下载后可独立加载预测。

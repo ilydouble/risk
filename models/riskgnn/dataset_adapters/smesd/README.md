@@ -48,13 +48,15 @@ audit.json                 # 来源说明；其中 SHA 是原始 Pickle 的摘�
 
 ## 打包与验收
 
+预设与规则见 [delivery.json](delivery.json)，轻量环境及校验选项见 [打包指南](../PACKAGING.md)。
+
 从 `models/` 执行：
 
 ```bash
-uv run --project service python -m riskgnn.tools.package_dataset \
-  --input ../datasets/comrisk_export_v5/smesd --output /tmp/smesd-v5.zip \
-  --dataset-id smesd --dataset-version json-v5 --adapter smesd
+python -m riskgnn.dataset_adapters.package_dataset \
+  --data-dir ../datasets/comrisk_export_v5/smesd --output /tmp/smesd-v5.zip \
+  --preset smesd --dataset-version json-v5
 ```
 
-可加 `--target-count 60` 进行真实小样本链路检查，不能将其指标当成模型效果结论。
+可加 `--set target_count=60` 进行真实小样本链路检查，不能将其指标当成模型效果结论。
 工作台训练完成后，由独立进程加载、测试和预测；发布包保存人物嵌入及必要图上下文。

@@ -31,15 +31,21 @@
 清单在 ZIP 根目录或统一单层目录；具体布局以适配器要求为准。
 包内 Python 不执行；需要的加载代码必须进入仓库，经测试后随模型镜像发布。
 
-现有 comrisk_export 可以生成一个新的交付包，原包不会改变：
+数据负责人和适配器开发者首次维护 delivery.json 中的绑定预设，日常上传者只需选择预设、
+数据目录、本次版本及输出位置。dataset.id 与 adapter.id 独立，预设不通过文件名推断。
+先按[轻量打包指南](../../models/riskgnn/dataset_adapters/PACKAGING.md)安装打包依赖：
 
 ```bash
 cd models
-uv sync --project service --locked
-uv run --project service python -m riskgnn.tools.package_dataset \
-  --input /path/to/comrisk_export.zip --output /path/to/dataset-v1.zip \
-  --dataset-id singapore-company --dataset-version 2026-10-11 --adapter sg-comrisk
+python -m riskgnn.dataset_adapters.package_dataset --show-preset uk-companies
+python -m riskgnn.dataset_adapters.package_dataset \
+  --preset uk-companies --data-dir ../datasets/uk_dataset_v1 \
+  --dataset-version 2026-10-20 --output /tmp/uk-20261020.zip
 ```
+
+默认只检查目录、必需文件、配置和清单，不扫描业务表。需要完整校验时显式添加
+--validate --validation-python service/.venv/bin/python，失败不发布输出 ZIP。
+旧 ZIP 输入先解压；旧 tools.package_dataset 入口移除。新参数不要求上传者手写 JSON。
 
 通用 ZIP 上限 512 MiB，解压上限 2 GiB、单文件 1 GiB，最多 128 个成员。
 压缩体积不能代表训练内存。需要分片或更大数据时另行明确资源与传输策略。

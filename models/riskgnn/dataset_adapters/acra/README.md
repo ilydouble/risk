@@ -46,12 +46,14 @@ is_inferred 必须一起出现且取值有效，不能把三者合并为一个�
 
 ## 打包
 
-日常用 uv 从 `models/` 执行：
+预设与规则见 [delivery.json](delivery.json)，轻量环境及校验选项见 [打包指南](../PACKAGING.md)。
+
+安装打包依赖后，从 `models/` 执行：
 
 ```bash
-uv run --project service python -m riskgnn.tools.package_dataset \
-  --input ../datasets/comrisk_export_v5/acra --output /tmp/acra-v5.zip \
-  --dataset-id acra --dataset-version v5 --adapter sg-comrisk
+python -m riskgnn.dataset_adapters.package_dataset \
+  --data-dir ../datasets/comrisk_export_v5/acra --output /tmp/acra-v5.zip \
+  --preset acra-companies --dataset-version v5
 ```
 
 输出必须是新路径；原目录不会被修改。

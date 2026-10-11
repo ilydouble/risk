@@ -4,6 +4,8 @@
 **新上传 ZIP 必须有唯一的 `risk_dataset_contract.json`。** 清单选择仓库中的适配器，
 不会安装或执行 ZIP 中的代码；仅添加清单不能让不兼容的数据自动可训练。
 
+日常数据交付请直接看 [选择预设并打包](PACKAGING.md)：无需手写契约或安装模型环境。
+
 ## 1. 谁负责什么，什么时候需要新适配器
 
 | 负责人 | 交付内容 |
@@ -26,6 +28,7 @@ SMEsD 原始 Pickle 不直接上传；工作台使用处理后的 JSON。旧 Bun
 dataset_adapters/new_dataset/
 ├── __init__.py
 ├── adapter.py          # DatasetAdapter 实现及配置校验
+├── delivery.json       # 绑定预设、必需文件、配置约束及默认值
 ├── schemas.py          # 此数据的类型/字段约束，按需建立
 ├── validation.py       # 全量文件、ID、引用、标签和划分校验
 ├── preparation.py      # 读取、编码、预处理和模型输入准备
@@ -110,27 +113,28 @@ NPZ 的监督划分名是 train / val / test；上下文为 context、label=-1�
 - 在 [registry.py](registry.py) 顶部导入并加入实例，`(id, version)` 必须唯一。
 - 在 [runtime.json](../runtime.json) 的 `dataset_formats` 中加入 inspect 返回的 protocol。
   工作台通过模型声明展示格式，不需要在业务 API 再写一套数据加载分支。
-- 要让下文打包命令支持新 ID，在 [package_dataset.py](../tools/package_dataset.py) 的
-  `MARKERS` 增加该 ID 对应的必需文件标记，并测试根目录定位。
-- 当前打包工具写入 `adapter.version="1"`，CLI 只提供可选 `--target-count` 配置。
-  非 v1 或其他 config 可手工准备清单后正常压缩；若扩展工具参数，要同时补测试与文档。
+- 在具体适配器目录添加 delivery.json，定义 adapter ID/version、必需文件、配置 Schema、
+  默认配置和数据集预设。适配器调用 delivery_for(id, version) 复用配置与文件规则。
+- 预设由数据负责人和适配器开发者首次确定；dataset.id 与 adapter.id 分别维护。
+  打包器自动发现仓库声明，无需再维护 MARKERS；声明格式见 [打包指南](PACKAGING.md)。
 - 新增依赖时同步模型可选依赖、服务 pyproject/uv.lock；不改变同事原研究环境的依赖方式。
 
 ## 4. 制作 ZIP：两条路径
 
-**路径 A：打包工具**。已登记 MARKERS 且适配器版本为 1 时，从 `models/` 执行：
+**推荐：选择预设**。先按 [轻量环境](PACKAGING.md#2-轻量环境) 安装打包依赖，
+从 models/ 执行（示例预设需由开发者先新增）：
 
 ```bash
-uv sync --project service --locked
-uv run --project service python -m riskgnn.tools.package_dataset \
-  --input /path/to/new_dataset --output /tmp/new-dataset-v1.zip \
-  --dataset-id new-dataset --dataset-version 2026-10-11 --adapter new-dataset
+python -m riskgnn.dataset_adapters.package_dataset --show-preset new-dataset
+python -m riskgnn.dataset_adapters.package_dataset \
+  --preset new-dataset --data-dir /path/to/new_dataset \
+  --dataset-version 2026-10-11 --output /tmp/new-dataset-v1.zip
 ```
 
-支持目录或 ZIP 输入，工具自动补清单；输入不能已含清单，输出必须是新路径且在源目录外。
-打包成功只说明清单和布局可生成，不代表数据校验或训练成功。
+目录就是数据根，不猜测；现有 ZIP 先解压。工具自动生成契约、检查必需文件和配置，
+成功摘要区分默认打包与 --validate 全量校验。允许的参数可用 --set KEY=JSON 覆盖。
 
-**路径 B：手工清单**。在单个数据集目录放入以下文件，再压缩目录内容：
+**高级用法：手工清单**。在单个数据集目录放入以下文件，再压缩目录内容：
 
 ```json
 {

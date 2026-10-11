@@ -65,17 +65,19 @@ ZIP 上限 512 MiB，安全解压上限 2 GiB；拒绝路径越界、链接和�
 
 ## 生成一个新包
 
-模型侧提供打包工具，支持目录或 ZIP 输入，不会修改或覆盖原数据：
+模型侧提供预设打包器，--data-dir 明确指定根目录，已有 ZIP 先解压。
+先按[轻量打包指南](../../models/riskgnn/dataset_adapters/PACKAGING.md)配置环境，从 models/ 执行：
 
 ```bash
 cd models
-uv run --project service python -m riskgnn.tools.package_dataset \
-  --input /path/to/comrisk_export.zip --output /path/to/dataset-v1.zip \
-  --dataset-id singapore-company --dataset-version 2026-10-11 \
-  --adapter sg-comrisk
+python -m riskgnn.dataset_adapters.package_dataset \
+  --preset acra-companies --data-dir /path/to/acra --dataset-version 2026-10-11 \
+  --output /path/to/dataset-v1.zip
 ```
 
-工具只为已知布局补交付清单，不执行数据清洗、特征转换或模型训练。
+预设绑定 dataset ID、adapter ID/version 和默认 config；它们来自具体适配器目录的 delivery.json。
+默认只检查打包条件；--validate 才执行全量 inspect，二者都不训练。
+源目录已有根契约时以预设重建包内契约，不修改源文件，摘要明确标注。
 其他数据由提供方按本协议制作清单，并由模型开发者实现对应适配器。
 
 本轮为破坏性升级：旧工作台数据、任务和模型不再兼容；不自动转换历史对象。
