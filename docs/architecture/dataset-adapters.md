@@ -28,6 +28,9 @@ inspect 负责该数据的语义校验及描述；prepare 负责 load、split、
 
 ## 新数据接入
 
+协作者的实施步骤、返回字段、打包和上传链路统一见
+[Adapter 接入指南](../../models/riskgnn/dataset_adapters/README.md)。
+
 1. 判断已有适配器是否能够处理该数据；同一格式的新批次通常无需新增类。
 2. 如有新语义，在 dataset_adapters/ 下实现 DatasetAdapter，声明精确 ID 和版本。
 3. 明确标签、缺失值、划分、特征、关系和时间边界；实现自己的校验与准备。
