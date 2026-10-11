@@ -4,6 +4,8 @@
 
 工作台负责身份、输入传输、进程、租约、状态、事件持久化与产物上传。
 RiskGNN CLI 负责调用数据适配器、训练、独立测试和预测。
+configure 操作读取已校验的数据契约，返回模型声明的实验参数、默认值和解析快照；
+不读取数据文件、不训练。提交配置及重试语义见[实验配置](experiment-configuration.md)。
 当前只部署一个模型 RiskGNN；研究脚本及环境继续由模型开发者维护。
 服务不导入 RiskGNN、Torch、数据适配器或训练代码。
 
@@ -24,9 +26,9 @@ Docker 同时打包服务与模型源码；`MODEL_CODE_ROOT=/app/models` 指定�
 
 - `contract_version=2`、`runtime_id="riskgnn"`、`runtime_version="2"`。
 - Run/Attempt/Request ID、绝对工作目录、CPU 资源提示。
-- `request.operation`：inspect、train、evaluate 或 predict。
+- `request.operation`：configure、inspect、train、evaluate 或 predict。
 - 按角色传递 `inputs`：本地路径、格式、SHA-256。
-- 模型声明的 `parameters`；平台按 runtime.json 合并默认值并校验 Schema。
+- 模型声明的 `parameters`；有 `configuration` 快照时保持最终值，否则按声明补齐默认。
 
 输入文件按只读约定使用。文件摘要为字节 SHA-256；目录摘要为排序的文件清单 JSON 摘要，
 每项记录相对路径、长度及文件 SHA-256。目录摘要与传输 ZIP 摘要分别记录。
@@ -68,6 +70,7 @@ CLI 失败写 error.json：code、message、可选 path、retryable。
 ## 内部 HTTP
 
 - `models/runtime`：单模型操作、输入和参数声明。
+- `models/configuration`：对已校验的数据集查询并解析实验参数，调用模型 configure 操作。
 - `jobs/submit` 的 `kind=execute`：指定当前 runtime 和单次操作；对象引用由服务下载。
 - 页面所用 validate/train 由 jobs/workflows.py 组合 inspect、train、evaluate 并投影显示字段。
 - jobs/get、jobs/events、jobs/cancel、artifacts/get 继续管理生命周期。

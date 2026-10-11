@@ -2,6 +2,8 @@ import { http } from "@/shared/api/http";
 import type {
   RequestModelingCapabilities,
   ResponseModelingCapabilities,
+  RequestRunConfiguration,
+  ResponseRunConfiguration,
   RequestCreateDatasetUpload,
   ResponseCreateDatasetUpload,
   RequestCompleteDatasetUpload,
@@ -92,3 +94,8 @@ export const requestCapabilities = http.post<
   RequestModelingCapabilities,
   ResponseModelingCapabilities
 >("/modeling/capabilities");
+
+export const requestRunConfiguration = http.post<
+  RequestRunConfiguration,
+  ResponseRunConfiguration
+>("/modeling/run-configuration");

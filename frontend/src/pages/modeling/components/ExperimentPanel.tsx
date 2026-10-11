@@ -1,4 +1,5 @@
 import { ExperimentProfilePanel } from "./ExperimentProfilePanel";
+import { ExperimentConfigurationPanel } from "./ExperimentConfigurationPanel";
 import {
   CartesianGrid,
   Line,
@@ -65,6 +66,8 @@ export function ExperimentPanel({ work }: { work: Workbench }) {
             </p>
           </div>
           <div className="flex gap-2">
+            {work.run.configuration && <button className={secondary} disabled={work.busy}
+              onClick={work.copyRun}>{t("modeling.config.copy")}</button>}
             {["queued", "running"].includes(work.run.status) ? (
               <button
                 className={secondary}
@@ -132,6 +135,7 @@ export function ExperimentPanel({ work }: { work: Workbench }) {
           ))}
         </div>
       </section>
+      <ExperimentConfigurationPanel run={work.run} />
       {work.run.profile && (
         <ExperimentProfilePanel profile={work.run.profile} />
       )}

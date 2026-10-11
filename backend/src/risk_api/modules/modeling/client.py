@@ -19,7 +19,7 @@ class ModelClient:
                 "/internal/v1/" + action,
                 json=body,
                 headers={"X-Request-ID": request_id} if request_id else {},
-                timeout=70 if action == "models/predict" else 10,
+                timeout=70 if action in {"models/predict", "models/configuration"} else 10,
             )
             data = response.json()
             if response.status_code >= 500:

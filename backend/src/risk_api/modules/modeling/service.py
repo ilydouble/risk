@@ -1,3 +1,4 @@
+from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import PurePath
 from typing import Any
@@ -113,19 +114,43 @@ class ModelingService:
     async def capabilities(self) -> dict[str, Any]:
         return await self.client.call("models/capabilities", {})
 
+    async def run_configuration(
+        self,
+        owner: str,
+        dataset_id: str,
+        parameters: dict,
+        request_id: str,
+        expected_digest: str | None = None,
+    ) -> dict[str, Any]:
+        source = await self.get_dataset(owner, dataset_id)
+        if source.execution.get("status") != "completed":
+            raise AppError(409, "MODELING_DATASET_NOT_READY", "Dataset is not ready")
+        if "riskgnn" not in source.execution.get("result", {}).get("supportedRunnerIds", []):
+            raise AppError(422, "MODELING_MODEL_INCOMPATIBLE", "Model cannot train this dataset")
+        return await self.client.call(
+            "models/configuration",
+            {
+                "jobId": dataset_id,
+                "parameters": parameters,
+                "expectedDigest": expected_digest,
+            },
+            request_id,
+        )
+
     async def create_run(
         self,
         owner: str,
         dataset_id: str,
         name: str,
         request_key: str,
-        epochs: int,
+        parameters: dict,
         request_id: str,
         retry_of: str | None = None,
         *,
         runner_id: str = "riskgnn",
+        configuration_digest: str | None = None,
+        frozen_configuration: dict | None = None,
     ) -> Run:
-        config = {"epochs": epochs, "runnerId": runner_id}
         previous = await self.session.scalar(
             select(Run).where(
                 Run.owner_id == owner, Run.request_key == request_key, Run.protocol_generation == 2
@@ -135,17 +160,29 @@ class ModelingService:
             if (
                 previous.dataset_id,
                 previous.name,
-                {"runnerId": "riskgnn", **previous.configuration},
+                previous.configuration.get("runnerId", "riskgnn"),
+                previous.configuration.get(
+                    "requestedParameters",
+                    {
+                        "epochs": previous.configuration.get("epochs", 2),
+                    },
+                ),
                 previous.retry_of,
             ) != (
                 dataset_id,
                 name,
-                config,
+                runner_id,
+                parameters,
                 retry_of,
             ):
                 raise AppError(
                     409, "MODELING_STATE_INVALID", "Request key reused with different input"
                 )
+            if (
+                configuration_digest is not None
+                and previous.configuration.get("schemaDigest") != configuration_digest
+            ):
+                raise AppError(409, "MODELING_STATE_INVALID", "Request key reused with new schema")
             return previous
         source = await self.get_dataset(owner, dataset_id)
         if source.execution.get("status") != "completed":
@@ -154,6 +191,17 @@ class ModelingService:
         supported = result.get("supportedRunnerIds", [])
         if runner_id not in supported:
             raise AppError(422, "MODELING_MODEL_INCOMPATIBLE", "Model cannot train this dataset")
+        # Resolve before committing; the run and its outbox carry the same immutable snapshot.
+        configuration = (
+            deepcopy(frozen_configuration)
+            if frozen_configuration
+            else (
+                await self.run_configuration(
+                    owner, dataset_id, parameters, request_id, configuration_digest
+                )
+            )
+        )
+        config = {"runnerId": runner_id, **configuration}
         item = Run(
             id=str(uuid4()),
             owner_id=owner,
@@ -167,7 +215,7 @@ class ModelingService:
         self.enqueue(
             item.id,
             "train",
-            {"sourceJobId": dataset_id, "epochs": epochs, "runnerId": runner_id},
+            {"sourceJobId": dataset_id, "configuration": configuration, "runnerId": runner_id},
             request_id,
         )
         try:
@@ -188,10 +236,12 @@ class ModelingService:
                 dataset_id,
                 name,
                 request_key,
-                epochs,
+                parameters,
                 request_id,
                 retry_of,
                 runner_id=runner_id,
+                configuration_digest=configuration_digest,
+                frozen_configuration=frozen_configuration,
             )
         return item
 
@@ -199,15 +249,26 @@ class ModelingService:
         previous = await self.get_run(owner, identity)
         if previous.execution.get("status") not in {"failed", "completed", "cancelled"}:
             raise AppError(409, "MODELING_STATE_INVALID", "Run is still active")
+        configuration = None
+        if "resolvedParameters" in previous.configuration:
+            configuration = deepcopy(previous.configuration)
+            configuration.pop("runnerId", None)
+            # Rerunning explicitly requests the original final values, never today's defaults.
+            configuration["requestedParameters"] = deepcopy(configuration["resolvedParameters"])
+            parameters = configuration["resolvedParameters"]
+        else:
+            # Legacy runs have no snapshot. Their immutable ZIP still supplies dataset defaults.
+            parameters = {"epochs": previous.configuration["epochs"]}
         return await self.create_run(
             owner,
             previous.dataset_id,
             previous.name,
             key,
-            previous.configuration["epochs"],
+            parameters,
             request_id,
             previous.id,
             runner_id=previous.configuration.get("runnerId", "riskgnn"),
+            frozen_configuration=configuration,
         )
 
     async def cancel(self, owner: str, identity: str, request_id: str) -> Run:

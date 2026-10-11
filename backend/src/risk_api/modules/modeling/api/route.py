@@ -29,6 +29,13 @@ router.add_api_route(
     responses=COMMON_ERROR_RESPONSES | WORKBENCH_ERRORS,
 )
 router.add_api_route(
+    "/run-configuration",
+    handler.run_configuration,
+    methods=["POST"],
+    response_model=ApiEnvelope[schemas.ResponseRunConfiguration],
+    responses=COMMON_ERROR_RESPONSES | WORKBENCH_ERRORS,
+)
+router.add_api_route(
     "/create-run",
     handler.create_run,
     methods=["POST"],

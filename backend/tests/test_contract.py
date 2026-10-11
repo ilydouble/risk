@@ -37,6 +37,7 @@ def test_error_envelope_and_openapi_contract() -> None:
         "/api/v1/modeling/complete-upload",
         "/api/v1/modeling/list-datasets",
         "/api/v1/modeling/get-dataset",
+        "/api/v1/modeling/run-configuration",
         "/api/v1/modeling/create-run",
         "/api/v1/modeling/list-runs",
         "/api/v1/modeling/get-run",
@@ -48,6 +49,11 @@ def test_error_envelope_and_openapi_contract() -> None:
     ):
         assert "post" in routes[path]
         assert "422" in routes[path]["post"]["responses"]
+
+    create_run = schema["components"]["schemas"]["RequestCreateRun"]
+    assert "parameters" in create_run["properties"]
+    assert "epochs" not in create_run["properties"]
+    assert create_run["additionalProperties"] is False
 
     # Module-specific error codes are part of the exported contract, not only runtime JSON.
     login_401 = routes["/api/v1/auth/login"]["post"]["responses"]["401"]

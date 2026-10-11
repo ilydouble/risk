@@ -43,7 +43,12 @@ def dataset_dto(item: Dataset) -> dto.DatasetDTO:
 
 def run_dto(item: Run) -> dto.RunDTO:
     execution = item.execution
+    configuration = item.configuration if "configVersion" in item.configuration else None
     return dto.RunDTO(
+        configuration=(
+            dto.ExperimentConfigurationDTO.model_validate(configuration) if configuration else None
+        ),
+        actualCounts=execution.get("result", {}).get("actualCounts") or None,
         profile=execution.get("result", {}).get("profile", {}).get("experimentProfile"),
         runnerId=item.configuration.get("runnerId", "riskgnn"),
         id=item.id,
@@ -52,7 +57,11 @@ def run_dto(item: Run) -> dto.RunDTO:
         retryOf=item.retry_of,
         status=execution.get("status", "queued"),
         stage=execution.get("stage", "queued"),
-        epochs=item.configuration["epochs"],
+        epochs=(
+            configuration["resolvedParameters"]["epochs"]
+            if configuration
+            else item.configuration["epochs"]
+        ),
         cancelRequested=execution.get("cancelRequested", False),
         attempts=execution.get("attempts", []),
         result=execution.get("result", {}),
@@ -127,11 +136,29 @@ async def create_run(
         str(body.datasetId),
         body.name,
         str(body.requestKey),
-        body.epochs,
+        body.parameters,
         request.state.request_id,
         runner_id=body.runnerId,
+        configuration_digest=body.configurationDigest,
     )
     return success_response(dto.ResponseCreateRun(run=run_dto(item)))
+
+
+async def run_configuration(
+    body: dto.RequestRunConfiguration,
+    request: Request,
+    auth: FromDishka[AuthService],
+    service: FromDishka[ModelingService],
+) -> ApiEnvelope[dto.ResponseRunConfiguration]:
+    user = await owner(request, auth)
+    configuration = await service.run_configuration(
+        user, str(body.datasetId), {}, request.state.request_id
+    )
+    return success_response(
+        dto.ResponseRunConfiguration(
+            configuration=dto.ExperimentConfigurationDTO.model_validate(configuration)
+        )
+    )
 
 
 async def get_run(

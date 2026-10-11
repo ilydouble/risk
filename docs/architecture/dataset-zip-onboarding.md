@@ -63,7 +63,7 @@
 1. 模型开发者用[模型 CLI](dataset-adapters.md#模型-cli-本地调用)执行 inspect。
 2. 核对文件索引、数据集契约、完整校验与数据统计。
 3. 用小样本 train，再以新进程 evaluate/predict，检查产物能够独立加载。
-4. 用户在 /modeling 上传新 ZIP，等待服务端校验，创建 RiskGNN 实验。
+4. 用户在 /modeling 上传 ZIP，等待校验，填写目标总数与轮数创建实验；同一数据可多次实验。
 5. 查看阶段、指标和事件，确认刷新恢复、取消、重试行为。
 6. 独立测试成功后发布、下载模型，并核对线上/离线预测和输入顺序。
 
@@ -91,3 +91,5 @@ SMEsD / UK 当前使用 node_edge；超边和事件作为证据保留，未接�
 
 comrisk_export_v5 是包含两套数据的交付包，必须分别打包其 acra 和 smesd 子目录。
 原始 datasets/smesd Pickle 不直接上传；旧 Bundle 及合成演示协议已移除。
+
+包内 config 是实验默认值，允许覆盖的范围由模型声明。配置快照与重新运行见[实验配置](experiment-configuration.md)。

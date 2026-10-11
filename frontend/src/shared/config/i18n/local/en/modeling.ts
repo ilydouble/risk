@@ -1,5 +1,23 @@
 export default {
   "modeling": {
+    "config": {
+  "title": "Experiment configuration snapshot",
+  "name": "Experiment name",
+  "reload": "Reload configuration",
+  "copy": "Copy and edit configuration",
+  "copied": "Original resolved parameters filled in. Submitting creates a new experiment.",
+  "range": "Enter an integer between {{min}} and {{max}}.",
+  "requestedParameters": "Requested parameters",
+  "resolvedParameters": "Resolved parameters",
+  "actual": "Actual execution counts",
+  "legacy": "This historical experiment has no complete configuration snapshot.",
+  "counts": {
+    "targets": "Total targets",
+    "train": "Training targets",
+    "validation": "Validation targets",
+    "test": "Test targets"
+  }
+},
     "contractIdentity": "Dataset version",
     "adapter": "Dataset adapter",
     "title": "Model workbench",
@@ -14,6 +32,9 @@ export default {
       "model": "Model versions"
     },
     "errors": {
+      "staleConfig": "Configuration changed. Reload it before submitting.",
+      "parameters": "Parameters do not match the model declaration. Check targets and epochs.",
+
       "contract": "ZIP must contain exactly one risk_dataset_contract.json at the dataset root.",
       "unavailable": "Model service unavailable. Please retry later.",
       "notReady": "Wait for dataset validation to complete.",

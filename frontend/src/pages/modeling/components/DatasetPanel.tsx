@@ -1,4 +1,5 @@
 import { DatasetAnalysisPanel } from "./DatasetAnalysisPanel";
+import { CreateExperimentForm } from "./CreateExperimentForm";
 import { useRef, useState } from "react";
 import { BlobReader, ZipReader } from "@zip.js/zip.js";
 import { box, button, input } from "./presentation";
@@ -15,7 +16,6 @@ export function DatasetPanel({ work }: { work: Workbench }) {
   );
   const [previewError, setPreviewError] = useState("");
   const [name, setName] = useState("");
-  const [epochs, setEpochs] = useState(2);
   const trainable = work.dataset?.supportedRunnerIds.includes("riskgnn") ?? false;
   const stage = (value: string) =>
     t(`modeling.status.${value}`, { defaultValue: value });
@@ -186,40 +186,9 @@ export function DatasetPanel({ work }: { work: Workbench }) {
               {t("modeling.analysisOnly")}
             </p>
           )}
-          <div className="flex flex-wrap items-end gap-3">
-            <p className="text-sm text-foreground-500">RiskGNN</p>
-            <label className="text-xs">
-              {t("modeling.epochs")}
-              <input
-                className={`${input} mt-1 max-w-24`}
-                type="number"
-                min={1}
-                max={20}
-                value={epochs}
-                onChange={(event) => setEpochs(Number(event.target.value))}
-              />
-            </label>
-            <button
-              className={button}
-              disabled={
-                work.dataset.status !== "ready" ||
-                !trainable ||
-                work.busy ||
-                !Number.isInteger(epochs) ||
-                epochs < 1 ||
-                epochs > 20
-              }
-              onClick={() =>
-                void work.create(
-                  work.dataset!.id,
-                  `${work.dataset!.name} · ${new Date().toLocaleTimeString()}`,
-                  epochs,
-                )
-              }
-            >
-              {t("modeling.train")}
-            </button>
-          </div>
+          {work.dataset.status === "ready" && trainable && (
+            <CreateExperimentForm work={work} />
+          )}
         </section>
       )}
     </>

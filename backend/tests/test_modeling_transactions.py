@@ -2,6 +2,7 @@
 
 import asyncio
 import os
+from copy import deepcopy
 from datetime import UTC, datetime
 from types import SimpleNamespace
 from uuid import uuid4
@@ -23,9 +24,29 @@ class Remote:
     def __init__(self):
         self.calls = []
         self.available = False
+        self.target_count = 4000
 
     async def call(self, action, body, request_id=""):
         self.calls.append((action, body, request_id))
+        if action == "models/configuration":
+            requested = body["parameters"]
+            count = requested.get("dataset", {}).get("target_count", self.target_count)
+            if isinstance(count, bool) or not isinstance(count, int) or not 6 <= count <= 20000:
+                raise AppError(422, "EXECUTION_PARAMETERS_INVALID", "invalid target_count")
+            return {
+                "configVersion": 1,
+                "schemaDigest": "a" * 64,
+                "dataset": {"id": "smesd", "version": "v5"},
+                "adapter": {"id": "smesd", "version": "1"},
+                "parameterSchema": {},
+                "uiSchema": {},
+                "defaultParameters": {"epochs": 2, "dataset": {"target_count": self.target_count}},
+                "requestedParameters": deepcopy(requested),
+                "resolvedParameters": {
+                    "epochs": requested.get("epochs", 2),
+                    "dataset": {"target_count": count},
+                },
+            }
         if not self.available:
             raise AppError(503, "MODEL_SERVICE_UNAVAILABLE", "offline")
         return {"status": "queued"}
@@ -88,22 +109,45 @@ def test_business_outbox_idempotency_ownership_and_publication():
                 await session.commit()
                 key = str(uuid4())
                 run = await service.create_run(
-                    owner, dataset_id, "experiment", key, 2, "gateway-id"
+                    owner, dataset_id, "experiment", key, {"epochs": 2}, "gateway-id"
                 )
                 again = await service.create_run(
-                    owner, dataset_id, "experiment", key, 2, "other-id"
+                    owner, dataset_id, "experiment", key, {"epochs": 2}, "other-id"
                 )
                 assert again.id == run.id
                 assert run.configuration["runnerId"] == "riskgnn"
                 dispatch = await session.get(Dispatch, run.id)
                 assert dispatch.payload["payload"]["runnerId"] == "riskgnn"
+                snapshot = {k: v for k, v in run.configuration.items() if k != "runnerId"}
+                assert dispatch.payload["payload"]["configuration"] == snapshot
+                assert snapshot["resolvedParameters"]["dataset"]["target_count"] == 4000
+                with pytest.raises(AppError) as invalid:
+                    await service.create_run(
+                        owner,
+                        dataset_id,
+                        "bad config",
+                        str(uuid4()),
+                        {"dataset": {"target_count": 0}},
+                        "invalid",
+                    )
+                assert invalid.value.status == 422
+                with pytest.raises(AppError) as parameters_conflict:
+                    await service.create_run(
+                        owner,
+                        dataset_id,
+                        "experiment",
+                        key,
+                        {"epochs": 2, "dataset": {"target_count": 60}},
+                        "conflict",
+                    )
+                assert parameters_conflict.value.status == 409
                 with pytest.raises(AppError) as conflict:
                     await service.create_run(
                         owner,
                         dataset_id,
                         "experiment",
                         key,
-                        2,
+                        {"epochs": 2},
                         "conflict",
                         runner_id="riskgnn-node-only",
                     )
@@ -112,13 +156,15 @@ def test_business_outbox_idempotency_ownership_and_publication():
                 await session.commit()
                 with pytest.raises(AppError) as incompatible:
                     await service.create_run(
-                        owner, dataset_id, "bundle", str(uuid4()), 2, "incompatible"
+                        owner, dataset_id, "bundle", str(uuid4()), {"epochs": 2}, "incompatible"
                     )
                 assert incompatible.value.code == "MODELING_MODEL_INCOMPATIBLE"
                 assert incompatible.value.status == 422
                 assert len(list(await session.scalars(select(Run)))) == 1
                 with pytest.raises(AppError):
-                    await service.create_run(owner, dataset_id, "different", key, 2, "conflict")
+                    await service.create_run(
+                        owner, dataset_id, "different", key, {"epochs": 2}, "conflict"
+                    )
                 assert len(list(await session.scalars(select(Dispatch)))) == 2
                 # Atomic transaction: no partial run or outbox row survives a failed commit.
                 await session.rollback()
@@ -149,12 +195,35 @@ def test_business_outbox_idempotency_ownership_and_publication():
                 assert first.id == second.id and second.name == "version"
                 with pytest.raises(AppError):
                     await service.repository.version(other, first.id)
+                # Same request and rerun keep their frozen values after defaults change.
+                source = await session.get(Dataset, dataset_id)
+                source.execution = {
+                    "status": "completed",
+                    "result": {"supportedRunnerIds": ["riskgnn"]},
+                }
+                await session.commit()
+                remote.target_count = 60
+                config_calls = sum(call[0] == "models/configuration" for call in remote.calls)
+                repeated = await service.create_run(
+                    owner, dataset_id, "experiment", key, {"epochs": 2}, "repeat"
+                )
+                assert (
+                    repeated.configuration["resolvedParameters"]["dataset"]["target_count"] == 4000
+                )
+                rerun = await service.rerun(owner, run.id, str(uuid4()), "rerun")
+                assert rerun.retry_of == run.id
+                assert rerun.configuration["resolvedParameters"] == snapshot["resolvedParameters"]
+                assert rerun.configuration["requestedParameters"] == snapshot["resolvedParameters"]
+                assert (
+                    sum(call[0] == "models/configuration" for call in remote.calls) == config_calls
+                )
             assert await deliver_one(sessions, remote)
             async with sessions.begin() as session:
                 pending = list(await session.scalars(select(Dispatch)))
                 assert not any(row.delivered for row in pending)
                 await session.execute(update(Dispatch).values(available_at=datetime.now(UTC)))
             remote.available = True
+            assert await deliver_one(sessions, remote)
             assert await deliver_one(sessions, remote)
             assert await deliver_one(sessions, remote)
             assert not await deliver_one(sessions, remote)

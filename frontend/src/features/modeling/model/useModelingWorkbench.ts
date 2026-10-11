@@ -28,6 +28,7 @@ export function useModelingWorkbench() {
   const [runs, setRuns] = useState<ModelingRun[]>([]);
   const [models, setModels] = useState<ModelingVersion[]>([]);
   const [events, setEvents] = useState<ModelingEvent[]>([]);
+  const [copiedRun, setCopiedRun] = useState<ModelingRun | null>(null);
   const [predictionResult, setPredictionResult] = useState<{
     modelId: string;
     items: ResponsePredictModel["items"];
@@ -58,6 +59,8 @@ export function useModelingWorkbench() {
         MODEL_RESOURCE_NOT_FOUND: t("modeling.errors.missing"),
         MODELING_FILE_INVALID: t("modeling.errors.file"),
         MODELING_MODEL_INCOMPATIBLE: t("modeling.errors.incompatible"),
+        MODELING_CONFIG_STALE: t("modeling.errors.staleConfig"),
+        EXECUTION_PARAMETERS_INVALID: t("modeling.errors.parameters"),
       }),
     [t],
   );
@@ -178,22 +181,31 @@ export function useModelingWorkbench() {
   const create = (
     id: string,
     name: string,
-    epochs: number,
+    parameters: Record<string, unknown>,
+    configurationDigest: string,
   ) =>
     act(async () => {
       const response = await ModelingApi.requestCreateRun({
         datasetId: id,
         runnerId: "riskgnn",
         name: name.slice(0, 128),
-        epochs,
+        parameters,
+        configurationDigest,
         requestKey: crypto.randomUUID(),
       });
       select("run", response.run.id);
+      setCopiedRun(null);
     });
   const cancel = () =>
     act(async () => {
       await ModelingApi.requestCancelRun({ runId });
     });
+  const copyRun = () => {
+    const previous = runs.find((item) => item.id === runId);
+    if (!previous?.configuration) return;
+    setCopiedRun(previous);
+    select("dataset", previous.datasetId);
+  };
   const rerun = () =>
     act(async () => {
       const response = await ModelingApi.requestRerun({
@@ -248,6 +260,8 @@ export function useModelingWorkbench() {
     create,
     cancel,
     rerun,
+    copyRun,
+    copiedRun,
     publish,
     download,
     predict,

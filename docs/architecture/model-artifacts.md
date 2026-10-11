@@ -7,7 +7,7 @@
 model/
   manifest.json     formatVersion=1, kind=riskgnn-model-v2, files
   weights.pt        网络、分类器、固定嵌入和 alpha
-  metadata.json     配置、特征顺序、预处理、划分、源码及依赖版本
+  metadata.json     配置快照、生效参数、实际目标数量、特征、预处理、划分与源码/依赖版本
   ids.json          公司在前、人物在后的图内索引；预测只接受公司
   context.npz       特征、图、标签及测试划分；快照配置另存方向/权重/置信度
   evidence.json     JSON 子集原始关系、超边和事件（仅保留证据）
@@ -26,6 +26,8 @@ manifest 为每个文件记录长度和 SHA-256，仅接受包内相对路径。
 
 业务发布创建不可变模型版本，绑定通过独立测试的模型 ZIP 摘要；重复发布幂等。
 发布不切换生产默认模型，也不自动上传 GitHub Release。
+参数冻结和重试绑定见[实验配置](experiment-configuration.md)；metadata 中的 configuration
+与业务记录一致，effectiveConfig 对应 resolvedParameters，actualCounts 记录实际执行数量。
 当前用户下载入口提供模型 ZIP；报告保存在任务结果和独立对象中。
 
 ## 离线重载

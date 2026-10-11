@@ -78,6 +78,7 @@ uv run --project service python -m model_service.export_openapi
 
 - [数据集 ZIP 契约](../../docs/architecture/dataset-contract.md)
 - [数据适配器与模型 CLI](../../docs/architecture/dataset-adapters.md)
+- [实验参数、配置快照与实际执行规模](../../docs/architecture/experiment-configuration.md)
 - [执行协议](../../docs/architecture/model-execution-contract.md)
 - [任务恢复](../../docs/architecture/modeling-execution.md)
 

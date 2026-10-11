@@ -18,13 +18,20 @@ WORKBENCH_ERRORS = {
                 "MODELING_DATASET_NOT_READY",
                 "MODELING_UPLOAD_INCOMPLETE",
                 "MODEL_STATE_INVALID",
+                "MODELING_CONFIG_STALE",
             ],
         ]
     },
     422: {
         "model": ErrorEnvelope[
             Literal[422],
-            Literal["REQUEST_INVALID", "MODELING_FILE_INVALID", "MODELING_MODEL_INCOMPATIBLE"],
+            Literal[
+                "REQUEST_INVALID",
+                "MODELING_FILE_INVALID",
+                "MODELING_MODEL_INCOMPATIBLE",
+                "EXECUTION_PARAMETERS_INVALID",
+                "MODEL_INPUT_INVALID",
+            ],
         ]
     },
     503: {

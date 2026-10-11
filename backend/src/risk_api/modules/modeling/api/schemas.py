@@ -2,7 +2,7 @@ from enum import StrEnum
 from typing import Any, Literal
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from risk_api.shared.api.page import Page, PageRequest
 
@@ -120,7 +120,28 @@ class ExperimentProfileDTO(BaseModel):
     dependencies: dict[str, str]
 
 
+class ExperimentConfigurationDTO(BaseModel):
+    configVersion: Literal[1]
+    schemaDigest: str
+    dataset: dict[str, Any]
+    adapter: dict[str, Any]
+    parameterSchema: dict[str, Any]
+    defaultParameters: dict[str, Any]
+    uiSchema: dict[str, Any]
+    requestedParameters: dict[str, Any]
+    resolvedParameters: dict[str, Any]
+
+
+class ActualCountsDTO(BaseModel):
+    targets: int
+    train: int
+    validation: int
+    test: int
+
+
 class RunDTO(BaseModel):
+    configuration: ExperimentConfigurationDTO | None = None
+    actualCounts: ActualCountsDTO | None = None
     profile: ExperimentProfileDTO | None = None
     runnerId: str = "riskgnn"
     id: str
@@ -204,11 +225,21 @@ class ResponseListDatasets(Page[DatasetDTO]):
 
 
 class RequestCreateRun(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     runnerId: Literal["riskgnn"] = "riskgnn"
     datasetId: UUID
     name: str = Field(min_length=1, max_length=128, pattern=r"\S")
     requestKey: UUID
-    epochs: int = Field(default=2, ge=1, le=20)
+    parameters: dict[str, Any] = Field(default_factory=dict)
+    configurationDigest: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
+
+
+class RequestRunConfiguration(RequestGetDataset):
+    pass
+
+
+class ResponseRunConfiguration(BaseModel):
+    configuration: ExperimentConfigurationDTO
 
 
 class RequestGetRun(BaseModel):

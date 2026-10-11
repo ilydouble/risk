@@ -1,6 +1,34 @@
 {
   "components": {
     "schemas": {
+      "ActualCountsDTO": {
+        "properties": {
+          "targets": {
+            "title": "Targets",
+            "type": "integer"
+          },
+          "test": {
+            "title": "Test",
+            "type": "integer"
+          },
+          "train": {
+            "title": "Train",
+            "type": "integer"
+          },
+          "validation": {
+            "title": "Validation",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "targets",
+          "train",
+          "validation",
+          "test"
+        ],
+        "title": "ActualCountsDTO",
+        "type": "object"
+      },
       "AgeDistributionItemDTO": {
         "properties": {
           "bucket": {
@@ -1007,6 +1035,40 @@
           "data"
         ],
         "title": "ApiEnvelope[ResponseRerun]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseRunConfiguration_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseRunConfiguration"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseRunConfiguration]",
         "type": "object"
       },
       "ApiEnvelope_ResponseRunEvents_": {
@@ -2424,7 +2486,7 @@
         "title": "ErrorEnvelope[Literal[409], Literal['DOCUMENT_UPLOAD_INCOMPLETE']]",
         "type": "object"
       },
-      "ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___": {
+      "ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___": {
         "properties": {
           "code": {
             "const": 409,
@@ -2439,7 +2501,8 @@
               "MODELING_STATE_INVALID",
               "MODELING_DATASET_NOT_READY",
               "MODELING_UPLOAD_INCOMPLETE",
-              "MODEL_STATE_INVALID"
+              "MODEL_STATE_INVALID",
+              "MODELING_CONFIG_STALE"
             ],
             "title": "Internal Code",
             "type": "string"
@@ -2455,7 +2518,7 @@
           "message",
           "data"
         ],
-        "title": "ErrorEnvelope[Literal[409], Literal['MODELING_STATE_INVALID', 'MODELING_DATASET_NOT_READY', 'MODELING_UPLOAD_INCOMPLETE', 'MODEL_STATE_INVALID']]",
+        "title": "ErrorEnvelope[Literal[409], Literal['MODELING_STATE_INVALID', 'MODELING_DATASET_NOT_READY', 'MODELING_UPLOAD_INCOMPLETE', 'MODEL_STATE_INVALID', 'MODELING_CONFIG_STALE']]",
         "type": "object"
       },
       "ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___": {
@@ -2487,7 +2550,7 @@
         "title": "ErrorEnvelope[Literal[422], Literal['REQUEST_INVALID']]",
         "type": "object"
       },
-      "ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___": {
+      "ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___": {
         "properties": {
           "code": {
             "const": 422,
@@ -2501,7 +2564,9 @@
             "enum": [
               "REQUEST_INVALID",
               "MODELING_FILE_INVALID",
-              "MODELING_MODEL_INCOMPATIBLE"
+              "MODELING_MODEL_INCOMPATIBLE",
+              "EXECUTION_PARAMETERS_INVALID",
+              "MODEL_INPUT_INVALID"
             ],
             "title": "Internal Code",
             "type": "string"
@@ -2517,7 +2582,7 @@
           "message",
           "data"
         ],
-        "title": "ErrorEnvelope[Literal[422], Literal['REQUEST_INVALID', 'MODELING_FILE_INVALID', 'MODELING_MODEL_INCOMPATIBLE']]",
+        "title": "ErrorEnvelope[Literal[422], Literal['REQUEST_INVALID', 'MODELING_FILE_INVALID', 'MODELING_MODEL_INCOMPATIBLE', 'EXECUTION_PARAMETERS_INVALID', 'MODEL_INPUT_INVALID']]",
         "type": "object"
       },
       "ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___": {
@@ -2740,6 +2805,67 @@
         ],
         "title": "ExecutionEventKind",
         "type": "string"
+      },
+      "ExperimentConfigurationDTO": {
+        "properties": {
+          "adapter": {
+            "additionalProperties": true,
+            "title": "Adapter",
+            "type": "object"
+          },
+          "configVersion": {
+            "const": 1,
+            "title": "Configversion",
+            "type": "integer"
+          },
+          "dataset": {
+            "additionalProperties": true,
+            "title": "Dataset",
+            "type": "object"
+          },
+          "defaultParameters": {
+            "additionalProperties": true,
+            "title": "Defaultparameters",
+            "type": "object"
+          },
+          "parameterSchema": {
+            "additionalProperties": true,
+            "title": "Parameterschema",
+            "type": "object"
+          },
+          "requestedParameters": {
+            "additionalProperties": true,
+            "title": "Requestedparameters",
+            "type": "object"
+          },
+          "resolvedParameters": {
+            "additionalProperties": true,
+            "title": "Resolvedparameters",
+            "type": "object"
+          },
+          "schemaDigest": {
+            "title": "Schemadigest",
+            "type": "string"
+          },
+          "uiSchema": {
+            "additionalProperties": true,
+            "title": "Uischema",
+            "type": "object"
+          }
+        },
+        "required": [
+          "configVersion",
+          "schemaDigest",
+          "dataset",
+          "adapter",
+          "parameterSchema",
+          "defaultParameters",
+          "uiSchema",
+          "requestedParameters",
+          "resolvedParameters"
+        ],
+        "title": "ExperimentConfigurationDTO",
+        "type": "object"
       },
       "ExperimentProfileDTO": {
         "properties": {
@@ -4114,18 +4240,24 @@
         "type": "object"
       },
       "RequestCreateRun": {
+        "additionalProperties": false,
         "properties": {
+          "configurationDigest": {
+            "anyOf": [
+              {
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Configurationdigest"
+          },
           "datasetId": {
             "format": "uuid",
             "title": "Datasetid",
             "type": "string"
-          },
-          "epochs": {
-            "default": 2,
-            "maximum": 20.0,
-            "minimum": 1.0,
-            "title": "Epochs",
-            "type": "integer"
           },
           "name": {
             "maxLength": 128,
@@ -4133,6 +4265,11 @@
             "pattern": "\\S",
             "title": "Name",
             "type": "string"
+          },
+          "parameters": {
+            "additionalProperties": true,
+            "title": "Parameters",
+            "type": "object"
           },
           "requestKey": {
             "format": "uuid",
@@ -4504,6 +4641,20 @@
           "requestKey"
         ],
         "title": "RequestRerun",
+        "type": "object"
+      },
+      "RequestRunConfiguration": {
+        "properties": {
+          "datasetId": {
+            "format": "uuid",
+            "title": "Datasetid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "datasetId"
+        ],
+        "title": "RequestRunConfiguration",
         "type": "object"
       },
       "RequestRunEvents": {
@@ -5289,6 +5440,18 @@
         "title": "ResponseRerun",
         "type": "object"
       },
+      "ResponseRunConfiguration": {
+        "properties": {
+          "configuration": {
+            "$ref": "#/components/schemas/ExperimentConfigurationDTO"
+          }
+        },
+        "required": [
+          "configuration"
+        ],
+        "title": "ResponseRunConfiguration",
+        "type": "object"
+      },
       "ResponseRunEvents": {
         "properties": {
           "items": {
@@ -5474,6 +5637,16 @@
       },
       "RunDTO": {
         "properties": {
+          "actualCounts": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ActualCountsDTO"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "attempts": {
             "items": {
               "$ref": "#/components/schemas/AttemptDTO"
@@ -5484,6 +5657,16 @@
           "cancelRequested": {
             "title": "Cancelrequested",
             "type": "boolean"
+          },
+          "configuration": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ExperimentConfigurationDTO"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "createdAt": {
             "title": "Createdat",
@@ -6933,7 +7116,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"
                 }
               }
             },
@@ -6943,7 +7126,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"
                 }
               }
             },
@@ -7034,7 +7217,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"
                 }
               }
             },
@@ -7044,7 +7227,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"
                 }
               }
             },
@@ -7135,7 +7318,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"
                 }
               }
             },
@@ -7145,7 +7328,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"
                 }
               }
             },
@@ -7236,7 +7419,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"
                 }
               }
             },
@@ -7246,7 +7429,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"
                 }
               }
             },
@@ -7337,7 +7520,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"
                 }
               }
             },
@@ -7347,7 +7530,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"
                 }
               }
             },
@@ -7438,7 +7621,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"
                 }
               }
             },
@@ -7448,7 +7631,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"
                 }
               }
             },
@@ -7539,7 +7722,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"
                 }
               }
             },
@@ -7549,7 +7732,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"
                 }
               }
             },
@@ -7640,7 +7823,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"
                 }
               }
             },
@@ -7650,7 +7833,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"
                 }
               }
             },
@@ -7741,7 +7924,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"
                 }
               }
             },
@@ -7751,7 +7934,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"
                 }
               }
             },
@@ -7842,7 +8025,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"
                 }
               }
             },
@@ -7852,7 +8035,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"
                 }
               }
             },
@@ -7943,7 +8126,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"
                 }
               }
             },
@@ -7953,7 +8136,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"
                 }
               }
             },
@@ -8044,7 +8227,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"
                 }
               }
             },
@@ -8054,7 +8237,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"
                 }
               }
             },
@@ -8145,7 +8328,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"
                 }
               }
             },
@@ -8155,7 +8338,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"
                 }
               }
             },
@@ -8246,7 +8429,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"
                 }
               }
             },
@@ -8256,7 +8439,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"
                 }
               }
             },
@@ -8347,7 +8530,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"
                 }
               }
             },
@@ -8357,7 +8540,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"
                 }
               }
             },
@@ -8385,6 +8568,107 @@
           }
         },
         "summary": "Rerun",
+        "tags": [
+          "modeling"
+        ]
+      }
+    },
+    "/api/v1/modeling/run-configuration": {
+      "post": {
+        "operationId": "run_configuration_api_v1_modeling_run_configuration_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestRunConfiguration"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseRunConfiguration_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Run Configuration",
         "tags": [
           "modeling"
         ]
@@ -8448,7 +8732,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"
                 }
               }
             },
@@ -8458,7 +8742,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"
                 }
               }
             },

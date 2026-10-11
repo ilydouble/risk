@@ -446,6 +446,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/modeling/run-configuration": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Run Configuration */
+        post: operations["run_configuration_api_v1_modeling_run_configuration_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/modeling/run-events": {
         parameters: {
             query?: never;
@@ -535,6 +552,17 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** ActualCountsDTO */
+        ActualCountsDTO: {
+            /** Targets */
+            targets: number;
+            /** Test */
+            test: number;
+            /** Train */
+            train: number;
+            /** Validation */
+            validation: number;
+        };
         /** AgeDistributionItemDTO */
         AgeDistributionItemDTO: {
             /**
@@ -831,6 +859,16 @@ export interface components {
             /** Code */
             code: number;
             data: components["schemas"]["ResponseRerun"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseRunConfiguration] */
+        ApiEnvelope_ResponseRunConfiguration_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseRunConfiguration"] | null;
             /** Internal Code */
             internal_code: string;
             /** Message */
@@ -1350,8 +1388,8 @@ export interface components {
             /** Message */
             message: string;
         };
-        /** ErrorEnvelope[Literal[409], Literal['MODELING_STATE_INVALID', 'MODELING_DATASET_NOT_READY', 'MODELING_UPLOAD_INCOMPLETE', 'MODEL_STATE_INVALID']] */
-        ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___: {
+        /** ErrorEnvelope[Literal[409], Literal['MODELING_STATE_INVALID', 'MODELING_DATASET_NOT_READY', 'MODELING_UPLOAD_INCOMPLETE', 'MODEL_STATE_INVALID', 'MODELING_CONFIG_STALE']] */
+        ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___: {
             /**
              * Code
              * @constant
@@ -1362,7 +1400,7 @@ export interface components {
              * Internal Code
              * @enum {string}
              */
-            internal_code: "MODELING_STATE_INVALID" | "MODELING_DATASET_NOT_READY" | "MODELING_UPLOAD_INCOMPLETE" | "MODEL_STATE_INVALID";
+            internal_code: "MODELING_STATE_INVALID" | "MODELING_DATASET_NOT_READY" | "MODELING_UPLOAD_INCOMPLETE" | "MODEL_STATE_INVALID" | "MODELING_CONFIG_STALE";
             /** Message */
             message: string;
         };
@@ -1382,8 +1420,8 @@ export interface components {
             /** Message */
             message: string;
         };
-        /** ErrorEnvelope[Literal[422], Literal['REQUEST_INVALID', 'MODELING_FILE_INVALID', 'MODELING_MODEL_INCOMPATIBLE']] */
-        ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___: {
+        /** ErrorEnvelope[Literal[422], Literal['REQUEST_INVALID', 'MODELING_FILE_INVALID', 'MODELING_MODEL_INCOMPATIBLE', 'EXECUTION_PARAMETERS_INVALID', 'MODEL_INPUT_INVALID']] */
+        ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___: {
             /**
              * Code
              * @constant
@@ -1394,7 +1432,7 @@ export interface components {
              * Internal Code
              * @enum {string}
              */
-            internal_code: "REQUEST_INVALID" | "MODELING_FILE_INVALID" | "MODELING_MODEL_INCOMPATIBLE";
+            internal_code: "REQUEST_INVALID" | "MODELING_FILE_INVALID" | "MODELING_MODEL_INCOMPATIBLE" | "EXECUTION_PARAMETERS_INVALID" | "MODEL_INPUT_INVALID";
             /** Message */
             message: string;
         };
@@ -1513,6 +1551,44 @@ export interface components {
          * @enum {string}
          */
         ExecutionEventKind: "state" | "stage" | "progress" | "log" | "metric";
+        /** ExperimentConfigurationDTO */
+        ExperimentConfigurationDTO: {
+            /** Adapter */
+            adapter: {
+                [key: string]: unknown;
+            };
+            /**
+             * Configversion
+             * @constant
+             */
+            configVersion: 1;
+            /** Dataset */
+            dataset: {
+                [key: string]: unknown;
+            };
+            /** Defaultparameters */
+            defaultParameters: {
+                [key: string]: unknown;
+            };
+            /** Parameterschema */
+            parameterSchema: {
+                [key: string]: unknown;
+            };
+            /** Requestedparameters */
+            requestedParameters: {
+                [key: string]: unknown;
+            };
+            /** Resolvedparameters */
+            resolvedParameters: {
+                [key: string]: unknown;
+            };
+            /** Schemadigest */
+            schemaDigest: string;
+            /** Uischema */
+            uiSchema: {
+                [key: string]: unknown;
+            };
+        };
         /** ExperimentProfileDTO */
         ExperimentProfileDTO: {
             /**
@@ -2031,18 +2107,19 @@ export interface components {
         };
         /** RequestCreateRun */
         RequestCreateRun: {
+            /** Configurationdigest */
+            configurationDigest?: string | null;
             /**
              * Datasetid
              * Format: uuid
              */
             datasetId: string;
-            /**
-             * Epochs
-             * @default 2
-             */
-            epochs: number;
             /** Name */
             name: string;
+            /** Parameters */
+            parameters?: {
+                [key: string]: unknown;
+            };
             /**
              * Requestkey
              * Format: uuid
@@ -2210,6 +2287,14 @@ export interface components {
              * Format: uuid
              */
             runId: string;
+        };
+        /** RequestRunConfiguration */
+        RequestRunConfiguration: {
+            /**
+             * Datasetid
+             * Format: uuid
+             */
+            datasetId: string;
         };
         /** RequestRunEvents */
         RequestRunEvents: {
@@ -2520,6 +2605,10 @@ export interface components {
         ResponseRerun: {
             run: components["schemas"]["RunDTO"];
         };
+        /** ResponseRunConfiguration */
+        ResponseRunConfiguration: {
+            configuration: components["schemas"]["ExperimentConfigurationDTO"];
+        };
         /** ResponseRunEvents */
         ResponseRunEvents: {
             /** Items */
@@ -2579,10 +2668,12 @@ export interface components {
         };
         /** RunDTO */
         RunDTO: {
+            actualCounts?: components["schemas"]["ActualCountsDTO"] | null;
             /** Attempts */
             attempts: components["schemas"]["AttemptDTO"][];
             /** Cancelrequested */
             cancelRequested: boolean;
+            configuration?: components["schemas"]["ExperimentConfigurationDTO"] | null;
             /** Createdat */
             createdAt: string;
             /** Datasetid */
@@ -3583,7 +3674,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -3592,7 +3683,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"];
                 };
             };
             /** @description Internal Server Error */
@@ -3670,7 +3761,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -3679,7 +3770,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"];
                 };
             };
             /** @description Internal Server Error */
@@ -3757,7 +3848,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -3766,7 +3857,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"];
                 };
             };
             /** @description Internal Server Error */
@@ -3844,7 +3935,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -3853,7 +3944,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"];
                 };
             };
             /** @description Internal Server Error */
@@ -3931,7 +4022,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -3940,7 +4031,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"];
                 };
             };
             /** @description Internal Server Error */
@@ -4018,7 +4109,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -4027,7 +4118,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"];
                 };
             };
             /** @description Internal Server Error */
@@ -4105,7 +4196,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -4114,7 +4205,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"];
                 };
             };
             /** @description Internal Server Error */
@@ -4192,7 +4283,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -4201,7 +4292,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"];
                 };
             };
             /** @description Internal Server Error */
@@ -4279,7 +4370,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -4288,7 +4379,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"];
                 };
             };
             /** @description Internal Server Error */
@@ -4366,7 +4457,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -4375,7 +4466,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"];
                 };
             };
             /** @description Internal Server Error */
@@ -4453,7 +4544,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -4462,7 +4553,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"];
                 };
             };
             /** @description Internal Server Error */
@@ -4540,7 +4631,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -4549,7 +4640,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"];
                 };
             };
             /** @description Internal Server Error */
@@ -4627,7 +4718,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -4636,7 +4727,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"];
                 };
             };
             /** @description Internal Server Error */
@@ -4714,7 +4805,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -4723,7 +4814,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"];
                 };
             };
             /** @description Internal Server Error */
@@ -4801,7 +4892,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -4810,7 +4901,94 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"];
+                };
+            };
+        };
+    };
+    run_configuration_api_v1_modeling_run_configuration_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestRunConfiguration"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseRunConfiguration_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"];
                 };
             };
             /** @description Internal Server Error */
@@ -4888,7 +5066,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -4897,7 +5075,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"];
                 };
             };
             /** @description Internal Server Error */
@@ -5244,6 +5422,7 @@ export type RequestPredictModel = components["schemas"]["RequestPredictModel"];
 export type RequestPublishModel = components["schemas"]["RequestPublishModel"];
 export type RequestRegister = components["schemas"]["RequestRegister"];
 export type RequestRerun = components["schemas"]["RequestRerun"];
+export type RequestRunConfiguration = components["schemas"]["RequestRunConfiguration"];
 export type RequestRunEvents = components["schemas"]["RequestRunEvents"];
 export type RequestSearchCompany = components["schemas"]["RequestSearchCompany"];
 export type RequestSearchOverviewCompany = components["schemas"]["RequestSearchOverviewCompany"];
@@ -5275,6 +5454,7 @@ export type ResponsePredictModel = components["schemas"]["ResponsePredictModel"]
 export type ResponsePublishModel = components["schemas"]["ResponsePublishModel"];
 export type ResponseRegister = components["schemas"]["ResponseRegister"];
 export type ResponseRerun = components["schemas"]["ResponseRerun"];
+export type ResponseRunConfiguration = components["schemas"]["ResponseRunConfiguration"];
 export type ResponseRunEvents = components["schemas"]["ResponseRunEvents"];
 export type ResponseSearchCompany = components["schemas"]["ResponseSearchCompany"];
 export type ResponseSearchOverviewCompany = components["schemas"]["ResponseSearchOverviewCompany"];

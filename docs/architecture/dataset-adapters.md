@@ -75,7 +75,7 @@ request = {
     "request": {
         "operation": "train",
         "inputs": {"dataset": {"path": str(source), "sha256": sha, "format": "zip"}},
-        "parameters": {"epochs": 2}
+        "parameters": {"epochs": 2, "dataset": {"target_count": 60}}
     }
 }
 Path("/tmp/model-request.json").write_text(json.dumps(request))

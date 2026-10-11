@@ -1,5 +1,23 @@
 export default {
   "modeling": {
+    "config": {
+  "title": "实验配置快照",
+  "name": "实验名称",
+  "reload": "重新加载配置",
+  "copy": "复制并修改配置",
+  "copied": "已填入原实验的最终配置，修改后会创建新的实验。",
+  "range": "请输入 {{min}}–{{max}} 之间的整数。",
+  "requestedParameters": "用户提交参数",
+  "resolvedParameters": "最终生效参数",
+  "actual": "实际执行规模",
+  "legacy": "历史实验未保存完整配置快照。",
+  "counts": {
+    "targets": "实际目标总数",
+    "train": "训练目标",
+    "validation": "验证目标",
+    "test": "测试目标"
+  }
+},
     "contractIdentity": "数据集版本",
     "adapter": "数据适配器",
     "title": "模型工作台",
@@ -14,6 +32,9 @@ export default {
       "model": "模型版本"
     },
     "errors": {
+      "staleConfig": "参数声明已更新，请重新加载配置后提交。",
+      "parameters": "实验参数不符合模型声明，请检查目标数量和训练轮数。",
+
       "contract": "ZIP 必须在数据根目录包含唯一的 risk_dataset_contract.json。",
       "unavailable": "模型服务暂不可用，请稍后重试。",
       "notReady": "请等待数据集校验通过。",
