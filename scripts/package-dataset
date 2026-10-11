@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if ! command -v uv >/dev/null 2>&1; then
+  printf '%s\n' '未找到 uv。请先安装 uv 并加入 PATH，再重新执行此命令。' >&2
+  exit 127
+fi
+
+repo_root="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+
+# Keep the caller's working directory so every explicit relative path retains its meaning.
+export PYTHONPATH="$repo_root/models${PYTHONPATH:+:$PYTHONPATH}"
+exec uv run --no-project --python 3.12 \
+  --with-requirements "$repo_root/models/riskgnn/dataset_adapters/packaging-requirements.txt" \
+  python -m riskgnn.dataset_adapters.package_dataset "$@"

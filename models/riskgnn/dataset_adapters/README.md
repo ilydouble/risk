@@ -121,18 +121,19 @@ NPZ 的监督划分名是 train / val / test；上下文为 context、label=-1�
 
 ## 4. 制作 ZIP：两条路径
 
-**推荐：选择预设**。先按 [轻量环境](PACKAGING.md#2-轻量环境) 安装打包依赖，
-从 models/ 执行（示例预设需由开发者先新增）：
+**推荐：选择预设**。安装 uv 后，从仓库根目录执行固定入口，自动准备轻量环境。
+示例预设需由开发者先新增，完整选项见 [打包指南](PACKAGING.md)：
 
 ```bash
-python -m riskgnn.dataset_adapters.package_dataset --show-preset new-dataset
-python -m riskgnn.dataset_adapters.package_dataset \
+./scripts/package-dataset --show-preset new-dataset
+./scripts/package-dataset \
   --preset new-dataset --data-dir /path/to/new_dataset \
-  --dataset-version 2026-10-11 --output /tmp/new-dataset-v1.zip
+  --dataset-version 2026-10-11
 ```
 
 目录就是数据根，不猜测；现有 ZIP 先解压。工具自动生成契约、检查必需文件和配置，
-成功摘要区分默认打包与 --validate 全量校验。允许的参数可用 --set KEY=JSON 覆盖。
+默认输出 models/runs/datasets/<预设>-<版本>.zip，--output 可选且不覆盖已有文件。
+成功摘要区分默认打包与 --validate 全量校验，--json 用于自动化。允许的参数可用 --set KEY=JSON 覆盖。
 
 **高级用法：手工清单**。在单个数据集目录放入以下文件，再压缩目录内容：
 

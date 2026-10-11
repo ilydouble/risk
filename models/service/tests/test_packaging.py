@@ -50,7 +50,7 @@ class LightweightOnly(importlib.abc.MetaPathFinder):
                                     'fastapi', 'sqlalchemy', 'model_service'}:
             raise ImportError('Packaging must remain lightweight: ' + fullname)
 sys.meta_path.insert(0, LightweightOnly())
-sys.argv = ['package_dataset', '--show-preset', 'uk-companies']
+sys.argv = ['package_dataset', '--show-preset', 'uk-companies', '--json']
 runpy.run_module('riskgnn.dataset_adapters.package_dataset', run_name='__main__')
 """
     result = subprocess.run(

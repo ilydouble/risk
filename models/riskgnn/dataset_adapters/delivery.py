@@ -120,6 +120,6 @@ def preset_details(name: str, overrides: dict | None = None) -> dict:
             "config": definition.config({**defaults, **(overrides or {})}),
             "requiredFiles": list(definition.required_files),
             "configSchema": definition.config_schema,
-            "userSupplied": ["data-dir", "dataset-version", "output"],
+            "userSupplied": ["data-dir", "dataset-version"],
         }
     raise ValueError(f"Unknown preset: {name}; use --list-presets")

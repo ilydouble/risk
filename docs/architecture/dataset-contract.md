@@ -66,15 +66,14 @@ ZIP 上限 512 MiB，安全解压上限 2 GiB；拒绝路径越界、链接和�
 ## 生成一个新包
 
 模型侧提供预设打包器，--data-dir 明确指定根目录，已有 ZIP 先解压。
-先按[轻量打包指南](../../models/riskgnn/dataset_adapters/PACKAGING.md)配置环境，从 models/ 执行：
+安装 uv 后，从仓库根目录执行固定入口；详见[打包指南](../../models/riskgnn/dataset_adapters/PACKAGING.md)：
 
 ```bash
-cd models
-python -m riskgnn.dataset_adapters.package_dataset \
-  --preset acra-companies --data-dir /path/to/acra --dataset-version 2026-10-11 \
-  --output /path/to/dataset-v1.zip
+./scripts/package-dataset \
+  --preset acra-companies --data-dir /path/to/acra --dataset-version 2026-10-11
 ```
 
+默认输出 models/runs/datasets/acra-companies-2026-10-11.zip，不覆盖已有文件；--output 可选。
 预设绑定 dataset ID、adapter ID/version 和默认 config；它们来自具体适配器目录的 delivery.json。
 默认只检查打包条件；--validate 才执行全量 inspect，二者都不训练。
 源目录已有根契约时以预设重建包内契约，不修改源文件，摘要明确标注。

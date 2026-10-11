@@ -50,13 +50,14 @@ audit.json                 # 来源说明；其中 SHA 是原始 Pickle 的摘�
 
 预设与规则见 [delivery.json](delivery.json)，轻量环境及校验选项见 [打包指南](../PACKAGING.md)。
 
-从 `models/` 执行：
+安装 uv 后，从仓库根目录执行：
 
 ```bash
-python -m riskgnn.dataset_adapters.package_dataset \
-  --data-dir ../datasets/comrisk_export_v5/smesd --output /tmp/smesd-v5.zip \
+./scripts/package-dataset \
+  --data-dir datasets/comrisk_export_v5/smesd \
   --preset smesd --dataset-version json-v5
 ```
 
+默认输出 `models/runs/datasets/smesd-json-v5.zip`，不覆盖已有文件；--output 可指定其他位置。
 可加 `--set target_count=60` 进行真实小样本链路检查，不能将其指标当成模型效果结论。
 工作台训练完成后，由独立进程加载、测试和预测；发布包保存人物嵌入及必要图上下文。

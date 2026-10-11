@@ -48,15 +48,15 @@ is_inferred 必须一起出现且取值有效，不能把三者合并为一个�
 
 预设与规则见 [delivery.json](delivery.json)，轻量环境及校验选项见 [打包指南](../PACKAGING.md)。
 
-安装打包依赖后，从 `models/` 执行：
+安装 uv 后，从仓库根目录执行：
 
 ```bash
-python -m riskgnn.dataset_adapters.package_dataset \
-  --data-dir ../datasets/comrisk_export_v5/acra --output /tmp/acra-v5.zip \
+./scripts/package-dataset \
+  --data-dir datasets/comrisk_export_v5/acra \
   --preset acra-companies --dataset-version v5
 ```
 
-输出必须是新路径；原目录不会被修改。
+默认输出 `models/runs/datasets/acra-companies-v5.zip`；可用 --output 指定新路径，原目录不会被修改。
 
 ## 静态概览
 
@@ -65,8 +65,9 @@ python -m riskgnn.dataset_adapters.package_dataset \
 不再自行解压或依赖 `comrisk_export/` 固定前缀。
 
 ```bash
+cd models
 uv run --project service python -m riskgnn.tools.sg_overview \
-  --source /tmp/acra-v5.zip --output /tmp/acra-overview.json
+  --source runs/datasets/acra-companies-v5.zip --output /tmp/acra-overview.json
 ```
 
 这个工具不会写数据库，也不会覆盖仓库已有种子；样本用于调试，不代表总体比例。

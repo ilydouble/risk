@@ -32,19 +32,19 @@
 包内 Python 不执行；需要的加载代码必须进入仓库，经测试后随模型镜像发布。
 
 数据负责人和适配器开发者首次维护 delivery.json 中的绑定预设，日常上传者只需选择预设、
-数据目录、本次版本及输出位置。dataset.id 与 adapter.id 独立，预设不通过文件名推断。
-先按[轻量打包指南](../../models/riskgnn/dataset_adapters/PACKAGING.md)安装打包依赖：
+数据目录和本次版本，输出位置可选。dataset.id 与 adapter.id 独立，预设不通过文件名推断。
+安装 uv 后从仓库根目录执行，启动器自动准备轻量环境：
 
 ```bash
-cd models
-python -m riskgnn.dataset_adapters.package_dataset --show-preset uk-companies
-python -m riskgnn.dataset_adapters.package_dataset \
-  --preset uk-companies --data-dir ../datasets/uk_dataset_v1 \
-  --dataset-version 2026-10-20 --output /tmp/uk-20261020.zip
+./scripts/package-dataset --show-preset uk-companies
+./scripts/package-dataset \
+  --preset uk-companies --data-dir datasets/uk_dataset_v1 --dataset-version 2026-10-20
 ```
 
+默认输出 models/runs/datasets/uk-companies-2026-10-20.zip；已有文件不覆盖，--output 可自定。
+显式相对路径以调用目录为准；--json 输出详细摘要。见[打包指南](../../models/riskgnn/dataset_adapters/PACKAGING.md)。
 默认只检查目录、必需文件、配置和清单，不扫描业务表。需要完整校验时显式添加
---validate --validation-python service/.venv/bin/python，失败不发布输出 ZIP。
+--validate --validation-python models/service/.venv/bin/python，失败不发布输出 ZIP。
 旧 ZIP 输入先解压；旧 tools.package_dataset 入口移除。新参数不要求上传者手写 JSON。
 
 通用 ZIP 上限 512 MiB，解压上限 2 GiB、单文件 1 GiB，最多 128 个成员。

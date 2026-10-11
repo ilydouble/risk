@@ -10,7 +10,7 @@
 | adapter ID / version、必需文件、config 约束 | 适配器开发者 | 从声明读取，不按文件名猜测 |
 | dataset ID / name、预设配置 | 数据负责人和适配器开发者 | 选择预设后复用 |
 | dataset version | 数据提供方 | 每次交付填写 |
-| data-dir / output | 打包者 | 按本机位置填写 |
+| data-dir / output | 打包者 | 填数据目录；输出位置可选 |
 
 `dataset.id` 与 `adapter.id` 独立；同一个适配器可以为多个数据集建立预设。
 当前预设：
@@ -25,52 +25,57 @@
 [UK](uk_dataset_v1/delivery.json) 的 `delivery.json`，与各自代码和 README 一起维护。
 数据负责人要交付另一个企业群体时新增预设，不需要复制适配器代码。
 
-## 2. 轻量环境
+## 2. 固定入口与轻量环境
 
-需要 Python 3.12+。从仓库 `models/` 执行，任选一种方式：
+安装 uv 并加入 PATH，拉取仓库后，从仓库根目录执行（Bash 环境）：
 
 ```bash
-# uv 临时环境：仅安装打包依赖，不读取模型服务的项目依赖
-uv run --no-project --python 3.12 \
-  --with-requirements riskgnn/dataset_adapters/packaging-requirements.txt \
-  python -m riskgnn.dataset_adapters.package_dataset --list-presets
-
-# 或在同事自己的 Python 环境安装轻量依赖
-python -m pip install -r riskgnn/dataset_adapters/packaging-requirements.txt
-python -m riskgnn.dataset_adapters.package_dataset --list-presets
+./scripts/package-dataset --list-presets
 ```
 
-下面命令假设当前 Python 已有该轻量依赖；也可继续使用上面的 uv 命令前缀。
-默认入口仅依赖标准库和 jsonschema，不导入模型、数据库或服务代码。
+脚本使用 uv 准备 Python 3.12 及 packaging-requirements.txt 中的轻量依赖，首次可能需要下载。
+无需定义 Shell 函数或安装模型服务环境；默认入口仅依赖标准库和 jsonschema。
+启动脚本只处理环境、模块定位和参数转交，保留 Python CLI 的错误与退出状态。
+预设、文件要求和配置全部由适配器声明，启动脚本不维护另一份映射。
+
+显式提供的 --data-dir、--output、--validation-python 均相对于**执行命令时的目录**。
+从其他目录也可用启动脚本的绝对路径调用；脚本不会把当前目录切换到 models/。
 
 ## 3. 查看预设，交付本次版本
 
 ```bash
-python -m riskgnn.dataset_adapters.package_dataset --show-preset uk-companies
+./scripts/package-dataset --show-preset uk-companies
 
-python -m riskgnn.dataset_adapters.package_dataset \
-  --preset uk-companies --data-dir ../datasets/uk_dataset_v1 \
-  --dataset-version 2026-10-20 --output /tmp/uk-20261020.zip
+./scripts/package-dataset \
+  --preset uk-companies --data-dir datasets/uk_dataset_v1 --dataset-version 2026-10-20
 ```
 
-`--show-preset` 展示绑定身份、默认配置、必需文件、配置 Schema，以及需手填的三个参数。
+只要求 --preset、--data-dir、--dataset-version；--output、--set 和 --json 可选。
+`--show-preset` 展示绑定身份、默认配置、必需文件、配置 Schema 及输出规则。
 `--data-dir` 精确表示一套数据的根目录，不递归猜测数据集类型。
 ACRA 选择 `comrisk_export_v5/acra`；SMEsD 选择 `comrisk_export_v5/smesd`。
 已有 ZIP 请先解压，再指定目录；旧 `tools.package_dataset --input ...` 入口已移除。
 
-成功摘要包含契约、默认配置、本次覆盖、文件数（含契约）、输出路径、字节数和校验级别。
+省略 --output 时输出到仓库 models/runs/datasets/<预设>-<版本>.zip，不受当前目录影响。
+上例输出 models/runs/datasets/uk-companies-2026-10-20.zip。
+默认文件名的预设与版本以英文字母或数字开头，仅含字母、数字、点、下划线、连字符；
+其他版本名称可以保留，通过 --output 显式指定文件路径即可。
+
+默认显示中文摘要：数据集/版本、适配器、契约生成、配置、文件数量、大小、校验级别和下一步。
+自动化调用添加 --json，标准输出保留详细 JSON，包括默认配置、本次覆盖及完整校验报告。
+--list-presets 与 --show-preset 也支持 --json；错误写入标准错误并返回非零退出状态。
 默认检查目录、必需文件、配置、契约及 ZIP 资源限制；**不扫描表内容，也不训练**。
 文件缺失会在压缩前列出具体名字，例如 `valid.json, test.json`。
-输出不能在数据目录中，也不能覆盖已有文件；源目录不会被修改。
+输出不能在数据目录中，也不能覆盖已有文件；遇到同名文件换版本或指定 --output，源目录不会被修改。
 
 ## 4. 可选参数覆盖
 
 ```bash
-python -m riskgnn.dataset_adapters.package_dataset \
+./scripts/package-dataset \
   --show-preset uk-companies --set target_count=60
 
-python -m riskgnn.dataset_adapters.package_dataset \
-  --preset uk-companies --data-dir ../datasets/uk_dataset_v1 \
+./scripts/package-dataset \
+  --preset uk-companies --data-dir datasets/uk_dataset_v1 \
   --dataset-version smoke-20261020 --output /tmp/uk-smoke.zip --set target_count=60
 ```
 
@@ -86,13 +91,13 @@ python -m riskgnn.dataset_adapters.package_dataset \
 已有服务开发环境时可指定其 Python；打包环境仍保持轻量：
 
 ```bash
-python -m riskgnn.dataset_adapters.package_dataset \
-  --preset uk-companies --data-dir ../datasets/uk_dataset_v1 \
+./scripts/package-dataset \
+  --preset uk-companies --data-dir datasets/uk_dataset_v1 \
   --dataset-version 2026-10-20 --output /tmp/uk-verified.zip \
-  --validate --validation-python service/.venv/bin/python
+  --validate --validation-python models/service/.venv/bin/python
 ```
 
-若当前 Python 已安装模型依赖，可只加 `--validate`。
+完整校验解释器需已有模型依赖；固定启动器的轻量环境不包含这些依赖。
 校验失败不会发布输出 ZIP；通过后摘要为 `validation=full`，附带数据规模与兼容性。
 默认 `validation=packaging-only` 只表示打包检查成功，不能作为数据有效或训练可用的证明。
 上传后 Worker 仍会独立全量校验，不信任本地摘要来跳过服务端校验。

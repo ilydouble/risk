@@ -20,6 +20,16 @@ PostgreSQL 内独立创建 `riskgnn` 数据库与用户，RustFS 内创建 `risk
 
 ## 第一条模型链路
 
+安装 `uv` 后，从仓库根目录打包已解压的数据，无需安装模型服务环境：
+
+```bash
+./scripts/package-dataset --preset smesd \
+  --data-dir datasets/comrisk_export_v5/smesd --dataset-version v5
+```
+
+默认输出 `models/runs/datasets/smesd-v5.zip`，自动生成契约；已有输出不会覆盖。
+`--output` 可指定其他位置，`--json` 提供自动化摘要。更多预设见[打包指南](models/riskgnn/dataset_adapters/PACKAGING.md)。
+
 1. 打开「模型训练工作台」，选择包含数据集契约的 ACRA、SMEsD JSON 或 UK ZIP（上限 512 MiB）。
 2. 浏览器预览文件索引，直传对象存储；Worker 全量扫描并校验数据协议。
 3. 校验通过后创建 RiskGNN 实验，默认 2 轮、CPU；准备配置由数据适配器记录。

@@ -83,7 +83,9 @@ def package(
         raise ValueError("--data-dir must be an existing directory; extract ZIP inputs first")
     output = output.absolute()
     if output.exists() or output.is_symlink():
-        raise ValueError("Output already exists; choose a new ZIP path")
+        raise ValueError(
+            f"Output already exists: {output}; 更换 --dataset-version 或通过 --output 指定新文件"
+        )
     if output.resolve().is_relative_to(root):
         raise ValueError("Output must be outside the data directory")
     if validation_python is not None and not validate:
