@@ -5,6 +5,7 @@ description = "Internal model API, execution worker and portable model artifacts
 # Python 3.12 is the validated deployment baseline for the current Torch/PyG stack.
 requires-python = ">=3.12,<3.13"
 dependencies = [
+  "jsonschema>=4.23,<5",
   # Model compatibility baseline; research environments remain independently managed.
   "torch==2.7.1",
   "torch-geometric==2.8.0",
