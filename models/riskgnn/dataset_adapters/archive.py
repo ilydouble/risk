@@ -10,19 +10,21 @@ from riskgnn.workbench.artifacts import digest
 
 MAX_UPLOAD = 512 * 1024 * 1024
 MAX_EXPANDED = 2 * 1024 * 1024 * 1024
+MAX_MEMBERS = 128
+MAX_FILE = 1024**3
+MAX_COMPRESSION_RATIO = 200
 
 
-def unpack(source: Path, target: Path) -> list[dict[str, Any]]:
+def check_archive(source: Path) -> None:
+    """Apply the same upload resource/path limits before publishing a local package."""
     if not 0 < source.stat().st_size <= MAX_UPLOAD:
         raise ValueError("ZIP must be between 1 byte and 512 MiB")
-    target.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(source) as archive:
         entries = archive.infolist()
-        if len(entries) > 128:
+        if len(entries) > MAX_MEMBERS:
             raise ValueError("ZIP contains more than 128 entries")
         names: set[str] = set()
         total = 0
-        files = []
         for entry in entries:
             relative = PurePosixPath(entry.filename)
             if (
@@ -45,10 +47,21 @@ def unpack(source: Path, target: Path) -> list[dict[str, Any]]:
             total += entry.file_size
             if (
                 total > MAX_EXPANDED
-                or entry.file_size > 1024**3
-                or entry.file_size > max(1, entry.compress_size) * 200
+                or entry.file_size > MAX_FILE
+                or entry.file_size > max(1, entry.compress_size) * MAX_COMPRESSION_RATIO
             ):
                 raise ValueError("ZIP expansion exceeds allowed resources")
+
+
+def unpack(source: Path, target: Path) -> list[dict[str, Any]]:
+    check_archive(source)
+    target.mkdir(parents=True, exist_ok=True)
+    files = []
+    with zipfile.ZipFile(source) as archive:
+        for entry in archive.infolist():
+            if entry.is_dir():
+                continue
+            name = PurePosixPath(entry.filename).as_posix()
             destination = target / name
             if not destination.resolve().is_relative_to(target.resolve()):
                 raise ValueError("ZIP path escapes destination")

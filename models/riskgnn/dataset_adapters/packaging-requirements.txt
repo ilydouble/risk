@@ -1,0 +1,2 @@
+# Packaging only; deliberately independent of Torch and the service environment.
+jsonschema==4.26.0

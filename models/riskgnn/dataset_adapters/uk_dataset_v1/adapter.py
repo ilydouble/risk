@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from riskgnn.dataset_adapters.base import DatasetAdapter
-from riskgnn.dataset_adapters.snapshot_preparation import target_count
+from riskgnn.dataset_adapters.delivery import delivery_for
 from riskgnn.dataset_adapters.uk_dataset_v1.analysis import analyze
 from riskgnn.dataset_adapters.uk_dataset_v1.preparation import prepare
 from riskgnn.dataset_adapters.uk_dataset_v1.validation import validate
@@ -13,7 +13,7 @@ class UKAdapter(DatasetAdapter):
     trainable = True
 
     def inspect(self, archive: Path, workspace: Path, config: dict) -> dict:
-        target_count(config, 2000)
+        delivery_for(self.id, self.version).config(config)
         result = validate(archive, workspace)
         result["analysis"] = analyze(workspace / result["root"], result)
         result["limitations"] = [
@@ -24,4 +24,5 @@ class UKAdapter(DatasetAdapter):
         return result
 
     def prepare(self, validated: Path, output: Path, config: dict) -> dict:
-        return prepare(validated, output, target_count(config, 2000))
+        resolved = delivery_for(self.id, self.version).config(config)
+        return prepare(validated, output, int(resolved["target_count"]))

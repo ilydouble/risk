@@ -1,15 +1,15 @@
 import json
-from zipfile import ZIP_DEFLATED, ZipFile
+from zipfile import ZipFile
 
 import numpy as np
 import pytest
 
+from riskgnn.dataset_adapters.packaging import package
 from riskgnn.dataset_adapters.registry import inspect, resolve
 from riskgnn.dataset_adapters.smesd.schemas import check as check_smesd
 from riskgnn.dataset_adapters.snapshot_io import load
 from riskgnn.dataset_adapters.snapshot_schema import Snapshot
 from riskgnn.dataset_adapters.uk_dataset_v1.schemas import check as check_uk
-from riskgnn.tools.package_dataset import package
 from riskgnn.workbench.artifacts import read_json
 from riskgnn.workbench.sampling import Sampler
 
@@ -21,7 +21,13 @@ def snapshot_zip(request, datasets, tmp_path):
     adapter, folder, count = request.param
     source = datasets / folder
     archive = tmp_path / "snapshot.zip"
-    package(source, archive, adapter, "real-local", adapter, config={"target_count": 60})
+    package(
+        source,
+        archive,
+        "smesd" if adapter == "smesd" else "uk-companies",
+        "real-local",
+        overrides={"target_count": 60},
+    )
     return archive, count
 
 
@@ -84,17 +90,17 @@ def test_v5_person_company_schema_and_uk_fields_are_not_inferred(datasets):
 
 def test_uk_file_hash_must_match_delivered_audit(datasets, tmp_path):
     source = datasets / "uk_dataset_v1"
-    raw = tmp_path / "raw.zip"
-    with ZipFile(raw, "w", compression=ZIP_DEFLATED) as archive:
-        for name in ("train.json", "valid.json", "test.json", "audit.json", "export_meta.json"):
-            if name == "audit.json":
-                audit = json.loads((source / name).read_text())
-                audit["snapshots"]["train"]["sha256"] = "0" * 64
-                archive.writestr(name, json.dumps(audit))
-            else:
-                archive.write(source / name, name)
+    raw = tmp_path / "raw"
+    raw.mkdir()
+    for name in ("train.json", "valid.json", "test.json", "audit.json", "export_meta.json"):
+        if name == "audit.json":
+            audit = json.loads((source / name).read_text())
+            audit["snapshots"]["train"]["sha256"] = "0" * 64
+            (raw / name).write_text(json.dumps(audit))
+        else:
+            (raw / name).write_bytes((source / name).read_bytes())
     wrapped = tmp_path / "wrapped.zip"
-    package(raw, wrapped, "uk", "v1", "uk-dataset-v1")
+    package(raw, wrapped, "uk-companies", "v1")
     with pytest.raises(ValueError, match="SHA-256"):
         inspect(wrapped, tmp_path / "validated")
 
@@ -114,5 +120,5 @@ def test_retired_bundle_and_raw_pickle_are_not_upload_protocols(tmp_path, datase
         )
     with pytest.raises(ValueError, match="not supported"):
         resolve(archive)
-    with pytest.raises(ValueError, match="one dataset"):
-        package(datasets / "smesd", tmp_path / "raw-pickle.zip", "smesd", "raw", "smesd")
+    with pytest.raises(ValueError, match="Missing required files"):
+        package(datasets / "smesd", tmp_path / "raw-pickle.zip", "smesd", "raw")

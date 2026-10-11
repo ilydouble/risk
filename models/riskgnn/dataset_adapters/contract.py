@@ -10,6 +10,12 @@ CONTRACT_NAME = "risk_dataset_contract.json"
 SCHEMA_PATH = Path(__file__).resolve().parents[2] / "risk_dataset_contract.schema.json"
 
 
+def validate_contract(contract: dict) -> None:
+    Draft202012Validator(json.loads(SCHEMA_PATH.read_text())).validate(contract)
+    if len(json.dumps(contract, ensure_ascii=False, allow_nan=False).encode()) > 65536:
+        raise ValueError("Dataset contract is too large")
+
+
 def read_contract(source: Path) -> tuple[dict, str]:
     with ZipFile(source) as archive:
         members = [
@@ -31,5 +37,5 @@ def read_contract(source: Path) -> tuple[dict, str]:
         if info.file_size > 65536 or info.flag_bits & 1:
             raise ValueError("Dataset contract is too large or encrypted")
         contract = json.loads(archive.read(info))
-    Draft202012Validator(json.loads(SCHEMA_PATH.read_text())).validate(contract)
+    validate_contract(contract)
     return contract, relative.parent.as_posix()

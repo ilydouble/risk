@@ -8,7 +8,7 @@ import pytest
 import torch
 from fixtures.real_datasets import acra_subset
 
-from riskgnn.tools.package_dataset import package
+from riskgnn.dataset_adapters.packaging import package
 
 
 def pytest_sessionstart(session):
@@ -57,7 +57,7 @@ def export_zip(acra_source, tmp_path):
     root = tmp_path / "source"
     shutil.copytree(acra_source, root)
     archive = tmp_path / "data.zip"
-    package(root, archive, "acra-real-test-subset", "v5", "sg-comrisk")
+    package(root, archive, "acra-companies", "v5")
     with ZipFile(archive) as zipped:
         contract = json.loads(zipped.read("risk_dataset_contract.json"))
     (root / "risk_dataset_contract.json").write_text(json.dumps(contract))

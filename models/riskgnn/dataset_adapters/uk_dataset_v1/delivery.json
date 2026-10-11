@@ -1,0 +1,36 @@
+{
+  "adapter": {
+    "id": "uk-dataset-v1",
+    "version": "1"
+  },
+  "required_files": [
+    "train.json",
+    "valid.json",
+    "test.json",
+    "audit.json",
+    "export_meta.json"
+  ],
+  "config_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "target_count": {
+        "type": "integer",
+        "minimum": 6,
+        "maximum": 20000
+      }
+    }
+  },
+  "default_config": {
+    "target_count": 2000
+  },
+  "presets": {
+    "uk-companies": {
+      "dataset": {
+        "id": "uk-companies",
+        "name": "UK Companies House / GLEIF snapshots"
+      },
+      "description": "UK Companies House / GLEIF snapshots; node_edge subset, preserving existing splits."
+    }
+  }
+}

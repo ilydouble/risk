@@ -7,7 +7,7 @@ from model_service.execution.artifacts import fingerprint, inventory, pack
 from model_service.execution.contracts import AssetInput, Operation, OperationRequest
 from model_service.execution.invocation import Invocation
 from model_service.execution.process import ComputationFailed, run_model
-from riskgnn.tools.package_dataset import package
+from riskgnn.dataset_adapters.packaging import package
 from riskgnn.workbench.predictor import Predictor
 
 
@@ -20,10 +20,9 @@ def real_training_zip(request, export_zip, datasets, tmp_path):
     package(
         datasets / folder,
         path,
-        request.param,
+        ("smesd" if request.param == "smesd" else "uk-companies"),
         "real-local",
-        request.param,
-        config={"target_count": 60},
+        overrides={"target_count": 60},
     )
     return path
 

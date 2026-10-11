@@ -10,15 +10,6 @@ from riskgnn.dataset_adapters.snapshot_schema import Edge
 from riskgnn.workbench.artifacts import seal, write_json
 
 
-def target_count(config: dict, default: int) -> int:
-    if set(config) - {"target_count"}:
-        raise ValueError("Unsupported dataset configuration")
-    count = config.get("target_count", default)
-    if type(count) is not int or not 6 <= count <= 20000:
-        raise ValueError("target_count must be an integer between 6 and 20000")
-    return count
-
-
 def prepare(
     validated: Path,
     output: Path,

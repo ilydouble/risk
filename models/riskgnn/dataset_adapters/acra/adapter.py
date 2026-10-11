@@ -6,7 +6,7 @@ from riskgnn.dataset_adapters.acra.preparation import prepare
 from riskgnn.dataset_adapters.acra.validation import validate
 from riskgnn.dataset_adapters.base import DatasetAdapter
 from riskgnn.dataset_adapters.contract import read_contract
-from riskgnn.dataset_adapters.snapshot_preparation import target_count
+from riskgnn.dataset_adapters.delivery import delivery_for
 
 
 class SingaporeAdapter(DatasetAdapter):
@@ -15,7 +15,7 @@ class SingaporeAdapter(DatasetAdapter):
     trainable = True
 
     def inspect(self, archive: Path, workspace: Path, config: dict) -> dict:
-        target_count(config, 2000)
+        delivery_for(self.id, self.version).config(config)
         _, relative = read_contract(archive)
         result = validate(archive, workspace)
         root = data_root(workspace)
@@ -33,4 +33,5 @@ class SingaporeAdapter(DatasetAdapter):
         return result
 
     def prepare(self, validated: Path, output: Path, config: dict) -> dict:
-        return prepare(validated, output, target_count=target_count(config, 2000))
+        resolved = delivery_for(self.id, self.version).config(config)
+        return prepare(validated, output, target_count=int(resolved["target_count"]))

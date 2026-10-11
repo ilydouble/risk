@@ -7,8 +7,8 @@ from jsonschema.exceptions import ValidationError as SchemaValidationError
 from model_service.execution.contracts import ExecutionError
 from model_service.shared.dataset_contract import read_dataset_contract
 from riskgnn.dataset_adapters.contract import read_contract
+from riskgnn.dataset_adapters.packaging import package
 from riskgnn.dataset_adapters.registry import resolve
-from riskgnn.tools.package_dataset import package
 
 CONTRACT = {
     "contract_version": 1,
@@ -58,18 +58,14 @@ def test_contract_selects_data_adapter_not_uploaded_code(export_zip, tmp_path):
 
 
 def test_packaging_creates_new_zip_and_preserves_bytes(tmp_path, acra_source):
-    source = tmp_path / "raw.zip"
-    with ZipFile(source, "w") as archive:
-        archive.write(acra_source / "company_attr.parquet", "data/company_attr.parquet")
+    source = acra_source / "company_attr.parquet"
     before = source.read_bytes()
     output = tmp_path / "dataset.zip"
-    package(source, output, "example", "1", "sg-comrisk")
+    package(acra_source, output, "acra-companies", "1")
     assert source.read_bytes() == before
-    assert read_dataset_contract(output)["dataset"] == {"id": "example", "version": "1"}
+    assert read_dataset_contract(output)["dataset"]["id"] == "acra"
+    assert read_dataset_contract(output)["dataset"]["version"] == "1"
     with ZipFile(output) as archive:
-        assert (
-            archive.read("data/company_attr.parquet")
-            == (acra_source / "company_attr.parquet").read_bytes()
-        )
+        assert archive.read("company_attr.parquet") == before
     with pytest.raises(ValueError):
-        package(source, output, "example", "1", "sg-comrisk")
+        package(acra_source, output, "acra-companies", "1")

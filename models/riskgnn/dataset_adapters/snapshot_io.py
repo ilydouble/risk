@@ -5,6 +5,7 @@ from pathlib import Path
 
 from riskgnn.dataset_adapters.archive import unpack
 from riskgnn.dataset_adapters.contract import read_contract
+from riskgnn.dataset_adapters.delivery import delivery_for
 from riskgnn.dataset_adapters.snapshot_schema import Snapshot
 from riskgnn.workbench.artifacts import digest, read_json, write_json
 
@@ -24,6 +25,7 @@ def validate(
     contract, relative = read_contract(source)
     files = unpack(source, destination)
     root = destination / relative
+    delivery_for(contract["adapter"]["id"], contract["adapter"]["version"]).check_files(root)
     snapshots = load(root)
     seen: set[str] = set()
     reference = snapshots["train"]

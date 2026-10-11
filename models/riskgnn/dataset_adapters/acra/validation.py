@@ -10,6 +10,7 @@ import pyarrow.parquet as pq
 from riskgnn.dataset_adapters.acra.paths import data_root
 from riskgnn.dataset_adapters.archive import unpack
 from riskgnn.dataset_adapters.contract import read_contract
+from riskgnn.dataset_adapters.delivery import delivery_for
 from riskgnn.workbench.artifacts import digest, read_json, write_json
 
 FEATURES = [
@@ -44,9 +45,12 @@ def connect(root: Path) -> duckdb.DuckDBPyConnection:
 
 
 def validate(source: Path, destination: Path) -> dict[str, Any]:
-    contract, _ = read_contract(source)
+    contract, relative = read_contract(source)
     files = unpack(source, destination)
     root = data_root(destination)
+    if root.resolve() != (destination / relative).resolve():
+        raise ValueError("ACRA files and contract must share the data root")
+    delivery_for("sg-comrisk", "1").check_files(root)
     config = read_json(root / "feature_config.json")
     export = read_json(root / "export_meta.json")
     if config.get("protocol_version") != "2.0":

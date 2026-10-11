@@ -1,0 +1,38 @@
+{
+  "adapter": {
+    "id": "sg-comrisk",
+    "version": "1"
+  },
+  "required_files": [
+    "company_attr.parquet",
+    "label.parquet",
+    "id_map.parquet",
+    "edges.parquet",
+    "splits_5seed.parquet",
+    "feature_config.json",
+    "export_meta.json"
+  ],
+  "config_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "target_count": {
+        "type": "integer",
+        "minimum": 6,
+        "maximum": 20000
+      }
+    }
+  },
+  "default_config": {
+    "target_count": 2000
+  },
+  "presets": {
+    "acra-companies": {
+      "dataset": {
+        "id": "acra",
+        "name": "Singapore ACRA/GLEIF companies"
+      },
+      "description": "Singapore ACRA/GLEIF companies; node_edge subset, preserving existing splits."
+    }
+  }
+}
