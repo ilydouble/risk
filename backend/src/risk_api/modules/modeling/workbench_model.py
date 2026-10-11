@@ -12,6 +12,9 @@ from risk_api.shared.db import Base
 
 class Dataset(Base):
     __tablename__ = "workbench_datasets"
+    protocol_generation: Mapped[int] = mapped_column(
+        Integer, default=2, server_default="2", comment="Workbench execution contract generation"
+    )
     id: Mapped[str] = mapped_column(String(64), primary_key=True)
     owner_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True)
     name: Mapped[str] = mapped_column(String(128))
@@ -26,6 +29,9 @@ class Dataset(Base):
 
 class Run(Base):
     __tablename__ = "workbench_runs"
+    protocol_generation: Mapped[int] = mapped_column(
+        Integer, default=2, server_default="2", comment="Workbench execution contract generation"
+    )
     __table_args__ = (UniqueConstraint("owner_id", "request_key"),)
     id: Mapped[str] = mapped_column(String(64), primary_key=True)
     owner_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True)
@@ -40,6 +46,9 @@ class Run(Base):
 
 class ModelVersion(Base):
     __tablename__ = "workbench_model_versions"
+    protocol_generation: Mapped[int] = mapped_column(
+        Integer, default=2, server_default="2", comment="Workbench execution contract generation"
+    )
     id: Mapped[str] = mapped_column(String(64), primary_key=True)
     owner_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True)
     run_id: Mapped[str] = mapped_column(ForeignKey("workbench_runs.id"), unique=True)

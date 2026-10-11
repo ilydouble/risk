@@ -29,6 +29,15 @@ from concurrent.futures import ProcessPoolExecutor
 from sklearn.metrics import accuracy_score as acc, precision_score as pre, recall_score as rec, f1_score as f1, roc_auc_score as roc, average_precision_score as ap_score
 from scipy.stats import ks_2samp
 
+if __package__:
+    from .training_engine import optimize_batch, run_epochs
+    from .gnn import RiskGNN
+    from .utils import Classifier, set_random_seed
+else:
+    from training_engine import optimize_batch, run_epochs
+    from gnn import RiskGNN
+    from utils import Classifier, set_random_seed
+
 # ---------------------------------------------------------------------------
 # Worker-process globals: set once per process by _worker_init, reused across
 # every sampling task in that process (avoids re-pickling the ~6M-entry CSR
@@ -272,16 +281,6 @@ def to_batch_tensors(n_id_np, ei_local, et_local, ew_local, device):
     return n_id, ei, et, ew
 
 
-def optimize_batch(model, optimizer, criterion, scores, labels):
-    """Shared optimization step; service callers supply their own data/epoch protocol."""
-    loss = criterion(scores, labels)
-    optimizer.zero_grad()
-    loss.backward()
-    torch.nn.utils.clip_grad_norm_(model.parameters(), 0.25)
-    optimizer.step()
-    return loss.item()
-
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--variant', type=str, required=True, choices=['node_only', 'node_edge'])
@@ -310,8 +309,6 @@ def main():
     # export folder -- they resolve from the repo root (comrisk_sg/), which is intended.
     sys.path.insert(0, args.data_dir)
     from load_comrisk import ComRiskExport   # noqa: E402  (loaded from --data_dir)
-    from gnn import RiskGNN                  # noqa: E402  (from repo root)
-    from utils import Classifier, set_random_seed  # noqa: E402  (from repo root)
 
     t0 = time.time()
     def log(msg):
@@ -414,28 +411,37 @@ def main():
     log('model built, training (%s, fanout=%d, batch=%d, %d epochs, %d workers)' % (
         args.variant, args.fanout, args.batch_size, args.n_epoch, args.num_workers))
     rng_train = np.random.default_rng(args.seed)
-    for epoch in range(args.n_epoch):
-        st = time.time()
-        model.train()
-        ep_loss, n_batches = 0.0, 0
+    batch_count = 0
+
+    def epoch_batches(epoch):
+        nonlocal batch_count
         seeds_list = make_batches(train_idx_np, args.batch_size, shuffle=True, rng=rng_train)
-        source = ParallelBatchSource(pool, seeds_list, base_seed=args.seed * 100 + epoch, lookahead=args.num_workers * 2)
-        for n_id_np, ei_local, et_local, ew_local, bsz in source:
-            if n_batches % 50 == 0:
-                log('  batch %d/%d...' % (n_batches, len(seeds_list)))
-            n_id, ei, et_, ew_ = to_batch_tensors(n_id_np, ei_local, et_local, ew_local, device)
-            emb = gnn.forward_batch(X, ei, et_, ew_, n_id, bsz)
-            res = classifier.forward(emb)
-            label = torch.LongTensor(y[n_id_np[:bsz]].astype(int)).to(device)
-            ep_loss += optimize_batch(model, optimizer, criterion, res, label); n_batches += 1
-        scheduler.step()
+        batch_count = len(seeds_list)
+        return ParallelBatchSource(pool, seeds_list, base_seed=args.seed * 100 + epoch,
+                                   lookahead=args.num_workers * 2)
+
+    def batch_forward(_epoch, batch):
+        n_id_np, ei_local, et_local, ew_local, bsz = batch
+        n_id, ei, et_, ew_ = to_batch_tensors(n_id_np, ei_local, et_local, ew_local, device)
+        emb = gnn.forward_batch(X, ei, et_, ew_, n_id, bsz)
+        return classifier.forward(emb), torch.LongTensor(y[n_id_np[:bsz]].astype(int)).to(device)
+
+    def batch_progress(number):
+        if number % 50 == 0:
+            log('  batch %d/%d...' % (number, batch_count))
+
+    def epoch_complete(epoch, loss, n_batches, duration):
         if epoch % args.eval_every == 0 or epoch == args.n_epoch - 1:
             pred, score, true = run_eval(valid_idx_np, y, args.eval_batch_size)
             log('Epoch %d (%.2fs, %d batches) TrainLoss=%.3f ValidAcc=%.4f ValidROC=%.4f' % (
-                epoch, time.time() - st, n_batches, ep_loss / max(n_batches, 1), acc(true, pred),
+                epoch, duration, n_batches, loss, acc(true, pred),
                 roc(true, score) if len(set(true.tolist())) > 1 else float('nan')))
         else:
-            log('Epoch %d (%.2fs, %d batches) TrainLoss=%.3f' % (epoch, time.time() - st, n_batches, ep_loss / max(n_batches, 1)))
+            log('Epoch %d (%.2fs, %d batches) TrainLoss=%.3f' % (
+                epoch, duration, n_batches, loss))
+
+    run_epochs(model, optimizer, scheduler, criterion, args.n_epoch,
+               epoch_batches, batch_forward, epoch_complete, batch_progress)
 
     pred, score, true = run_eval(test_idx_np, y, args.eval_batch_size)
     # Kept byte-identical to previous runs: with deterministic seeds this line must

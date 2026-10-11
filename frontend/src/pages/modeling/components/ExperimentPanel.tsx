@@ -88,7 +88,8 @@ export function ExperimentPanel({ work }: { work: Workbench }) {
           {t(`modeling.models.${work.run.runnerId}`, {
             defaultValue: work.run.runnerId,
           })}{" "}
-          · smoke-v1 · {work.run.epochs} epochs · CPU
+          · {work.run.epochs} epochs
+          {work.run.profile && ` · ${work.run.profile.profile} · ${work.run.profile.device}`}
         </p>
         {work.run.error && (
           <pre className="max-h-48 overflow-auto whitespace-pre-wrap text-xs text-danger-500">

@@ -6,13 +6,13 @@ from uuid import uuid4
 
 from stellarmesh_objectstorage import AsyncClient
 
-from model_service.adapters.archive import unpack
-from model_service.adapters.contracts import AssetInput, Operation, OperationRequest
 from model_service.execution.artifacts import fingerprint
+from model_service.execution.contracts import AssetInput, Operation, OperationRequest
 from model_service.execution.invocation import Invocation
-from model_service.execution.process import ComputationFailed, run_adapter
+from model_service.execution.process import ComputationFailed, run_model
 from model_service.files import digest
 from model_service.modules.jobs.repository import Store
+from model_service.shared.archive import unpack
 from model_service.shared.config import Settings
 
 
@@ -29,6 +29,8 @@ class Runtime:
             if job["status"] != "completed" or job["kind"] != "train":
                 raise ValueError("Model artifact is not ready")
             result = job["result"]
+            if result.get("runtimeId") != "riskgnn" or result.get("runtimeVersion") != "2":
+                raise ValueError("Model belongs to a retired workbench protocol")
             directory = self.settings.workspace / "models" / result["sha256"]
             if not directory.exists():
                 archive = directory.with_suffix(".zip")
@@ -41,20 +43,16 @@ class Runtime:
                 await asyncio.to_thread(unpack, archive, temporary)
                 temporary.rename(directory)
             call_directory = self.settings.workspace / "inference" / uuid4().hex
-            # Old published records predate adapter identity. Keep this mapping at
-            # the existing RiskGNN endpoint, not in the generic execution protocol.
             invocation = Invocation(
-                adapter_id=result.get(
-                    "adapterId", job["payload"].get("runnerId", "riskgnn-node-edge")
-                ),
-                adapter_version=result.get("adapterVersion", "1.0.0"),
+                runtime_id="riskgnn",
+                runtime_version="2",
                 request=OperationRequest(
                     operation=Operation.PREDICT,
                     inputs={
                         "model": AssetInput(
                             path=directory,
                             sha256=await asyncio.to_thread(fingerprint, directory),
-                            format=result.get("format", "riskgnn-model-v1"),
+                            format=result.get("format", "riskgnn-model-v2"),
                         )
                     },
                     parameters={"company_ids": [item for item in ids]},
@@ -70,12 +68,12 @@ class Runtime:
 
             try:
                 async with asyncio.timeout(60):
-                    result_data = (await run_adapter(invocation, ignore)).result.data
+                    result_data = (await run_model(invocation, ignore)).result.data
                     items = result_data["items"]
                     if not isinstance(items, list) or not all(
                         isinstance(item, dict) for item in items
                     ):
-                        raise ValueError("Adapter prediction result has invalid shape")
+                        raise ValueError("Model prediction result has invalid shape")
                     return [dict(item) for item in items if isinstance(item, dict)]
             except ComputationFailed as error:
                 if error.detail.code == "RISKGNN_COMPANY_NOT_FOUND":

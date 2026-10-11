@@ -1,13 +1,13 @@
 from dishka.integrations.fastapi import FromDishka
 from fastapi import Request
 
-from model_service.adapters.registry import registry
+from model_service.execution.runtime import runtime_spec
 from model_service.modules.models.api.schemas import (
     RequestCapabilities,
     RequestPredict,
-    ResponseAdapters,
     ResponseCapabilities,
     ResponsePredict,
+    ResponseRuntime,
 )
 from model_service.modules.models.service import Runtime
 from model_service.runners.registry import capabilities
@@ -33,5 +33,5 @@ async def model_capabilities(body: RequestCapabilities) -> Envelope[ResponseCapa
     return success_response(ResponseCapabilities.model_validate({"items": capabilities()}))
 
 
-async def adapters(body: RequestCapabilities) -> Envelope[ResponseAdapters]:
-    return success_response(ResponseAdapters(items=registry.describe()))
+async def runtime(body: RequestCapabilities) -> Envelope[ResponseRuntime]:
+    return success_response(ResponseRuntime(runtime=runtime_spec()))

@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from model_service.adapters.singapore import FEATURES
+from riskgnn.dataset_adapters.sg_comrisk.validation import FEATURES
 
 
 @pytest.fixture
@@ -52,6 +52,15 @@ def export_zip(tmp_path):
     )
     (root / "export_meta.json").write_text(json.dumps({"scope": "synthetic"}))
     (root / "load_comrisk.py").write_text("raise RuntimeError('never execute uploads')")
+    (root / "risk_dataset_contract.json").write_text(
+        json.dumps(
+            {
+                "contract_version": 1,
+                "dataset": {"id": "synthetic-sg", "version": "1"},
+                "adapter": {"id": "sg-comrisk", "version": "1", "config": {}},
+            }
+        )
+    )
     archive = tmp_path / "data.zip"
     with zipfile.ZipFile(archive, "w") as z:
         for file in root.iterdir():

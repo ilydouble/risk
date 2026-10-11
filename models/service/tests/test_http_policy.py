@@ -35,19 +35,17 @@ def test_service_auth_validation_envelope_and_schema(monkeypatch):
         )
         assert catalog.status_code == 200
         models = {item["id"]: item for item in catalog.json()["data"]["items"]}
-        assert models["riskgnn-node-only"]["trainable"] is True
-        assert models["riskgnn-plus"]["trainable"] is False
+        assert models["riskgnn"]["trainable"] is True
+        assert list(models) == ["riskgnn"]
         adapters = client.post(
-            "/internal/v1/models/adapters",
+            "/internal/v1/models/runtime",
             json={},
             headers={"Authorization": "Bearer contract-test-token"},
-        ).json()["data"]["items"]
-        assert adapters[0]["adapter_version"] == "1.0.0"
-        assert set(adapters[0]["operations"]) == {"inspect", "train", "evaluate", "predict"}
+        ).json()["data"]["runtime"]
+        assert adapters["runtime_version"] == "2"
+        assert set(adapters["operations"]) == {"inspect", "train", "evaluate", "predict"}
         assert (
-            adapters[0]["operations"]["train"]["parameters_schema"]["properties"]["epochs"][
-                "maximum"
-            ]
+            adapters["operations"]["train"]["parameters_schema"]["properties"]["epochs"]["maximum"]
             == 20
         )
         assert client.get("/health/live").status_code == 200
@@ -108,8 +106,8 @@ def test_job_artifact_and_prediction_routes_share_dishka_store(monkeypatch):
                 "jobId": str(uuid4()),
                 "kind": "execute",
                 "payload": {
-                    "adapter_id": "riskgnn-node-edge",
-                    "adapter_version": "1.0.0",
+                    "runtime_id": "riskgnn",
+                    "runtime_version": "2",
                     "operation": "inspect",
                     "inputs": {
                         "dataset": {
@@ -127,9 +125,12 @@ def test_job_artifact_and_prediction_routes_share_dishka_store(monkeypatch):
             unsupported = {
                 **generic,
                 "jobId": str(uuid4()),
-                "payload": {**generic["payload"], "adapter_version": "absent"},
+                "payload": {**generic["payload"], "runtime_version": "absent"},
             }
-            assert post("jobs/submit", unsupported, 422)["internal_code"] == "ADAPTER_NOT_AVAILABLE"
+            assert (
+                post("jobs/submit", unsupported, 422)["internal_code"]
+                == "MODEL_RUNTIME_INCOMPATIBLE"
+            )
             post("jobs/cancel", {"jobId": generic["jobId"]})
             identity = str(uuid4())
             body = {

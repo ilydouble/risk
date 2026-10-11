@@ -57,6 +57,10 @@ line-length = 100
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]
 
+[tool.ruff.lint.isort]
+# Keep import groups stable when checking from models/ or service/.
+known-first-party = ["alembic", "model_service", "riskgnn"]
+
 [tool.mypy]
 python_version = "3.12"
 files = ["src/model_service"]

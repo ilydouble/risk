@@ -15,7 +15,7 @@ class ValidateInput(BaseModel):
 class TrainInput(BaseModel):
     model_config = ConfigDict(extra="forbid")
     sourceJobId: UUID
-    runnerId: str | None = Field(default=None, min_length=1, max_length=64)
+    runnerId: Literal["riskgnn"] = "riskgnn"
     epochs: int = Field(default=2, ge=1, le=20)
 
 

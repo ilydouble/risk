@@ -1061,6 +1061,10 @@ export interface components {
         };
         /** DatasetDTO */
         DatasetDTO: {
+            /** Adapterid */
+            adapterId?: string | null;
+            /** Adapterversion */
+            adapterVersion?: string | null;
             analysis?: components["schemas"]["DatasetAnalysisDTO"] | null;
             /** Counts */
             counts: {
@@ -1070,6 +1074,10 @@ export interface components {
             createdAt: string;
             /** Dataformat */
             dataFormat?: string | null;
+            /** Datasetidentity */
+            datasetIdentity?: string | null;
+            /** Datasetversion */
+            datasetVersion?: string | null;
             /** Error */
             error?: string | null;
             /** Filename */
@@ -1509,7 +1517,7 @@ export interface components {
         ExperimentProfileDTO: {
             /**
              * Artifactformat
-             * @default riskgnn-model-v1
+             * @default riskgnn-model-v2
              */
             artifactFormat: string;
             /** Codeversion */
@@ -1721,7 +1729,7 @@ export interface components {
             runId: string;
             /**
              * Runnerid
-             * @default riskgnn-node-edge
+             * @default riskgnn
              */
             runnerId: string;
             /** Sha256 */
@@ -2042,9 +2050,10 @@ export interface components {
             requestKey: string;
             /**
              * Runnerid
-             * @default riskgnn-node-edge
+             * @default riskgnn
+             * @constant
              */
-            runnerId: string;
+            runnerId: "riskgnn";
         };
         /** RequestCreateUpload */
         RequestCreateUpload: {
@@ -2595,7 +2604,7 @@ export interface components {
             retryOf: string | null;
             /**
              * Runnerid
-             * @default riskgnn-node-edge
+             * @default riskgnn
              */
             runnerId: string;
             /** Stage */

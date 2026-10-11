@@ -123,17 +123,19 @@ class ModelingService:
         request_id: str,
         retry_of: str | None = None,
         *,
-        runner_id: str = "riskgnn-node-edge",
+        runner_id: str = "riskgnn",
     ) -> Run:
-        config = {"profile": "smoke-v1", "epochs": epochs, "seed": 0, "runnerId": runner_id}
+        config = {"epochs": epochs, "runnerId": runner_id}
         previous = await self.session.scalar(
-            select(Run).where(Run.owner_id == owner, Run.request_key == request_key)
+            select(Run).where(
+                Run.owner_id == owner, Run.request_key == request_key, Run.protocol_generation == 2
+            )
         )
         if previous:
             if (
                 previous.dataset_id,
                 previous.name,
-                {"runnerId": "riskgnn-node-edge", **previous.configuration},
+                {"runnerId": "riskgnn", **previous.configuration},
                 previous.retry_of,
             ) != (
                 dataset_id,
@@ -149,7 +151,7 @@ class ModelingService:
         if source.execution.get("status") != "completed":
             raise AppError(409, "MODELING_DATASET_NOT_READY", "Dataset is not ready")
         result = source.execution.get("result", {})
-        supported = result.get("supportedRunnerIds", ["riskgnn-node-edge"])
+        supported = result.get("supportedRunnerIds", [])
         if runner_id not in supported:
             raise AppError(422, "MODELING_MODEL_INCOMPATIBLE", "Model cannot train this dataset")
         item = Run(
@@ -173,7 +175,11 @@ class ModelingService:
         except IntegrityError:
             await self.session.rollback()
             existing = await self.session.scalar(
-                select(Run).where(Run.owner_id == owner, Run.request_key == request_key)
+                select(Run).where(
+                    Run.owner_id == owner,
+                    Run.request_key == request_key,
+                    Run.protocol_generation == 2,
+                )
             )
             if existing is None:
                 raise
@@ -201,7 +207,7 @@ class ModelingService:
             previous.configuration["epochs"],
             request_id,
             previous.id,
-            runner_id=previous.configuration.get("runnerId", "riskgnn-node-edge"),
+            runner_id=previous.configuration.get("runnerId", "riskgnn"),
         )
 
     async def cancel(self, owner: str, identity: str, request_id: str) -> Run:

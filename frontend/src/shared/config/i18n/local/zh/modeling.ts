@@ -1,5 +1,7 @@
 export default {
   "modeling": {
+    "contractIdentity": "数据集版本",
+    "adapter": "数据适配器",
     "title": "模型工作台",
     "subtitle": "上传数据、检查质量与划分，选择已接入的模型配置进行训练、测试和发布。",
     "disclaimer": "当前为 smoke-v1 真实子集实验：2,000 个有标签目标、固定静态图、CPU 训练。输出反映新加坡企业困境标签，不是授信违约概率；两轮训练仅用于验证链路。",
@@ -12,6 +14,7 @@ export default {
       "model": "模型版本"
     },
     "errors": {
+      "contract": "ZIP 必须在数据根目录包含唯一的 risk_dataset_contract.json。",
       "unavailable": "模型服务暂不可用，请稍后重试。",
       "notReady": "请等待数据集校验通过。",
       "state": "当前状态不支持此操作。",
@@ -86,12 +89,7 @@ export default {
     "available": "可训练与发布",
     "analysisOnly": "数据分析已完成；该数据协议暂没有已接入的训练配置。",
     "dataFormat": "数据协议",
-    "models": {
-      "riskgnn-node-edge": "RiskGNN · 自身特征与图关系",
-      "riskgnn-node-only": "RiskGNN · 仅自身特征",
-      "comrisk-baseline": "ComRisk 原始基线",
-      "riskgnn-plus": "RiskGNN+"
-    },
+    "models": { "riskgnn": "RiskGNN" },
     "capabilityReasons": {
       "ARTIFACT_ADAPTER_PENDING": "尚未接入模型包",
       "RESEARCH_VALIDATION_PENDING": "等待研究链路验收"

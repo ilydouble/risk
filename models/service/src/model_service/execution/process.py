@@ -6,37 +6,54 @@ from collections.abc import Awaitable, Callable
 
 from pydantic import TypeAdapter
 
-from model_service.adapters.contracts import AdapterError, AdapterEvent, ErrorDetail
-from model_service.execution.invocation import Invocation, Receipt, verify_receipt
+from model_service.execution.contracts import (
+    ErrorDetail,
+    ExecutionError,
+    ExecutionEvent,
+    OperationResult,
+    parameters_for,
+)
+from model_service.execution.invocation import Invocation, Receipt, finalize, validate_inputs
+from model_service.execution.runtime import model_root, runtime_spec
 from model_service.files import read_json, write_json
+from model_service.shared.dataset_contract import read_dataset_contract
 
 
-class ComputationFailed(AdapterError):
+class ComputationFailed(ExecutionError):
     pass
 
 
-async def run_adapter(
+async def run_model(
     invocation: Invocation, event: Callable[[str, dict], Awaitable[None]]
 ) -> Receipt:
+    spec = runtime_spec()
+    await asyncio.to_thread(validate_inputs, invocation, spec)
+    if "dataset" in invocation.request.inputs:
+        await asyncio.to_thread(read_dataset_contract, invocation.request.inputs["dataset"].path)
     directory = invocation.directory
     directory.mkdir(parents=True, exist_ok=True)
-    for name in ("error.json", "result.json", "events.jsonl"):
+    for name in ("error.json", "result.json", "operation-result.json", "events.jsonl"):
         (directory / name).unlink(missing_ok=True)
     request = directory / "request.json"
-    write_json(request, invocation.model_dump(mode="json"))
+    payload = invocation.model_dump(mode="json")
+    payload["request"]["parameters"] = parameters_for(
+        spec, invocation.request.operation, invocation.request.parameters
+    )
+    write_json(request, payload)
     process = await asyncio.create_subprocess_exec(
         sys.executable,
         "-m",
-        "model_service.execution.adapter_cli",
+        "riskgnn.workbench_cli",
         "--request",
         str(request),
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.STDOUT,
         start_new_session=True,
+        cwd=model_root(),
         limit=1024 * 1024,
     )
     finished = asyncio.Event()
-    event_type: TypeAdapter[AdapterEvent] = TypeAdapter(AdapterEvent)
+    event_type: TypeAdapter[ExecutionEvent] = TypeAdapter(ExecutionEvent)
 
     async def logs():
         assert process.stdout is not None
@@ -63,7 +80,7 @@ async def run_adapter(
                     await event(record.kind.value, record.model_dump(mode="json", exclude={"kind"}))
             if finished.is_set():
                 if pending:
-                    raise ComputationFailed("ADAPTER_PROTOCOL_INVALID", "Incomplete event record")
+                    raise ComputationFailed("EXECUTION_PROTOCOL_INVALID", "Incomplete event record")
                 return
             await asyncio.sleep(0.1)
 
@@ -80,13 +97,14 @@ async def run_adapter(
             # A crash/OOM is not proof of a transient error. Lease expiry already
             # recovers killed workers; adapters explicitly classify retriable failures.
             raise ComputationFailed(
-                "ADAPTER_PROCESS_FAILED", f"Process exited with {process.returncode}"
+                "EXECUTION_PROCESS_FAILED", f"Process exited with {process.returncode}"
             )
-        if not (directory / "result.json").is_file():
+        if not (directory / "operation-result.json").is_file():
             raise ComputationFailed(
-                "ADAPTER_RESULT_MISSING", "Process exited without a sealed result"
+                "EXECUTION_RESULT_MISSING", "Process exited without a sealed result"
             )
-        return await asyncio.to_thread(verify_receipt, invocation)
+        result = OperationResult.model_validate(read_json(directory / "operation-result.json"))
+        return await asyncio.to_thread(finalize, invocation, spec, result)
     finally:
         for consumer in consumers:
             consumer.cancel()

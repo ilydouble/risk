@@ -1,55 +1,6 @@
 {
   "components": {
     "schemas": {
-      "AdapterSpec": {
-        "additionalProperties": false,
-        "properties": {
-          "adapter_id": {
-            "pattern": "^[a-z][a-z0-9-]{0,63}$",
-            "title": "Adapter Id",
-            "type": "string"
-          },
-          "adapter_version": {
-            "maxLength": 64,
-            "minLength": 1,
-            "title": "Adapter Version",
-            "type": "string"
-          },
-          "contract_version": {
-            "const": 1,
-            "default": 1,
-            "title": "Contract Version",
-            "type": "integer"
-          },
-          "description": {
-            "default": "",
-            "title": "Description",
-            "type": "string"
-          },
-          "name": {
-            "title": "Name",
-            "type": "string"
-          },
-          "operations": {
-            "additionalProperties": {
-              "$ref": "#/components/schemas/OperationSpec"
-            },
-            "propertyNames": {
-              "$ref": "#/components/schemas/Operation"
-            },
-            "title": "Operations",
-            "type": "object"
-          }
-        },
-        "required": [
-          "adapter_id",
-          "adapter_version",
-          "name",
-          "operations"
-        ],
-        "title": "AdapterSpec",
-        "type": "object"
-      },
       "ArtifactSpec": {
         "additionalProperties": false,
         "properties": {
@@ -169,33 +120,6 @@
         "title": "CapabilityDTO",
         "type": "object"
       },
-      "Envelope_ResponseAdapters_": {
-        "properties": {
-          "code": {
-            "default": 200,
-            "title": "Code",
-            "type": "integer"
-          },
-          "data": {
-            "$ref": "#/components/schemas/ResponseAdapters"
-          },
-          "internal_code": {
-            "default": "SUCCESS",
-            "title": "Internal Code",
-            "type": "string"
-          },
-          "message": {
-            "default": "OK",
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "Envelope[ResponseAdapters]",
-        "type": "object"
-      },
       "Envelope_ResponseCapabilities_": {
         "properties": {
           "code": {
@@ -304,6 +228,33 @@
         "title": "Envelope[ResponsePredict]",
         "type": "object"
       },
+      "Envelope_ResponseRuntime_": {
+        "properties": {
+          "code": {
+            "default": 200,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ResponseRuntime"
+          },
+          "internal_code": {
+            "default": "SUCCESS",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "default": "OK",
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "Envelope[ResponseRuntime]",
+        "type": "object"
+      },
       "ErrorDetail": {
         "properties": {
           "field": {
@@ -399,14 +350,6 @@
       "ExecuteInput": {
         "additionalProperties": false,
         "properties": {
-          "adapter_id": {
-            "title": "Adapter Id",
-            "type": "string"
-          },
-          "adapter_version": {
-            "title": "Adapter Version",
-            "type": "string"
-          },
           "inputs": {
             "additionalProperties": {
               "$ref": "#/components/schemas/ObjectInput"
@@ -419,11 +362,19 @@
           },
           "parameters": {
             "$ref": "#/components/schemas/JsonObject"
+          },
+          "runtime_id": {
+            "title": "Runtime Id",
+            "type": "string"
+          },
+          "runtime_version": {
+            "title": "Runtime Version",
+            "type": "string"
           }
         },
         "required": [
-          "adapter_id",
-          "adapter_version",
+          "runtime_id",
+          "runtime_version",
           "operation",
           "inputs"
         ],
@@ -672,22 +623,6 @@
         "title": "RequestSubmitJob",
         "type": "object"
       },
-      "ResponseAdapters": {
-        "properties": {
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/AdapterSpec"
-            },
-            "title": "Items",
-            "type": "array"
-          }
-        },
-        "required": [
-          "items"
-        ],
-        "title": "ResponseAdapters",
-        "type": "object"
-      },
       "ResponseCapabilities": {
         "properties": {
           "items": {
@@ -812,6 +747,67 @@
         "title": "ResponsePredict",
         "type": "object"
       },
+      "ResponseRuntime": {
+        "properties": {
+          "runtime": {
+            "$ref": "#/components/schemas/RuntimeSpec"
+          }
+        },
+        "required": [
+          "runtime"
+        ],
+        "title": "ResponseRuntime",
+        "type": "object"
+      },
+      "RuntimeSpec": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "const": 2,
+            "default": 2,
+            "title": "Contract Version",
+            "type": "integer"
+          },
+          "description": {
+            "default": "",
+            "title": "Description",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "operations": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/OperationSpec"
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/Operation"
+            },
+            "title": "Operations",
+            "type": "object"
+          },
+          "runtime_id": {
+            "pattern": "^[a-z][a-z0-9-]{0,63}$",
+            "title": "Runtime Id",
+            "type": "string"
+          },
+          "runtime_version": {
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Runtime Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "runtime_id",
+          "runtime_version",
+          "name",
+          "operations"
+        ],
+        "title": "RuntimeSpec",
+        "type": "object"
+      },
       "TrainInput": {
         "additionalProperties": false,
         "properties": {
@@ -823,17 +819,10 @@
             "type": "integer"
           },
           "runnerId": {
-            "anyOf": [
-              {
-                "maxLength": 64,
-                "minLength": 1,
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Runnerid"
+            "const": "riskgnn",
+            "default": "riskgnn",
+            "title": "Runnerid",
+            "type": "string"
           },
           "sourceJobId": {
             "format": "uuid",
@@ -1260,84 +1249,6 @@
         "summary": "Submit"
       }
     },
-    "/internal/v1/models/adapters": {
-      "post": {
-        "operationId": "adapters_internal_v1_models_adapters_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RequestCapabilities"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Envelope_ResponseAdapters_"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            },
-            "description": "Unauthorized"
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            },
-            "description": "Not Found"
-          },
-          "409": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            },
-            "description": "Conflict"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            },
-            "description": "Unprocessable Entity"
-          },
-          "503": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            },
-            "description": "Service Unavailable"
-          }
-        },
-        "summary": "Adapters"
-      }
-    },
     "/internal/v1/models/capabilities": {
       "post": {
         "operationId": "model_capabilities_internal_v1_models_capabilities_post",
@@ -1492,6 +1403,84 @@
           }
         },
         "summary": "Predict"
+      }
+    },
+    "/internal/v1/models/runtime": {
+      "post": {
+        "operationId": "runtime_internal_v1_models_runtime_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestCapabilities"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_ResponseRuntime_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Runtime"
       }
     }
   }

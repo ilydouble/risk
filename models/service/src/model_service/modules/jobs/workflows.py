@@ -6,14 +6,18 @@ contract. Dataset loading/splitting/training rules remain entirely in the adapte
 
 import asyncio
 
-from model_service.adapters.contracts import AdapterError, AssetInput, Operation, OperationRequest
 from model_service.execution.artifacts import artifact_paths, fingerprint
+from model_service.execution.contracts import (
+    AssetInput,
+    ExecutionError,
+    Operation,
+    OperationRequest,
+)
 from model_service.execution.executor import Executor
 from model_service.execution.invocation import Invocation
+from model_service.execution.runtime import runtime_spec
 from model_service.files import digest
-from model_service.runners.registry import DEFAULT_MODEL
-
-ADAPTER_VERSION = "1.0.0"
+from model_service.shared.dataset_contract import read_dataset_contract
 
 
 async def execute_workflow(job, settings, store, storage) -> dict:
@@ -24,13 +28,15 @@ async def execute_workflow(job, settings, store, storage) -> dict:
     base = settings.workspace / "jobs" / job["id"]
     directory = base / str(job["attempt"])
     directory.mkdir(parents=True, exist_ok=True)
-    adapter_id = job["payload"].get("runnerId") or DEFAULT_MODEL
-    version = job["payload"].get("adapterVersion", ADAPTER_VERSION)
+    if job["payload"].get("runnerId", "riskgnn") != "riskgnn":
+        raise ExecutionError("MODEL_RUNTIME_INCOMPATIBLE", "Only RiskGNN is deployed")
+    runtime_id = "riskgnn"
+    version = runtime_spec().runtime_version
 
     def invocation(operation, inputs, parameters=None):
         return Invocation(
-            adapter_id=adapter_id,
-            adapter_version=version,
+            runtime_id=runtime_id,
+            runtime_version=version,
             request=OperationRequest(
                 operation=operation, inputs=inputs, parameters=parameters or {}
             ),
@@ -58,10 +64,10 @@ async def execute_workflow(job, settings, store, storage) -> dict:
         # Analysis-only Bundle remains visible, but a corrupt upload must not be
         # marked ready merely because inspect successfully returned diagnostics.
         if not result.data.get("protocol"):
-            raise AdapterError("DATASET_INCOMPATIBLE", str(result.data.get("issues", [])))
+            raise ExecutionError("DATASET_INCOMPATIBLE", str(result.data.get("issues", [])))
         key = f"datasets/{job['id']}/{sha}/source.zip"
         await storage.upload_file(key, archive, content_type="application/zip")
-        return {**result.data, "objectKey": key, "adapterId": adapter_id, "adapterVersion": version}
+        return {**result.data, "objectKey": key, "runtimeId": runtime_id, "runtimeVersion": version}
 
     source = await store.get(job["payload"]["sourceJobId"])
     if source["kind"] != "validate" or source["status"] != "completed":
@@ -73,6 +79,7 @@ async def execute_workflow(job, settings, store, storage) -> dict:
         {"dataset": AssetInput(path=archive, sha256=data["sha256"], format="zip")},
         {"epochs": job["payload"].get("epochs", 2)},
     )
+    await asyncio.to_thread(read_dataset_contract, archive)
     trained = await execute(train_call)
     model = artifact_paths(train_call.directory / "output", trained)["model"]
     model_sha = await asyncio.to_thread(fingerprint, model)
@@ -93,8 +100,8 @@ async def execute_workflow(job, settings, store, storage) -> dict:
         "report": tested.data["report"],
         "profile": trained.data["profile"],
         "companies": trained.data["companies"],
-        "adapterId": adapter_id,
-        "adapterVersion": version,
+        "runtimeId": runtime_id,
+        "runtimeVersion": version,
         "artifacts": artifacts,
         "effectiveConfig": trained.effective_config,
     }

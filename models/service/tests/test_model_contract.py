@@ -1,17 +1,19 @@
-import json
-import subprocess
-import sys
 import zipfile
+from pathlib import Path
 
 import numpy as np
+import pandas as pd
 import pytest
-from model_service.files import export_zip as pack
-from model_service.files import read_json, verify
+import torch
 
-from model_service.adapters.prepare import prepare
-from model_service.adapters.singapore import validate
-from model_service.runtime.predictor import Predictor
-from model_service.training.pipeline import train
+from model_service.files import write_json
+from riskgnn.dataset_adapters.sg_comrisk.preparation import prepare
+from riskgnn.dataset_adapters.sg_comrisk.validation import validate
+from riskgnn.workbench.artifacts import export_zip as pack
+from riskgnn.workbench.artifacts import read_json, verify
+from riskgnn.workbench.network import EdgeRiskGNN
+from riskgnn.workbench.predictor import Predictor
+from riskgnn.workbench.training import evaluate, train
 
 
 def test_archive_train_reload_predict(export_zip, tmp_path):
@@ -23,13 +25,7 @@ def test_archive_train_reload_predict(export_zip, tmp_path):
     train(prepared, model, epochs=1)
     ids = read_json(model / "ids.json")[:3]
     before = Predictor(model).predict(ids)
-    result = subprocess.run(
-        [sys.executable, "-m", "model_service.cli", "test", "--input", str(model)],
-        check=True,
-        text=True,
-        capture_output=True,
-    )
-    assert json.loads(result.stdout)["data"]["independentReload"] is True
+    assert evaluate(model, output=tmp_path / "report")["independentReload"] is True
     archive = tmp_path / "model.zip"
     pack(model, archive)
     separate = tmp_path / "independent"
@@ -44,27 +40,25 @@ def test_archive_train_reload_predict(export_zip, tmp_path):
         Predictor(separate).predict(["missing"])
     (separate / "weights.pt").write_bytes(b"damaged")
     with pytest.raises(ValueError):
-        verify(separate, "riskgnn-model-v1")
+        verify(separate, "riskgnn-model-v2")
 
 
 def test_manifest_path_and_format_rejected(tmp_path):
-    from model_service.files import write_json
 
     for manifest in (
         {"formatVersion": 99},
         {
             "formatVersion": 1,
-            "kind": "riskgnn-model-v1",
+            "kind": "riskgnn-model-v2",
             "files": {"../outside": {"size": 1, "sha256": "bad"}},
         },
     ):
         write_json(tmp_path / "manifest.json", manifest)
         with pytest.raises(ValueError):
-            verify(tmp_path, "riskgnn-model-v1")
+            verify(tmp_path, "riskgnn-model-v2")
 
 
 def test_overlapping_splits_rejected(export_zip, tmp_path):
-    import pandas as pd
 
     root = tmp_path / "source"
     split = pd.read_parquet(root / "splits_5seed.parquet")
@@ -77,11 +71,6 @@ def test_overlapping_splits_rejected(export_zip, tmp_path):
 
 
 def test_node_edge_forward_matches_research_reference():
-    from pathlib import Path
-
-    import torch
-
-    from model_service.model.network import EdgeRiskGNN
 
     # Reference uses dev's full RiskGNN constructor followed by utils.Classifier.
     expected = read_json(Path(__file__).parent / "fixtures/node-edge-forward.json")

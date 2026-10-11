@@ -4,7 +4,7 @@ from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException
 
-from model_service.adapters.contracts import AdapterError
+from model_service.execution.contracts import ExecutionError
 from model_service.shared.api.response import error_response
 
 logger = logging.getLogger("riskgnn.http")
@@ -31,17 +31,17 @@ async def unexpected(request: Request, exc: Exception):
     return error_response(request, 503, "MODEL_SERVICE_UNAVAILABLE", "Model service unavailable")
 
 
-async def adapter_error(request: Request, exc: AdapterError):
+async def execution_error(request: Request, exc: ExecutionError):
     status = (
         422
         if exc.detail.code
         in {
-            "ADAPTER_NOT_AVAILABLE",
-            "ADAPTER_OPERATION_UNSUPPORTED",
-            "ADAPTER_PARAMETERS_INVALID",
-            "ADAPTER_INPUT_INVALID",
-            "ADAPTER_INPUT_INCOMPATIBLE",
-            "RISKGNN_INPUT_INVALID",
+            "MODEL_RUNTIME_INCOMPATIBLE",
+            "EXECUTION_OPERATION_UNSUPPORTED",
+            "EXECUTION_PARAMETERS_INVALID",
+            "EXECUTION_INPUT_INVALID",
+            "EXECUTION_INPUT_INCOMPATIBLE",
+            "MODEL_INPUT_INVALID",
         }
         else 503
     )
@@ -51,7 +51,7 @@ async def adapter_error(request: Request, exc: AdapterError):
 
 
 def register_error_handlers(app: FastAPI) -> None:
-    app.exception_handler(AdapterError)(adapter_error)
+    app.exception_handler(ExecutionError)(execution_error)
     app.exception_handler(HTTPException)(http_error)
     app.exception_handler(RequestValidationError)(invalid)
     app.exception_handler(ValueError)(conflict)

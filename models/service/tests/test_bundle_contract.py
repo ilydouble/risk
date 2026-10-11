@@ -8,12 +8,12 @@ from pathlib import Path
 
 import pytest
 
-from model_service.datasets.bundle.bundle import (
+from riskgnn.dataset_adapters.bundle.bundle import (
     BundleLimits,
     BundleValidationError,
     validate_bundle,
 )
-from model_service.tools.bundle_demo import build_demo_bundle
+from riskgnn.tools.bundle_demo import build_demo_bundle
 
 
 def test_demo_bundle_satisfies_v1_contract(tmp_path: Path) -> None:
@@ -31,7 +31,7 @@ def test_demo_bundle_satisfies_v1_contract(tmp_path: Path) -> None:
         "hyperedges": False,
         "gnn": False,
     }
-    assert bundle.members == ("metadata.json", "samples.csv")
+    assert bundle.members == ("metadata.json", "risk_dataset_contract.json", "samples.csv")
 
 
 def test_bundle_rejects_hash_mismatch(tmp_path: Path) -> None:

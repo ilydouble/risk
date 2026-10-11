@@ -6,7 +6,7 @@ import signal
 from sqlalchemy import text
 from stellarmesh_objectstorage import AsyncClient, ClientConfig
 
-from model_service.adapters.contracts import AdapterError
+from model_service.execution.contracts import ExecutionError
 from model_service.modules.jobs.operations import execute_operation
 from model_service.modules.jobs.repository import LostLease, Store
 from model_service.modules.jobs.workflows import execute_workflow
@@ -47,9 +47,9 @@ class Worker:
             # finish is fenced: it closes that cancellation, but cannot touch a new owner.
             await self.store.finish(job["id"], job["owner"], error="Execution interrupted")
             logger.warning("job.lease_lost", extra={"job_id": job["id"]})
-        except (AdapterError, ValueError) as error:
+        except (ExecutionError, ValueError) as error:
             message = str(error)
-            if isinstance(error, AdapterError):
+            if isinstance(error, ExecutionError):
                 try:
                     await self.store.event(
                         job["id"],
@@ -63,7 +63,7 @@ class Worker:
                     )
                 except LostLease:
                     pass  # finish below is fenced and can only close this owner's attempt.
-            retryable = isinstance(error, AdapterError) and error.detail.retryable
+            retryable = isinstance(error, ExecutionError) and error.detail.retryable
             await self.store.finish(job["id"], job["owner"], error=message, retryable=retryable)
         except asyncio.CancelledError:
             raise

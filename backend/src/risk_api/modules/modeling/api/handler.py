@@ -17,11 +17,12 @@ def dataset_dto(item: Dataset) -> dto.DatasetDTO:
     result = execution.get("result", {})
     status = execution.get("status", "queued" if item.confirmed else "pending_upload")
     return dto.DatasetDTO(
+        datasetIdentity=result.get("datasetContract", {}).get("dataset", {}).get("id"),
+        datasetVersion=result.get("datasetContract", {}).get("dataset", {}).get("version"),
+        adapterId=result.get("datasetContract", {}).get("adapter", {}).get("id"),
+        adapterVersion=result.get("datasetContract", {}).get("adapter", {}).get("version"),
         dataFormat=result.get("protocol"),
-        supportedRunnerIds=result.get(
-            "supportedRunnerIds",
-            ["riskgnn-node-edge"] if result.get("protocol") == "sg-comrisk-v1" else [],
-        ),
+        supportedRunnerIds=result.get("supportedRunnerIds", []),
         analysis=result.get("analysis"),
         profile=result.get("datasetProfile", {}),
         id=item.id,
@@ -44,7 +45,7 @@ def run_dto(item: Run) -> dto.RunDTO:
     execution = item.execution
     return dto.RunDTO(
         profile=execution.get("result", {}).get("profile", {}).get("experimentProfile"),
-        runnerId=item.configuration.get("runnerId", "riskgnn-node-edge"),
+        runnerId=item.configuration.get("runnerId", "riskgnn"),
         id=item.id,
         name=item.name,
         datasetId=item.dataset_id,
@@ -62,7 +63,7 @@ def run_dto(item: Run) -> dto.RunDTO:
 
 def model_dto(item: ModelVersion) -> dto.ModelVersionDTO:
     return dto.ModelVersionDTO(
-        runnerId=item.artifact.get("profile", {}).get("runnerId", "riskgnn-node-edge"),
+        runnerId=item.artifact.get("profile", {}).get("runnerId", "riskgnn"),
         id=item.id,
         name=item.name,
         runId=item.run_id,

@@ -179,12 +179,11 @@ export function useModelingWorkbench() {
     id: string,
     name: string,
     epochs: number,
-    selectedModel: string,
   ) =>
     act(async () => {
       const response = await ModelingApi.requestCreateRun({
         datasetId: id,
-        runnerId: selectedModel,
+        runnerId: "riskgnn",
         name: name.slice(0, 128),
         epochs,
         requestKey: crypto.randomUUID(),

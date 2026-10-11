@@ -1,0 +1,5 @@
+-r requirements.txt
+# Optional model-side dataset/CLI utilities; research commands keep requirements.txt.
+duckdb==1.5.6
+pydantic>=2.10,<3
+jsonschema>=4.23,<5

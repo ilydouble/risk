@@ -5,21 +5,21 @@ from pathlib import Path
 
 from pydantic import Field
 
-from model_service.adapters.archive import unpack
-from model_service.adapters.contracts import (
-    AdapterError,
+from model_service.execution.artifacts import fingerprint
+from model_service.execution.contracts import (
     AssetInput,
     Contract,
+    ExecutionError,
     JsonObject,
     Operation,
     OperationRequest,
     parameters_for,
 )
-from model_service.adapters.registry import registry
-from model_service.execution.artifacts import fingerprint
 from model_service.execution.executor import Executor
 from model_service.execution.invocation import Invocation
+from model_service.execution.runtime import runtime_spec
 from model_service.files import digest
+from model_service.shared.archive import unpack
 
 
 class ObjectInput(Contract):
@@ -29,32 +29,38 @@ class ObjectInput(Contract):
 
 
 class ExecuteInput(Contract):
-    adapter_id: str
-    adapter_version: str
+    runtime_id: str
+    runtime_version: str
     operation: Operation
     inputs: dict[str, ObjectInput]
     parameters: JsonObject = Field(default_factory=dict)
 
 
 def validate_submission(payload: ExecuteInput) -> None:
-    spec = registry.get(payload.adapter_id, payload.adapter_version).describe()
+    spec = runtime_spec()
+    if (payload.runtime_id, payload.runtime_version) != (spec.runtime_id, spec.runtime_version):
+        raise ExecutionError("MODEL_RUNTIME_INCOMPATIBLE", "Unsupported model runtime/version")
     parameters_for(spec, payload.operation, payload.parameters)
     inputs = spec.operations[payload.operation].inputs
     if set(payload.inputs) - set(inputs):
-        raise AdapterError("ADAPTER_INPUT_INVALID", "Unknown input role")
+        raise ExecutionError("EXECUTION_INPUT_INVALID", "Unknown input role")
     for role, definition in inputs.items():
         asset = payload.inputs.get(role)
         if asset is None:
             if definition.required:
-                raise AdapterError("ADAPTER_INPUT_INVALID", f"Missing input: {role}")
+                raise ExecutionError("EXECUTION_INPUT_INVALID", f"Missing input: {role}")
         elif definition.formats and asset.format not in definition.formats:
-            raise AdapterError("ADAPTER_INPUT_INCOMPATIBLE", f"Unsupported input format: {role}")
+            raise ExecutionError(
+                "EXECUTION_INPUT_INCOMPATIBLE", f"Unsupported input format: {role}"
+            )
 
 
 async def execute_operation(job, settings, store, storage) -> dict:
     payload = ExecuteInput.model_validate(job["payload"])
     validate_submission(payload)
-    spec = registry.get(payload.adapter_id, payload.adapter_version).describe()
+    spec = runtime_spec()
+    if (payload.runtime_id, payload.runtime_version) != (spec.runtime_id, spec.runtime_version):
+        raise ExecutionError("MODEL_RUNTIME_INCOMPATIBLE", "Unsupported model runtime/version")
     base = settings.workspace / "jobs" / job["id"]
     directory = base / str(job["attempt"])
     directory.mkdir(parents=True, exist_ok=True)
@@ -64,7 +70,7 @@ async def execute_operation(job, settings, store, storage) -> dict:
         path = directory / f"input-{index}"
         await storage.download_file(reference.object_key, path)
         if await asyncio.to_thread(digest, path) != reference.sha256:
-            raise AdapterError("ADAPTER_INPUT_INVALID", "Downloaded input checksum mismatch")
+            raise ExecutionError("EXECUTION_INPUT_INVALID", "Downloaded input checksum mismatch")
         if spec.operations[payload.operation].inputs[role].kind == "directory":
             extracted = path.with_suffix(".dir")
             await asyncio.to_thread(unpack, path, extracted)
@@ -73,8 +79,8 @@ async def execute_operation(job, settings, store, storage) -> dict:
             path=path, sha256=await asyncio.to_thread(fingerprint, path), format=reference.format
         )
     invocation = Invocation(
-        adapter_id=payload.adapter_id,
-        adapter_version=payload.adapter_version,
+        runtime_id=payload.runtime_id,
+        runtime_version=payload.runtime_version,
         request=OperationRequest(
             operation=payload.operation, inputs=assets, parameters=payload.parameters
         ),
@@ -92,8 +98,8 @@ async def execute_operation(job, settings, store, storage) -> dict:
     result = await executor.execute(invocation, previous)
     artifacts = await executor.upload(invocation, result)
     return {
-        "adapterId": payload.adapter_id,
-        "adapterVersion": payload.adapter_version,
+        "runtimeId": payload.runtime_id,
+        "runtimeVersion": payload.runtime_version,
         "operation": payload.operation.value,
         "data": result.data,
         "effectiveConfig": result.effective_config,

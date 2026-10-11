@@ -1,0 +1,285 @@
+{
+  "contract_version": 2,
+  "name": "RiskGNN",
+  "description": "Single deployed model; dataset adapters and training are model-owned.",
+  "operations": {
+    "inspect": {
+      "inputs": {
+        "dataset": {
+          "kind": "file",
+          "formats": [
+            "zip"
+          ],
+          "required": true
+        }
+      },
+      "parameters_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "target_operation": {
+            "const": "train",
+            "default": "train",
+            "title": "Target Operation",
+            "type": "string"
+          }
+        },
+        "title": "InspectParameters",
+        "type": "object"
+      },
+      "default_parameters": {
+        "target_operation": "train"
+      },
+      "result_schema": {
+        "$defs": {
+          "InspectionIssue": {
+            "additionalProperties": false,
+            "properties": {
+              "code": {
+                "title": "Code",
+                "type": "string"
+              },
+              "message": {
+                "title": "Message",
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "title": "InspectionIssue",
+            "type": "object"
+          },
+          "InspectionStatus": {
+            "enum": [
+              "compatible",
+              "configuration_required",
+              "incompatible"
+            ],
+            "title": "InspectionStatus",
+            "type": "string"
+          }
+        },
+        "additionalProperties": true,
+        "properties": {
+          "compatibility": {
+            "$ref": "#/$defs/InspectionStatus"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/$defs/InspectionIssue"
+            },
+            "title": "Issues",
+            "type": "array"
+          }
+        },
+        "required": [
+          "compatibility",
+          "issues"
+        ],
+        "title": "InspectionSummary",
+        "type": "object"
+      },
+      "artifacts": {},
+      "ui_schema": {}
+    },
+    "train": {
+      "inputs": {
+        "dataset": {
+          "kind": "file",
+          "formats": [
+            "zip"
+          ],
+          "required": true
+        }
+      },
+      "parameters_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "epochs": {
+            "default": 2,
+            "maximum": 20,
+            "minimum": 1,
+            "title": "Epochs",
+            "type": "integer"
+          }
+        },
+        "title": "TrainParameters",
+        "type": "object"
+      },
+      "default_parameters": {
+        "epochs": 2
+      },
+      "result_schema": {
+        "$defs": {
+          "JsonObject": {
+            "additionalProperties": {
+              "$ref": "#/$defs/JsonValue"
+            },
+            "type": "object"
+          },
+          "JsonValue": {}
+        },
+        "additionalProperties": false,
+        "properties": {
+          "profile": {
+            "$ref": "#/$defs/JsonObject"
+          },
+          "companies": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Companies",
+            "type": "array"
+          }
+        },
+        "required": [
+          "profile",
+          "companies"
+        ],
+        "title": "TrainingSummary",
+        "type": "object"
+      },
+      "artifacts": {
+        "model": {
+          "format": "riskgnn-model-v2",
+          "kind": "directory",
+          "required": true
+        }
+      },
+      "ui_schema": {}
+    },
+    "evaluate": {
+      "inputs": {
+        "model": {
+          "kind": "directory",
+          "formats": [
+            "riskgnn-model-v2"
+          ],
+          "required": true
+        }
+      },
+      "parameters_schema": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "Parameters",
+        "type": "object"
+      },
+      "default_parameters": {},
+      "result_schema": {
+        "$defs": {
+          "JsonObject": {
+            "additionalProperties": {
+              "$ref": "#/$defs/JsonValue"
+            },
+            "type": "object"
+          },
+          "JsonValue": {}
+        },
+        "additionalProperties": false,
+        "properties": {
+          "report": {
+            "$ref": "#/$defs/JsonObject"
+          }
+        },
+        "required": [
+          "report"
+        ],
+        "title": "EvaluationSummary",
+        "type": "object"
+      },
+      "artifacts": {
+        "report": {
+          "format": "riskgnn-evaluation-v2",
+          "kind": "directory",
+          "required": true
+        }
+      },
+      "ui_schema": {}
+    },
+    "predict": {
+      "inputs": {
+        "model": {
+          "kind": "directory",
+          "formats": [
+            "riskgnn-model-v2"
+          ],
+          "required": true
+        }
+      },
+      "parameters_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "company_ids": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 32,
+            "minItems": 1,
+            "title": "Company Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "company_ids"
+        ],
+        "title": "PredictParameters",
+        "type": "object"
+      },
+      "default_parameters": {},
+      "result_schema": {
+        "$defs": {
+          "Prediction": {
+            "additionalProperties": false,
+            "properties": {
+              "companyId": {
+                "title": "Companyid",
+                "type": "string"
+              },
+              "probability": {
+                "maximum": 1,
+                "minimum": 0,
+                "title": "Probability",
+                "type": "number"
+              },
+              "predictedLabel": {
+                "enum": [
+                  0,
+                  1
+                ],
+                "title": "Predictedlabel",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "companyId",
+              "probability",
+              "predictedLabel"
+            ],
+            "title": "Prediction",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/$defs/Prediction"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "PredictionSummary",
+        "type": "object"
+      },
+      "artifacts": {},
+      "ui_schema": {}
+    }
+  },
+  "runtime_id": "riskgnn",
+  "runtime_version": "2"
+}

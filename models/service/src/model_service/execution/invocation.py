@@ -5,27 +5,25 @@ import json
 from pathlib import Path
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, field_validator
 
-from model_service.adapters.contracts import (
-    AdapterError,
+from model_service.execution.artifacts import artifact_paths, fingerprint, inventory
+from model_service.execution.contracts import (
     Contract,
-    ExecutionContext,
-    ModelAdapter,
+    ExecutionError,
     OperationRequest,
     OperationResult,
-    parameters_for,
+    RuntimeSpec,
     validate_request,
     validate_result,
 )
-from model_service.execution.artifacts import artifact_paths, fingerprint, inventory
 from model_service.files import read_json, write_json
 
 
 class Invocation(Contract):
-    contract_version: Literal[1] = 1
-    adapter_id: str
-    adapter_version: str
+    contract_version: Literal[2] = 2
+    runtime_id: str
+    runtime_version: str
     request: OperationRequest
     run_id: str
     attempt_id: str
@@ -33,6 +31,11 @@ class Invocation(Contract):
     directory: Path
     device: Literal["cpu"] = "cpu"
     resources: dict[str, int] = Field(default_factory=lambda: {"threads": 2})
+
+    @field_validator("directory")
+    @classmethod
+    def absolute_directory(cls, value: Path) -> Path:
+        return value.absolute()
 
     def binding(self) -> str:
         # Paths/attempt IDs change on retry. Content, exact adapter version and
@@ -52,55 +55,44 @@ class Receipt(Contract):
 def verify_receipt(invocation: Invocation) -> Receipt:
     receipt = Receipt.model_validate(read_json(invocation.directory / "result.json"))
     if receipt.binding != invocation.binding():
-        raise AdapterError("ADAPTER_RESULT_INVALID", "Result does not match invocation")
+        raise ExecutionError("EXECUTION_RESULT_INVALID", "Result does not match invocation")
     actual = {
         role: inventory(path)
         for role, path in artifact_paths(invocation.directory / "output", receipt.result).items()
     }
     if actual != receipt.files:
-        raise AdapterError("ADAPTER_ARTIFACT_INVALID", "Sealed artifact checksum mismatch")
+        raise ExecutionError("EXECUTION_ARTIFACT_INVALID", "Sealed artifact checksum mismatch")
     return receipt
 
 
-def invoke(adapter: ModelAdapter, invocation: Invocation, context: ExecutionContext) -> Receipt:
-    spec = adapter.describe()
-    if (spec.adapter_id, spec.adapter_version) != (
-        invocation.adapter_id,
-        invocation.adapter_version,
+def validate_inputs(invocation: Invocation, spec: RuntimeSpec) -> None:
+    if (spec.runtime_id, spec.runtime_version) != (
+        invocation.runtime_id,
+        invocation.runtime_version,
     ):
-        raise AdapterError("ADAPTER_NOT_AVAILABLE", "Adapter identity/version mismatch")
-    request = invocation.request.model_copy(
-        update={
-            "parameters": parameters_for(
-                spec, invocation.request.operation, invocation.request.parameters
-            )
-        }
-    )
-    validate_request(spec, request)
-    for asset in request.inputs.values():
+        raise ExecutionError("MODEL_RUNTIME_INCOMPATIBLE", "Model runtime/version mismatch")
+    validate_request(spec, invocation.request)
+    for asset in invocation.request.inputs.values():
         if fingerprint(asset.path) != asset.sha256:
-            raise AdapterError("ADAPTER_INPUT_INVALID", "Input checksum mismatch")
-    context.work_dir.mkdir(parents=True, exist_ok=True)
-    context.output_dir.mkdir(parents=True, exist_ok=True)
-    context.check_cancelled()
-    result = adapter.execute(request, context)
-    context.check_cancelled()
-    if not isinstance(result, OperationResult):
-        raise AdapterError("ADAPTER_RESULT_INVALID", "Adapter must return OperationResult")
-    # Validation is repeated after execution; adapters cannot silently mutate inputs.
-    for asset in request.inputs.values():
-        if fingerprint(asset.path) != asset.sha256:
-            raise AdapterError("ADAPTER_INPUT_MUTATED", "Adapter modified an input asset")
-    validate_result(spec, request, result)
-    paths = artifact_paths(context.output_dir, result)
+            raise ExecutionError("EXECUTION_INPUT_INVALID", "Input checksum mismatch")
+
+
+def finalize(invocation: Invocation, spec: RuntimeSpec, result: OperationResult) -> Receipt:
+    # The model CLI writes only operation-result.json; the service independently
+    # validates it and seals the trusted completion receipt.
+    validate_inputs(invocation, spec)
+    validate_result(spec, invocation.request, result)
+    paths = artifact_paths(invocation.directory / "output", result)
     for role, path in paths.items():
-        expected = spec.operations[request.operation].artifacts[role].kind
+        expected = spec.operations[invocation.request.operation].artifacts[role].kind
         if (expected == "file" and not path.is_file()) or (
             expected == "directory" and not path.is_dir()
         ):
-            raise AdapterError("ADAPTER_ARTIFACT_INVALID", f"Wrong artifact kind: {role}")
+            raise ExecutionError("EXECUTION_ARTIFACT_INVALID", f"Wrong artifact kind: {role}")
     if len(result.model_dump_json()) > 1024 * 1024:
-        raise AdapterError("ADAPTER_RESULT_INVALID", "Large results must be returned as artifacts")
+        raise ExecutionError(
+            "EXECUTION_RESULT_INVALID", "Large results must be returned as artifacts"
+        )
     receipt = Receipt(
         binding=invocation.binding(),
         result=result,

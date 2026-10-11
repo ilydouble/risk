@@ -1,4 +1,3 @@
-import SelectMenu from "@/shared/ui/SelectMenu";
 import { DatasetAnalysisPanel } from "./DatasetAnalysisPanel";
 import { useRef, useState } from "react";
 import { BlobReader, ZipReader } from "@zip.js/zip.js";
@@ -17,19 +16,7 @@ export function DatasetPanel({ work }: { work: Workbench }) {
   const [previewError, setPreviewError] = useState("");
   const [name, setName] = useState("");
   const [epochs, setEpochs] = useState(2);
-  const [selectedModel, setSelectedModel] = useState("riskgnn-node-edge");
-  const options = work.capabilities
-    .filter(
-      (item) =>
-        item.trainable && work.dataset?.supportedRunnerIds.includes(item.id),
-    )
-    .map((item) => ({
-      value: item.id,
-      label: t(`modeling.models.${item.id}`, { defaultValue: item.name }),
-    }));
-  const modelId = options.some((item) => item.value === selectedModel)
-    ? selectedModel
-    : (options[0]?.value ?? "");
+  const trainable = work.dataset?.supportedRunnerIds.includes("riskgnn") ?? false;
   const stage = (value: string) =>
     t(`modeling.status.${value}`, { defaultValue: value });
   const preview = async (chosen?: File) => {
@@ -45,6 +32,10 @@ export function DatasetPanel({ work }: { work: Workbench }) {
       const items = await reader.getEntries();
       if (items.length > 128 || chosen.size > 512 * 1024 * 1024)
         throw new Error("limit");
+      const contracts = items.filter((item) =>
+        !item.directory && /^(?:[^/]+\/)?risk_dataset_contract\.json$/.test(item.filename),
+      );
+      if (contracts.length !== 1) throw new Error("contract");
       if (sequence !== previewSequence.current) return;
       setEntries(
         items
@@ -54,9 +45,10 @@ export function DatasetPanel({ work }: { work: Workbench }) {
             size: item.uncompressedSize,
           })),
       );
-    } catch {
+    } catch (error) {
       if (sequence === previewSequence.current)
-        setPreviewError(t("modeling.errors.file"));
+        setPreviewError(t(error instanceof Error && error.message === "contract"
+          ? "modeling.errors.contract" : "modeling.errors.file"));
     } finally {
       await reader.close();
       if (sequence === previewSequence.current) setPreviewing(false);
@@ -182,21 +174,20 @@ export function DatasetPanel({ work }: { work: Workbench }) {
           <p className="text-xs text-foreground-500">
             {t("modeling.dataFormat")}: {work.dataset.dataFormat ?? "—"}
           </p>
+          {work.dataset.datasetIdentity && (
+            <p className="text-xs text-foreground-500">
+              {t("modeling.contractIdentity")}: {work.dataset.datasetIdentity} / {work.dataset.datasetVersion}
+              {" · "}{t("modeling.adapter")}: {work.dataset.adapterId} / {work.dataset.adapterVersion}
+            </p>
+          )}
           <DatasetAnalysisPanel dataset={work.dataset} />
-          {!options.length && work.dataset.status === "ready" && (
+          {!trainable && work.dataset.status === "ready" && (
             <p className="text-sm text-foreground-500">
               {t("modeling.analysisOnly")}
             </p>
           )}
           <div className="flex flex-wrap items-end gap-3">
-            {options.length > 0 && (
-              <SelectMenu
-                label={t("modeling.modelChoice")}
-                value={modelId}
-                options={options}
-                onChange={setSelectedModel}
-              />
-            )}
+            <p className="text-sm text-foreground-500">RiskGNN</p>
             <label className="text-xs">
               {t("modeling.epochs")}
               <input
@@ -212,7 +203,7 @@ export function DatasetPanel({ work }: { work: Workbench }) {
               className={button}
               disabled={
                 work.dataset.status !== "ready" ||
-                !modelId ||
+                !trainable ||
                 work.busy ||
                 !Number.isInteger(epochs) ||
                 epochs < 1 ||
@@ -223,7 +214,6 @@ export function DatasetPanel({ work }: { work: Workbench }) {
                   work.dataset!.id,
                   `${work.dataset!.name} · ${new Date().toLocaleTimeString()}`,
                   epochs,
-                  modelId,
                 )
               }
             >

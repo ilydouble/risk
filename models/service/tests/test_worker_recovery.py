@@ -7,12 +7,12 @@ import pytest
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import create_async_engine
 
-from model_service.adapters.singapore import validate
 from model_service.execution.worker import Worker
 from model_service.modules.jobs.model import Base
 from model_service.modules.jobs.repository import Store
 from model_service.modules.models.service import Runtime
 from model_service.shared.config import Settings
+from riskgnn.dataset_adapters.sg_comrisk.validation import validate
 
 
 def test_artifact_upload_retry_reuses_independently_tested_checkpoint(export_zip, tmp_path):
@@ -93,8 +93,8 @@ def test_artifact_upload_retry_reuses_independently_tested_checkpoint(export_zip
                 generic_id,
                 "execute",
                 {
-                    "adapter_id": "riskgnn-node-edge",
-                    "adapter_version": "1.0.0",
+                    "runtime_id": "riskgnn",
+                    "runtime_version": "2",
                     "operation": "inspect",
                     "inputs": {
                         "dataset": {

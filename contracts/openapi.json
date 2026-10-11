@@ -1752,6 +1752,28 @@
       },
       "DatasetDTO": {
         "properties": {
+          "adapterId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Adapterid"
+          },
+          "adapterVersion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Adapterversion"
+          },
           "analysis": {
             "anyOf": [
               {
@@ -1783,6 +1805,28 @@
               }
             ],
             "title": "Dataformat"
+          },
+          "datasetIdentity": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Datasetidentity"
+          },
+          "datasetVersion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Datasetversion"
           },
           "error": {
             "anyOf": [
@@ -2700,7 +2744,7 @@
       "ExperimentProfileDTO": {
         "properties": {
           "artifactFormat": {
-            "default": "riskgnn-model-v1",
+            "default": "riskgnn-model-v2",
             "title": "Artifactformat",
             "type": "string"
           },
@@ -3254,7 +3298,7 @@
             "type": "string"
           },
           "runnerId": {
-            "default": "riskgnn-node-edge",
+            "default": "riskgnn",
             "title": "Runnerid",
             "type": "string"
           },
@@ -4096,9 +4140,8 @@
             "type": "string"
           },
           "runnerId": {
-            "default": "riskgnn-node-edge",
-            "maxLength": 64,
-            "minLength": 1,
+            "const": "riskgnn",
+            "default": "riskgnn",
             "title": "Runnerid",
             "type": "string"
           }
@@ -5500,7 +5543,7 @@
             "title": "Retryof"
           },
           "runnerId": {
-            "default": "riskgnn-node-edge",
+            "default": "riskgnn",
             "title": "Runnerid",
             "type": "string"
           },

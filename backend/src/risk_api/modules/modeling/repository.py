@@ -12,7 +12,9 @@ class ModelingRepository:
         self.session = session
 
     async def owned(self, model: Any, owner: str, identity: str, *, lock: bool = False) -> Any:
-        query = select(model).where(model.id == identity, model.owner_id == owner)
+        query = select(model).where(
+            model.id == identity, model.owner_id == owner, model.protocol_generation == 2
+        )
         if lock:
             query = query.with_for_update()
         item = await self.session.scalar(query)
@@ -30,7 +32,7 @@ class ModelingRepository:
         return await self.owned(ModelVersion, owner, identity)
 
     async def page(self, model: Any, owner: str, page: int, size: int) -> tuple[list, int]:
-        condition = model.owner_id == owner
+        condition = (model.owner_id == owner) & (model.protocol_generation == 2)
         total = await self.session.scalar(select(func.count()).select_from(model).where(condition))
         rows: ScalarResult[Any] = await self.session.scalars(
             select(model)

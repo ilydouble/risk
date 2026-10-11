@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from model_service.adapters.contracts import AdapterSpec
+from model_service.execution.contracts import RuntimeSpec
 from model_service.modules.jobs.api.schemas import RequestJob
 
 
@@ -34,5 +34,5 @@ class ResponseCapabilities(BaseModel):
     items: list[CapabilityDTO]
 
 
-class ResponseAdapters(BaseModel):
-    items: list[AdapterSpec]
+class ResponseRuntime(BaseModel):
+    runtime: RuntimeSpec

@@ -2,7 +2,7 @@ import zipfile
 
 import pytest
 
-from model_service.adapters.archive import unpack
+from model_service.shared.archive import unpack
 
 
 @pytest.mark.parametrize(

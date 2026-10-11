@@ -65,6 +65,10 @@ class DatasetAnalysisDTO(BaseModel):
 
 
 class DatasetDTO(BaseModel):
+    datasetIdentity: str | None = None
+    datasetVersion: str | None = None
+    adapterId: str | None = None
+    adapterVersion: str | None = None
     dataFormat: str | None = None
     supportedRunnerIds: list[str] = Field(default_factory=list)
     analysis: DatasetAnalysisDTO | None = None
@@ -95,7 +99,7 @@ class AttemptDTO(BaseModel):
 class ExperimentProfileDTO(BaseModel):
     threshold: float = 0.5
     evaluationSplit: Literal["test"] = "test"
-    artifactFormat: str = "riskgnn-model-v1"
+    artifactFormat: str = "riskgnn-model-v2"
     device: str = "cpu"
     version: int
     runnerId: str
@@ -118,7 +122,7 @@ class ExperimentProfileDTO(BaseModel):
 
 class RunDTO(BaseModel):
     profile: ExperimentProfileDTO | None = None
-    runnerId: str = "riskgnn-node-edge"
+    runnerId: str = "riskgnn"
     id: str
     name: str
     datasetId: str
@@ -134,7 +138,7 @@ class RunDTO(BaseModel):
 
 
 class ModelVersionDTO(BaseModel):
-    runnerId: str = "riskgnn-node-edge"
+    runnerId: str = "riskgnn"
     id: str
     name: str
     runId: str
@@ -200,7 +204,7 @@ class ResponseListDatasets(Page[DatasetDTO]):
 
 
 class RequestCreateRun(BaseModel):
-    runnerId: str = Field(default="riskgnn-node-edge", min_length=1, max_length=64)
+    runnerId: Literal["riskgnn"] = "riskgnn"
     datasetId: UUID
     name: str = Field(min_length=1, max_length=128, pattern=r"\S")
     requestKey: UUID

@@ -2,10 +2,10 @@ import asyncio
 import shutil
 from pathlib import Path
 
-from model_service.adapters.contracts import AdapterError, OperationResult
 from model_service.execution.artifacts import artifact_paths, digest, pack
+from model_service.execution.contracts import ExecutionError, OperationResult
 from model_service.execution.invocation import Invocation, verify_receipt
-from model_service.execution.process import run_adapter
+from model_service.execution.process import run_model
 
 
 class Executor:
@@ -19,7 +19,7 @@ class Executor:
             try:
                 old = invocation.model_copy(update={"directory": directory})
                 await asyncio.to_thread(verify_receipt, old)
-            except (OSError, ValueError, AdapterError):
+            except (OSError, ValueError, ExecutionError):
                 continue
             # Copy a verified receipt into the new attempt; stale owners only write
             # their own directories and cannot overwrite a later attempt's output.
@@ -35,7 +35,7 @@ class Executor:
             receipt = await asyncio.to_thread(verify_receipt, invocation)
             await self.event("log", {"level": "info", "message": "Resumed sealed operation result"})
             return receipt.result
-        return (await run_adapter(invocation, self.event)).result
+        return (await run_model(invocation, self.event)).result
 
     async def upload(self, invocation: Invocation, result: OperationResult) -> dict:
         uploaded = {}

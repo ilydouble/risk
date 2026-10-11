@@ -1,5 +1,7 @@
 export default {
   "modeling": {
+    "contractIdentity": "Dataset version",
+    "adapter": "Dataset adapter",
     "title": "Model workbench",
     "subtitle": "Upload data, inspect quality and splits, then train, test and publish an available model configuration.",
     "disclaimer": "smoke-v1 real subset experiment: 2,000 labeled targets, a fixed static graph and CPU training. Scores reflect Singapore corporate distress labels, not credit default probability. Two epochs validate the workflow only.",
@@ -12,6 +14,7 @@ export default {
       "model": "Model versions"
     },
     "errors": {
+      "contract": "ZIP must contain exactly one risk_dataset_contract.json at the dataset root.",
       "unavailable": "Model service unavailable. Please retry later.",
       "notReady": "Wait for dataset validation to complete.",
       "state": "This action is unavailable in the current state.",
@@ -86,12 +89,7 @@ export default {
     "available": "Training and publication available",
     "analysisOnly": "Analysis is complete. No training configuration is connected for this dataset protocol yet.",
     "dataFormat": "Dataset protocol",
-    "models": {
-      "riskgnn-node-edge": "RiskGNN · node + edge",
-      "riskgnn-node-only": "RiskGNN · node only",
-      "comrisk-baseline": "ComRisk baseline",
-      "riskgnn-plus": "RiskGNN+"
-    },
+    "models": { "riskgnn": "RiskGNN" },
     "capabilityReasons": {
       "ARTIFACT_ADAPTER_PENDING": "Artifact adapter pending",
       "RESEARCH_VALIDATION_PENDING": "Research validation pending"

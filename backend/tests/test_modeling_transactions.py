@@ -8,6 +8,7 @@ from uuid import uuid4
 
 import pytest
 from sqlalchemy import select, text, update
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from risk_api.errors import AppError
@@ -80,7 +81,10 @@ def test_business_outbox_idempotency_ownership_and_publication():
                 assert error.value.status == 404
                 await session.rollback()
                 source = await session.get(Dataset, dataset_id)
-                source.execution = {"status": "completed"}
+                source.execution = {
+                    "status": "completed",
+                    "result": {"supportedRunnerIds": ["riskgnn"]},
+                }
                 await session.commit()
                 key = str(uuid4())
                 run = await service.create_run(
@@ -90,18 +94,21 @@ def test_business_outbox_idempotency_ownership_and_publication():
                     owner, dataset_id, "experiment", key, 2, "other-id"
                 )
                 assert again.id == run.id
-                assert run.configuration["runnerId"] == "riskgnn-node-edge"
+                assert run.configuration["runnerId"] == "riskgnn"
                 dispatch = await session.get(Dispatch, run.id)
-                assert dispatch.payload["payload"]["runnerId"] == "riskgnn-node-edge"
+                assert dispatch.payload["payload"]["runnerId"] == "riskgnn"
                 with pytest.raises(AppError) as conflict:
                     await service.create_run(
-                        owner, dataset_id, "experiment", key, 2, "conflict",
+                        owner,
+                        dataset_id,
+                        "experiment",
+                        key,
+                        2,
+                        "conflict",
                         runner_id="riskgnn-node-only",
                     )
                 assert conflict.value.code == "MODELING_STATE_INVALID"
-                source.execution = {
-                    "status": "completed", "result": {"supportedRunnerIds": []}
-                }
+                source.execution = {"status": "completed", "result": {"supportedRunnerIds": []}}
                 await session.commit()
                 with pytest.raises(AppError) as incompatible:
                     await service.create_run(
@@ -127,8 +134,6 @@ def test_business_outbox_idempotency_ownership_and_publication():
                     )
                 )
                 service.enqueue(bad_id, "train", {}, "bad")
-                from sqlalchemy.exc import IntegrityError
-
                 with pytest.raises(IntegrityError):
                     await session.commit()
                 await session.rollback()
@@ -154,6 +159,20 @@ def test_business_outbox_idempotency_ownership_and_publication():
             assert await deliver_one(sessions, remote)
             assert not await deliver_one(sessions, remote)
             assert any(call[2] == "gateway-id" for call in remote.calls)
+            # Retired generations remain stored, but cannot be listed or accessed.
+            async with sessions() as session:
+                repository = ModelingRepository(session)
+                for model in (Dataset, Run, ModelVersion):
+                    stored = list(await session.scalars(select(model)))
+                    assert stored
+                    await session.execute(update(model).values(protocol_generation=1))
+                    await session.commit()
+                    assert await repository.page(model, owner, 1, 10) == ([], 0)
+                    with pytest.raises(AppError) as retired:
+                        await repository.owned(model, owner, stored[0].id)
+                    assert retired.value.status == 404
+                    assert len(list(await session.scalars(select(model)))) == len(stored)
+
         finally:
             await engine.dispose()
             async with admin.begin() as connection:
