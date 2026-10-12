@@ -50,7 +50,11 @@ def validate_predictions(data: dict[str, np.ndarray]) -> None:
             or ((u < 0) | (u > 1)).any()
         ):
             raise ValueError(f"{split}: invalid uncertainty")
-    if np.intersect1d(data["cal_ids"], data["test_ids"]).size:
+    # Published benchmark reproduction preserves IDs; it does not assert exchangeability.
+    policy = str(data.get("split_policy", "deduplicated"))
+    if policy not in ("original", "deduplicated"):
+        raise ValueError(f"Unknown split policy: {policy}")
+    if policy != "original" and np.intersect1d(data["cal_ids"], data["test_ids"]).size:
         raise ValueError("Calibration and test IDs overlap")
 
 
@@ -286,6 +290,7 @@ def main() -> None:
         identity = {
             key: data[key] for key in ("cal_ids", "test_ids", "cal_y", "test_y")
         }
+        identity["split_policy"] = np.asarray(data.get("split_policy", "deduplicated"))
         if reference is not None and any(
             not np.array_equal(identity[key], reference[key]) for key in identity
         ):
@@ -315,6 +320,11 @@ def main() -> None:
             "epsilon": args.epsilon,
             "beta": args.beta,
             "test_labels_used_for_selection": False,
+            "split_policy": str(reference["split_policy"]),
+            "calibration_test_overlap": int(
+                np.intersect1d(reference["cal_ids"], reference["test_ids"]).size
+            ),
+            "coverage_guarantee_assumptions_verified": False,
             "evaluation_source_sha256": hashlib.sha256(
                 Path(__file__).read_bytes()
             ).hexdigest(),

@@ -119,3 +119,48 @@ def test_matched_conformal_comparators_automate_exactly_the_same_count():
     matched = [r for r in rows if r["protocol"] == "matched_evidence_cp_coverage"]
     assert len(matched) == 3
     assert len({r["auto_count"] for r in matched}) == 1
+
+
+def test_published_id_overlap_requires_explicit_original_policy():
+    data = predictions()
+    data["test_ids"][0] = data["cal_ids"][0]
+    with pytest.raises(ValueError, match="overlap"):
+        compare_triage(data)
+    data["split_policy"] = np.asarray("original")
+    rows = compare_triage(data)
+    assert rows
+    assert all(row["n"] == len(data["test_y"]) for row in rows)
+    data["split_policy"] = np.asarray("unknown")
+    with pytest.raises(ValueError, match="Unknown split policy"):
+        compare_triage(data)
+
+
+def test_original_loader_preserves_all_published_indices_and_legacy_calibration_split(
+    tmp_path,
+):
+    import pandas as pd
+    from smesd_uncertainty.triage_training import load_dataset
+
+    ids = [[0, 1, 2], [2, 3, 4, 5], [1, 5, 6, 7]]
+    pd.to_pickle(ids, tmp_path / "split_data_idx.pkl")
+    pd.to_pickle((np.zeros((8, 32)), np.zeros((1, 32))), tmp_path / "meta_emb.pkl")
+    for name, group in zip(("train", "validate", "test"), ids, strict=True):
+        hyper = {key: {0: list(range(8))} for key in ("industry", "area", "qualify")}
+        pd.to_pickle(
+            (
+                {},
+                np.zeros((len(group), 3)),
+                [[], [], []],
+                hyper,
+                np.arange(len(group)) % 2,
+            ),
+            tmp_path / f"{name}_data.pkl",
+        )
+    dataset = load_dataset(tmp_path, "original", 42)
+    splits = dataset["splits"]
+    assert splits["train"]["idx"] == ids[0]
+    assert splits["test"]["idx"] == ids[2]
+    perm = np.random.RandomState(42).permutation(len(ids[1]))
+    assert splits["cal"]["idx"] == [ids[1][i] for i in perm[:2]]
+    assert splits["valid"]["idx"] == [ids[1][i] for i in perm[2:]]
+    assert set(splits["cal"]["idx"]) | set(splits["valid"]["idx"]) == set(ids[1])

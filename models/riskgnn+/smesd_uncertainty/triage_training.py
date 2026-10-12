@@ -218,7 +218,7 @@ def main() -> None:
     parser.add_argument("--beta", type=float, default=0.2)
     parser.add_argument("--split-seed", type=int, default=42)
     parser.add_argument(
-        "--split-policy", choices=["original", "deduplicated"], default="deduplicated"
+        "--split-policy", choices=["original", "deduplicated"], default="original"
     )
     parser.add_argument("--threads", type=int, default=1)
     parser.add_argument(
@@ -237,8 +237,17 @@ def main() -> None:
     args.output.mkdir(parents=True)
     torch.set_num_threads(args.threads)
     dataset = load_dataset(args.data_dir, args.split_policy, args.split_seed)
-    if set(dataset["splits"]["cal"]["idx"]) & set(dataset["splits"]["test"]["idx"]):
+    calibration_test_overlap = sorted(
+        set(dataset["splits"]["cal"]["idx"]) & set(dataset["splits"]["test"]["idx"])
+    )
+    if args.split_policy == "deduplicated" and calibration_test_overlap:
         parser.error("Calibration/test IDs overlap; use the deduplicated split policy")
+    if calibration_test_overlap:
+        print(
+            "Preserving published IDs: calibration/test overlap exists; "
+            "report empirical coverage without asserting an independent-calibration guarantee.",
+            flush=True,
+        )
     config = {
         k: str(v.resolve()) if isinstance(v, Path) else v for k, v in vars(args).items()
     }
@@ -262,8 +271,10 @@ def main() -> None:
             "numpy": np.__version__,
             "device": "cpu",
             "original_overlap": dataset["original_overlap"],
+            "calibration_test_overlap": len(calibration_test_overlap),
+            "coverage_guarantee_assumptions_verified": False,
             "split_sizes": {name: len(s["y"]) for name, s in dataset["splits"].items()},
-            "graph_protocol": "Frozen original transductive graphs and pretrained embeddings; only target IDs deduplicated",
+            "graph_protocol": "Frozen original transductive graphs and pretrained embeddings; target ID policy recorded separately",
             "community_prior": False,
             "fusion_gate_trainable": args.gate_policy == "trainable",
             "plus_architecture": "Existing RiskGNNPlus, exp(clamped logits) evidence heads",
@@ -300,7 +311,7 @@ def main() -> None:
     for seed in args.seeds:
         out = args.output / f"seed_{seed}"
         out.mkdir()
-        data = {"seed": np.asarray(seed)}
+        data = {"seed": np.asarray(seed), "split_policy": np.asarray(args.split_policy)}
         for name in ("cal", "test"):
             data[f"{name}_ids"] = np.asarray(dataset["splits"][name]["idx"])
             data[f"{name}_y"] = dataset["splits"][name]["y"]

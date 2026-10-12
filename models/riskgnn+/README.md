@@ -58,4 +58,5 @@ python -m pytest models/riskgnn+/tests
 协议、校准边界、历史脚本的熵替代问题及命令见
 [复核分流对照](../../docs/architecture/triage-comparison.md)。
 
-本轮三种子实测见[补充实验结果](../../docs/architecture/triage-comparison-results.md)。
+默认保留上游原论文划分；去重仅作敏感性分析。
+原划分三种子实测见[补充实验结果](../../docs/architecture/triage-comparison-results.md)。
