@@ -68,4 +68,5 @@ python -m pytest models/riskgnn+/tests
 ComRisk / RiskGNN / RiskGNN+ 三臂对照，但训练真实证据双分支模型而非熵替代。
 实现位于 `uk_benchmark/`（`data.py` 加载契约不依赖 torch，`training.py` 负责训练与评估）。
 协议、数据差异与运行方式见
-[UK 对照](../../docs/architecture/uk-comparison.md)。
+[UK 对照](../../docs/architecture/uk-comparison.md)，实测结果见
+[UK 对照结果](../../docs/architecture/uk-comparison-results.md)。

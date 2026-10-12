@@ -95,3 +95,5 @@ python -m pytest models/riskgnn+/tests -k uk
 
 `uk_benchmark.data` 不依赖 torch，仅验证加载契约（全局索引、split 划分、边映射、
 超边分型、预处理、`--max-nodes` 过滤）。
+
+实测三种子结果见 [uk-comparison-results.md](uk-comparison-results.md)。
