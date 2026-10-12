@@ -137,7 +137,11 @@ class HeteGNN(MessagePassing):
         return res_c,res_p
 
     def message(self,edge_index, x_i,x_j, edge_weight, edge_confidence, edge_type):
-        if torch.sum(edge_weight)!=edge_index.shape[1]:
+        # Explicit scalar mode must also hold in a batch whose sampled weights are all 1.
+        # Legacy callers without a mode keep the original relation convention.
+        weighted = (torch.sum(edge_weight)!=edge_index.shape[1]
+                    if self.use_scalar_weights is None else self.use_scalar_weights)
+        if weighted:
             x_j=self.rel_wi[edge_type](x_j)
             edge_weight=softmax(edge_weight,edge_index[1])
             rs=x_j*edge_weight*edge_confidence

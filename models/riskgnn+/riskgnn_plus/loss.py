@@ -115,10 +115,22 @@ class EvidentialRiskLoss(nn.Module):
             y_one_hot = target.float()
 
         # Expected log-probabilities: log_p_k = digamma(alpha_k) - digamma(S)
+        weights = None
+        if self.class_weights is not None:
+            weights = torch.as_tensor(
+                self.class_weights, dtype=fused_alpha.dtype, device=fused_alpha.device
+            )
+
         def expected_ce(a):
             s = torch.sum(a, dim=-1, keepdim=True)
             log_p = torch.digamma(a) - torch.digamma(s)
-            return -torch.sum(y_one_hot * log_p, dim=-1)
+            ce = -torch.sum(y_one_hot * log_p, dim=-1)
+            if weights is not None:
+                # Re-weight each sample by the cost of its true class, matching the
+                # class-weighted CE used for the discriminative backbone below. Needed
+                # for the UK benchmark's 3.6% positive rate; None keeps SMEsD behaviour.
+                ce = ce * torch.sum(y_one_hot * weights, dim=-1)
+            return ce
 
         l_fused_sample = expected_ce(fused_alpha)
         l_node_sample = expected_ce(node_alpha)
@@ -133,7 +145,11 @@ class EvidentialRiskLoss(nn.Module):
         l_kl = torch.mean(kl_fused)
 
         # Primary Cross-Entropy on discriminative backbone logits
-        l_primary = F.cross_entropy(primary_logits, target.long()) if primary_logits is not None else 0.0
+        l_primary = (
+            F.cross_entropy(primary_logits, target.long(), weight=weights)
+            if primary_logits is not None
+            else 0.0
+        )
 
         total_loss = (
             l_primary

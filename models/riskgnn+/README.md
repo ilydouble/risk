@@ -8,7 +8,7 @@
 
 ```
 riskgnn+/
-  <5 个顶层脚本>          # 文档中固定的 CLI 入口，仅转发到包内 main()
+  <顶层脚本>              # 文档中固定的 CLI 入口，仅转发到包内 main()
   smesd_uncertainty/       # 合法包名的实现包
     protocol.py            # 变体注册表、图/嵌入构造
     simulation.py          # 合成场景生成
@@ -17,6 +17,7 @@ riskgnn+/
     matrix.py              # 多场景矩阵调度与 manifest
     summary.py             # 配对汇总与 bootstrap 区间
     comrisk_base/          # 冻结的历史 RiskGNN 基座（vendor）
+  uk_benchmark/            # UK 数据集三臂对照（data.py / training.py）
   tests/
 ```
 
@@ -60,3 +61,11 @@ python -m pytest models/riskgnn+/tests
 
 默认保留上游原论文划分；去重仅作敏感性分析。
 原划分三种子实测见[补充实验结果](../../docs/architecture/triage-comparison-results.md)。
+
+## UK 数据集对照
+
+新增 `run_uk_experiments.py`，在 `datasets/uk_dataset_v1` 上复刻
+ComRisk / RiskGNN / RiskGNN+ 三臂对照，但训练真实证据双分支模型而非熵替代。
+实现位于 `uk_benchmark/`（`data.py` 加载契约不依赖 torch，`training.py` 负责训练与评估）。
+协议、数据差异与运行方式见
+[UK 对照](../../docs/architecture/uk-comparison.md)。
