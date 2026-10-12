@@ -50,3 +50,12 @@ python -m pytest models/riskgnn+/tests
 
 `matrix.py` 会把包内各源文件的 sha256 写入 `matrix_manifest.json`；源码变化会
 使旧实验工作目录被拒绝复用，这是预期的安全行为。
+
+## 证据学习与 Table 3 分流对照
+
+新增 `run_triage_comparison.py` 训练真实双分支证据模型与配对 ComRisk，
+`evaluate_triage_comparison.py` 从保存的预测重放概率/保形/固定预算分流比较。
+协议、校准边界、历史脚本的熵替代问题及命令见
+[复核分流对照](../../docs/architecture/triage-comparison.md)。
+
+本轮三种子实测见[补充实验结果](../../docs/architecture/triage-comparison-results.md)。

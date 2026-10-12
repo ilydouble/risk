@@ -101,12 +101,14 @@ class ConformalRiskAuditor:
         # Extract the score corresponding to the true label: E_i = scores[i, y_i]
         true_scores = scores[np.arange(n), cal_labels]
 
-        # Conformal quantile: ceil((n + 1) * (1 - epsilon)) / n
-        quantile_level = float(np.ceil((n + 1) * (1.0 - self.epsilon)) / n)
-        quantile_level = min(1.0, max(0.0, quantile_level))
-
-        # Quantile using method='higher' or standard linear interpolation
-        self.conformal_threshold_ = float(np.quantile(true_scores, quantile_level, method="higher"))
+        if not 0.0 < self.epsilon < 1.0:
+            raise ValueError("epsilon must be strictly between 0 and 1.")
+        # Use the one-based order statistic, including the finite-sample infinity case.
+        rank = int(np.ceil((n + 1) * (1.0 - self.epsilon)))
+        self.conformal_threshold_ = (
+            float(np.partition(true_scores, rank - 1)[rank - 1])
+            if rank <= n else float("inf")
+        )
         return self.conformal_threshold_
 
     def audit(
