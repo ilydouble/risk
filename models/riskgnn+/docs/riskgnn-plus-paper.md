@@ -257,13 +257,27 @@ Thus, $p_{i, k}^{	ext{DST}} = m_{i, k} + rac{u_i}{2} = m_{i, k}^{	ext{node}} +
 
 ---
 
-#### 4.3 Contagion Conflict Metric Properties
-**Theorem 3 (Properties of Inter-Branch Conflict $C$)**. *The inter-branch conflict $C_i$ satisfies:*
-1. **Range**: $0 \le C_i \le rac{1}{2}(1 - u_i^{	ext{node}})(1 - u_i^{	ext{graph}}) < 1$.
-2. **Zero Conflict**: $C_i = 0$ if and only if at least one branch has complete epistemic uncertainty ($u^{	ext{node}} = 1$ or $u^{	ext{graph}} = 1$) or both branches agree completely on the same class direction.
-3. **Maximal Conflict**: $C_i 	o 1$ if and only if both branches exhibit zero uncertainty ($u_i^{	ext{node}} 	o 0, u_i^{	ext{graph}} 	o 0$) and assign full belief mass to diametrically opposing classes ($m_{i, 0}^{	ext{node}} = 1, m_{i, 1}^{	ext{graph}} = 1$).
+#### 4.3 Inter-Branch Conflict Metric Properties
+**Theorem 3 (Properties of Inter-Branch Conflict $C$)**. *For nonnegative belief masses satisfying $m_{i,0}^{b}+m_{i,1}^{b}=1-u_i^{b}$, where $b\in\{\text{node},\text{graph}\}$, the inter-branch conflict $C_i$ satisfies:*
 
-*Proof*. Since $m_{i, 0}^{	ext{node}} + m_{i, 1}^{	ext{node}} = 1 - u_i^{	ext{node}}$ and $m_{i, 0}^{	ext{graph}} + m_{i, 1}^{	ext{graph}} = 1 - u_i^{	ext{graph}}$, Cauchy-Schwarz implies that $C_i = m_{i, 0}^{	ext{node}} m_{i, 1}^{	ext{graph}} + m_{i, 1}^{	ext{node}} m_{i, 0}^{	ext{graph}} \le (m_{i, 0}^{	ext{node}} + m_{i, 1}^{	ext{node}})(m_{i, 0}^{	ext{graph}} + m_{i, 1}^{	ext{graph}}) = (1 - u_i^{	ext{node}})(1 - u_i^{	ext{graph}})$. For strictly positive uncertainties $u > 0$, $C_i < 1$. In the extreme deterministic limit where $u 	o 0$, $C_i = 1 		imes 1 + 0 		imes 0 = 1$. $lacksquare$
+1. **Range**: $0\le C_i\le(1-u_i^{\text{node}})(1-u_i^{\text{graph}})<1$ for finite evidence, which gives strictly positive uncertainties.
+2. **Zero Conflict**: $C_i=0$ if and only if both cross-products vanish. Equivalently, at least one branch has complete epistemic uncertainty ($u_i^{\text{node}}=1$ or $u_i^{\text{graph}}=1$), or both branches allocate all their non-uncertainty mass to the same class.
+3. **Maximal Conflict**: For fixed uncertainties and nonzero belief in both branches, the upper bound is attained when the branches allocate all their non-uncertainty mass to opposite classes, in either orientation. Consequently, $C_i$ can approach $1$ as both uncertainties vanish and the branches concentrate on opposing classes. This is a limiting case, not a value attained with finite evidence.
+
+*Proof*. Expanding the product of the total belief masses gives
+$$
+\begin{aligned}
+(1-u_i^{\text{node}})(1-u_i^{\text{graph}})
+&=(m_{i,0}^{\text{node}}+m_{i,1}^{\text{node}})(m_{i,0}^{\text{graph}}+m_{i,1}^{\text{graph}})\\
+&=C_i+m_{i,0}^{\text{node}}m_{i,0}^{\text{graph}}+m_{i,1}^{\text{node}}m_{i,1}^{\text{graph}}.
+\end{aligned}
+$$
+All terms are nonnegative, establishing the bounds. Since $C_i$ is the sum of two nonnegative cross-products, it is zero exactly when both vanish, yielding property 2. Equality in the upper bound holds exactly when both same-class products vanish; if neither branch is completely uncertain, this requires belief concentrated on opposite classes. For example, setting
+$$
+(m_{i,0}^{\text{node}},m_{i,1}^{\text{node}})=(1-u_i^{\text{node}},0),\qquad
+(m_{i,0}^{\text{graph}},m_{i,1}^{\text{graph}})=(0,1-u_i^{\text{graph}})
+$$
+gives $C_i=(1-u_i^{\text{node}})(1-u_i^{\text{graph}})\to1$ as both uncertainties tend to zero. Interchanging the class assignments gives the same result. $\blacksquare$
 
 ---
 
