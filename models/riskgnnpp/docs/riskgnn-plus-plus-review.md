@@ -77,10 +77,26 @@ Graph CP（ICML 2023，完整题名为 *Conformal Prediction Sets for Graph Neur
 Bengs 的原稿条目“Pitfalls of Evidential Deep Learning”改为可追溯的 2022 预印本题名。
 对应论文链接列在主稿 References。
 
-[PENDING VERIFICATION] ComRisk 和 RiskGNN 的准确原始文献、实现版本与复现差异；
+[PENDING VERIFICATION] ComRisk 的准确原始文献、实现版本与复现差异；
+RiskGNN / RiskGNN+ 是作者同一研究线的方法，若已有公开版本需补准确出处。
 原稿 ComRisk 的作者/题名/会议组合暂未核实，不补造引用。
 [PENDING VERIFICATION] TEF、HeteGNN 等补充相关工作、研究新颖性和完整文献覆盖。
 这轮是稿件与实现一致性复核，未进行系统综述。
+
+## 创新点的论文表述
+
+1. **数据贡献**：整合 Companies House 与 GLEIF 公开记录，构建 233,251 家企业、
+   412,348 条有向边、四类关系的 UK 登记困境状态图；说明地址组划分、边证据权重及标签语义。
+   原始获取以官方批量文件为主，少量 API 补充；不称网页爬虫，也不称前瞻违约数据。
+2. **方法贡献**：对各关系分别形成证据意见，以冲突和度数折扣后融合，再限制高度节点的证据预算；
+   将复合冲突作为人工审核评分的一个信号，而不把它解释为因果传染或已校准概率。
+3. **实证贡献**：完整系统与仓库实现的 ComRisk 比较，UK 原始 AP 有提升；同一 ++ 预测上，
+   冲突排序相对概率模糊度有小幅 AURC 收益。RiskGNN / RiskGNN+ 留在正文作同系列参照，
+   明示 ++ 新组件尚未证明独立提升 AP，且固定预算和 SMEsD 的结果不支持普遍收益。
+
+“首个”“唯一”“全面领先”需要系统文献核对与对应实验证据，目前不能据此下结论。
+投稿前还需确认可公开的数据内容、原始来源版本与获取脚本，以及是否存在当前数据包说明之外的网页抓取步骤；
+本地 `datasets/uk_dataset_v1/3_合规说明.md` 记载的是官方批量文件和少量 API 补充。
 
 ## 5. 写作检查记录
 
