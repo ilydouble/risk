@@ -127,3 +127,19 @@ router.add_api_route(
     response_model=ApiEnvelope[schemas.ResponseModelingCapabilities],
     responses=COMMON_ERROR_RESPONSES | WORKBENCH_ERRORS,
 )
+
+
+router.add_api_route(
+    "/import-enterprises",
+    handler.import_enterprises,
+    methods=["POST"],
+    response_model=ApiEnvelope[schemas.ResponseImportEnterprises],
+    responses=COMMON_ERROR_RESPONSES | WORKBENCH_ERRORS,
+)
+router.add_api_route(
+    "/list-enterprise-records",
+    handler.list_enterprise_records,
+    methods=["POST"],
+    response_model=ApiEnvelope[schemas.ResponseListEnterpriseRecords],
+    responses=COMMON_ERROR_RESPONSES | WORKBENCH_ERRORS,
+)

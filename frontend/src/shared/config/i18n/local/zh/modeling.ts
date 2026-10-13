@@ -1,5 +1,38 @@
 export default {
   "modeling": {
+    "enterprise": {
+      "title": "真实企业数据",
+      "note": "属性保留模型预处理前的值，缺失显示为 —。关系与事件按原快照隔离；预测反映数据集状态标签，不代表授信违约概率。",
+      "loading": "正在加载企业数据…",
+      "retry": "重新加载",
+      "import": "导入企业数据",
+      "importing": "正在导入，请稍候…",
+      "reupload": "此数据集没有标准企业数据产物，请重新上传原数据包。",
+      "invalid": "企业数据校验失败，未导入任何记录。",
+      "outsideGraph": "该企业未包含在当前模型的训练图中，暂不支持预测。",
+      "kind": "数据类型",
+      "search": "搜索企业或人物 ID、名称",
+      "model": "关联模型",
+      "noModel": "选择同数据集模型查看预测",
+      "graphNote": "当前模型只支持其绑定图内的企业；子集训练可能未包含全部企业。",
+      "clear": "清除企业筛选",
+      "empty": "暂无符合条件的数据",
+      "attributes": "查看原始属性与证据",
+      "related": "查看关联关系",
+      "predict": "运行预测",
+      "probability": "状态分类概率",
+      "label": "预测标签",
+      "unassessed": "未评估",
+      "previous": "上一页",
+      "next": "下一页",
+      "kinds": {
+            "company": "企业",
+            "person": "人物",
+            "edge": "关系",
+            "hyperedge": "超边",
+            "event": "事件"
+      }
+},
     "config": {
   "title": "实验配置快照",
   "name": "实验名称",

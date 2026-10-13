@@ -348,3 +348,41 @@ class ModelCapabilityDTO(BaseModel):
 
 class ResponseModelingCapabilities(BaseModel):
     items: list[ModelCapabilityDTO]
+
+
+class RequestImportEnterprises(RequestGetDataset):
+    model_config = ConfigDict(extra="forbid")
+
+
+class ResponseImportEnterprises(BaseModel):
+    datasetId: str
+    counts: dict[str, int]
+    sha256: str
+
+
+class RequestListEnterpriseRecords(RequestGetDataset):
+    model_config = ConfigDict(extra="forbid")
+    kind: Literal["company", "person", "edge", "hyperedge", "event"] = "company"
+    keyword: str = Field(default="", max_length=200)
+    nodeId: str | None = Field(default=None, max_length=512)
+    snapshot: str | None = Field(default=None, max_length=256)
+    modelId: UUID | None = None
+    pagination: PageRequest = Field(default_factory=PageRequest)
+
+
+class EnterpriseRecordDTO(BaseModel):
+    sequence: int
+    kind: Literal["company", "person", "edge", "hyperedge", "event"]
+    snapshot: str
+    nodeId: str | None
+    source: str | None
+    target: str | None
+    members: list[str]
+    data: dict[str, Any]
+    prediction: PredictionDTO | None = None
+
+
+class ResponseListEnterpriseRecords(Page[EnterpriseRecordDTO]):
+    imported: bool
+    counts: dict[str, int]
+    manifest: dict[str, Any]

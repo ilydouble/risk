@@ -5,6 +5,7 @@ from pathlib import Path
 
 import numpy as np
 
+from riskgnn.dataset_adapters.enterprise import attributes, feature_vector
 from riskgnn.dataset_adapters.snapshot_io import load, verified
 from riskgnn.dataset_adapters.snapshot_schema import Edge
 from riskgnn.workbench.artifacts import seal, write_json
@@ -70,7 +71,11 @@ def prepare(
     index = {(split, n.id): i for i, (split, n) in enumerate(records)}
     company_count = sum(n.kind == "company" for _, n in records)
     ids = [n.id if n.kind == "company" else f"@{split}:{n.id}" for split, n in records]
-    x = np.array([n.features for _, n in records], dtype=np.float32)
+    names = snapshots["train"].feature_names
+    x = np.array(
+        [feature_vector(attributes(names, n.features), names) for _, n in records],
+        dtype=np.float32,
+    )
     labels = np.array(
         [n.label if (split, n.id) in targets else -1 for split, n in records], dtype=np.int64
     )

@@ -5,13 +5,20 @@ from typing import Any
 from uuid import uuid4
 
 from sqlalchemy import select
+from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import IntegrityError
 from stellarmesh_objectstorage import AsyncClient, StorageError
 
 from risk_api.errors import AppError
 from risk_api.modules.modeling.client import ModelClient
 from risk_api.modules.modeling.repository import ModelingRepository
-from risk_api.modules.modeling.workbench_model import Dataset, Dispatch, ModelVersion, Run
+from risk_api.modules.modeling.workbench_model import (
+    Dataset,
+    Dispatch,
+    EnterprisePrediction,
+    ModelVersion,
+    Run,
+)
 
 
 @dataclass
@@ -327,6 +334,17 @@ class ModelingService:
 
     async def predict(self, owner: str, identity: str, ids: list[str], request_id: str) -> dict:
         version = await self.repository.version(owner, identity)
-        return await self.client.call(
+        result = await self.client.call(
             "models/predict", {"jobId": version.run_id, "companyIds": ids}, request_id
         )
+        run = await self.repository.run(owner, version.run_id)
+        for prediction in result["items"]:
+            statement = insert(EnterprisePrediction).values(
+                model_id=identity,
+                company_id=prediction["companyId"],
+                dataset_id=run.dataset_id,
+                result=prediction,
+            )
+            await self.session.execute(statement.on_conflict_do_nothing())
+        await self.session.commit()
+        return result

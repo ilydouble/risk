@@ -31,6 +31,7 @@ flowchart LR
 | 参数声明、配置快照、重试与实际规模 | [实验配置](experiment-configuration.md) |
 | 协作者交付数据 ZIP、自检与新增适配 | [数据集接入流程](dataset-zip-onboarding.md) |
 | 上传包身份、版本与适配器选择 | [数据集 ZIP 契约](dataset-contract.md) |
+| 企业属性共享、事务导入与真实预测展示 | [标准企业数据](enterprise-data.md) |
 | 模型侧数据扩展与本地 CLI | [数据适配器](dataset-adapters.md) |
 | 单模型 CLI 输入输出、事件与产物 | [模型执行协议](model-execution-contract.md) |
 | 建模术语、不变量与适配边界 | [建模领域模型](modeling-domain.md) |

@@ -70,7 +70,14 @@ async def execute_workflow(job, settings, store, storage) -> dict:
             raise ExecutionError("DATASET_INCOMPATIBLE", str(result.data.get("issues", [])))
         key = f"datasets/{job['id']}/{sha}/source.zip"
         await storage.upload_file(key, archive, content_type="application/zip")
-        return {**result.data, "objectKey": key, "runtimeId": runtime_id, "runtimeVersion": version}
+        artifacts = await executor.upload(call, result)
+        return {
+            **result.data,
+            "objectKey": key,
+            "runtimeId": runtime_id,
+            "runtimeVersion": version,
+            "enterpriseArtifact": artifacts.get("enterprises"),
+        }
 
     source = await store.get(job["payload"]["sourceJobId"])
     if source["kind"] != "validate" or source["status"] != "completed":

@@ -80,7 +80,13 @@
         "title": "InspectionSummary",
         "type": "object"
       },
-      "artifacts": {},
+      "artifacts": {
+        "enterprises": {
+          "format": "risk-enterprise-data-v1",
+          "kind": "file",
+          "required": true
+        }
+      },
       "ui_schema": {}
     },
     "train": {

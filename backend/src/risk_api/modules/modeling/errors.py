@@ -19,6 +19,7 @@ WORKBENCH_ERRORS = {
                 "MODELING_UPLOAD_INCOMPLETE",
                 "MODEL_STATE_INVALID",
                 "MODELING_CONFIG_STALE",
+                "MODELING_ENTERPRISE_UNAVAILABLE",
             ],
         ]
     },
@@ -28,6 +29,7 @@ WORKBENCH_ERRORS = {
             Literal[
                 "REQUEST_INVALID",
                 "MODELING_FILE_INVALID",
+                "MODELING_ENTERPRISE_INVALID",
                 "MODELING_MODEL_INCOMPATIBLE",
                 "EXECUTION_PARAMETERS_INVALID",
                 "MODEL_INPUT_INVALID",

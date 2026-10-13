@@ -11,6 +11,7 @@ from riskgnn.dataset_adapters.acra.validation import (
     connect,
     verify_validated,
 )
+from riskgnn.dataset_adapters.enterprise import attributes, feature_vector
 from riskgnn.workbench.artifacts import seal, write_json
 
 
@@ -77,7 +78,13 @@ def prepare(validated: Path, output: Path, *, target_count: int = 2000) -> dict[
             row.split,
             int(row.label),
         )
-    x = nodes[FEATURES].to_numpy(dtype=np.float32)
+    x = np.array(
+        [
+            feature_vector(attributes(FEATURES, row), FEATURES)
+            for row in nodes[FEATURES].itertuples(index=False, name=None)
+        ],
+        dtype=np.float32,
+    )
     x[~np.isfinite(x)] = np.nan
     train = split == "train"
     statistics: list[float] = []

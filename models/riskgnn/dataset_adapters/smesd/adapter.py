@@ -1,10 +1,13 @@
+from collections.abc import Iterable
 from pathlib import Path
 
 from riskgnn.dataset_adapters.base import DatasetAdapter
 from riskgnn.dataset_adapters.delivery import delivery_for
+from riskgnn.dataset_adapters.enterprise import snapshot_records
 from riskgnn.dataset_adapters.smesd.analysis import analyze
 from riskgnn.dataset_adapters.smesd.preparation import prepare
 from riskgnn.dataset_adapters.smesd.validation import validate
+from riskgnn.dataset_adapters.snapshot_io import load, verified
 
 
 class SMEsDAdapter(DatasetAdapter):
@@ -26,3 +29,7 @@ class SMEsDAdapter(DatasetAdapter):
     def prepare(self, validated: Path, output: Path, config: dict) -> dict:
         resolved = delivery_for(self.id, self.version).config(config)
         return prepare(validated, output, int(resolved["target_count"]))
+
+    def enterprise_records(self, validated: Path) -> Iterable[dict]:
+        _, root = verified(validated, "smesd-json-v5")
+        yield from snapshot_records(load(root))

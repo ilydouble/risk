@@ -1,5 +1,38 @@
 export default {
   "modeling": {
+    "enterprise": {
+      "title": "Enterprise data",
+      "note": "Attributes retain values before model preprocessing; missing values appear as —. Relations and events remain snapshot-local. Predictions classify dataset status, not credit default probability.",
+      "loading": "Loading enterprise data…",
+      "retry": "Reload",
+      "import": "Import enterprise data",
+      "importing": "Importing, please wait…",
+      "reupload": "This dataset has no normalized enterprise artifact. Upload the original package again.",
+      "invalid": "Enterprise data validation failed. No records were imported.",
+      "outsideGraph": "This company is outside the model’s bound graph and cannot be predicted yet.",
+      "kind": "Record type",
+      "search": "Search company/person ID or name",
+      "model": "Associated model",
+      "noModel": "Choose a model from this dataset",
+      "graphNote": "Only companies in the model’s bound graph can be predicted. Subset training may exclude companies.",
+      "clear": "Clear company filter",
+      "empty": "No matching records",
+      "attributes": "View original attributes and evidence",
+      "related": "View related records",
+      "predict": "Predict",
+      "probability": "Status probability",
+      "label": "Predicted label",
+      "unassessed": "Not assessed",
+      "previous": "Previous",
+      "next": "Next",
+      "kinds": {
+            "company": "Companies",
+            "person": "Persons",
+            "edge": "Relations",
+            "hyperedge": "Hyperedges",
+            "event": "Events"
+      }
+},
     "config": {
   "title": "Experiment configuration snapshot",
   "name": "Experiment name",

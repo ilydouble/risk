@@ -5,7 +5,7 @@
 - ID / 版本：`sg-comrisk / 1`；代码目录为 `acra/`，沿用既有契约 ID。
 - 本机来源：仓库 `datasets/comrisk_export_v5/acra/`。
 - 此目录是一个数据集；不要把含 `acra/` 和 `smesd/` 的整个交付包一起上传。
-- Parquet 原始业务行留在对象存储和执行目录，不导入业务数据库。
+- Parquet 原始业务行留在对象存储和执行目录；标准企业属性和边可显式导入业务数据库，见[标准企业数据](../../../../docs/architecture/enterprise-data.md)。
 
 必需文件：
 

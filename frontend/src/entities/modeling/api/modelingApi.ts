@@ -99,3 +99,13 @@ export const requestRunConfiguration = http.post<
   RequestRunConfiguration,
   ResponseRunConfiguration
 >("/modeling/run-configuration");
+
+export const requestImportEnterprises = http.post<
+  import("@/shared/api/generated/schema").RequestImportEnterprises,
+  import("@/shared/api/generated/schema").ResponseImportEnterprises
+>("/modeling/import-enterprises");
+
+export const requestListEnterpriseRecords = http.post<
+  import("@/shared/api/generated/schema").RequestListEnterpriseRecords,
+  import("@/shared/api/generated/schema").ResponseListEnterpriseRecords
+>("/modeling/list-enterprise-records");

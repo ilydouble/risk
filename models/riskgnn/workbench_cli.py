@@ -10,6 +10,7 @@ import torch
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import ValidationError as SchemaValidationError
 
+from riskgnn.dataset_adapters.enterprise import FORMAT, export
 from riskgnn.dataset_adapters.registry import inspect, resolve
 from riskgnn.workbench.artifacts import asset_digest, read_json, write_json
 from riskgnn.workbench.configuration import ConfigurationError, merge, validate_frozen
@@ -40,7 +41,17 @@ def execute(request: dict, directory: Path, emit) -> dict:
     if operation == "inspect":
         emit({"kind": "stage", "stage": "validating", "message": ""})
         data = inspect(Path(inputs["dataset"]["path"]), work / "validated")
-        return {"data": data, "effective_config": parameters}
+        adapter, _ = resolve(Path(inputs["dataset"]["path"]))
+        data["enterpriseData"] = export(
+            adapter, work / "validated", output / "enterprises.jsonl", data
+        )
+        return {
+            "data": data,
+            "effective_config": parameters,
+            "artifacts": {
+                "enterprises": {"path": "enterprises.jsonl", "format": FORMAT}
+            },
+        }
     if operation == "train":
         source = Path(inputs["dataset"]["path"])
         adapter, contract = resolve(source)
@@ -100,12 +111,16 @@ def execute(request: dict, directory: Path, emit) -> dict:
         write_json(output / "report/metrics.json", report)
         return {
             "data": {"report": report},
-            "artifacts": {"report": {"path": "report", "format": "riskgnn-evaluation-v2"}},
+            "artifacts": {
+                "report": {"path": "report", "format": "riskgnn-evaluation-v2"}
+            },
         }
     if operation == "predict":
         emit({"kind": "stage", "stage": "predicting", "message": ""})
         try:
-            items = Predictor(Path(inputs["model"]["path"])).predict(parameters["company_ids"])
+            items = Predictor(Path(inputs["model"]["path"])).predict(
+                parameters["company_ids"]
+            )
         except KeyError as error:
             raise OperationFailure("RISKGNN_COMPANY_NOT_FOUND", str(error)) from error
         return {"data": {"items": items}, "effective_config": parameters}
@@ -146,7 +161,9 @@ def main() -> None:
                 )
             for asset in command["request"]["inputs"].values():
                 if asset_digest(Path(asset["path"])) != asset["sha256"]:
-                    raise OperationFailure("MODEL_INPUT_INVALID", "Input asset checksum mismatch")
+                    raise OperationFailure(
+                        "MODEL_INPUT_INVALID", "Input asset checksum mismatch"
+                    )
             descriptor = read_json(Path(__file__).with_name("runtime.json"))
             operation = descriptor["operations"][command["request"]["operation"]]
             if not command["request"].get("configuration"):
@@ -166,7 +183,11 @@ def main() -> None:
             if isinstance(error, OperationFailure):
                 code = error.code
             elif isinstance(error, ConfigurationError):
-                code = "MODELING_CONFIG_STALE" if error.stale else "EXECUTION_PARAMETERS_INVALID"
+                code = (
+                    "MODELING_CONFIG_STALE"
+                    if error.stale
+                    else "EXECUTION_PARAMETERS_INVALID"
+                )
             elif isinstance(
                 error, (ValueError, KeyError, FileNotFoundError, SchemaValidationError)
             ):

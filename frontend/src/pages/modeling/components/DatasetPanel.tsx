@@ -1,3 +1,4 @@
+import { EnterpriseDataPanel } from "./EnterpriseDataPanel";
 import { DatasetAnalysisPanel } from "./DatasetAnalysisPanel";
 import { CreateExperimentForm } from "./CreateExperimentForm";
 import { useRef, useState } from "react";
@@ -181,6 +182,9 @@ export function DatasetPanel({ work }: { work: Workbench }) {
             </p>
           )}
           <DatasetAnalysisPanel dataset={work.dataset} />
+          {work.dataset.status === "ready" && (
+            <EnterpriseDataPanel key={work.datasetId} work={work} />
+          )}
           {!trainable && work.dataset.status === "ready" && (
             <p className="text-sm text-foreground-500">
               {t("modeling.analysisOnly")}

@@ -6,6 +6,7 @@ from fastapi import Request
 from risk_api.modules.auth.api.handler import authorize_request
 from risk_api.modules.auth.service import AuthService
 from risk_api.modules.modeling.api import schemas as dto
+from risk_api.modules.modeling.enterprise_service import EnterpriseService
 from risk_api.modules.modeling.service import ModelingService
 from risk_api.modules.modeling.workbench_model import Dataset, ModelVersion, Run
 from risk_api.shared.api.envelope import ApiEnvelope
@@ -326,3 +327,47 @@ async def capabilities(
     await owner(request, auth)
     result = await service.capabilities()
     return success_response(dto.ResponseModelingCapabilities(**result))
+
+
+async def import_enterprises(
+    body: dto.RequestImportEnterprises,
+    request: Request,
+    auth: FromDishka[AuthService],
+    service: FromDishka[ModelingService],
+) -> ApiEnvelope[dto.ResponseImportEnterprises]:
+    user = await owner(request, auth)
+    result = await EnterpriseService(service).import_dataset(user, str(body.datasetId))
+    return success_response(
+        dto.ResponseImportEnterprises(
+            datasetId=result.dataset_id,
+            counts=result.counts,
+            sha256=result.sha256,
+        )
+    )
+
+
+async def list_enterprise_records(
+    body: dto.RequestListEnterpriseRecords,
+    request: Request,
+    auth: FromDishka[AuthService],
+    service: FromDishka[ModelingService],
+) -> ApiEnvelope[dto.ResponseListEnterpriseRecords]:
+    user = await owner(request, auth)
+    result = await EnterpriseService(service).page(
+        user,
+        str(body.datasetId),
+        body.kind,
+        body.keyword,
+        body.nodeId,
+        body.snapshot,
+        str(body.modelId) if body.modelId else None,
+        body.pagination.page,
+        body.pagination.pageSize,
+    )
+    return success_response(
+        dto.ResponseListEnterpriseRecords(
+            **result,
+            page=body.pagination.page,
+            pageSize=body.pagination.pageSize,
+        )
+    )
