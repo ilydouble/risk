@@ -1,5 +1,8 @@
 # SMEsD JSON V5 数据适配器
 
+工作台当前默认使用 [RiskGNN+](../../../../docs/architecture/riskgnn-plus-workbench.md)，
+在本适配器基础准备后加入超图和已有事件。下文 node_edge 描述保留为基础准备与历史配置说明。
+
 ## 输入与来源
 
 ID / 版本为 `smesd / 1`。接收 `datasets/comrisk_export_v5/smesd/` 的处理后快照，

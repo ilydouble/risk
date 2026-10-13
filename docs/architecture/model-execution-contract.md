@@ -6,7 +6,7 @@
 RiskGNN CLI 负责调用数据适配器、训练、独立测试和预测。
 configure 操作读取已校验的数据契约，返回模型声明的实验参数、默认值和解析快照；
 不读取数据文件、不训练。提交配置及重试语义见[实验配置](experiment-configuration.md)。
-当前只部署一个模型 RiskGNN；研究脚本及环境继续由模型开发者维护。
+当前默认部署 RiskGNN+，运行器 ID riskgnn 保留；研究脚本及环境继续由模型开发者维护。
 服务不导入 RiskGNN、Torch、数据适配器或训练代码。
 
 ```text
@@ -18,13 +18,13 @@ model-service → python -m riskgnn.workbench_cli --request request.json
 
 服务不再定义 ModelAdapter 类。接口描述来自模型维护的 `models/riskgnn/runtime.json`，
 服务中的 `execution/contracts/` 只描述执行消息，按 spec/io/events/errors 等职责分文件。
-Docker 同时打包服务与模型源码；`MODEL_CODE_ROOT=/app/models` 指定模型根目录。
+监督器给计算子进程加入受信任的 riskgnn+ 包路径。Docker 同时打包服务与模型源码；`MODEL_CODE_ROOT=/app/models` 指定模型根目录。
 
 ## 请求与结果
 
 每次操作在独立进程运行。请求记录：
 
-- `contract_version=2`、`runtime_id="riskgnn"`、`runtime_version="2"`。
+- `contract_version=2`、`runtime_id="riskgnn"`、`runtime_version="3"`。
 - Run/Attempt/Request ID、绝对工作目录、CPU 资源提示。
 - `request.operation`：configure、inspect、train、evaluate 或 predict。
 - 按角色传递 `inputs`：本地路径、格式、SHA-256。

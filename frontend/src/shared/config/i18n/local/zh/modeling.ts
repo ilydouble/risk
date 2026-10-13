@@ -1,5 +1,13 @@
 export default {
   "modeling": {
+    "plus": {
+      "scopeNote": "当前为有界子图实验，使用固定随机初始嵌入，未进行概率或保形校准。",
+      "counts": {"nodes": "节点", "edges": "普通边", "hyperedges": "超边", "incidences": "成员关联", "events": "事件"},
+      "fused": "证据融合概率",
+      "uncertainty": "证据不确定性",
+      "conflict": "分支冲突度",
+      "note": "主预测来自分类头；证据融合概率、不确定性和冲突度分别展示，未进行概率或保形校准。"
+},
     "enterprise": {
       "title": "真实企业数据",
       "note": "属性保留模型预处理前的值，缺失显示为 —。关系与事件按原快照隔离；预测反映数据集状态标签，不代表授信违约概率。",

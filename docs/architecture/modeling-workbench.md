@@ -19,7 +19,7 @@ flowchart LR
 
 1. ZIP 本地预览列目录并检查契约文件存在，上传进度来自浏览器实际字节传输。
 2. 完成上传只代表对象就绪；后台全量校验通过后才能创建实验。
-3. ACRA 使用 smoke-v1，SMEsD/UK 使用 snapshot-node-edge-v1；可设 1–20 轮，默认 2；展示阶段、曲线、Attempt 和诊断日志。
+3. 默认 RiskGNN+ 复用各适配器的有界子集准备，并接入超图和已有事件；可设 1–20 轮，默认 2；展示阶段、曲线、Attempt 和诊断日志。
 4. 可取消或在终态重新运行；URL 保存选中记录，刷新后继续轮询。
 5. 独立测试成功才允许发布；模型版本可下载并预测最多 32 个图内企业。
 
@@ -49,7 +49,7 @@ flowchart LR
 代码位于 `models/service/`，与 baseline / riskgnn / riskgnn+ 并列。
 HTTP 与 Worker 保持同一镜像；业务后端只负责归属、实验与可靠投递。
 模型能力目录通过 POST `/api/v1/modeling/capabilities` 提供，已验收的模型配置才可提交。
-当前仅部署 `riskgnn`，页面不提供多个模型选择；数据准备策略由适配器负责。
+当前执行入口仍为 `riskgnn`，默认算法为 [RiskGNN+](riskgnn-plus-workbench.md)，页面按实际算法显示，历史 RiskGNN 保留；数据准备策略由适配器负责。
 当前支持 ACRA、SMEsD V5 JSON、UK v1；旧 Bundle 上传协议和合成生成器已移除。
 已停用的旧 Bundle 训练记录与对象保留，不把旧 worker 或旧模型网络复制成第二套实现。
 数据集详情包含类型化分析报告；实验详情包含可追溯档案，均随 OpenAPI 生成前端类型。

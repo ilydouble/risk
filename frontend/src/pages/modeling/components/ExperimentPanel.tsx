@@ -88,9 +88,7 @@ export function ExperimentPanel({ work }: { work: Workbench }) {
           </div>
         </div>
         <p className="font-mono text-xs text-foreground-500">
-          {t(`modeling.models.${work.run.runnerId}`, {
-            defaultValue: work.run.runnerId,
-          })}{" "}
+          {work.run.algorithm}{" "}
           · {work.run.epochs} epochs
           {work.run.profile && ` · ${work.run.profile.profile} · ${work.run.profile.device}`}
         </p>

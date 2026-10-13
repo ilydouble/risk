@@ -45,8 +45,10 @@ def verify(directory: Path, kind: str) -> dict[str, Any]:
     if not isinstance(files, dict) or not files:
         raise ValueError("Artifact file list is empty")
     required = {"context.npz", "ids.json", "metadata.json"}
-    if kind == "riskgnn-model-v2":
+    if kind in {"riskgnn-model-v2", "riskgnn-plus-model-v1"}:
         required.add("weights.pt")
+    if kind == "riskgnn-plus-model-v1":
+        required.add("risk_events.json")
     if not required.issubset(files):
         raise ValueError("Artifact is missing required files")
     for name, expected in files.items():
@@ -64,7 +66,10 @@ def verify(directory: Path, kind: str) -> dict[str, Any]:
 
 
 def export_zip(directory: Path, target: Path) -> None:
-    verify(directory, "riskgnn-model-v2")
+    kind = read_json(directory / "manifest.json").get("kind")
+    if kind not in {"riskgnn-model-v2", "riskgnn-plus-model-v1"}:
+        raise ValueError("Unsupported model format")
+    verify(directory, kind)
     target.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(target, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         manifest = read_json(directory / "manifest.json")

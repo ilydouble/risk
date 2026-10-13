@@ -1,5 +1,13 @@
 export default {
   "modeling": {
+    "plus": {
+      "scopeNote": "Bounded subgraph experiment with fixed random initial embeddings; probability and conformal calibration are not fitted.",
+      "counts": {"nodes": "Nodes", "edges": "Edges", "hyperedges": "Hyperedges", "incidences": "Incidences", "events": "Events"},
+      "fused": "Evidence probability",
+      "uncertainty": "Evidence uncertainty",
+      "conflict": "Branch conflict",
+      "note": "Primary predictions use the classifier head. Evidence probabilities, uncertainty and conflict are separate diagnostics; probability and conformal calibration are not fitted."
+},
     "enterprise": {
       "title": "Enterprise data",
       "note": "Attributes retain values before model preprocessing; missing values appear as —. Relations and events remain snapshot-local. Predictions classify dataset status, not credit default probability.",

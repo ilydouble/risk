@@ -15,7 +15,7 @@ def call(tmp_path):
     (model / "data").write_text("test")
     return Invocation(
         runtime_id="riskgnn",
-        runtime_version="2",
+        runtime_version="3",
         request=OperationRequest(
             operation=Operation.PREDICT,
             parameters={"company_ids": ["x"]},

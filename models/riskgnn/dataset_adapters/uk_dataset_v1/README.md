@@ -1,5 +1,8 @@
 # UK Dataset V1 数据适配器
 
+工作台当前默认使用 [RiskGNN+](../../../../docs/architecture/riskgnn-plus-workbench.md)，
+在本适配器基础准备后加入超图和已有事件。下文 node_edge 描述保留为基础准备与历史配置说明。
+
 ## 输入与契约
 
 ID / 版本：`uk-dataset-v1 / 1`。来源为 `datasets/uk_dataset_v1/`。

@@ -1,6 +1,7 @@
 # RiskGNN 模型产物与发布
 
-当前固定使用 riskgnn-model-v2；旧 v1 包不再兼容此次工作台升级。
+当前新模型使用 riskgnn-plus-model-v1，完整文件与算法状态见[RiskGNN+ 接入](riskgnn-plus-workbench.md)。
+以下 riskgnn-model-v2 描述作为历史 RiskGNN 包兼容说明；两种格式均可独立重载预测。
 产物格式由模型代码负责，服务只校验声明、文件安全和内容摘要。
 
 ```text

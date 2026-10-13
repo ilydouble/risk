@@ -2,6 +2,8 @@ from pathlib import Path
 
 import numpy as np
 import torch
+from riskgnn_plus.workbench.predictor import PlusPredictor
+from riskgnn_plus.workbench.preparation import FORMAT as PLUS_FORMAT
 
 from riskgnn.workbench.artifacts import read_json, verify
 from riskgnn.workbench.network import create_model
@@ -9,6 +11,11 @@ from riskgnn.workbench.sampling import Sampler, forward
 
 
 class Predictor:
+    def __new__(cls, directory: Path):
+        if read_json(directory / "manifest.json").get("kind") == PLUS_FORMAT:
+            return PlusPredictor(directory)
+        return super().__new__(cls)
+
     def __init__(self, directory: Path):
         verify(directory, "riskgnn-model-v2")
         self.meta = read_json(directory / "metadata.json")

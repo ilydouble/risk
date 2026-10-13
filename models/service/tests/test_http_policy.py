@@ -47,7 +47,7 @@ def test_service_auth_validation_envelope_and_schema(monkeypatch):
             json={},
             headers={"Authorization": "Bearer contract-test-token"},
         ).json()["data"]["runtime"]
-        assert adapters["runtime_version"] == "2"
+        assert adapters["runtime_version"] == "3"
         assert set(adapters["operations"]) == {
             "configure",
             "inspect",
@@ -118,7 +118,7 @@ def test_job_artifact_and_prediction_routes_share_dishka_store(monkeypatch):
                 "kind": "execute",
                 "payload": {
                     "runtime_id": "riskgnn",
-                    "runtime_version": "2",
+                    "runtime_version": "3",
                     "operation": "inspect",
                     "inputs": {
                         "dataset": {

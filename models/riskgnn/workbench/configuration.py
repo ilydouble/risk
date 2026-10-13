@@ -107,6 +107,11 @@ def validate_frozen(contract: dict, parameters: dict, snapshot: dict) -> dict:
     ):
         raise ConfigurationError("Execution parameters differ from the frozen configuration")
     # Validate compatibility with current code, but never apply its new defaults on retry.
+    if resolved.get("algorithm") != "riskgnn-plus":
+        raise ConfigurationError(
+            "This experiment uses the previous RiskGNN runtime; create a new RiskGNN+ experiment",
+            stale=True,
+        )
     validate_parameters(current["parameterSchema"], resolved)
     validate_parameters(snapshot["parameterSchema"], resolved)
     return deepcopy(snapshot)

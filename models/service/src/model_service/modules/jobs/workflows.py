@@ -85,6 +85,10 @@ async def execute_workflow(job, settings, store, storage) -> dict:
     data = source["result"]
     await storage.download_file(data["objectKey"], archive)
     configuration = job["payload"].get("configuration")
+    if not configuration and data.get("runtimeVersion") == "2":
+        raise ExecutionError(
+            "MODELING_CONFIG_STALE", "Create a new RiskGNN+ experiment with current configuration"
+        )
     train_call = invocation(
         Operation.TRAIN,
         {"dataset": AssetInput(path=archive, sha256=data["sha256"], format="zip")},

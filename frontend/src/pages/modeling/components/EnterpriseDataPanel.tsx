@@ -176,6 +176,10 @@ export function EnterpriseDataPanel({ work }: { work: Workbench }) {
                     <span>{row.prediction
                       ? `${t("modeling.enterprise.probability")}: ${(row.prediction.probability * 100).toFixed(3)}% · ${t("modeling.enterprise.label")}: ${row.prediction.predictedLabel}`
                       : t("modeling.enterprise.unassessed")}</span>
+                    {row.prediction?.uncertainty != null && (
+                      <span>{t("modeling.plus.uncertainty")}: {(row.prediction.uncertainty * 100).toFixed(3)}%
+                        {" · "}{t("modeling.plus.conflict")}: {((row.prediction.conflict ?? 0) * 100).toFixed(3)}%</span>
+                    )}
                   </div>
                 )}
               </article>

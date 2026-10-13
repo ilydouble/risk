@@ -1,6 +1,6 @@
 # 风控工作台
 
-React 工作台、Go Session 网关、FastAPI 业务 API 与独立 RiskGNN 模型服务组成的 Monorepo。
+React 工作台、Go Session 网关、FastAPI 业务 API 与独立 RiskGNN+ 模型服务组成的 Monorepo。
 保留注册登录、企业检索、画像、图谱及文件直传。八家企业的评分、解释、报告和授信决策仍是演示内容。
 `/overview` 是新加坡数据的静态统计；`/modeling` 执行真实数据校验、子集训练、独立测试与模型发布。
 
@@ -32,7 +32,7 @@ PostgreSQL 内独立创建 `riskgnn` 数据库与用户，RustFS 内创建 `risk
 
 1. 打开「模型训练工作台」，选择包含数据集契约的 ACRA、SMEsD JSON 或 UK ZIP（上限 512 MiB）。
 2. 浏览器预览文件索引，直传对象存储；Worker 全量扫描并校验数据协议。
-3. 校验通过后填写目标企业总数与训练轮数，创建 RiskGNN 实验；同一 ZIP 可重复用于不同配置。
+3. 校验通过后填写目标企业总数与训练轮数，创建 RiskGNN+ 实验；同一 ZIP 可重复用于不同配置。
 4. 查看阶段、epoch 曲线、Attempt 和增量事件；刷新页面可继续查看。
 5. 校验后的数据集详情可导入真实企业数据，浏览原始属性、关系、超边和事件。
 6. 新进程独立测试结束后，发布不可变模型版本；下载模型包或预测该图内企业，并在企业数据列表关联结果。
@@ -40,10 +40,11 @@ PostgreSQL 内独立创建 `riskgnn` 数据库与用户，RustFS 内创建 `risk
 ACRA / UK 默认最多 2,000 个目标，SMEsD 默认最多 4,000 个，保留原划分和有限图上下文。
 创建时保存请求值、最终值和声明快照；重试/重新运行沿用原配置，详情另列实际执行规模。
 参数边界、默认值及历史兼容见[实验配置](docs/architecture/experiment-configuration.md)。
-当前 node_edge 不消费超边和事件，实验档案明确列出参与训练和仅保留的数据。
+当前 RiskGNN+ 消费所选子图的普通边、超边及已有事件，实验档案明确列出参与训练和仅保留的数据。
+核心接入、资源边界与历史兼容见[RiskGNN+ 工作台](docs/architecture/riskgnn-plus-workbench.md)。
 困境分类分数不是授信违约概率。发布不会切换生产模型，也不会上传 GitHub Release。
 旧 SMEsD 链接显示停用说明，旧 Bundle 记录和对象保留，不转换成新版本。
-旧 Bundle 协议与合成数据生成器已删除；原始基线和 RiskGNN+ 研究入口保持独立。
+旧 Bundle 协议与合成数据生成器已删除；原始基线及各模型研究入口保持独立。
 
 协作者准备新数据集时，先阅读[数据集 ZIP 接入流程](docs/architecture/dataset-zip-onboarding.md)，
 其中列出当前协议、交付材料、自检命令和新增模型适配的分工。

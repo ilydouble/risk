@@ -40,9 +40,14 @@ class Remote:
                 "adapter": {"id": "smesd", "version": "1"},
                 "parameterSchema": {},
                 "uiSchema": {},
-                "defaultParameters": {"epochs": 2, "dataset": {"target_count": self.target_count}},
+                "defaultParameters": {
+                    "epochs": 2,
+                    "algorithm": "riskgnn-plus",
+                    "dataset": {"target_count": self.target_count},
+                },
                 "requestedParameters": deepcopy(requested),
                 "resolvedParameters": {
+                    "algorithm": "riskgnn-plus",
                     "epochs": requested.get("epochs", 2),
                     "dataset": {"target_count": count},
                 },

@@ -46,6 +46,11 @@ def run_dto(item: Run) -> dto.RunDTO:
     execution = item.execution
     configuration = item.configuration if "configVersion" in item.configuration else None
     return dto.RunDTO(
+        algorithm=(
+            "RiskGNN+"
+            if item.configuration.get("resolvedParameters", {}).get("algorithm") == "riskgnn-plus"
+            else "RiskGNN"
+        ),
         configuration=(
             dto.ExperimentConfigurationDTO.model_validate(configuration) if configuration else None
         ),
@@ -73,6 +78,7 @@ def run_dto(item: Run) -> dto.RunDTO:
 
 def model_dto(item: ModelVersion) -> dto.ModelVersionDTO:
     return dto.ModelVersionDTO(
+        algorithm=item.artifact.get("profile", {}).get("algorithm", "RiskGNN"),
         runnerId=item.artifact.get("profile", {}).get("runnerId", "riskgnn"),
         id=item.id,
         name=item.name,

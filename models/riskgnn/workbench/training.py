@@ -225,6 +225,9 @@ def evaluate(model_dir: Path, *, output: Path | None = None) -> dict[str, Any]:
     scores = np.array([row["probability"] for row in rows])
     report = {
         "split": "test",
+        "algorithm": predictor.meta.get("algorithm", "RiskGNN"),
+        "calibration": predictor.meta.get("calibration", "not_fitted"),
+        "conformal": predictor.meta.get("conformal", "not_fitted"),
         "independentReload": True,
         "metrics": metrics(predictor.context["labels"][indices], scores),
         "sourceSha256": predictor.meta["sourceSha256"],
@@ -236,7 +239,7 @@ def evaluate(model_dir: Path, *, output: Path | None = None) -> dict[str, Any]:
         # Preserve the original CLI; adapter evaluations write separate immutable reports.
         seal(
             model_dir,
-            kind="riskgnn-model-v2",
+            kind=read_json(model_dir / "manifest.json")["kind"],
             metadata={"sourceSha256": predictor.meta["sourceSha256"]},
         )
     return report

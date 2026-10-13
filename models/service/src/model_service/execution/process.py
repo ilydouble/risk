@@ -51,6 +51,17 @@ async def run_model(
         stderr=asyncio.subprocess.STDOUT,
         start_new_session=True,
         cwd=model_root(),
+        env={
+            **os.environ,
+            "MPLCONFIGDIR": str(directory.parent / "matplotlib-cache"),
+            "PYTHONPATH": os.pathsep.join(
+                [
+                    str(model_root()),
+                    str(model_root() / "riskgnn+"),
+                    os.environ.get("PYTHONPATH", ""),
+                ]
+            ),
+        },
         limit=1024 * 1024,
     )
     finished = asyncio.Event()

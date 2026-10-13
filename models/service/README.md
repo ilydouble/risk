@@ -1,7 +1,7 @@
 # 单模型工作台服务
 
 服务负责 HTTP、任务队列、租约、取消、事件与产物管理。
-当前部署 RiskGNN，通过 `python -m riskgnn.workbench_cli` 启动模型侧进程。
+当前默认部署 RiskGNN+，通过 `python -m riskgnn.workbench_cli` 启动模型侧进程。
 数据适配、load/split、训练、测试和预测均位于 `../riskgnn/`，服务不导入模型代码。
 
 ## 目录
@@ -51,12 +51,13 @@ MODEL_CODE_ROOT 指向 models/；仓库可编辑安装自动使用源码位置�
 
 ## 协议与破坏性升级
 
-- 当前模型 runtime_id=riskgnn、runtime_version=2，执行 contract_version=2。
+- 当前模型 runtime_id=riskgnn、runtime_version=3，执行 contract_version=2。
 - 数据包清单 contract_version=1，与执行协议独立。
-- 模型产物为 riskgnn-model-v2；测试报告独立输出。
+- 新模型产物为 riskgnn-plus-model-v1；历史 riskgnn-model-v2 可继续预测，测试报告独立输出。
 - 业务 V0007 将已有记录标记为旧代次并停止旧投递，新记录使用代次 2。
 - 模型库 V0002 取消原型阶段的待执行/运行任务，清除旧租约。
-- 不兼容旧 ZIP、旧任务或旧模型；历史记录和对象不物理删除。
+- 旧原型协议不兼容；本次 RiskGNN v2 模型保留预测，旧训练配置需新建 Plus 实验。
+- 完整模型、超图、资源和校准边界见[RiskGNN+ 工作台](../../docs/architecture/riskgnn-plus-workbench.md)。
 
 部署用仓库根目录的 docker compose up --build -d。升级时需重建并重启后端、模型 HTTP 和 Worker。
 不使用 down -v 清理历史卷。

@@ -16,9 +16,13 @@ config.target_count 可设 6–20,000；校验始终覆盖整个包，不因子�
 不生成合成演示样本，不重划分已有数据；数量不足时保留全部目标。
 旧 Bundle 协议、分析和生成器已经移除。
 
-## 模型配置
+## 当前 RiskGNN+ 配置
 
-当前部署一个 RiskGNN，以 node_edge 作为工作台首版配置：
+默认已切换[RiskGNN+ 完整分支](riskgnn-plus-workbench.md)，以下 node_edge 描述保留为历史 RiskGNN 配置。
+
+## 历史模型配置
+
+历史 RiskGNN 以 node_edge 作为工作台首版配置：
 
 - ACRA 维持双向、单位边权的原配置，便于原结果回归。
 - SMEsD / UK 保留方向及原 weight；显式 confidence 独立传入，不从权重猜测。
@@ -31,7 +35,7 @@ config.target_count 可设 6–20,000；校验始终覆盖整个包，不因子�
 epoch / 优化循环共用 training_engine.py。原研究脚本的命令与默认行为保持兼容。
 固定张量及真实 ACRA 子集的改动前后预测用于验证研究入口未漂移。
 
-## 训练与评估
+## 历史 node_edge 训练与评估
 
 - CPU 两线程，单计算进程；默认两轮，允许 1–20 轮。
 - batch size 64，五层 fanout 2；节点准备默认两跳、每个中心四个邻居。

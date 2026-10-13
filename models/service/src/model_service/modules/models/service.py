@@ -10,6 +10,7 @@ from model_service.execution.artifacts import fingerprint
 from model_service.execution.contracts import AssetInput, Operation, OperationRequest
 from model_service.execution.invocation import Invocation
 from model_service.execution.process import ComputationFailed, run_model
+from model_service.execution.runtime import runtime_spec
 from model_service.files import digest
 from model_service.modules.jobs.repository import Store
 from model_service.shared.archive import unpack
@@ -39,7 +40,7 @@ class Runtime:
             directory = self.settings.workspace / "configuration" / uuid4().hex
             invocation = Invocation(
                 runtime_id="riskgnn",
-                runtime_version="2",
+                runtime_version=runtime_spec().runtime_version,
                 request=OperationRequest(
                     operation=Operation.CONFIGURE,
                     parameters={
@@ -71,7 +72,10 @@ class Runtime:
             if job["status"] != "completed" or job["kind"] != "train":
                 raise ValueError("Model artifact is not ready")
             result = job["result"]
-            if result.get("runtimeId") != "riskgnn" or result.get("runtimeVersion") != "2":
+            if result.get("runtimeId") != "riskgnn" or result.get("runtimeVersion") not in {
+                "2",
+                "3",
+            }:
                 raise ValueError("Model belongs to a retired workbench protocol")
             directory = self.settings.workspace / "models" / result["sha256"]
             if not directory.exists():
@@ -87,7 +91,7 @@ class Runtime:
             call_directory = self.settings.workspace / "inference" / uuid4().hex
             invocation = Invocation(
                 runtime_id="riskgnn",
-                runtime_version="2",
+                runtime_version=runtime_spec().runtime_version,
                 request=OperationRequest(
                     operation=Operation.PREDICT,
                     inputs={

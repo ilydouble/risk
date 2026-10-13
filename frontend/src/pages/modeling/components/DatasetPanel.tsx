@@ -116,7 +116,7 @@ export function DatasetPanel({ work }: { work: Workbench }) {
         {work.capabilities.map((item) => (
           <div key={item.id} className="flex justify-between gap-3 text-xs">
             <span>
-              {t(`modeling.models.${item.id}`, { defaultValue: item.name })}
+              {item.name}
             </span>
             <span className="text-foreground-500">
               {item.trainable

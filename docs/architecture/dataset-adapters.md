@@ -50,7 +50,7 @@ ACRA 使用 smoke-v1；SMEsD/UK 使用 snapshot-node-edge-v1。
 研究 CLI 的全量训练、GPU 和消融命令保持原样。
 旧 Bundle 协议与合成演示生成器已移除，验收使用本地真实数据的固定子集。
 训练策略属于模型侧：现有研究配置和工作台 smoke 配置可以不同，并在档案中明确记录。
-未来确定使用 RiskGNN+ 时，再切换模型 CLI；不保证它自动兼容 RiskGNN 的输入与产物。
+当前模型 CLI 默认调用 RiskGNN+ 的[完整分支接入](riskgnn-plus-workbench.md)，适配器准备层继续复用；历史 RiskGNN 产物独立兼容。
 
 ## 模型 CLI 本地调用
 
@@ -68,7 +68,7 @@ source = Path("/absolute/path/dataset.zip")
 with source.open("rb") as stream:
     sha = hashlib.file_digest(stream, "sha256").hexdigest()
 request = {
-    "contract_version": 2, "runtime_id": "riskgnn", "runtime_version": "2",
+    "contract_version": 2, "runtime_id": "riskgnn", "runtime_version": "3",
     "run_id": "local", "attempt_id": "1", "request_id": "local",
     "directory": "/tmp/riskgnn-local-train",
     "device": "cpu", "resources": {"threads": 2},
@@ -82,11 +82,11 @@ Path("/tmp/model-request.json").write_text(json.dumps(request))
 ```
 
 ```bash
-uv run --project service python -m riskgnn.workbench_cli --request /tmp/model-request.json
+PYTHONPATH=riskgnn+ uv run --project service python -m riskgnn.workbench_cli --request /tmp/model-request.json
 ```
 
 每次操作用新的空目录。先校验可改为 inspect、parameters={}。
-train 返回模型目录；evaluate/predict 接收该目录，格式 riskgnn-model-v2。
+train 返回模型目录；evaluate/predict 接收该目录，新格式 riskgnn-plus-model-v1（历史 riskgnn-model-v2 也可评估/预测）。
 目录摘要可通过模型侧 `riskgnn.workbench.artifacts.asset_digest(path)` 计算。
 predict 参数为 company_ids 数组；evaluate 输出独立报告，不改模型文件。
 

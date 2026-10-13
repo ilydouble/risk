@@ -97,6 +97,7 @@ class AttemptDTO(BaseModel):
 
 
 class ExperimentProfileDTO(BaseModel):
+    algorithm: str = "RiskGNN"
     threshold: float = 0.5
     evaluationSplit: Literal["test"] = "test"
     artifactFormat: str = "riskgnn-model-v2"
@@ -140,6 +141,7 @@ class ActualCountsDTO(BaseModel):
 
 
 class RunDTO(BaseModel):
+    algorithm: str = "RiskGNN"
     configuration: ExperimentConfigurationDTO | None = None
     actualCounts: ActualCountsDTO | None = None
     profile: ExperimentProfileDTO | None = None
@@ -159,6 +161,7 @@ class RunDTO(BaseModel):
 
 
 class ModelVersionDTO(BaseModel):
+    algorithm: str = "RiskGNN"
     runnerId: str = "riskgnn"
     id: str
     name: str
@@ -325,6 +328,11 @@ class RequestPredictModel(RequestGetModel):
 
 
 class PredictionDTO(BaseModel):
+    fusedProbability: float | None = Field(default=None, ge=0, le=1)
+    uncertainty: float | None = Field(default=None, ge=0, le=1)
+    conflict: float | None = Field(default=None, ge=0, le=1)
+    nodeProbability: float | None = Field(default=None, ge=0, le=1)
+    graphProbability: float | None = Field(default=None, ge=0, le=1)
     companyId: str
     probability: float
     predictedLabel: int

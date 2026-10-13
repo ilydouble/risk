@@ -40,7 +40,7 @@ def test_registered_riskgnn_cli_train_independent_test_predict(real_training_zip
     ):
         call = Invocation(
             runtime_id="riskgnn",
-            runtime_version="2",
+            runtime_version="3",
             request=OperationRequest(
                 operation=name,
                 inputs={role: AssetInput(path=path, sha256=fingerprint(path), format=format)}
@@ -83,13 +83,13 @@ def test_registered_riskgnn_cli_train_independent_test_predict(real_training_zip
         assert metadata["actualCounts"]["targets"] == 30
         assert sum(metadata["actualCounts"][key] for key in ("train", "validation", "test")) == 30
         before = inventory(model)
-        _, tested = await operation(Operation.EVALUATE, "model", model, "riskgnn-model-v2")
+        _, tested = await operation(Operation.EVALUATE, "model", model, "riskgnn-plus-model-v1")
         assert tested.data["report"]["independentReload"] is True
         assert tested.data["report"]["modelSha256"] == fingerprint(model)
         assert before == inventory(model), "Independent testing must not mutate the trained model"
         ids = trained.data["companies"][:3]
         _, predicted = await operation(
-            Operation.PREDICT, "model", model, "riskgnn-model-v2", {"company_ids": ids[::-1]}
+            Operation.PREDICT, "model", model, "riskgnn-plus-model-v1", {"company_ids": ids[::-1]}
         )
         reference = Predictor(model).predict(ids[::-1])
         assert [r["companyId"] for r in predicted.data["items"]] == ids[::-1]
@@ -100,7 +100,11 @@ def test_registered_riskgnn_cli_train_independent_test_predict(real_training_zip
         )
         with pytest.raises(ComputationFailed) as error:
             await operation(
-                Operation.PREDICT, "model", model, "riskgnn-model-v2", {"company_ids": ["missing"]}
+                Operation.PREDICT,
+                "model",
+                model,
+                "riskgnn-plus-model-v1",
+                {"company_ids": ["missing"]},
             )
         assert error.value.detail.code == "RISKGNN_COMPANY_NOT_FOUND"
         assert not error.value.detail.retryable

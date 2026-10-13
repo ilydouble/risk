@@ -11,6 +11,11 @@ class RequestPredict(RequestJob):
 
 
 class PredictionDTO(BaseModel):
+    fusedProbability: float | None = Field(default=None, ge=0, le=1)
+    uncertainty: float | None = Field(default=None, ge=0, le=1)
+    conflict: float | None = Field(default=None, ge=0, le=1)
+    nodeProbability: float | None = Field(default=None, ge=0, le=1)
+    graphProbability: float | None = Field(default=None, ge=0, le=1)
     companyId: str
     probability: float
     predictedLabel: int

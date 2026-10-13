@@ -96,7 +96,7 @@ def test_export_training_and_predictions_survive_cli_processes(datasets, tmp_pat
         command = {
             "contract_version": 2,
             "runtime_id": "riskgnn",
-            "runtime_version": "2",
+            "runtime_version": "3",
             "run_id": "enterprise-cli",
             "attempt_id": "1",
             "request_id": "test",
@@ -132,12 +132,13 @@ def test_export_training_and_predictions_survive_cli_processes(datasets, tmp_pat
     trained_dir, trained = operation("train", "dataset", archive, "zip", {"epochs": 1})
     model = trained_dir / "output/model"
     before = asset_digest(model)
-    _, evaluated = operation("evaluate", "model", model, "riskgnn-model-v2", {})
+    _, evaluated = operation("evaluate", "model", model, "riskgnn-plus-model-v1", {})
     assert evaluated["data"]["report"]["independentReload"] is True
     assert asset_digest(model) == before
     company = trained["data"]["companies"][0]
     _, predicted = operation(
-        "predict", "model", model, "riskgnn-model-v2", {"company_ids": [company]}
+        "predict", "model", model, "riskgnn-plus-model-v1", {"company_ids": [company]}
     )
     assert predicted["data"]["items"][0]["companyId"] == company
     assert 0 <= predicted["data"]["items"][0]["probability"] <= 1
+    assert 0 <= predicted["data"]["items"][0]["uncertainty"] <= 1

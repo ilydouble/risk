@@ -10,9 +10,7 @@ export function ModelPanel({ work }: { work: Workbench }) {
     <section className={`${box} space-y-4`}>
       <h2 className="font-semibold">{work.model.name}</h2>
       <p className="text-xs text-foreground-500">
-        {t(`modeling.models.${work.model.runnerId}`, {
-          defaultValue: work.model.runnerId,
-        })}
+        {work.model.algorithm}
       </p>
       <p className="text-sm text-foreground-500">{t("modeling.modelNote")}</p>
       <p className="break-all font-mono text-xs">SHA-256 {work.model.sha256}</p>
@@ -25,6 +23,9 @@ export function ModelPanel({ work }: { work: Workbench }) {
       </button>
       <hr className="border-background-200" />
       <h3 className="font-semibold">{t("modeling.predict")}</h3>
+      {work.model.algorithm === "RiskGNN+" && (
+        <p className="text-xs text-foreground-500">{t("modeling.plus.note")}</p>
+      )}
       <p className="text-xs text-foreground-500">{t("modeling.predictNote")}</p>
       <textarea
         rows={3}
@@ -58,6 +59,9 @@ export function ModelPanel({ work }: { work: Workbench }) {
               <th className="py-2">{t("modeling.enterpriseIds")}</th>
               <th>{t("modeling.probability")}</th>
               <th>{t("modeling.label")}</th>
+              <th>{t("modeling.plus.fused")}</th>
+              <th>{t("modeling.plus.uncertainty")}</th>
+              <th>{t("modeling.plus.conflict")}</th>
             </tr>
           </thead>
           <tbody>
@@ -69,6 +73,9 @@ export function ModelPanel({ work }: { work: Workbench }) {
                 <td className="py-2 font-mono">{prediction.companyId}</td>
                 <td>{(prediction.probability * 100).toFixed(3)}%</td>
                 <td>{prediction.predictedLabel}</td>
+                {[prediction.fusedProbability, prediction.uncertainty, prediction.conflict].map((value, i) => (
+                  <td key={i}>{value == null ? "—" : `${(value * 100).toFixed(3)}%`}</td>
+                ))}
               </tr>
             ))}
           </tbody>

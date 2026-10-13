@@ -254,6 +254,10 @@ class ModelingService:
 
     async def rerun(self, owner: str, identity: str, key: str, request_id: str) -> Run:
         previous = await self.get_run(owner, identity)
+        if previous.configuration.get("resolvedParameters", {}).get("algorithm") != "riskgnn-plus":
+            raise AppError(
+                409, "MODELING_CONFIG_STALE", "Create a new RiskGNN+ experiment for this dataset"
+            )
         if previous.execution.get("status") not in {"failed", "completed", "cancelled"}:
             raise AppError(409, "MODELING_STATE_INVALID", "Run is still active")
         configuration = None

@@ -13,9 +13,7 @@ export function ExperimentProfilePanel({
       <h2 className="text-base font-semibold">{t("modeling.profile.title")}</h2>
       <p>
         {t("modeling.modelChoice")}:{" "}
-        {t(`modeling.models.${profile.runnerId}`, {
-          defaultValue: profile.runnerId,
-        })}
+        {profile.algorithm}
       </p>
       <p>
         {t("modeling.profile.target")}:{" "}
@@ -46,6 +44,18 @@ export function ExperimentProfilePanel({
           </span>
         ))}
       </div>
+      {profile.algorithm === "RiskGNN+" && (
+        <>
+          <p className="text-foreground-500">{t("modeling.plus.scopeNote")}</p>
+          <div className="flex flex-wrap gap-3 font-mono">
+            {(["nodes", "edges", "hyperedges", "incidences", "events"] as const).map((key) => (
+              typeof profile.graph[key] === "number" && (
+                <span key={key}>{t(`modeling.plus.counts.${key}`)}: {Number(profile.graph[key]).toLocaleString()}</span>
+              )
+            ))}
+          </div>
+        </>
+      )}
       {(["usedInputs", "retainedOnlyInputs"] as const).map((key) => {
         const values = profile.graph[key];
         return Array.isArray(values) && values.length > 0 ? (

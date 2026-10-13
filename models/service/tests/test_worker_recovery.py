@@ -114,7 +114,7 @@ def test_artifact_upload_retry_reuses_independently_tested_checkpoint(export_zip
                 "execute",
                 {
                     "runtime_id": "riskgnn",
-                    "runtime_version": "2",
+                    "runtime_version": "3",
                     "operation": "inspect",
                     "inputs": {
                         "dataset": {

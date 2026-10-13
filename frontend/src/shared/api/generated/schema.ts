@@ -1671,6 +1671,11 @@ export interface components {
         /** ExperimentProfileDTO */
         ExperimentProfileDTO: {
             /**
+             * Algorithm
+             * @default RiskGNN
+             */
+            algorithm: string;
+            /**
              * Artifactformat
              * @default riskgnn-model-v2
              */
@@ -1868,6 +1873,11 @@ export interface components {
         };
         /** ModelVersionDTO */
         ModelVersionDTO: {
+            /**
+             * Algorithm
+             * @default RiskGNN
+             */
+            algorithm: string;
             /** Companies */
             companies: string[];
             /** Createdat */
@@ -2120,10 +2130,20 @@ export interface components {
         PredictionDTO: {
             /** Companyid */
             companyId: string;
+            /** Conflict */
+            conflict?: number | null;
+            /** Fusedprobability */
+            fusedProbability?: number | null;
+            /** Graphprobability */
+            graphProbability?: number | null;
+            /** Nodeprobability */
+            nodeProbability?: number | null;
             /** Predictedlabel */
             predictedLabel: number;
             /** Probability */
             probability: number;
+            /** Uncertainty */
+            uncertainty?: number | null;
         };
         /** RelatedParty */
         RelatedParty: {
@@ -2814,6 +2834,11 @@ export interface components {
         /** RunDTO */
         RunDTO: {
             actualCounts?: components["schemas"]["ActualCountsDTO"] | null;
+            /**
+             * Algorithm
+             * @default RiskGNN
+             */
+            algorithm: string;
             /** Attempts */
             attempts: components["schemas"]["AttemptDTO"][];
             /** Cancelrequested */

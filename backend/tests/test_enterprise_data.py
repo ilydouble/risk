@@ -48,7 +48,14 @@ class Remote:
         assert action == "models/predict"
         return {
             "items": [
-                {"companyId": name, "probability": 0.25, "predictedLabel": 0}
+                {
+                    "companyId": name,
+                    "probability": 0.25,
+                    "predictedLabel": 0,
+                    "fusedProbability": 0.3,
+                    "uncertainty": 0.4,
+                    "conflict": 0.1,
+                }
                 for name in body["companyIds"]
             ]
         }
@@ -239,6 +246,7 @@ def test_transactional_enterprise_import_and_prediction_binding():
                     owner, identity, "company", "", None, None, model_id, 1, 20
                 )
                 assert rows["items"][0]["prediction"]["probability"] == 0.25
+                assert rows["items"][0]["prediction"]["uncertainty"] == 0.4
                 assert rows["items"][0]["data"]["attributes"]["revenue"] is None
                 second = await dataset(content)
                 await service.import_dataset(owner, second.id)

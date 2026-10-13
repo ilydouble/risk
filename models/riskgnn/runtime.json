@@ -1,7 +1,7 @@
 {
   "contract_version": 2,
-  "name": "RiskGNN",
-  "description": "Single deployed model; dataset adapters and training are model-owned.",
+  "name": "RiskGNN+",
+  "description": "RiskGNN+ with ordinary graphs, induced hypergraphs, event encoding and dual-branch evidence.",
   "operations": {
     "inspect": {
       "inputs": {
@@ -112,6 +112,11 @@
           "dataset": {
             "type": "object",
             "default": {}
+          },
+          "algorithm": {
+            "type": "string",
+            "const": "riskgnn-plus",
+            "default": "riskgnn-plus"
           }
         },
         "title": "TrainParameters",
@@ -119,7 +124,8 @@
       },
       "default_parameters": {
         "epochs": 2,
-        "dataset": {}
+        "dataset": {},
+        "algorithm": "riskgnn-plus"
       },
       "result_schema": {
         "$defs": {
@@ -153,7 +159,7 @@
       },
       "artifacts": {
         "model": {
-          "format": "riskgnn-model-v2",
+          "format": "riskgnn-plus-model-v1",
           "kind": "directory",
           "required": true
         }
@@ -190,6 +196,7 @@
         "model": {
           "kind": "directory",
           "formats": [
+            "riskgnn-plus-model-v1",
             "riskgnn-model-v2"
           ],
           "required": true
@@ -238,6 +245,7 @@
         "model": {
           "kind": "directory",
           "formats": [
+            "riskgnn-plus-model-v1",
             "riskgnn-model-v2"
           ],
           "required": true
@@ -285,6 +293,31 @@
                 ],
                 "title": "Predictedlabel",
                 "type": "integer"
+              },
+              "fusedProbability": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "uncertainty": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "conflict": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "nodeProbability": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "graphProbability": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
               }
             },
             "required": [
@@ -362,7 +395,7 @@
     }
   },
   "runtime_id": "riskgnn",
-  "runtime_version": "2",
+  "runtime_version": "3",
   "dataset_formats": [
     "sg-comrisk-v1",
     "smesd-json-v5",

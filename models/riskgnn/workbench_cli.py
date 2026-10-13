@@ -9,6 +9,9 @@ from pathlib import Path
 import torch
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import ValidationError as SchemaValidationError
+from riskgnn_plus.workbench.preparation import FORMAT as PLUS_FORMAT
+from riskgnn_plus.workbench.preparation import prepare as prepare_plus
+from riskgnn_plus.workbench.training import train
 
 from riskgnn.dataset_adapters.enterprise import FORMAT, export
 from riskgnn.dataset_adapters.registry import inspect, resolve
@@ -16,7 +19,7 @@ from riskgnn.workbench.artifacts import asset_digest, read_json, write_json
 from riskgnn.workbench.configuration import ConfigurationError, merge, validate_frozen
 from riskgnn.workbench.configuration import resolve as resolve_configuration
 from riskgnn.workbench.predictor import Predictor
-from riskgnn.workbench.training import evaluate, train
+from riskgnn.workbench.training import evaluate
 
 
 class OperationFailure(Exception):
@@ -69,7 +72,7 @@ def execute(request: dict, directory: Path, emit) -> dict:
         emit({"kind": "stage", "stage": "validating", "message": ""})
         inspect(source, work / "validated")
         emit({"kind": "stage", "stage": "preparing", "message": ""})
-        adapter.prepare(work / "validated", work / "prepared", parameters["dataset"])
+        prepare_plus(adapter, work / "validated", work / "prepared", parameters["dataset"])
         emit({"kind": "stage", "stage": "training", "message": ""})
 
         def metric(row):
@@ -101,7 +104,7 @@ def execute(request: dict, directory: Path, emit) -> dict:
                     : min(100, profile.get("companyCount", profile["nodeCount"]))
                 ],
             },
-            "artifacts": {"model": {"path": "model", "format": "riskgnn-model-v2"}},
+            "artifacts": {"model": {"path": "model", "format": PLUS_FORMAT}},
             "effective_config": parameters,
         }
     if operation == "evaluate":
@@ -154,7 +157,7 @@ def main() -> None:
             if (
                 command.get("contract_version") != 2
                 or command.get("runtime_id") != "riskgnn"
-                or command.get("runtime_version") != "2"
+                or command.get("runtime_version") != "3"
             ):
                 raise OperationFailure(
                     "MODEL_RUNTIME_INCOMPATIBLE", "Unsupported execution contract"

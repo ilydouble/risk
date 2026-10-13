@@ -23,12 +23,17 @@ def dataset_contract(adapter="smesd", config=None):
 def test_model_defaults_zip_defaults_and_explicit_parameters(adapter, default):
     assert configuration.resolve(dataset_contract(adapter), {})["resolvedParameters"] == {
         "epochs": 2,
+        "algorithm": "riskgnn-plus",
         "dataset": {"target_count": default},
     }
     contract = dataset_contract(adapter, {"target_count": 60})
     snapshot = configuration.resolve(contract, {"dataset": {"target_count": 2000}})
     assert snapshot["defaultParameters"]["dataset"]["target_count"] == 60
-    assert snapshot["resolvedParameters"] == {"epochs": 2, "dataset": {"target_count": 2000}}
+    assert snapshot["resolvedParameters"] == {
+        "epochs": 2,
+        "dataset": {"target_count": 2000},
+        "algorithm": "riskgnn-plus",
+    }
     assert snapshot["requestedParameters"] == {"dataset": {"target_count": 2000}}
     assert contract["adapter"]["config"] == {"target_count": 60}
     assert snapshot["schemaDigest"] == configuration.descriptor_digest(snapshot)
@@ -94,7 +99,7 @@ def test_dataset_parameters_are_bound_to_the_completion_receipt(tmp_path):
     calls = [
         Invocation(
             runtime_id="riskgnn",
-            runtime_version="2",
+            runtime_version="3",
             run_id="same-run",
             attempt_id="1",
             request_id="id",

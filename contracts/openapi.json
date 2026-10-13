@@ -3029,6 +3029,11 @@
       },
       "ExperimentProfileDTO": {
         "properties": {
+          "algorithm": {
+            "default": "RiskGNN",
+            "title": "Algorithm",
+            "type": "string"
+          },
           "artifactFormat": {
             "default": "riskgnn-model-v2",
             "title": "Artifactformat",
@@ -3555,6 +3560,11 @@
       },
       "ModelVersionDTO": {
         "properties": {
+          "algorithm": {
+            "default": "RiskGNN",
+            "title": "Algorithm",
+            "type": "string"
+          },
           "companies": {
             "items": {
               "type": "string"
@@ -4220,6 +4230,58 @@
             "title": "Companyid",
             "type": "string"
           },
+          "conflict": {
+            "anyOf": [
+              {
+                "maximum": 1.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conflict"
+          },
+          "fusedProbability": {
+            "anyOf": [
+              {
+                "maximum": 1.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fusedprobability"
+          },
+          "graphProbability": {
+            "anyOf": [
+              {
+                "maximum": 1.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Graphprobability"
+          },
+          "nodeProbability": {
+            "anyOf": [
+              {
+                "maximum": 1.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nodeprobability"
+          },
           "predictedLabel": {
             "title": "Predictedlabel",
             "type": "integer"
@@ -4227,6 +4289,19 @@
           "probability": {
             "title": "Probability",
             "type": "number"
+          },
+          "uncertainty": {
+            "anyOf": [
+              {
+                "maximum": 1.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Uncertainty"
           }
         },
         "required": [
@@ -5973,6 +6048,11 @@
                 "type": "null"
               }
             ]
+          },
+          "algorithm": {
+            "default": "RiskGNN",
+            "title": "Algorithm",
+            "type": "string"
           },
           "attempts": {
             "items": {
