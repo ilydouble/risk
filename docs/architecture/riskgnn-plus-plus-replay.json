@@ -1,0 +1,2874 @@
+{
+  "input_sha256": {
+    "models/runs/riskgnnpp-uk-20261013/seed_14/predictions.npz": "dc6d5f0bdc032cb7fbaacb34a88804cf3bc0ba549034bae0689201cd4ad4477c",
+    "models/runs/riskgnnpp-uk-20261013/seed_42/predictions.npz": "cf3584b436f218a8e0c47ee89cff736ecf4e6ea09bfba9822466c5b4094a7bf1",
+    "models/runs/riskgnnpp-uk-20261013/seed_2026/predictions.npz": "b8fe4b6cc427e063169c8f529e7b8d3a66f4b69d2570e63ca6479b5d0cc90fd1",
+    "models/runs/riskgnnpp-smesd-20261013/seed_14/predictions.npz": "ad14ea20915d7e58c3cc2712708854e8896b481db585353032b51c81411b75b2",
+    "models/runs/riskgnnpp-smesd-20261013/seed_42/predictions.npz": "3e8f4c7d9b97634220fea072ff36dda1557dc32a639bc5d69db9a7775f820199",
+    "models/runs/riskgnnpp-smesd-20261013/seed_2026/predictions.npz": "28a83b0b65189024f8cb42e1ec1d11a6c04501efd0f782a9cce470e675024723"
+  },
+  "auditor_sha256": "02e698b983ad706e84899bad9b8cfeaf8a835c2b8815023339de14a8eda11174",
+  "protocol": {
+    "seeds": [
+      14,
+      42,
+      2026
+    ],
+    "epsilon": 0.05,
+    "tacr_gamma": 0.6,
+    "tacr_beta": 0.05,
+    "budget_gamma": 0.6,
+    "prediction_threshold": 0.5,
+    "review_count": "ceil(N * budget)",
+    "tie_break": "stable input order",
+    "probability": "raw primary softmax"
+  },
+  "summary": [
+    {
+      "dataset": "smesd",
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.1,
+      "auto_error": {
+        "mean": 0.22826908541194257,
+        "std": 0.018187769335625038
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.2,
+      "auto_error": {
+        "mean": 0.19982993197278912,
+        "std": 0.020461240502578165
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.3,
+      "auto_error": {
+        "mean": 0.18172983479105928,
+        "std": 0.01941203533084371
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.4,
+      "auto_error": {
+        "mean": 0.15532879818594106,
+        "std": 0.010391328106475825
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.5,
+      "auto_error": {
+        "mean": 0.1292517006802721,
+        "std": 0.014334222792996922
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plus",
+      "method": "evidence_cp",
+      "budget": null,
+      "coverage": {
+        "mean": 0.9314324507807196,
+        "std": 0.006222098703266575
+      },
+      "auto_rate": {
+        "mean": 0.5084860828241683,
+        "std": 0.017794083397258874
+      },
+      "ood_rate": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "auto_error": {
+        "mean": 0.13479891091758797,
+        "std": 0.010422208618124991
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.1,
+      "auto_error": {
+        "mean": 0.217687074829932,
+        "std": 0.019374158152647467
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.2,
+      "auto_error": {
+        "mean": 0.19727891156462585,
+        "std": 0.011782658554890319
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.3,
+      "auto_error": {
+        "mean": 0.173955296404276,
+        "std": 0.019845070803364562
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.4,
+      "auto_error": {
+        "mean": 0.15306122448979595,
+        "std": 0.017006802721088426
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.5,
+      "auto_error": {
+        "mean": 0.1292517006802721,
+        "std": 0.013120613280262526
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plus",
+      "method": "softmax_cp",
+      "budget": null,
+      "coverage": {
+        "mean": 0.9300746775288528,
+        "std": 0.008479291240187942
+      },
+      "auto_rate": {
+        "mean": 0.5173116089613035,
+        "std": 0.026002332657441365
+      },
+      "ood_rate": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "auto_error": {
+        "mean": 0.1349137157493739,
+        "std": 0.010620925995542464
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plus",
+      "method": "tacr_cp",
+      "budget": null,
+      "coverage": {
+        "mean": 0.9266802443991854,
+        "std": 0.016670779576114955
+      },
+      "auto_rate": {
+        "mean": 0.4772572980312288,
+        "std": 0.07038518956297499
+      },
+      "ood_rate": {
+        "mean": 0.0027155465037338763,
+        "std": 0.004703464514783102
+      },
+      "auto_error": {
+        "mean": 0.14756072765165232,
+        "std": 0.0038861389059610296
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.1,
+      "auto_error": {
+        "mean": 0.23129251700680273,
+        "std": 0.0275862246272028
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.2,
+      "auto_error": {
+        "mean": 0.22448979591836735,
+        "std": 0.032569248303070675
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.3,
+      "auto_error": {
+        "mean": 0.217687074829932,
+        "std": 0.03979707527588586
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.4,
+      "auto_error": {
+        "mean": 0.20294784580498867,
+        "std": 0.03440814264284245
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.5,
+      "auto_error": {
+        "mean": 0.18231292517006803,
+        "std": 0.03964299941315229
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.1,
+      "auto_error": {
+        "mean": 0.25699168556311414,
+        "std": 0.017019395690397135
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.2,
+      "auto_error": {
+        "mean": 0.23554421768707487,
+        "std": 0.017364436952944
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.3,
+      "auto_error": {
+        "mean": 0.2089407191448008,
+        "std": 0.016577961233461593
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.4,
+      "auto_error": {
+        "mean": 0.17120181405895693,
+        "std": 0.01711980597567064
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.5,
+      "auto_error": {
+        "mean": 0.14149659863945577,
+        "std": 0.015452811825306858
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plusplus",
+      "method": "evidence_cp",
+      "budget": null,
+      "coverage": {
+        "mean": 0.9538357094365241,
+        "std": 0.00715251442827749
+      },
+      "auto_rate": {
+        "mean": 0.38628649015614386,
+        "std": 0.11218896769399901
+      },
+      "ood_rate": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "auto_error": {
+        "mean": 0.12355324074074074,
+        "std": 0.021550400672876658
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.1,
+      "auto_error": {
+        "mean": 0.25925925925925924,
+        "std": 0.013286769335787573
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.2,
+      "auto_error": {
+        "mean": 0.233843537414966,
+        "std": 0.01620115551297418
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.3,
+      "auto_error": {
+        "mean": 0.20699708454810495,
+        "std": 0.015427121347315404
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.4,
+      "auto_error": {
+        "mean": 0.17346938775510204,
+        "std": 0.012263779848516983
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.5,
+      "auto_error": {
+        "mean": 0.14421768707482993,
+        "std": 0.01649572197684644
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plusplus",
+      "method": "softmax_cp",
+      "budget": null,
+      "coverage": {
+        "mean": 0.9511201629327903,
+        "std": 0.011339642286822866
+      },
+      "auto_rate": {
+        "mean": 0.3883231500339443,
+        "std": 0.11467558686360259
+      },
+      "ood_rate": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "auto_error": {
+        "mean": 0.12871029653070792,
+        "std": 0.018753964180567628
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plusplus",
+      "method": "tacr_cp",
+      "budget": null,
+      "coverage": {
+        "mean": 0.9545145960624576,
+        "std": 0.01025096325223455
+      },
+      "auto_rate": {
+        "mean": 0.38900203665987787,
+        "std": 0.10707486295800339
+      },
+      "ood_rate": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "auto_error": {
+        "mean": 0.11855204771823119,
+        "std": 0.010909334539247195
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.1,
+      "auto_error": {
+        "mean": 0.27059712773998484,
+        "std": 0.014578459200291705
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.2,
+      "auto_error": {
+        "mean": 0.2593537414965986,
+        "std": 0.0064199272408765095
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.3,
+      "auto_error": {
+        "mean": 0.24489795918367344,
+        "std": 0.010511811298728828
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.4,
+      "auto_error": {
+        "mean": 0.23922902494331066,
+        "std": 0.018733233154034367
+      }
+    },
+    {
+      "dataset": "smesd",
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.5,
+      "auto_error": {
+        "mean": 0.21904761904761902,
+        "std": 0.03964299941315228
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.1,
+      "auto_error": {
+        "mean": 0.13590837245137052,
+        "std": 0.0385032112904704
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.2,
+      "auto_error": {
+        "mean": 0.1012491957966974,
+        "std": 0.04002434905795952
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.3,
+      "auto_error": {
+        "mean": 0.07435433963420239,
+        "std": 0.03422745690698096
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.4,
+      "auto_error": {
+        "mean": 0.05517430361951056,
+        "std": 0.028965972498032448
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.5,
+      "auto_error": {
+        "mean": 0.042790764171849315,
+        "std": 0.027377307052764113
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plus",
+      "method": "evidence_cp",
+      "budget": null,
+      "coverage": {
+        "mean": 0.9404902318200339,
+        "std": 0.005563758776290263
+      },
+      "auto_rate": {
+        "mean": 0.7182775406918145,
+        "std": 0.1344633835725904
+      },
+      "ood_rate": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "auto_error": {
+        "mean": 0.08400544443308805,
+        "std": 0.009487829989176761
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.1,
+      "auto_error": {
+        "mean": 0.1383388535436573,
+        "std": 0.04204056503058628
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.2,
+      "auto_error": {
+        "mean": 0.10932697119165058,
+        "std": 0.043024954631617096
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.3,
+      "auto_error": {
+        "mean": 0.08399456715991137,
+        "std": 0.038002795458991885
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.4,
+      "auto_error": {
+        "mean": 0.06503919746467463,
+        "std": 0.03430720696349732
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.5,
+      "auto_error": {
+        "mean": 0.04996783186789621,
+        "std": 0.030282393030919712
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plus",
+      "method": "softmax_cp",
+      "budget": null,
+      "coverage": {
+        "mean": 0.9402471889229626,
+        "std": 0.005523246873787294
+      },
+      "auto_rate": {
+        "mean": 0.7096852594482926,
+        "std": 0.1314629774967865
+      },
+      "ood_rate": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "auto_error": {
+        "mean": 0.08532549857666534,
+        "std": 0.009285734512654681
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plus",
+      "method": "tacr_cp",
+      "budget": null,
+      "coverage": {
+        "mean": 0.9431780003288227,
+        "std": 0.00426794245475555
+      },
+      "auto_rate": {
+        "mean": 0.6245630589093092,
+        "std": 0.16734670624393305
+      },
+      "ood_rate": {
+        "mean": 0.00010007648702937245,
+        "std": 0.00013787181289975846
+      },
+      "auto_error": {
+        "mean": 0.09483125724641822,
+        "std": 0.022516379727130675
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.1,
+      "auto_error": {
+        "mean": 0.17562211578939005,
+        "std": 0.04121805374298459
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.2,
+      "auto_error": {
+        "mean": 0.1856279934234041,
+        "std": 0.04376278623812768
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.3,
+      "auto_error": {
+        "mean": 0.19917690430236,
+        "std": 0.04667537382594955
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.4,
+      "auto_error": {
+        "mean": 0.21028427097481353,
+        "std": 0.05514504696087448
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.5,
+      "auto_error": {
+        "mean": 0.21928658231467582,
+        "std": 0.08337627190514235
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.1,
+      "auto_error": {
+        "mean": 0.12844218870382285,
+        "std": 0.017761241683732207
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.2,
+      "auto_error": {
+        "mean": 0.0945117592394024,
+        "std": 0.022428820704501026
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.3,
+      "auto_error": {
+        "mean": 0.06845174269579159,
+        "std": 0.02340472873936577
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.4,
+      "auto_error": {
+        "mean": 0.05017037195892011,
+        "std": 0.022750132519761896
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.5,
+      "auto_error": {
+        "mean": 0.035513617842590606,
+        "std": 0.018947997680485516
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plusplus",
+      "method": "evidence_cp",
+      "budget": null,
+      "coverage": {
+        "mean": 0.9478172603346845,
+        "std": 0.005554631412393585
+      },
+      "auto_rate": {
+        "mean": 0.700235179744519,
+        "std": 0.09309917598802256
+      },
+      "ood_rate": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "auto_error": {
+        "mean": 0.07476410312468741,
+        "std": 0.0037977061872812596
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.1,
+      "auto_error": {
+        "mean": 0.1314286622028419,
+        "std": 0.017037484716786507
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.2,
+      "auto_error": {
+        "mean": 0.09922081635570806,
+        "std": 0.020980928538049295
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.3,
+      "auto_error": {
+        "mean": 0.07383352225728379,
+        "std": 0.02190098092083201
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.4,
+      "auto_error": {
+        "mean": 0.05560321204756118,
+        "std": 0.020296389553301958
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.5,
+      "auto_error": {
+        "mean": 0.041918650368146404,
+        "std": 0.015594247727454815
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plusplus",
+      "method": "softmax_cp",
+      "budget": null,
+      "coverage": {
+        "mean": 0.9468665337079053,
+        "std": 0.005791820541784371
+      },
+      "auto_rate": {
+        "mean": 0.7011716097302939,
+        "std": 0.09020519229767
+      },
+      "ood_rate": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "auto_error": {
+        "mean": 0.07596140664209178,
+        "std": 0.0032963168734572684
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plusplus",
+      "method": "tacr_cp",
+      "budget": null,
+      "coverage": {
+        "mean": 0.9488323218459822,
+        "std": 0.003587979830985991
+      },
+      "auto_rate": {
+        "mean": 0.6747085272315271,
+        "std": 0.08055100174559461
+      },
+      "ood_rate": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "auto_error": {
+        "mean": 0.07614884992651184,
+        "std": 0.00392998148931347
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.1,
+      "auto_error": {
+        "mean": 0.1610154009896665,
+        "std": 0.012730313368507102
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.2,
+      "auto_error": {
+        "mean": 0.15708771177353634,
+        "std": 0.006181098654941595
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.3,
+      "auto_error": {
+        "mean": 0.16271968791805805,
+        "std": 0.0033950144117320356
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.4,
+      "auto_error": {
+        "mean": 0.17317177782543425,
+        "std": 0.013262152918299795
+      }
+    },
+    {
+      "dataset": "uk",
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.5,
+      "auto_error": {
+        "mean": 0.17273572092358283,
+        "std": 0.04592434388323664
+      }
+    }
+  ],
+  "rows": [
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plus",
+      "method": "softmax_cp",
+      "coverage": 0.938817524822543,
+      "auto_rate": 0.770967811112779,
+      "ood_rate": 0.0,
+      "auto_error": 0.07935801507607577
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plus",
+      "method": "evidence_cp",
+      "coverage": 0.9395252085522506,
+      "auto_rate": 0.7799103600609036,
+      "ood_rate": 0.0,
+      "auto_error": 0.07754069511658601
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plus",
+      "method": "tacr_cp",
+      "coverage": 0.9396753232827947,
+      "auto_rate": 0.7125088460466213,
+      "ood_rate": 4.288992301258819e-05,
+      "auto_error": 0.08460496613995486
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.1,
+      "n_auto": 41967,
+      "auto_error": 0.16920437486596612
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.1,
+      "n_auto": 41967,
+      "auto_error": 0.12555102818881503
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.1,
+      "n_auto": 41967,
+      "auto_error": 0.12097600495627517
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.2,
+      "n_auto": 37304,
+      "auto_error": 0.1792569161484023
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.2,
+      "n_auto": 37304,
+      "auto_error": 0.08848917006219172
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.2,
+      "n_auto": 37304,
+      "auto_error": 0.07784687969118594
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.3,
+      "n_auto": 32641,
+      "auto_error": 0.1904659783707607
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.3,
+      "n_auto": 32641,
+      "auto_error": 0.062222358383627954
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.3,
+      "n_auto": 32641,
+      "auto_error": 0.05269446401764652
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.4,
+      "n_auto": 27978,
+      "auto_error": 0.18099935663735792
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.4,
+      "n_auto": 27978,
+      "auto_error": 0.04239044963900207
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.4,
+      "n_auto": 27978,
+      "auto_error": 0.03602830795625134
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.5,
+      "n_auto": 23315,
+      "auto_error": 0.14514261205232684
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.5,
+      "n_auto": 23315,
+      "auto_error": 0.028608192150975768
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.5,
+      "n_auto": 23315,
+      "auto_error": 0.024319107870469654
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "softmax_cp",
+      "coverage": 0.9522635156869893,
+      "auto_rate": 0.602517638480839,
+      "ood_rate": 0.0,
+      "auto_error": 0.07922835990888383
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "evidence_cp",
+      "coverage": 0.9529926443782033,
+      "auto_rate": 0.5974780725268598,
+      "ood_rate": 0.0,
+      "auto_error": 0.07867628584760059
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "tacr_cp",
+      "coverage": 0.9527138598786216,
+      "auto_rate": 0.5873989406189016,
+      "ood_rate": 0.0,
+      "auto_error": 0.08050089445438283
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.1,
+      "n_auto": 41967,
+      "auto_error": 0.1754473753187028
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.1,
+      "n_auto": 41967,
+      "auto_error": 0.1510949079038292
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.1,
+      "n_auto": 41967,
+      "auto_error": 0.1488788810255677
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.2,
+      "n_auto": 37304,
+      "auto_error": 0.16421831438987777
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.2,
+      "n_auto": 37304,
+      "auto_error": 0.12293587819000644
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.2,
+      "n_auto": 37304,
+      "auto_error": 0.12022839373793695
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.3,
+      "n_auto": 32641,
+      "auto_error": 0.15897184522533012
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.3,
+      "n_auto": 32641,
+      "auto_error": 0.09812812107472198
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.3,
+      "n_auto": 32641,
+      "auto_error": 0.09506448944578903
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.4,
+      "n_auto": 27978,
+      "auto_error": 0.15787404389162912
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.4,
+      "n_auto": 27978,
+      "auto_error": 0.07884766602330402
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.4,
+      "n_auto": 27978,
+      "auto_error": 0.07641718493101723
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.5,
+      "n_auto": 23315,
+      "auto_error": 0.12116663092429766
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.5,
+      "n_auto": 23315,
+      "auto_error": 0.05948959897061977
+    },
+    {
+      "dataset": "uk",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.5,
+      "n_auto": 23315,
+      "auto_error": 0.057216384301951535
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plus",
+      "method": "softmax_cp",
+      "coverage": 0.9463447063112522,
+      "auto_rate": 0.5587699170079989,
+      "ood_rate": 0.0,
+      "auto_error": 0.09602394841879029
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plus",
+      "method": "evidence_cp",
+      "coverage": 0.9464733760802899,
+      "auto_rate": 0.5640453775385473,
+      "ood_rate": 0.0,
+      "auto_error": 0.09489772640863813
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plus",
+      "method": "tacr_cp",
+      "coverage": 0.9479316334627179,
+      "auto_rate": 0.4315798503141687,
+      "ood_rate": 0.0,
+      "auto_error": 0.12064596273291925
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.1,
+      "n_auto": 41967,
+      "auto_error": 0.21967259989992136
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.1,
+      "n_auto": 41967,
+      "auto_error": 0.18528844091786403
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.1,
+      "n_auto": 41967,
+      "auto_error": 0.17964114661519764
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.2,
+      "n_auto": 37304,
+      "auto_error": 0.2322271070126528
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.2,
+      "n_auto": 37304,
+      "auto_error": 0.1588033454857388
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.2,
+      "n_auto": 37304,
+      "auto_error": 0.14746407891915075
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.3,
+      "n_auto": 32641,
+      "auto_error": 0.24959406880916638
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.3,
+      "n_auto": 32641,
+      "auto_error": 0.1278759841916608
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.3,
+      "n_auto": 32641,
+      "auto_error": 0.11381391501485862
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.4,
+      "n_auto": 27978,
+      "auto_error": 0.27389377367931944
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.4,
+      "n_auto": 27978,
+      "auto_error": 0.10451068696833227
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.4,
+      "n_auto": 27978,
+      "auto_error": 0.08849810565444277
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.5,
+      "n_auto": 23315,
+      "auto_error": 0.3095432125241261
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.5,
+      "n_auto": 23315,
+      "auto_error": 0.0846236328543856
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.5,
+      "n_auto": 23315,
+      "auto_error": 0.0742440488955608
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "softmax_cp",
+      "coverage": 0.9475885140786172,
+      "auto_rate": 0.7215586198022774,
+      "ood_rate": 0.0,
+      "auto_error": 0.07263649062323535
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "evidence_cp",
+      "coverage": 0.9485106474233879,
+      "auto_rate": 0.7242606849520705,
+      "ood_rate": 0.0,
+      "auto_error": 0.07109229265981701
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "tacr_cp",
+      "coverage": 0.9481460830777809,
+      "auto_rate": 0.6905920953871888,
+      "ood_rate": 0.0,
+      "auto_error": 0.07508617209576747
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.1,
+      "n_auto": 41967,
+      "auto_error": 0.15138084685586295
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.1,
+      "n_auto": 41967,
+      "auto_error": 0.12114280267829484
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.1,
+      "n_auto": 41967,
+      "auto_error": 0.11673457716777468
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.2,
+      "n_auto": 37304,
+      "auto_error": 0.15379047823289727
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.2,
+      "n_auto": 37304,
+      "auto_error": 0.09165236971906499
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.2,
+      "n_auto": 37304,
+      "auto_error": 0.08430731288869826
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.3,
+      "n_auto": 32641,
+      "auto_error": 0.16359792898501885
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.3,
+      "n_auto": 32641,
+      "auto_error": 0.06776753163199657
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.3,
+      "n_auto": 32641,
+      "auto_error": 0.059219999387273674
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.4,
+      "n_auto": 27978,
+      "auto_error": 0.18142826506540854
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.4,
+      "n_auto": 27978,
+      "auto_error": 0.04657230681249553
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.4,
+      "n_auto": 27978,
+      "auto_error": 0.03799413825148331
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.5,
+      "n_auto": 23315,
+      "auto_error": 0.20922153120308815
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.5,
+      "n_auto": 23315,
+      "auto_error": 0.029723354063907356
+    },
+    {
+      "dataset": "uk",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.5,
+      "n_auto": 23315,
+      "auto_error": 0.02226034741582672
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "softmax_cp",
+      "coverage": 0.9355793356350925,
+      "auto_rate": 0.7993180502240999,
+      "ood_rate": 0.0,
+      "auto_error": 0.08059453223512998
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "evidence_cp",
+      "coverage": 0.9354721108275611,
+      "auto_rate": 0.8108768844759924,
+      "ood_rate": 0.0,
+      "auto_error": 0.07957791177403999
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "tacr_cp",
+      "coverage": 0.9419270442409556,
+      "auto_rate": 0.7296004803671378,
+      "ood_rate": 0.00025733953807552916,
+      "auto_error": 0.07924284286638057
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.1,
+      "n_auto": 41967,
+      "auto_error": 0.13798937260228275
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.1,
+      "n_auto": 41967,
+      "auto_error": 0.1041770915242929
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.1,
+      "n_auto": 41967,
+      "auto_error": 0.10710796578263874
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.2,
+      "n_auto": 37304,
+      "auto_error": 0.1453999571091572
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.2,
+      "n_auto": 37304,
+      "auto_error": 0.08068839802702123
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.2,
+      "n_auto": 37304,
+      "auto_error": 0.07843662877975552
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.3,
+      "n_auto": 32641,
+      "auto_error": 0.15747066572715296
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.3,
+      "n_auto": 32641,
+      "auto_error": 0.06188535890444533
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.3,
+      "n_auto": 32641,
+      "auto_error": 0.05655463987010202
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.4,
+      "n_auto": 27978,
+      "auto_error": 0.17595968260776323
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.4,
+      "n_auto": 27978,
+      "auto_error": 0.048216455786689545
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.4,
+      "n_auto": 27978,
+      "auto_error": 0.040996497247837584
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.5,
+      "n_auto": 23315,
+      "auto_error": 0.20317392236757453
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.5,
+      "n_auto": 23315,
+      "auto_error": 0.03667167059832726
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.5,
+      "n_auto": 23315,
+      "auto_error": 0.029809135749517476
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "softmax_cp",
+      "coverage": 0.9407475713581094,
+      "auto_rate": 0.7794385709077652,
+      "ood_rate": 0.0,
+      "auto_error": 0.07601936939415617
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "evidence_cp",
+      "coverage": 0.9419484892024619,
+      "auto_rate": 0.7789667817546267,
+      "ood_rate": 0.0,
+      "auto_error": 0.07452373086664464
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "tacr_cp",
+      "coverage": 0.9456370225815445,
+      "auto_rate": 0.7461345456884905,
+      "ood_rate": 0.0,
+      "auto_error": 0.07285948322938522
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.1,
+      "n_auto": 41967,
+      "auto_error": 0.15621798079443372
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.1,
+      "n_auto": 41967,
+      "auto_error": 0.1220482760264017
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.1,
+      "n_auto": 41967,
+      "auto_error": 0.11971310791812614
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.2,
+      "n_auto": 37304,
+      "auto_error": 0.153254342697834
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.2,
+      "n_auto": 37304,
+      "auto_error": 0.08307420115805275
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.2,
+      "n_auto": 37304,
+      "auto_error": 0.07899957109157195
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.3,
+      "n_auto": 32641,
+      "auto_error": 0.16558928954382526
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.3,
+      "n_auto": 32641,
+      "auto_error": 0.05560491406513281
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.3,
+      "n_auto": 32641,
+      "auto_error": 0.05107073925431206
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.4,
+      "n_auto": 27978,
+      "auto_error": 0.18021302451926513
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.4,
+      "n_auto": 27978,
+      "auto_error": 0.041389663306883984
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.4,
+      "n_auto": 27978,
+      "auto_error": 0.03609979269425977
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.5,
+      "n_auto": 23315,
+      "auto_error": 0.18781900064336265
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.5,
+      "n_auto": 23315,
+      "auto_error": 0.036542998069912076
+    },
+    {
+      "dataset": "uk",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.5,
+      "n_auto": 23315,
+      "auto_error": 0.027064121809993565
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plus",
+      "method": "softmax_cp",
+      "coverage": 0.9205702647657841,
+      "auto_rate": 0.539714867617108,
+      "ood_rate": 0.0,
+      "auto_error": 0.1471698113207547
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plus",
+      "method": "evidence_cp",
+      "coverage": 0.924643584521385,
+      "auto_rate": 0.5132382892057027,
+      "ood_rate": 0.0,
+      "auto_error": 0.14682539682539683
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plus",
+      "method": "tacr_cp",
+      "coverage": 0.9083503054989817,
+      "auto_rate": 0.5498981670061099,
+      "ood_rate": 0.008146639511201629,
+      "auto_error": 0.15185185185185185
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.1,
+      "n_auto": 441,
+      "auto_error": 0.24489795918367346
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.1,
+      "n_auto": 441,
+      "auto_error": 0.2199546485260771
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.1,
+      "n_auto": 441,
+      "auto_error": 0.22675736961451248
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.2,
+      "n_auto": 392,
+      "auto_error": 0.23214285714285715
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.2,
+      "n_auto": 392,
+      "auto_error": 0.20408163265306123
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.2,
+      "n_auto": 392,
+      "auto_error": 0.20153061224489796
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.3,
+      "n_auto": 343,
+      "auto_error": 0.22448979591836735
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.3,
+      "n_auto": 343,
+      "auto_error": 0.18950437317784258
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.3,
+      "n_auto": 343,
+      "auto_error": 0.19825072886297376
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.4,
+      "n_auto": 294,
+      "auto_error": 0.22448979591836735
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.4,
+      "n_auto": 294,
+      "auto_error": 0.17006802721088435
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.4,
+      "n_auto": 294,
+      "auto_error": 0.16666666666666666
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.5,
+      "n_auto": 245,
+      "auto_error": 0.2163265306122449
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.5,
+      "n_auto": 245,
+      "auto_error": 0.13877551020408163
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.5,
+      "n_auto": 245,
+      "auto_error": 0.14285714285714285
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "softmax_cp",
+      "coverage": 0.9531568228105907,
+      "auto_rate": 0.4215885947046843,
+      "ood_rate": 0.0,
+      "auto_error": 0.1111111111111111
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "evidence_cp",
+      "coverage": 0.9531568228105907,
+      "auto_rate": 0.4215885947046843,
+      "ood_rate": 0.0,
+      "auto_error": 0.1111111111111111
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "tacr_cp",
+      "coverage": 0.9531568228105907,
+      "auto_rate": 0.43380855397148677,
+      "ood_rate": 0.0,
+      "auto_error": 0.107981220657277
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.1,
+      "n_auto": 441,
+      "auto_error": 0.2766439909297052
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.1,
+      "n_auto": 441,
+      "auto_error": 0.25396825396825395
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.1,
+      "n_auto": 441,
+      "auto_error": 0.2562358276643991
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.2,
+      "n_auto": 392,
+      "auto_error": 0.2653061224489796
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.2,
+      "n_auto": 392,
+      "auto_error": 0.22448979591836735
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.2,
+      "n_auto": 392,
+      "auto_error": 0.22959183673469388
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.3,
+      "n_auto": 343,
+      "auto_error": 0.2565597667638484
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.3,
+      "n_auto": 343,
+      "auto_error": 0.20116618075801748
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.3,
+      "n_auto": 343,
+      "auto_error": 0.20408163265306123
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.4,
+      "n_auto": 294,
+      "auto_error": 0.24829931972789115
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.4,
+      "n_auto": 294,
+      "auto_error": 0.16326530612244897
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.4,
+      "n_auto": 294,
+      "auto_error": 0.15306122448979592
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.5,
+      "n_auto": 245,
+      "auto_error": 0.22857142857142856
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.5,
+      "n_auto": 245,
+      "auto_error": 0.1346938775510204
+    },
+    {
+      "dataset": "smesd",
+      "seed": 14,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.5,
+      "n_auto": 245,
+      "auto_error": 0.1306122448979592
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plus",
+      "method": "softmax_cp",
+      "coverage": 0.9368635437881874,
+      "auto_rate": 0.48879837067209775,
+      "ood_rate": 0.0,
+      "auto_error": 0.12916666666666668
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plus",
+      "method": "evidence_cp",
+      "coverage": 0.9368635437881874,
+      "auto_rate": 0.48879837067209775,
+      "ood_rate": 0.0,
+      "auto_error": 0.12916666666666668
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plus",
+      "method": "tacr_cp",
+      "coverage": 0.9409368635437881,
+      "auto_rate": 0.4093686354378819,
+      "ood_rate": 0.0,
+      "auto_error": 0.14427860696517414
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.1,
+      "n_auto": 441,
+      "auto_error": 0.19954648526077098
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.1,
+      "n_auto": 441,
+      "auto_error": 0.19727891156462585
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.1,
+      "n_auto": 441,
+      "auto_error": 0.2108843537414966
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.2,
+      "n_auto": 392,
+      "auto_error": 0.18877551020408162
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.2,
+      "n_auto": 392,
+      "auto_error": 0.1836734693877551
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.2,
+      "n_auto": 392,
+      "auto_error": 0.17857142857142858
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.3,
+      "n_auto": 343,
+      "auto_error": 0.1749271137026239
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.3,
+      "n_auto": 343,
+      "auto_error": 0.15160349854227406
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.3,
+      "n_auto": 343,
+      "auto_error": 0.16034985422740525
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.4,
+      "n_auto": 294,
+      "auto_error": 0.16326530612244897
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.4,
+      "n_auto": 294,
+      "auto_error": 0.15306122448979592
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.4,
+      "n_auto": 294,
+      "auto_error": 0.14625850340136054
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.5,
+      "n_auto": 245,
+      "auto_error": 0.13877551020408163
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.5,
+      "n_auto": 245,
+      "auto_error": 0.1346938775510204
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.5,
+      "n_auto": 245,
+      "auto_error": 0.1306122448979592
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "softmax_cp",
+      "coverage": 0.9389002036659878,
+      "auto_rate": 0.48268839103869654,
+      "ood_rate": 0.0,
+      "auto_error": 0.12658227848101267
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "evidence_cp",
+      "coverage": 0.9470468431771895,
+      "auto_rate": 0.47657841140529533,
+      "ood_rate": 0.0,
+      "auto_error": 0.1111111111111111
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "tacr_cp",
+      "coverage": 0.945010183299389,
+      "auto_rate": 0.4663951120162933,
+      "ood_rate": 0.0,
+      "auto_error": 0.11790393013100436
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.1,
+      "n_auto": 441,
+      "auto_error": 0.2811791383219955
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.1,
+      "n_auto": 441,
+      "auto_error": 0.2743764172335601
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.1,
+      "n_auto": 441,
+      "auto_error": 0.2743764172335601
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.2,
+      "n_auto": 392,
+      "auto_error": 0.2602040816326531
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.2,
+      "n_auto": 392,
+      "auto_error": 0.25255102040816324
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.2,
+      "n_auto": 392,
+      "auto_error": 0.25510204081632654
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.3,
+      "n_auto": 343,
+      "auto_error": 0.23615160349854228
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.3,
+      "n_auto": 343,
+      "auto_error": 0.22448979591836735
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.3,
+      "n_auto": 343,
+      "auto_error": 0.22740524781341107
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.4,
+      "n_auto": 294,
+      "auto_error": 0.21768707482993196
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.4,
+      "n_auto": 294,
+      "auto_error": 0.1870748299319728
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.4,
+      "n_auto": 294,
+      "auto_error": 0.1870748299319728
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.5,
+      "n_auto": 245,
+      "auto_error": 0.17551020408163265
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.5,
+      "n_auto": 245,
+      "auto_error": 0.1346938775510204
+    },
+    {
+      "dataset": "smesd",
+      "seed": 42,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.5,
+      "n_auto": 245,
+      "auto_error": 0.1346938775510204
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "softmax_cp",
+      "coverage": 0.9327902240325866,
+      "auto_rate": 0.5234215885947047,
+      "ood_rate": 0.0,
+      "auto_error": 0.12840466926070038
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "evidence_cp",
+      "coverage": 0.9327902240325866,
+      "auto_rate": 0.5234215885947047,
+      "ood_rate": 0.0,
+      "auto_error": 0.12840466926070038
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "tacr_cp",
+      "coverage": 0.9307535641547862,
+      "auto_rate": 0.4725050916496945,
+      "ood_rate": 0.0,
+      "auto_error": 0.14655172413793102
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.1,
+      "n_auto": 441,
+      "auto_error": 0.2494331065759637
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.1,
+      "n_auto": 441,
+      "auto_error": 0.23582766439909297
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.1,
+      "n_auto": 441,
+      "auto_error": 0.2471655328798186
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.2,
+      "n_auto": 392,
+      "auto_error": 0.25255102040816324
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.2,
+      "n_auto": 392,
+      "auto_error": 0.20408163265306123
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.2,
+      "n_auto": 392,
+      "auto_error": 0.2193877551020408
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.3,
+      "n_auto": 343,
+      "auto_error": 0.2536443148688047
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.3,
+      "n_auto": 343,
+      "auto_error": 0.18075801749271136
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.3,
+      "n_auto": 343,
+      "auto_error": 0.18658892128279883
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.4,
+      "n_auto": 294,
+      "auto_error": 0.22108843537414966
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.4,
+      "n_auto": 294,
+      "auto_error": 0.1360544217687075
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.4,
+      "n_auto": 294,
+      "auto_error": 0.15306122448979592
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "uncertainty",
+      "budget": 0.5,
+      "n_auto": 245,
+      "auto_error": 0.19183673469387755
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "margin",
+      "budget": 0.5,
+      "n_auto": 245,
+      "auto_error": 0.11428571428571428
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plus",
+      "method": "conflict_rank",
+      "budget": 0.5,
+      "n_auto": 245,
+      "auto_error": 0.11428571428571428
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "softmax_cp",
+      "coverage": 0.9613034623217923,
+      "auto_rate": 0.2606924643584521,
+      "ood_rate": 0.0,
+      "auto_error": 0.1484375
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "evidence_cp",
+      "coverage": 0.9613034623217923,
+      "auto_rate": 0.2606924643584521,
+      "ood_rate": 0.0,
+      "auto_error": 0.1484375
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "tacr_cp",
+      "coverage": 0.9653767820773931,
+      "auto_rate": 0.2668024439918534,
+      "ood_rate": 0.0,
+      "auto_error": 0.1297709923664122
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.1,
+      "n_auto": 441,
+      "auto_error": 0.25396825396825395
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.1,
+      "n_auto": 441,
+      "auto_error": 0.2494331065759637
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.1,
+      "n_auto": 441,
+      "auto_error": 0.24036281179138322
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.2,
+      "n_auto": 392,
+      "auto_error": 0.25255102040816324
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.2,
+      "n_auto": 392,
+      "auto_error": 0.22448979591836735
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.2,
+      "n_auto": 392,
+      "auto_error": 0.22193877551020408
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.3,
+      "n_auto": 343,
+      "auto_error": 0.24198250728862974
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.3,
+      "n_auto": 343,
+      "auto_error": 0.19533527696793002
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.3,
+      "n_auto": 343,
+      "auto_error": 0.19533527696793002
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.4,
+      "n_auto": 294,
+      "auto_error": 0.25170068027210885
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.4,
+      "n_auto": 294,
+      "auto_error": 0.17006802721088435
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.4,
+      "n_auto": 294,
+      "auto_error": 0.17346938775510204
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "uncertainty",
+      "budget": 0.5,
+      "n_auto": 245,
+      "auto_error": 0.2530612244897959
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "margin",
+      "budget": 0.5,
+      "n_auto": 245,
+      "auto_error": 0.16326530612244897
+    },
+    {
+      "dataset": "smesd",
+      "seed": 2026,
+      "arm": "plusplus",
+      "method": "conflict_rank",
+      "budget": 0.5,
+      "n_auto": 245,
+      "auto_error": 0.15918367346938775
+    }
+  ]
+}
