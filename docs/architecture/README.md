@@ -48,4 +48,4 @@ flowchart LR
 - [数据与规模证据](../../models/riskgnn/docs/comrisk-data-and-scale-evidence.md)、[置信度证据](../../models/riskgnn/docs/comrisk-confidence-channel-evidence.md)
 - [SMEsD 受控实验](../../models/riskgnn+/docs/smesd-edge-confidence-experiment.md)
 - [RiskGNN+ 研究文稿](../../models/riskgnn+/docs/riskgnn-plus-paper.md)，与当前服务开放能力分开验收
-- [RiskGNN++ 研究工作稿](../../models/riskgnn+/riskgnn_pp/docs/riskgnn_plus_plus_paper.md)、[实验复现补充](../../models/riskgnn+/riskgnn_pp/docs/riskgnn-plus-plus-experiments.md)与[论文核验报告](../../models/riskgnn+/riskgnn_pp/docs/riskgnn-plus-plus-review.md)
+- [RiskGNN++ 研究工作稿](../../models/riskgnnpp/docs/riskgnn_plus_plus_paper.md)、[实验复现补充](../../models/riskgnnpp/docs/riskgnn-plus-plus-experiments.md)与[论文核验报告](../../models/riskgnnpp/docs/riskgnn-plus-plus-review.md)

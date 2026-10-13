@@ -9,6 +9,6 @@
 | 去重划分敏感性分析 | [敏感性结果](triage-deduplicated-sensitivity-results.md) |
 | UK 三模型对照 | [协议](uk-comparison.md)、[结果](uk-comparison-results.md) |
 
-最新 RiskGNN++ 的实现与文档位于兄弟包 `riskgnn_pp/`，见
-[RiskGNN++ 文档索引](../riskgnn_pp/docs/README.md)。
+最新 RiskGNN++ 的实现与文档位于独立方法目录 `models/riskgnnpp/`，见
+[RiskGNN++ 文档索引](../../riskgnnpp/docs/README.md)。
 研究结果与统一服务能力分开验收，服务边界见[模型工作台](../../../docs/architecture/modeling-workbench.md)。

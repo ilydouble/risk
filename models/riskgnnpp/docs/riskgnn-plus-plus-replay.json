@@ -7,7 +7,7 @@
     "models/runs/riskgnnpp-smesd-20261013/seed_42/predictions.npz": "3e8f4c7d9b97634220fea072ff36dda1557dc32a639bc5d69db9a7775f820199",
     "models/runs/riskgnnpp-smesd-20261013/seed_2026/predictions.npz": "28a83b0b65189024f8cb42e1ec1d11a6c04501efd0f782a9cce470e675024723"
   },
-  "auditor_sha256": "02e698b983ad706e84899bad9b8cfeaf8a835c2b8815023339de14a8eda11174",
+  "auditor_sha256": "94659306f69830ac5bdab837adc28e3df02e994e9ebe0b8ee4338ec2839305b3",
   "protocol": {
     "seeds": [
       14,

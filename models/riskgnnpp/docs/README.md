@@ -8,6 +8,6 @@
 | 逐 seed 复放指标与输入哈希 | [复放结果 JSON](riskgnn-plus-plus-replay.json) |
 | 整理前原稿 | [原稿存档](archive/riskgnn-plus-plus-original-20261013.md) |
 
-实现位于本目录上层：`model.py`、`fusion.py`、`conformal_triage.py`。
+实现位于 `../riskgnn_pp/`：`model.py`、`fusion.py`、`conformal_triage.py`。
 保存预测复放入口为 [replay_paper.py](../replay_paper.py)，训练制品保留在 `models/runs/`。
-RiskGNN+ 的历史论文和实验见[其文档索引](../../docs/README.md)。
+RiskGNN+ 的历史论文和实验见[其文档索引](../../riskgnn+/docs/README.md)。

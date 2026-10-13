@@ -14,9 +14,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    root = Path(__file__).resolve().parents[3]
+    root = Path(__file__).resolve().parents[2]
     spec = importlib.util.spec_from_file_location(
-        "paper_conformal", root / "models/riskgnn+/riskgnn_pp/conformal_triage.py"
+        "paper_conformal", root / "models/riskgnnpp/riskgnn_pp/conformal_triage.py"
     )
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module

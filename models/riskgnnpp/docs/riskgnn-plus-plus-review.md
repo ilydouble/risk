@@ -7,7 +7,7 @@
 
 ## 1. 本轮定位与范围
 
-最新实现位于 `models/riskgnn+/riskgnn_pp/`：
+最新实现位于独立目录 `models/riskgnnpp/`，模型包为 `riskgnn_pp/`：
 
 - `model.py`：关系证据头、冲突/度数折扣、多源融合、度数证据预算。
 - `fusion.py`：主观逻辑映射、两两冲突、折扣与逐源融合。
@@ -15,8 +15,10 @@
 - `evaluate_conformal_comparison.py`：概率 CP / 证据 CP / TACR 对照入口，最后修改于 01:58。
 - `riskgnn_benchmark/training.py`：共享训练入口，`run_benchmark.py` 为启动脚本。
 
-当前 `model.py` 对 UK/SMEsD 训练快照的唯一区别是新增一行 TACR 导入；前向算法相同。
-`fusion.py` 和训练入口的 SHA-256 与两组 manifest 一致。
+目录拆分前，`model.py` 对 UK/SMEsD 训练快照的唯一区别是新增一行 TACR 导入；前向算法相同。
+拆分前 `fusion.py` 和训练入口的 SHA-256 与两组 manifest 一致。
+独立目录整理后清理了未使用导入并统一格式，训练入口新增跨目录源码快照收集；
+历史制品保持原样，当前源码哈希以新运行记录为准。
 最新 TACR 尚未包含于训练源码快照，故本轮将其作为保存预测上的后处理复放。
 原始模型、训练脚本、检查点和预测均未修改。
 

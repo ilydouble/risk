@@ -74,7 +74,7 @@ ComRisk / RiskGNN / RiskGNN+ 三臂对照，但训练真实证据双分支模型
 ## 研究文档
 
 - [RiskGNN+ 文档索引](docs/README.md)：原稿、受控实验与分流对照。
-- [RiskGNN++ 文档索引](riskgnn_pp/docs/README.md)：最新方法论文、实验复放与核验报告。
+- [RiskGNN++ 文档索引](../riskgnnpp/docs/README.md)：最新方法论文、实验复放与核验报告。
 
-RiskGNN++ 实现位于 `riskgnn_pp/`，共享训练入口为 `run_benchmark.py`；
-论文复放入口为 `riskgnn_pp/replay_paper.py`。训练制品统一保留在 `models/runs/`。
+RiskGNN++ 已独立到 `../riskgnnpp/`；四模型训练入口和论文复放入口也归该目录。
+本目录保留 RiskGNN+ 与共享基座，训练制品统一保留在 `models/runs/`。
