@@ -26,6 +26,12 @@ Our contributions are as follows. The empirical claims marked below describe the
 2. **Conflict-aware evidence modeling for selective assessment.** We introduce a corporate graph model that couples relation-conditioned evidential heads with conflict discounting, degree-scaled fusion, and a separate review score. **[HYPOTHETICAL]** Retrained ablations identify the contributions of the fusion components, and matched-budget evaluation shows that conflict improves review allocation beyond probability ambiguity.
 3. **A UK corporate-status graph and a structured evaluation of reliability.** We integrate 233,251 firms and 412,348 directed edges from public records with documented relation semantics and split rules. **[HYPOTHETICAL]** Supplementary evaluation demonstrates that the review benefit persists across the tested calibration procedures and data partitions, with its dataset-specific scope reported explicitly.
 
+Figure 1 summarizes the distinction between predicting corporate status and prioritizing predictions for review.
+
+![Research setting and two assessment decisions](figures/figure-1-problem.png)
+
+**Figure 1. Research setting and motivation.** Public records define the UK corporate graph. Edges in the middle panel are schematic, not sampled observations; name-based associations summarize the two name relation types. Whether conflict adds error information beyond probability remains the hypothesis of this draft.
+
 ## 2. Related Work
 
 **Corporate graph prediction.** ComRisk combines information about a firm's own condition with relational information for enterprise bankruptcy prediction [7]. It is the principal external comparison in our experiments. Our study emphasizes the additional decision of which predictions to review and develops a UK registry-based evaluation setting. RiskGNN and RiskGNN+ belong to our own research line and are included as within-family comparators; they are not independent external baselines.
@@ -53,6 +59,12 @@ We use “weak relational evidence” to describe the uncertain predictive relev
 ## 4. RiskGNN++: Evidence Modeling and Selective Review
 
 This section describes the implemented model and existing calibration protocol. Supplementary protocols in Section 5 are hypothetical and have not replaced this implementation.
+
+Figure 2 separates the implemented prediction, opinion-scoring, and auxiliary-fusion paths.
+
+![RiskGNN++ implemented architecture](figures/figure-2-architecture.png)
+
+**Figure 2. Implemented RiskGNN++ pathways.** The primary classifier supplies the probabilities used for review; the conflict feature is computed before discounting. Relational opinions are discounted before fusion with the node opinion. The figure abstracts degree extraction and the auxiliary node and aggregate-graph losses. It does not imply a direct inference path from fused evidence into the primary head or an established benefit from each component.
 
 ### 4.1 Backbone and evidential branches
 
@@ -119,6 +131,12 @@ The completed experiments use ten training seeds (7, 14, 21, 42, 77, 101, 314, 5
 | SMEsD AURC: conflict-guided review vs ambiguity | 0.1479 vs 0.1443; paired t p = 0.063 | No replicated review benefit |
 
 The existing UK uncertainty-only score has AURC 0.0465. Isotonic calibration creates extensive ties, and the baseline uses saved input order to break them. Ten training seeds quantify training variability on the same partition; they do not constitute ten independent graph samples. Full tables, probability-quality results, and secondary prediction-set diagnostics remain in the [empirical manuscript](riskgnn_plus_plus_paper.md) and its [appendix](riskgnnpp-paper-appendix.md).
+
+Figure 3 visualizes completed results from Section 5.1; supplementary hypotheses are not plotted.
+
+![Existing UK and SMEsD experimental results](figures/figure-3-existing-results.png)
+
+**Figure 3. Existing ten-seed results on fixed splits.** (a) Raw UK average precision, with sample standard deviations across training seeds. (b–c) Mean AURC on identical RiskGNN++ predictions after UK isotonic and SMEsD Platt calibration; panels use different horizontal scales and do not display uncertainty intervals. The UK AURC benefit does not establish a significant 70% automatic-coverage benefit or transfer to SMEsD. Values are reproduced from the empirical manuscript, not hypothetical supplementary experiments.
 
 ### 5.2 Does conflict contain error information beyond probability?
 

@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="650" viewBox="0 0 1440 650">
+<rect width="100%" height="100%" fill="white"/>
+<text x="40" y="45" font-family="Helvetica, Arial, sans-serif" font-size="27" font-weight="bold" text-anchor="start" fill="#172B40">Relational evidence: predicting status and deciding what to review</text>
+<rect x="40" y="80" width="420" height="500" rx="10" fill="#F6F8FB" stroke="#CFD8E3" stroke-width="1.5"/>
+<text x="62" y="115" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="bold" text-anchor="start" fill="#172B40">(a) Public records</text>
+<rect x="510" y="80" width="420" height="500" rx="10" fill="#F6F8FB" stroke="#CFD8E3" stroke-width="1.5"/>
+<text x="532" y="115" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="bold" text-anchor="start" fill="#172B40">(b) Corporate graph</text>
+<rect x="980" y="80" width="420" height="500" rx="10" fill="#F6F8FB" stroke="#CFD8E3" stroke-width="1.5"/>
+<text x="1002" y="115" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="bold" text-anchor="start" fill="#172B40">(c) Two distinct decisions</text>
+<rect x="70" y="155" width="360" height="80" rx="10" fill="#F0F5FF" stroke="#2563eb" stroke-width="1.5"/>
+<text x="250.0" y="185" font-family="Helvetica, Arial, sans-serif" font-size="19" font-weight="bold" text-anchor="middle" fill="#2563eb">Companies House</text>
+<text x="250.0" y="211" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="normal" text-anchor="middle" fill="#526579">Registry records and director attributes</text>
+<rect x="70" y="260" width="360" height="80" rx="10" fill="#F0F5FF" stroke="#2563eb" stroke-width="1.5"/>
+<text x="250.0" y="290" font-family="Helvetica, Arial, sans-serif" font-size="19" font-weight="bold" text-anchor="middle" fill="#2563eb">GLEIF</text>
+<text x="250.0" y="316" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="normal" text-anchor="middle" fill="#526579">Legal-entity records and relationships</text>
+<text x="70" y="385" font-family="Helvetica, Arial, sans-serif" font-size="27" font-weight="bold" text-anchor="start" fill="#2563eb">233,251 firms</text>
+<text x="70" y="425" font-family="Helvetica, Arial, sans-serif" font-size="25" font-weight="bold" text-anchor="start" fill="#2563eb">412,348 directed edges</text>
+<text x="70" y="475" font-family="Helvetica, Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="start" fill="#172B40">Address-group split</text>
+<text x="70" y="505" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="normal" text-anchor="start" fill="#526579">Train / validation / test snapshots</text>
+<text x="70" y="545" font-family="Helvetica, Arial, sans-serif" font-size="16" font-weight="normal" text-anchor="start" fill="#526579">Labels: contemporaneous registry status</text>
+<polyline points="460,305 510,305" fill="none" stroke="#2563eb" stroke-width="2" />
+<polygon points="510,305 500.0,301.0 500.0,309.0" fill="#2563eb"/>
+<polyline points="720,257 614,205" fill="none" stroke="#2563eb" stroke-width="2" stroke-dasharray="7 5"/>
+<polyline points="720,257 832,205" fill="none" stroke="#087F8C" stroke-width="2" />
+<polyline points="720,297 620,355" fill="none" stroke="#2563eb" stroke-width="2" stroke-dasharray="7 5"/>
+<polyline points="720,297 825,355" fill="none" stroke="#7354AD" stroke-width="2" stroke-dasharray="7 5"/>
+<circle cx="720" cy="277" r="32" fill="white" stroke="#172B40" stroke-width="2"/>
+<text x="720" y="283" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#172B40">Firm</text>
+<circle cx="595" cy="195" r="24" fill="white" stroke="#2563eb" stroke-width="2"/>
+<text x="595" y="201" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#2563eb">A</text>
+<circle cx="850" cy="195" r="24" fill="white" stroke="#087F8C" stroke-width="2"/>
+<text x="850" y="201" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#087F8C">B</text>
+<circle cx="600" cy="367" r="24" fill="white" stroke="#2563eb" stroke-width="2"/>
+<text x="600" y="373" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#2563eb">C</text>
+<circle cx="845" cy="367" r="24" fill="white" stroke="#7354AD" stroke-width="2"/>
+<text x="845" y="373" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#7354AD">D</text>
+<polyline points="540,421 582,421" fill="none" stroke="#2563eb" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="595" y="427" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="normal" text-anchor="start" fill="#172B40">Shared address</text>
+<polyline points="540,456 582,456" fill="none" stroke="#087F8C" stroke-width="2" />
+<text x="595" y="462" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="normal" text-anchor="start" fill="#172B40">Registered ownership</text>
+<polyline points="540,491 582,491" fill="none" stroke="#7354AD" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="595" y="497" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="normal" text-anchor="start" fill="#172B40">Name-based association</text>
+<text x="540" y="545" font-family="Helvetica, Arial, sans-serif" font-size="16" font-weight="normal" text-anchor="start" fill="#526579">A recorded link need not imply similar risk.</text>
+<polyline points="930,305 980,305" fill="none" stroke="#2563eb" stroke-width="2" />
+<polygon points="980,305 970.0,301.0 970.0,309.0" fill="#2563eb"/>
+<rect x="1010" y="155" width="360" height="100" rx="10" fill="#EDF8F7" stroke="#087F8C" stroke-width="1.5"/>
+<text x="1190.0" y="185" font-family="Helvetica, Arial, sans-serif" font-size="19" font-weight="bold" text-anchor="middle" fill="#087F8C">Predict corporate status</text>
+<text x="1190.0" y="211" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="normal" text-anchor="middle" fill="#526579">Rank firms by distress probability</text>
+<text x="1030" y="285" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="normal" text-anchor="start" fill="#087F8C">Evaluate: average precision</text>
+<rect x="1010" y="335" width="360" height="100" rx="10" fill="#F5F1FB" stroke="#7354AD" stroke-width="1.5"/>
+<text x="1190.0" y="365" font-family="Helvetica, Arial, sans-serif" font-size="19" font-weight="bold" text-anchor="middle" fill="#7354AD">Prioritize review</text>
+<text x="1190.0" y="391" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="normal" text-anchor="middle" fill="#526579">Rank predictions by need for scrutiny</text>
+<text x="1030" y="465" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="normal" text-anchor="start" fill="#7354AD">Evaluate: retained error vs coverage</text>
+<text x="1010" y="530" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="start" fill="#172B40">Research question:</text>
+<text x="1010" y="556" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="normal" text-anchor="start" fill="#172B40">Does conflict add error information?</text>
+<text x="40" y="618" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="normal" text-anchor="start" fill="#526579">Conceptual graph only. Dataset counts are observed; the additional value of conflict is the hypothesis under study.</text>
+</svg>

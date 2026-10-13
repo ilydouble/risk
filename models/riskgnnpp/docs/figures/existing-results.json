@@ -1,0 +1,19 @@
+{
+  "source": "../riskgnn_plus_plus_paper.md, Sections 5.2–5.4, committed empirical draft 92c9624",
+  "status": "Observed summary results; no hypothetical or simulated data",
+  "protocol": "Ten training seeds, one fixed split per dataset; primary raw AP; UK isotonic and SMEsD Platt recalibration for review",
+  "uk_ap": {
+    "models": ["ComRisk", "RiskGNN", "RiskGNN+", "RiskGNN++"],
+    "mean": [29.01, 29.92, 32.81, 32.89],
+    "sample_sd": [3.54, 4.10, 3.30, 4.65],
+    "unit": "percent"
+  },
+  "uk_aurc": {
+    "order": ["probability ambiguity", "scalar evidence uncertainty", "conflict-guided ranking"],
+    "mean": [0.0097, 0.0465, 0.0083]
+  },
+  "smesd_aurc": {
+    "order": ["probability ambiguity", "scalar evidence uncertainty", "conflict-guided ranking"],
+    "mean": [0.1443, 0.2021, 0.1479]
+  }
+}
