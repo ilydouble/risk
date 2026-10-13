@@ -21,17 +21,19 @@ from pathlib import Path
 
 import numpy as np
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
 from riskgnn_plus import (
-    AuditDecision,
-    ConformalRiskAuditor,
     EvidentialRiskLoss,
     RiskGNNPlus,
     analyze_conflict_contagion,
     evaluate_risk_predictions,
 )
 from riskgnn_pp import RiskGNNPlusPlus
+from riskgnn_pp.triage_analysis import (
+    Recalibrator,
+    evaluate_triage,
+    tune_gamma,
+)
 from sklearn.metrics import roc_auc_score
 from smesd_uncertainty.comrisk_base.gnn import RiskGNN
 from smesd_uncertainty.comrisk_base.utils import (
@@ -41,10 +43,15 @@ from smesd_uncertainty.comrisk_base.utils import (
     build_incidence,
     fit_bayesian_group_prior,
 )
-from torch import optim
+from torch import nn, optim
 from uk_benchmark.data import load_uk_benchmark
 
 SPLIT_ORDER = ("train", "valid", "cal", "test")
+
+# Arms that expose both a calibrated probability and a Dempster-Shafer conflict,
+# i.e. the arms on which the recalibrated risk--coverage triage is defined.
+TRIAGE_ARMS = {"plus", "plusplus", "plusplus_nodiscount", "plusplus_noreg"}
+RECALIBRATION_DEFAULT = {"uk": "isotonic", "smesd": "platt"}
 
 # arm name -> (model kind, RiskGNNPlusPlus ablation switches)
 ARM_DEFS: dict[str, dict] = {
@@ -126,7 +133,9 @@ def build_priors(dataset: dict) -> dict:
     for name in ("valid", "cal", "test"):
         split = dataset["splits"][name]
         groups = _community_groups(split["community"], split["idx"])
-        priors[name] = build_group_prior_feature(groups, split["idx"], prior, global_mean)
+        priors[name] = build_group_prior_feature(
+            groups, split["idx"], prior, global_mean
+        )
     return priors
 
 
@@ -141,7 +150,9 @@ def class_weights_for(dataset: dict, mode: str):
     return (1.0, negatives / positives)
 
 
-def model_config(dataset: dict, arm: str, device: torch.device, plusplus_kwargs: dict) -> dict:
+def model_config(
+    dataset: dict, arm: str, device: torch.device, plusplus_kwargs: dict
+) -> dict:
     definition = ARM_DEFS[arm]
     config = {
         "input_dim": 16,
@@ -175,7 +186,9 @@ def model_config(dataset: dict, arm: str, device: torch.device, plusplus_kwargs:
     return config
 
 
-def make_arm(dataset: dict, arm: str, device: torch.device, plusplus_kwargs: dict) -> nn.Module:
+def make_arm(
+    dataset: dict, arm: str, device: torch.device, plusplus_kwargs: dict
+) -> nn.Module:
     config = model_config(dataset, arm, device, plusplus_kwargs)
     kind = ARM_DEFS[arm]["kind"]
     if kind == "plusplus":
@@ -187,13 +200,21 @@ def make_arm(dataset: dict, arm: str, device: torch.device, plusplus_kwargs: dic
 
 def forward_arm(model: nn.Module, arm: str, split: dict, hyper, prior):
     if ARM_DEFS[arm]["kind"] in ("plus", "plusplus"):
-        return model(split["risk"], split["attr"], split["graph"], hyper, split["idx"], prior)
-    emb = model[0](split["risk"], split["attr"], split["graph"], hyper, split["idx"], prior)
+        return model(
+            split["risk"], split["attr"], split["graph"], hyper, split["idx"], prior
+        )
+    emb = model[0](
+        split["risk"], split["attr"], split["graph"], hyper, split["idx"], prior
+    )
     return model[1](emb)
 
 
 def arm_probabilities(arm: str, output) -> torch.Tensor:
-    return output.probabilities if ARM_DEFS[arm]["kind"] in ("plus", "plusplus") else output.exp()
+    return (
+        output.probabilities
+        if ARM_DEFS[arm]["kind"] in ("plus", "plusplus")
+        else output.exp()
+    )
 
 
 def _diagnostics(dataset: dict, split_name: str, result) -> dict[str, np.ndarray]:
@@ -228,10 +249,14 @@ def fit_arm(
     seed_everything(seed)
     model = make_arm(dataset, arm, device, plusplus_kwargs)
     optimizer = optim.Adam(model.parameters(), lr=lr)
-    scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs, eta_min=1e-5)
+    scheduler = optim.lr_scheduler.CosineAnnealingLR(
+        optimizer, T_max=epochs, eta_min=1e-5
+    )
     kind = ARM_DEFS[arm]["kind"]
     loss_fn = (
-        EvidentialRiskLoss(class_weights=class_weights) if kind in ("plus", "plusplus") else None
+        EvidentialRiskLoss(class_weights=class_weights)
+        if kind in ("plus", "plusplus")
+        else None
     )
     weight_tensor = (
         torch.tensor(class_weights, dtype=torch.float32, device=device)
@@ -247,7 +272,11 @@ def fit_arm(
 
     def run(split_name: str):
         return forward_arm(
-            model, arm, splits[split_name], hypergraphs[split_name], prior_for[split_name]
+            model,
+            arm,
+            splits[split_name],
+            hypergraphs[split_name],
+            prior_for[split_name],
         )
 
     train_y = torch.as_tensor(splits["train"]["y"], dtype=torch.long, device=device)
@@ -282,10 +311,14 @@ def fit_arm(
             model.eval()
             with torch.no_grad():
                 probs = arm_probabilities(arm, run("valid"))
-                auc = float(roc_auc_score(splits["valid"]["y"], probs[:, 1].cpu().numpy()))
+                auc = float(
+                    roc_auc_score(splits["valid"]["y"], probs[:, 1].cpu().numpy())
+                )
             if auc > valid_auc:
                 valid_auc, best_epoch = auc, epoch
-                best_state = {k: v.detach().cpu().clone() for k, v in model.state_dict().items()}
+                best_state = {
+                    k: v.detach().cpu().clone() for k, v in model.state_dict().items()
+                }
 
     if best_state is None:
         raise RuntimeError(f"{arm} produced no finite validation epoch")
@@ -341,18 +374,25 @@ def topology_diagnostics(
     labels_all = np.full(num_all, -1, dtype=np.int64)
     for name in ("train", "valid", "test"):
         part = dataset["splits"][name]
-        labels_all[np.asarray(part["idx"], dtype=np.int64)] = np.asarray(part["y"], dtype=np.int64)
+        labels_all[np.asarray(part["idx"], dtype=np.int64)] = np.asarray(
+            part["y"], dtype=np.int64
+        )
 
     degree = np.bincount(target, minlength=num_all)
     differs = (labels_all[source] != labels_all[target]).astype(np.float64)
     known = (labels_all[source] >= 0) & (labels_all[target] >= 0)
     hetero_sum = np.bincount(target, weights=differs * known, minlength=num_all)
-    hetero_cnt = np.bincount(target, weights=known.astype(np.float64), minlength=num_all)
+    hetero_cnt = np.bincount(
+        target, weights=known.astype(np.float64), minlength=num_all
+    )
 
     idx = np.asarray(split["idx"], dtype=np.int64)
     node_degree = degree[idx].astype(np.float64)
     node_hetero = np.divide(
-        hetero_sum[idx], hetero_cnt[idx], out=np.zeros(len(idx)), where=hetero_cnt[idx] > 0
+        hetero_sum[idx],
+        hetero_cnt[idx],
+        out=np.zeros(len(idx)),
+        where=hetero_cnt[idx] > 0,
     )
 
     def _corr(a: np.ndarray, b: np.ndarray) -> float:
@@ -382,10 +422,18 @@ def topology_diagnostics(
         "conflict_error_pearson": _corr(conflict, errors),
         "error_rate_high_conflict": float(errors[high].mean()) if high.any() else 0.0,
         "error_rate_low_conflict": float(errors[low].mean()) if low.any() else 0.0,
-        "mean_degree_high_conflict": float(node_degree[high].mean()) if high.any() else 0.0,
-        "mean_degree_low_conflict": float(node_degree[low].mean()) if low.any() else 0.0,
-        "mean_heterophily_high_conflict": float(node_hetero[high].mean()) if high.any() else 0.0,
-        "mean_heterophily_low_conflict": float(node_hetero[low].mean()) if low.any() else 0.0,
+        "mean_degree_high_conflict": float(node_degree[high].mean())
+        if high.any()
+        else 0.0,
+        "mean_degree_low_conflict": float(node_degree[low].mean())
+        if low.any()
+        else 0.0,
+        "mean_heterophily_high_conflict": float(node_hetero[high].mean())
+        if high.any()
+        else 0.0,
+        "mean_heterophily_low_conflict": float(node_hetero[low].mean())
+        if low.any()
+        else 0.0,
     }
 
 
@@ -436,35 +484,52 @@ def main() -> None:
     parser.add_argument("--dataset", choices=("uk", "smesd"), default="uk")
     parser.add_argument("--data-dir", type=Path, default=None)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--arms", nargs="+", default=list(DEFAULT_ARMS), choices=sorted(ARM_DEFS))
+    parser.add_argument(
+        "--arms", nargs="+", default=list(DEFAULT_ARMS), choices=sorted(ARM_DEFS)
+    )
     parser.add_argument("--seeds", type=int, nargs="+", default=[14, 42, 2026])
     parser.add_argument("--epochs", type=int, default=250)
     parser.add_argument("--lr", type=float, default=0.01)
     parser.add_argument("--eval-every", type=int, default=5)
     parser.add_argument("--class-weight", choices=["auto", "uniform"], default="auto")
-    parser.add_argument("--edge-weights", choices=["dataset", "uniform"], default="dataset")
+    parser.add_argument(
+        "--edge-weights", choices=["dataset", "uniform"], default="dataset"
+    )
     parser.add_argument("--embed-seed", type=int, default=0)
     parser.add_argument("--max-nodes", type=int, default=None)
     parser.add_argument("--calib-fraction", type=float, default=0.5)
     parser.add_argument("--calib-seed", type=int, default=42)
     parser.add_argument("--no-standardize", action="store_true")
-    parser.add_argument("--epsilon", type=float, default=0.05)
-    parser.add_argument("--beta", type=float, default=0.2)
+    parser.add_argument(
+        "--recalibration",
+        choices=["isotonic", "platt"],
+        default=None,
+        help="Monotone post-hoc recalibration for triage "
+        "(default: isotonic for UK, platt for SMEsD).",
+    )
     parser.add_argument("--conflict-exponent", type=float, default=1.0)
     parser.add_argument("--degree-exponent", type=float, default=0.25)
     parser.add_argument("--degree-lambda", type=float, default=0.5)
     parser.add_argument("--threads", type=int, default=1)
     args = parser.parse_args()
-    if args.epochs < 1 or args.eval_every < 1 or len(set(args.seeds)) != len(args.seeds):
+    if (
+        args.epochs < 1
+        or args.eval_every < 1
+        or len(set(args.seeds)) != len(args.seeds)
+    ):
         parser.error("epochs/eval-every must be positive and seeds unique")
-    if not 0 < args.epsilon < 1 or not np.isfinite(args.beta) or args.beta < 0:
-        parser.error("Require epsilon in (0, 1) and finite beta >= 0")
+    if args.recalibration is None:
+        args.recalibration = RECALIBRATION_DEFAULT[args.dataset]
     if args.output.exists():
-        parser.error("Output already exists; use a new directory to preserve prior runs")
+        parser.error(
+            "Output already exists; use a new directory to preserve prior runs"
+        )
 
     data_dir = args.data_dir
     if data_dir is None:
-        data_dir = Path("datasets/uk_dataset_v1" if args.dataset == "uk" else "datasets/smesd")
+        data_dir = Path(
+            "datasets/uk_dataset_v1" if args.dataset == "uk" else "datasets/smesd"
+        )
     args.output.mkdir(parents=True)
     torch.set_num_threads(args.threads)
     device = torch.device("cpu")
@@ -479,7 +544,10 @@ def main() -> None:
         max_nodes=args.max_nodes,
         uniform_weights=args.edge_weights == "uniform",
     )
-    arms_config = {"incidences": build_incidences(dataset), "priors": build_priors(dataset)}
+    arms_config = {
+        "incidences": build_incidences(dataset),
+        "priors": build_priors(dataset),
+    }
     class_weights = class_weights_for(dataset, args.class_weight)
     plusplus_kwargs = {
         "conflict_exponent": args.conflict_exponent,
@@ -489,7 +557,9 @@ def main() -> None:
     from smesd_benchmark.data import summarize as summarize_smesd
     from uk_benchmark.data import summarize as summarize_uk
 
-    data_summary = summarize_smesd(dataset) if args.dataset == "smesd" else summarize_uk(dataset)
+    data_summary = (
+        summarize_smesd(dataset) if args.dataset == "smesd" else summarize_uk(dataset)
+    )
     print(json.dumps(data_summary, ensure_ascii=False, indent=2), flush=True)
     print(f"class_weights={class_weights} arms={args.arms}", flush=True)
 
@@ -497,7 +567,8 @@ def main() -> None:
     plus_root = experiment_root.parent / "riskgnn+"
     source_roots = {
         **{
-            name: plus_root / name for name in ("riskgnn_plus", "smesd_uncertainty", "uk_benchmark")
+            name: plus_root / name
+            for name in ("riskgnn_plus", "smesd_uncertainty", "uk_benchmark")
         },
         **{
             name: experiment_root / name
@@ -551,7 +622,7 @@ def main() -> None:
         shutil.copyfile(source_files[relative], target)
 
     rows: list[dict] = []
-    audits: list[dict] = []
+    triage_records: list[dict] = []
     topologies: dict[str, list[dict]] = {}
     for seed in args.seeds:
         seed_dir = args.output / f"seed_{seed}"
@@ -582,38 +653,43 @@ def main() -> None:
             rows.append(dict(info["test"], arm=arm, seed=seed, split="test"))
             if ARM_DEFS[arm]["kind"] == "plusplus":
                 diagnostics = topology_diagnostics(
-                    dataset, arm, "test", predictions, predictions[f"{arm}_test_conflict"]
+                    dataset,
+                    arm,
+                    "test",
+                    predictions,
+                    predictions[f"{arm}_test_conflict"],
                 )
                 topologies.setdefault(arm, []).append({"seed": seed, **diagnostics})
                 print(f"[seed={seed}] {arm} topology:", flush=True)
                 print(json.dumps(diagnostics, ensure_ascii=False), flush=True)
-            if arm in {"plus", "plusplus"}:
-                auditor = ConformalRiskAuditor(epsilon=args.epsilon, beta=args.beta)
-                q_hat = auditor.calibrate(
-                    predictions[f"{arm}_cal_p"],
-                    predictions[f"{arm}_cal_uncertainty"],
-                    payload["cal_y"],
+            if arm in TRIAGE_ARMS:
+                # Recalibrate on the held-out calibration split, then evaluate triage
+                # across review budgets. ``gamma`` is tuned on the calibration
+                # split only, never on test.
+                recalibrator = Recalibrator(method=args.recalibration).fit(
+                    predictions[f"{arm}_cal_p"][:, 1], payload["cal_y"]
                 )
-                audit = auditor.audit(
-                    predictions[f"{arm}_test_p"],
-                    predictions[f"{arm}_test_uncertainty"],
-                    payload["test_y"],
+                cal_p = recalibrator.transform(predictions[f"{arm}_cal_p"][:, 1])
+                test_p = recalibrator.transform(predictions[f"{arm}_test_p"][:, 1])
+                gamma = tune_gamma(
+                    cal_p, predictions[f"{arm}_cal_conflict"], payload["cal_y"]
                 )
-                auto = int(
-                    sum(
-                        decision in (AuditDecision.AUTO_APPROVE, AuditDecision.AUTO_REJECT)
-                        for decision in audit.decisions
-                    )
-                )
-                audits.append(
+                triage_records.append(
                     {
                         "seed": seed,
                         "arm": arm,
-                        "q_hat": q_hat,
-                        "coverage": audit.empirical_coverage,
-                        "auto": auto,
-                        "deferral_rate": audit.deferral_rate,
-                        "ood_rate": audit.ood_rate,
+                        "recalibration": args.recalibration,
+                        "gamma": gamma,
+                        "signals": evaluate_triage(
+                            test_p,
+                            predictions[f"{arm}_test_uncertainty"],
+                            predictions[f"{arm}_test_conflict"],
+                            payload["test_y"],
+                            gamma=gamma,
+                        ),
+                        "recalibrated_test": evaluate_risk_predictions(
+                            test_p, payload["test_y"]
+                        ),
                     }
                 )
         np.savez_compressed(seed_dir / "predictions.npz", **payload)
@@ -621,7 +697,11 @@ def main() -> None:
             json.dumps(training, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
         )
         conflict_key = next(
-            (f"{arm}_test_conflict" for arm in args.arms if f"{arm}_test_conflict" in payload),
+            (
+                f"{arm}_test_conflict"
+                for arm in args.arms
+                if f"{arm}_test_conflict" in payload
+            ),
             None,
         )
         if conflict_key is not None:
@@ -635,7 +715,12 @@ def main() -> None:
     summary = _aggregate(rows, tuple(args.arms))
     (args.output / "summary.json").write_text(
         json.dumps(
-            {"test": summary, "rows": rows, "audits": audits, "topology": topologies},
+            {
+                "test": summary,
+                "rows": rows,
+                "triage": triage_records,
+                "topology": topologies,
+            },
             ensure_ascii=False,
             indent=2,
         )
@@ -644,7 +729,9 @@ def main() -> None:
     )
     _write_markdown(summary, args.output / "results.md", tuple(args.arms))
     print(json.dumps(summary, ensure_ascii=False, indent=2), flush=True)
-    (args.output / "COMPLETE").write_text("All requested seeds completed.\n", encoding="utf-8")
+    (args.output / "COMPLETE").write_text(
+        "All requested seeds completed.\n", encoding="utf-8"
+    )
 
 
 if __name__ == "__main__":

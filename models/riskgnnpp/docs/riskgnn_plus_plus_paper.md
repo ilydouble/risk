@@ -6,7 +6,7 @@
 
 ## Abstract
 
-Corporate risk models must distinguish default prediction from deciding which predictions require human review. Dirichlet evidence provides an uncertainty score, but its usefulness for review allocation must be evaluated separately from classification performance. We introduce RiskGNN++, which extends a dual-branch graph model with relation-specific evidential heads, conflict- and degree-based opinion discounting, and a degree-scaled evidence budget. On a UK corporate dataset containing 233,251 firms, three-seed average precision increases from 31.63% for the implemented ComRisk baseline to 35.32%, while ECE decreases from 22.88% to 20.71%. These metrics use the primary classifier probabilities. Inter-source conflict is associated with classification error: the highest-conflict quartile has 14.2–82.1 times the error rate of the lowest quartile. At a fixed 30% review budget, adding conflict to probability-margin ranking reduces automatic error from 7.38% to 6.85% on the same RiskGNN++ predictions. We also evaluate a topology-aware conformal score separately; it attains 94.88% empirical coverage on UK data at a nominal 95% target, without improving automatic error over probability-only conformal prediction. Results on SMEsD show mixed discrimination and calibration effects. The evidence supports conflict-guided selective prediction in the tested UK setting, while broader transfer and coverage under graph dependence require further validation.
+Corporate risk models must distinguish classification from deciding which predictions require human review. We introduce RiskGNN++, extending a dual-branch graph model with relation-specific evidential heads, conflict- and degree-based discounting, and a degree-scaled evidence budget. On a UK corporate dataset of 233,251 firms, ten seeds give raw average precision (AP) of 32.89% ± 4.65 for RiskGNN++ versus 29.01% ± 3.54 for the implemented ComRisk baseline (paired p = 0.027; 7/10 seeds) and 32.81% ± 3.30 for RiskGNN+ (p = 0.965). The incremental classification benefit over RiskGNN+ is therefore unestablished. Under the current class-weighted training protocol, raw probabilities are poorly calibrated; isotonic recalibration lowers the UK Brier score from approximately 0.135 to 0.028. On recalibrated predictions, adding Dempster–Shafer conflict to the probability-ambiguity review score lowers mean area under the risk–coverage curve (AURC) from 0.0097 to 0.0083 (paired p = 0.002), but does not establish a benefit at fixed 70% automatic coverage (p = 0.277). Isotonic regression creates extensive score ties; a randomized-tie sensitivity check retains an AURC advantage in eight of ten seeds. Scalar evidential uncertainty performs worse than the probability margin. SMEsD does not replicate the conflict-ranking gain. These observations motivate further evaluation of conflict-guided review allocation, without establishing a coverage guarantee under graph dependence.
 
 ## 1. Introduction
 
@@ -84,17 +84,25 @@ Singleton sets produce automatic predictions; two-class sets are deferred. Empty
 
 The standard finite-sample marginal coverage statement requires exchangeability of calibration and test scores under an appropriate fixed-model protocol [5, 6]. It does not require independence as a separate assumption. Adding conflict to the score does not establish exchangeability or repair arbitrary graph dependence. The current optional `network_inflation` subtracts a user-specified quantity from epsilon; `max_degree` is unused and there is no implemented graph-dependence bound. All coverage here is empirical.
 
-### 3.5 Fixed-budget review ranking
+### 3.5 Recalibrated risk–coverage triage
 
-A separate protocol reviews the highest-scoring $\lceil BN\rceil$ firms and predicts the remainder at threshold 0.5. We compare $u$, probability ambiguity $0.5-|\hat p_1-0.5|$, and ambiguity plus $0.6C$. Ties follow saved input order. Automatic error is the number of wrong retained predictions divided by the number retained. Review accuracy and business costs are not modeled.
+Under the current class-weighted training protocol, raw probabilities are poorly calibrated. Every arm is recalibrated on the calibration split: isotonic regression on UK (23,332 points) and Platt scaling on SMEsD (360 points). Isotonic regression is nondecreasing but creates ties, which can change AP and review-score rankings. The calibration labels are reused to select the conflict weight; test labels are not used in either step.
 
-This ranking does not use a conformal threshold and inherits no conformal coverage guarantee. Its conflict coefficient is fixed for this replay; a prospective evaluation requires its selection on validation data before accessing test results.
+Triage is then evaluated as a risk–coverage curve rather than a single thresholded error rate. Let $s_i$ be a review score, oriented so that larger values are deferred first. Deferring the highest-scoring firms leaves a fraction $c$ of firms processed automatically, and the selective risk $R(c)$ is the 0/1 error of those retained, using the recalibrated probability at threshold 0.5. We report the area under this curve, $\mathrm{AURC}=\int_0^1 R(c)\,\mathrm{d}c$ (lower is better), together with the risk at fixed coverage levels.
+
+Three review scores are compared on identical predictions:
+
+- **probability ambiguity** $0.5-|\hat p_1-0.5|$, the natural margin baseline;
+- **scalar evidence uncertainty** $u$, the score a naive evidential pipeline would use;
+- **conflict-guided ranking**, ambiguity plus $\gamma C$ with the composite conflict $C$ of Section 3.2. This is distinct from the TACR conformal score in Section 3.4.
+
+The conflict weight $\gamma$ is selected on the calibration split by minimising the calibration risk at 70% coverage, never on test; selected values range from 0.0 to 0.4 across seeds. The AURC and fixed-coverage metrics are computed on test predictions only and are paired across seeds. Review accuracy, monetary cost, and a prospective lending protocol are not modeled.
 
 ## 4. Experiments
 
 ### 4.1 Protocol
 
-We use training seeds 14, 42, and 2026, 250 epochs, learning rate 0.01, cosine annealing, gradient clipping at 0.25, and checkpoint selection by validation ROC-AUC every five epochs. Three seeds reuse the same data split. Values below are means ± sample standard deviations, not confidence intervals.
+We use ten training seeds (7, 14, 21, 42, 77, 101, 314, 555, 888, 2026), 250 epochs, learning rate 0.01, cosine annealing, gradient clipping at 0.25, and checkpoint selection by validation ROC-AUC every five epochs. All seeds reuse the same data split. Values below are means ± sample standard deviations, not confidence intervals; paired comparisons across seeds report a paired $t$-test, a Wilcoxon signed-rank test, and a bootstrap 95% confidence interval of the mean difference.
 
 The UK dataset has 233,251 firms and four relations (`SAME_ADDRESS`, `EQUITY`, `PREVNAME`, `SAME_NAME`). Train/validation/calibration/test sizes are 139,956/23,332/23,332/46,631. The 248,517 edges are the **training snapshot** count; validation and test snapshots contain 84,060 and 79,771 edges. Test positive prevalence is 3.42%.
 
@@ -102,34 +110,44 @@ SMEsD has 3,976 firm nodes, 2,405 person nodes, and 12 relation types. Its train
 
 ### 4.2 Discrimination and probability quality
 
-**Table 2. UK primary-head performance.** “PR-AUC” in the artifacts is average precision (AP), not trapezoidal area under an interpolated PR curve. ECE uses ten equal-width probability bins. AP, ECE, and ROC-AUC are percentages; Brier is unscaled.
+**Table 2. UK primary-head performance over ten seeds.** “PR-AUC” in the artifacts is average precision (AP), not trapezoidal area under an interpolated PR curve. ECE uses ten equal-width probability bins. AP, ECE, and ROC-AUC are percentages; Brier is unscaled.
 
 | Model | AP (%) ↑ | ECE (%) ↓ | Brier ↓ | ROC-AUC (%) ↑ |
 | --- | ---: | ---: | ---: | ---: |
-| ComRisk | 31.63 ± 2.75 | 22.88 ± 4.41 | 0.1376 ± 0.0288 | 86.06 ± 0.94 |
-| RiskGNN | 31.93 ± 1.89 | 22.44 ± 5.94 | 0.1421 ± 0.0390 | **86.30 ± 0.93** |
-| RiskGNN+ | 33.20 ± 2.88 | 21.87 ± 2.55 | 0.1210 ± 0.0248 | 86.02 ± 0.65 |
-| RiskGNN++ | **35.32 ± 1.81** | **20.71 ± 3.02** | **0.1150 ± 0.0105** | 85.82 ± 0.25 |
+| ComRisk | 29.01 ± 3.54 | 23.75 ± 4.40 | 0.1319 ± 0.0242 | 85.56 ± 0.82 |
+| RiskGNN | 29.92 ± 4.10 | 25.31 ± 8.34 | 0.1478 ± 0.0446 | **85.64 ± 1.17** |
+| RiskGNN+ | 32.81 ± 3.30 | 26.33 ± 5.36 | 0.1422 ± 0.0259 | 85.59 ± 1.15 |
+| RiskGNN++ | **32.89 ± 4.65** | **23.11 ± 2.82** | **0.1348 ± 0.0159** | 85.56 ± 1.02 |
 
-RiskGNN++ improves mean AP by 3.69 percentage points over ComRisk and 2.12 points over RiskGNN+, while ROC-AUC is lower. Its ECE and Brier are lowest among these four implementations. These primary-head results do not by themselves demonstrate calibrated evidential uncertainty, and the remaining ECE is substantial. No significance claim is made from three seeds.
+Over ten seeds RiskGNN++ improves raw mean AP over ComRisk by 3.88 percentage points (paired $t$ $p = 0.027$, Wilcoxon $p = 0.049$, 7/10 seeds) but is indistinguishable from RiskGNN+ (0.08 points, paired $t$ $p = 0.965$, 6/10 seeds). The corresponding **recalibrated** AP comparisons are +4.65 points ($p = 0.010$, 8/10) and +0.99 points ($p = 0.572$, 5/10). These recalibrated tests must not be attached to Table 2's raw AP. ROC-AUC, ECE and Brier differences among the evidential variants are within seed noise. The earlier three-seed advantage over RiskGNN+ is not sustained.
 
-### 4.3 Fixed-budget selective prediction
+Under the current class-weighted protocol, every arm overpredicts positives on UK: raw Brier (0.1319–0.1478) exceeds a constant base-rate predictor (0.0330), and raw accuracy (0.78–0.81) is below always predicting negative (0.9658). Isotonic recalibration fit on the calibration split reduces Brier to 0.0276–0.0285 and ECE to 0.0060–0.0091; accuracy rises to 0.966–0.968. This does not isolate class weighting as the cause. Because isotonic ties alter AP, raw and recalibrated AP are reported separately. Decision-level metrics below use recalibrated probabilities.
 
-**Table 3. UK automatic error on the same RiskGNN++ predictions (%).** All methods retain the same number of firms within each budget. This table comes from saved-prediction replay, not retraining.
+### 4.3 Recalibrated risk–coverage triage
 
-| Review budget | Evidence uncertainty | Probability ambiguity | Ambiguity + conflict |
-| ---: | ---: | ---: | ---: |
-| 10% | 16.10 ± 1.27 | 13.14 ± 1.70 | **12.84 ± 1.78** |
-| 20% | 15.71 ± 0.62 | 9.92 ± 2.10 | **9.45 ± 2.24** |
-| 30% | 16.27 ± 0.34 | 7.38 ± 2.19 | **6.85 ± 2.34** |
-| 40% | 17.32 ± 1.33 | 5.56 ± 2.03 | **5.02 ± 2.28** |
-| 50% | 17.27 ± 4.59 | 4.19 ± 1.56 | **3.55 ± 1.89** |
+**Table 3. UK recalibrated risk–coverage triage over ten seeds.** Selective 0/1 error of the automatically processed firms after isotonic recalibration on the calibration split; lower is better. AURC integrates the risk–coverage curve over automatic coverage $c\in[0,1]$.
 
-Conflict ranking lowers mean automatic error by 0.30–0.64 percentage points across these UK budgets. The result supports an incremental ranking benefit under this protocol. It does not establish monetary benefit, prospective lending performance, or an industry-standard review budget.
+| Review score | AURC ↓ | Risk@0.5 ↓ | Risk@0.7 ↓ | Risk@0.9 ↓ |
+| --- | ---: | ---: | ---: | ---: |
+| Probability ambiguity | 0.0097 | 0.0069 | 0.0089 | 0.0155 |
+| Scalar evidence uncertainty $u$ | 0.0465 | 0.0420 | 0.0362 | 0.0339 |
+| Conflict-guided ranking (ambiguity + $\gamma C$) | **0.0083** | **0.0063** | 0.0087 | 0.0156 |
+
+Paired comparisons across the ten seeds, on the same RiskGNN++ predictions:
+
+| Comparison | Mean difference | 95% CI | Paired $t$ | Wilcoxon | Seeds favoured |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| AURC: conflict ranking − ambiguity | −0.0014 | [−0.0020, −0.0008] | 0.0023 | 0.0078 | 8/10; tied in 2 |
+| AURC: conflict ranking − uncertainty $u$ | −0.0382 | [−0.0459, −0.0302] | <0.0001 | 0.0020 | 10/10 |
+| Risk@0.7: conflict ranking − ambiguity | −0.0002 | [−0.0006, +0.0001] | 0.2765 | 0.4609 | 5/10; tied in 2 |
+
+Scalar evidential uncertainty is a substantially worse review score than the probability margin at the measured coverage levels. Adding conflict produces a small AURC reduction, significant under the reported paired tests, concentrated at low automatic coverage. Two seeds select $\gamma=0$ and tie the baseline; thus “10/10 improved” would be inaccurate. The 70% coverage improvement is not significant. UK isotonic calibration leaves 99.7–99.9% of ambiguity scores in tied groups; the baseline breaks ties by saved input order. In a sensitivity check averaging 30 random input permutations per seed, mean baseline AURC is 0.0096 versus 0.0083 for conflict ranking, which is better in eight seeds and tied with the deterministic baseline in two. This does not remove all tie-breaking dependence or selection bias from tuning $\gamma$ on the same calibration labels used to fit isotonic regression. Monetary cost and prospective lending performance remain unmodeled.
 
 ### 4.4 Conformal prediction and transfer
 
-**Table 4. Prediction-set replay using RiskGNN++ (%).** Coverage, automatic rate, and automatic error are separate metrics. Automatic populations differ across scores; their errors are not a matched-budget comparison.
+The risk–coverage protocol of Section 4.3 is the primary triage evaluation. We additionally replay the conformal auditor, which operates on uncalibrated probabilities and produces prediction sets rather than a ranked budget, as a secondary check on the same predictions.
+
+**Table 4. Prediction-set replay using RiskGNN++ (%).** Three-seed replay; this secondary check has not been extended to ten seeds. Coverage, automatic rate, and automatic error are separate metrics. Automatic populations differ across scores; their errors are not a matched-budget comparison.
 
 | Dataset | Score | Coverage | Automatic rate | Automatic error |
 | --- | --- | ---: | ---: | ---: |
@@ -142,17 +160,17 @@ Conflict ranking lowers mean automatic error by 0.30–0.64 percentage points ac
 
 UK TACR slightly increases empirical coverage, while automatic error does not improve over probability-only CP. SMEsD shows lower mean automatic error with TACR. Neither result establishes a graph-dependent theorem. The original 95.38% SMEsD figure belongs to evidence-augmented CP, rather than TACR.
 
-On SMEsD, full RiskGNN++ has AP 87.84 ± 0.47%, ROC-AUC 79.66 ± 0.28%, ECE 10.24 ± 2.14%, and Brier 0.1818 ± 0.0068. RiskGNN+ has AP 87.52 ± 1.41%, ROC-AUC 80.35 ± 1.48%, ECE 6.55 ± 0.68%, and Brier 0.1691 ± 0.0045. Thus, the full method does not improve calibration or ROC-AUC on this benchmark. Detailed ablations are retained in the supplement.
+On SMEsD over ten seeds, RiskGNN++ has AP 87.79 ± 1.25%, ROC-AUC 80.24 ± 1.30%, ECE 9.77 ± 1.77%, and Brier 0.1793 ± 0.0069; RiskGNN+ has AP 87.74 ± 1.60%, ROC-AUC 80.26 ± 2.43%, ECE 7.58 ± 1.70%, and Brier 0.1720 ± 0.0083. Paired differences are not significant on these metrics (AP $p = 0.95$, ROC-AUC $p = 0.98$). SMEsD ECE changes from 9.77% to 8.26% after Platt scaling; these data do not identify the cause of residual miscalibration. Conflict-guided ranking has higher mean AURC than the probability margin (0.1479 vs 0.1443, paired $p = 0.063$); scalar evidence uncertainty is worse still (0.2021). Two datasets cannot establish which graph or prevalence property controls transfer.
 
 ## 5. Discussion and Limitations
 
-The strongest supported finding is that composite evidential disagreement helps rank UK classification errors beyond the same model's probability ambiguity. Scalar uncertainty performs worse for that task. This is consistent with a failure of uncertainty ranking, but does not prove that majority-neighbor evidence inflation is its cause. Class-weighted training also affects probability scale and should be separated from topological effects in further experiments.
+After ten seeds, RiskGNN++ is statistically indistinguishable from RiskGNN+ on UK AP, ROC-AUC, ECE and Brier; its raw AP advantage over ComRisk is significant under the reported tests. The main incremental result is an observed UK AURC reduction from adding conflict to the same model's probability ambiguity, subject to extensive isotonic ties and a single shared test graph. Scalar evidence uncertainty is a worse review signal than ambiguity here. Neither finding identifies majority-neighbor evidence inflation as the cause. The contribution of class weighting to probability miscalibration needs an unweighted ablation.
 
 The evidence does not establish that edge-confidence channels universally collapse, that high conflict identifies causal contagion, or that dataset differences constitute a phase transition. Shared representations weaken an independent-source interpretation of Dempster fusion. Missing-relation heads and split-dependent mean-degree scaling also deserve ablation. UK component-removal experiments, repeated data splits, held-out score selection, calibrated probability baselines, and uncertainty estimates accounting for graph dependence remain necessary.
 
 ## 6. Conclusion
 
-RiskGNN++ combines relation-specific opinions with topology-aware discounting and degree-scaled evidence. Saved experiments show higher UK average precision and an incremental fixed-budget benefit from conflict ranking. Conformal-score replay and SMEsD results expose limits to this improvement. The current evidence supports a selective-prediction method for further evaluation, rather than a proved underwriting guarantee.
+RiskGNN++ combines relation-specific opinions with topology-aware discounting and degree-scaled evidence. Saved UK experiments show higher raw AP than ComRisk and a small AURC gain from conflict-guided ranking, without an established AP gain over RiskGNN+ or a fixed-budget triage gain. SMEsD and conformal-score replay limit generalization. Further split-level and tie-aware evaluation is needed before an operational claim.
 
 ## References
 
