@@ -1,0 +1,270 @@
+{
+  "archived_on": "2026-10-14",
+  "description": "Byte-identical copies of existing experiment reports; no experiments rerun.",
+  "files": [
+    {
+      "file": "riskgnnpp-smesd-20261013/COMPLETE",
+      "source": "models/runs/riskgnnpp-smesd-20261013/COMPLETE",
+      "bytes": 31,
+      "sha256": "386aa447b491c3c58c41ef602dd0aa851d3ab8e32552f854797861b49a736fee"
+    },
+    {
+      "file": "riskgnnpp-smesd-20261013/manifest.json",
+      "source": "models/runs/riskgnnpp-smesd-20261013/manifest.json",
+      "bytes": 5440,
+      "sha256": "57b6889a2bd07c8aabff94f4c7b542b0a36e4cecd592107e5f1b2d095bf65669"
+    },
+    {
+      "file": "riskgnnpp-smesd-20261013/summary.json",
+      "source": "models/runs/riskgnnpp-smesd-20261013/summary.json",
+      "bytes": 16619,
+      "sha256": "aace8da29fb6d35874e838aafe75ef000dd7c03ed7f0e3250fe47c5ecc52c5e1"
+    },
+    {
+      "file": "riskgnnpp-smesd-20261013/results.md",
+      "source": "models/runs/riskgnnpp-smesd-20261013/results.md",
+      "bytes": 797,
+      "sha256": "68ceb79442599394ba1bc603913a00320176bb90156efc1109f5b5edb4ed88dc"
+    },
+    {
+      "file": "riskgnnpp-smesd-20261013/seed_14/training.json",
+      "source": "models/runs/riskgnnpp-smesd-20261013/seed_14/training.json",
+      "bytes": 5634,
+      "sha256": "c2ada9eb0c0ec403cb85fa5d32c0d1a96a771e597b5c92833a2a526d11436be9"
+    },
+    {
+      "file": "riskgnnpp-smesd-20261013/seed_2026/training.json",
+      "source": "models/runs/riskgnnpp-smesd-20261013/seed_2026/training.json",
+      "bytes": 5619,
+      "sha256": "890242f306623b3165a8ce33c24baba1f2fde27fd313e5c43bbc78da1c4a0151"
+    },
+    {
+      "file": "riskgnnpp-smesd-20261013/seed_42/training.json",
+      "source": "models/runs/riskgnnpp-smesd-20261013/seed_42/training.json",
+      "bytes": 5632,
+      "sha256": "666af740475fd18925218c5a55d54202f1724d9cb397395f93c341f40ab110f2"
+    },
+    {
+      "file": "riskgnnpp-smesd-20261013/analysis/analysis.json",
+      "source": "models/runs/riskgnnpp-smesd-20261013/analysis/analysis.json",
+      "bytes": 25364,
+      "sha256": "a1a86c6fd4a17e03a68211ff84ebcc69d22bb48d07343380a8dc055493ffc204"
+    },
+    {
+      "file": "riskgnnpp-smesd-20261013/analysis/analysis.md",
+      "source": "models/runs/riskgnnpp-smesd-20261013/analysis/analysis.md",
+      "bytes": 4522,
+      "sha256": "3a625e6dd969534f4fb4342502cae46bafff88191757652449a82fedb69763ea"
+    },
+    {
+      "file": "riskgnnpp-smesd-20261013/analysis-10seed/analysis.json",
+      "source": "models/runs/riskgnnpp-smesd-20261013/analysis-10seed/analysis.json",
+      "bytes": 25850,
+      "sha256": "7f66713df8125820d50d74876c73b04ae8067603cfb4314e92311703debf9059"
+    },
+    {
+      "file": "riskgnnpp-smesd-20261013/analysis-10seed/analysis.md",
+      "source": "models/runs/riskgnnpp-smesd-20261013/analysis-10seed/analysis.md",
+      "bytes": 4703,
+      "sha256": "87a256237a0811b4c1ec984314e3ca18f774c6f74a943ea74c81d8764b713077"
+    },
+    {
+      "file": "riskgnnpp-smesd-20261013-ext/COMPLETE",
+      "source": "models/runs/riskgnnpp-smesd-20261013-ext/COMPLETE",
+      "bytes": 31,
+      "sha256": "386aa447b491c3c58c41ef602dd0aa851d3ab8e32552f854797861b49a736fee"
+    },
+    {
+      "file": "riskgnnpp-smesd-20261013-ext/manifest.json",
+      "source": "models/runs/riskgnnpp-smesd-20261013-ext/manifest.json",
+      "bytes": 5803,
+      "sha256": "44724118ae081ed4f209b621c419538c4fe94844951e9fe1ee277c71bb6b3ba7"
+    },
+    {
+      "file": "riskgnnpp-smesd-20261013-ext/summary.json",
+      "source": "models/runs/riskgnnpp-smesd-20261013-ext/summary.json",
+      "bytes": 87406,
+      "sha256": "9c54c53d3b76adaa8dd29f8056ce1db9e6c13275328e70a837c1692c4a284006"
+    },
+    {
+      "file": "riskgnnpp-smesd-20261013-ext/results.md",
+      "source": "models/runs/riskgnnpp-smesd-20261013-ext/results.md",
+      "bytes": 797,
+      "sha256": "e1dbd44786aa414ab0d7c119da8db744f3eb0e95ac9acaf5dafb231c12abc7e6"
+    },
+    {
+      "file": "riskgnnpp-smesd-20261013-ext/seed_101/training.json",
+      "source": "models/runs/riskgnnpp-smesd-20261013-ext/seed_101/training.json",
+      "bytes": 5626,
+      "sha256": "6f550bbd9cd16719241ca01fc1f24f8eb4f440ddf7166b89232ed01a98c22219"
+    },
+    {
+      "file": "riskgnnpp-smesd-20261013-ext/seed_21/training.json",
+      "source": "models/runs/riskgnnpp-smesd-20261013-ext/seed_21/training.json",
+      "bytes": 5581,
+      "sha256": "9b7e588cabc6505cc037a18c2c72238edee70f7929f53361bdd189c694f7b1ca"
+    },
+    {
+      "file": "riskgnnpp-smesd-20261013-ext/seed_314/training.json",
+      "source": "models/runs/riskgnnpp-smesd-20261013-ext/seed_314/training.json",
+      "bytes": 5585,
+      "sha256": "e907b584f24dee828a7cfc7b6680d1d170f3b394d1e2fa6d3d222097fbb256e6"
+    },
+    {
+      "file": "riskgnnpp-smesd-20261013-ext/seed_555/training.json",
+      "source": "models/runs/riskgnnpp-smesd-20261013-ext/seed_555/training.json",
+      "bytes": 5621,
+      "sha256": "10e59a7096dc58f9d92caa84ab5675cf4cd5f839e8a7475ff4d11c9ec0dd04be"
+    },
+    {
+      "file": "riskgnnpp-smesd-20261013-ext/seed_7/training.json",
+      "source": "models/runs/riskgnnpp-smesd-20261013-ext/seed_7/training.json",
+      "bytes": 5615,
+      "sha256": "335d20da52b5af50760067d7d022d235514469c542b7bf727971ee0cc08d783e"
+    },
+    {
+      "file": "riskgnnpp-smesd-20261013-ext/seed_77/training.json",
+      "source": "models/runs/riskgnnpp-smesd-20261013-ext/seed_77/training.json",
+      "bytes": 5602,
+      "sha256": "1ad0e1e781dbb0a5d729ff35f0260a4c88783be7e3e1ccddb4921970396de4e6"
+    },
+    {
+      "file": "riskgnnpp-smesd-20261013-ext/seed_888/training.json",
+      "source": "models/runs/riskgnnpp-smesd-20261013-ext/seed_888/training.json",
+      "bytes": 5615,
+      "sha256": "7d25310a8f4c96767ffa61213ea23e10aa36ca93b129b88b0406eb1ea35afc9e"
+    },
+    {
+      "file": "riskgnnpp-uk-20261013/COMPLETE",
+      "source": "models/runs/riskgnnpp-uk-20261013/COMPLETE",
+      "bytes": 31,
+      "sha256": "386aa447b491c3c58c41ef602dd0aa851d3ab8e32552f854797861b49a736fee"
+    },
+    {
+      "file": "riskgnnpp-uk-20261013/manifest.json",
+      "source": "models/runs/riskgnnpp-uk-20261013/manifest.json",
+      "bytes": 5104,
+      "sha256": "0920a05f64a394ad747ed7404fcce7c12503eb829baa3bd13af0bceca90a2039"
+    },
+    {
+      "file": "riskgnnpp-uk-20261013/summary.json",
+      "source": "models/runs/riskgnnpp-uk-20261013/summary.json",
+      "bytes": 9439,
+      "sha256": "dcfe7ce17e6973c0bf9b4f9b37a8c002b836f40f8d3c7dbb4019df368daea142"
+    },
+    {
+      "file": "riskgnnpp-uk-20261013/results.md",
+      "source": "models/runs/riskgnnpp-uk-20261013/results.md",
+      "bytes": 589,
+      "sha256": "06114fe38a640125c10a0881278081e8fc0f85837f2ba421717bdf35538c0aa5"
+    },
+    {
+      "file": "riskgnnpp-uk-20261013/seed_14/training.json",
+      "source": "models/runs/riskgnnpp-uk-20261013/seed_14/training.json",
+      "bytes": 3545,
+      "sha256": "04f7f32d7325ad3a7adef4aa0c09693ce1e5b7ab5e3e8c835b72344de23cb5b2"
+    },
+    {
+      "file": "riskgnnpp-uk-20261013/seed_2026/training.json",
+      "source": "models/runs/riskgnnpp-uk-20261013/seed_2026/training.json",
+      "bytes": 3545,
+      "sha256": "840a5f34995565ae1bdf4dcbb9f6a9de8afca1f955d97ea7d5bd9655305904fd"
+    },
+    {
+      "file": "riskgnnpp-uk-20261013/seed_42/training.json",
+      "source": "models/runs/riskgnnpp-uk-20261013/seed_42/training.json",
+      "bytes": 3548,
+      "sha256": "6bc4364f12c9995888ab0e7d848de96e3f89a5c76c37f12d0585f069e46d7f1a"
+    },
+    {
+      "file": "riskgnnpp-uk-20261013/analysis/analysis.json",
+      "source": "models/runs/riskgnnpp-uk-20261013/analysis/analysis.json",
+      "bytes": 15882,
+      "sha256": "1059961539b57fc1b8d6b446b067c933e3fb055a49241fe079b9d2b1d8a3c9cc"
+    },
+    {
+      "file": "riskgnnpp-uk-20261013/analysis/analysis.md",
+      "source": "models/runs/riskgnnpp-uk-20261013/analysis/analysis.md",
+      "bytes": 3096,
+      "sha256": "8b3aa829361990f127953a8f0fc908118f51427b53a72dcc2df8f9f2b63cf14a"
+    },
+    {
+      "file": "riskgnnpp-uk-20261013/analysis-10seed/analysis.json",
+      "source": "models/runs/riskgnnpp-uk-20261013/analysis-10seed/analysis.json",
+      "bytes": 16186,
+      "sha256": "578317034da276752d5a719b6fe1a81b49b25ba76940a18a5461430aaa683f07"
+    },
+    {
+      "file": "riskgnnpp-uk-20261013/analysis-10seed/analysis.md",
+      "source": "models/runs/riskgnnpp-uk-20261013/analysis-10seed/analysis.md",
+      "bytes": 3207,
+      "sha256": "5cbe997265207e819418ed886a3c2b70b73335958bb5253b18e2f8776a199251"
+    },
+    {
+      "file": "riskgnnpp-uk-20261013-ext/COMPLETE",
+      "source": "models/runs/riskgnnpp-uk-20261013-ext/COMPLETE",
+      "bytes": 31,
+      "sha256": "386aa447b491c3c58c41ef602dd0aa851d3ab8e32552f854797861b49a736fee"
+    },
+    {
+      "file": "riskgnnpp-uk-20261013-ext/manifest.json",
+      "source": "models/runs/riskgnnpp-uk-20261013-ext/manifest.json",
+      "bytes": 5467,
+      "sha256": "89128a9b274d7a09bcdda402693e8d9a51c63bc213eba27472acc863a9bfbe49"
+    },
+    {
+      "file": "riskgnnpp-uk-20261013-ext/summary.json",
+      "source": "models/runs/riskgnnpp-uk-20261013-ext/summary.json",
+      "bytes": 19688,
+      "sha256": "3107361378121970daf028110b775055613071df9ad51375e17ccc5a4c3eb638"
+    },
+    {
+      "file": "riskgnnpp-uk-20261013-ext/results.md",
+      "source": "models/runs/riskgnnpp-uk-20261013-ext/results.md",
+      "bytes": 589,
+      "sha256": "9cb03ba0cc17afaaf75bec51fd0ad860f5afb2359d6b18c359df0bf224d1356b"
+    },
+    {
+      "file": "riskgnnpp-uk-20261013-ext/seed_101/training.json",
+      "source": "models/runs/riskgnnpp-uk-20261013-ext/seed_101/training.json",
+      "bytes": 3550,
+      "sha256": "af995ccca302d86133a48c2d907df712f3f0fc55cc1a1d33a9a7422c23ffb3c1"
+    },
+    {
+      "file": "riskgnnpp-uk-20261013-ext/seed_21/training.json",
+      "source": "models/runs/riskgnnpp-uk-20261013-ext/seed_21/training.json",
+      "bytes": 3547,
+      "sha256": "12e5408d3954604b49b2959183ae4e553ac88ce02a0fbdca10b7467fe8b36548"
+    },
+    {
+      "file": "riskgnnpp-uk-20261013-ext/seed_314/training.json",
+      "source": "models/runs/riskgnnpp-uk-20261013-ext/seed_314/training.json",
+      "bytes": 3530,
+      "sha256": "2248f7709dbf6ad9c68e343568c884a8029e341475ecc42f120ee1025204b750"
+    },
+    {
+      "file": "riskgnnpp-uk-20261013-ext/seed_555/training.json",
+      "source": "models/runs/riskgnnpp-uk-20261013-ext/seed_555/training.json",
+      "bytes": 3555,
+      "sha256": "3e4906f625ec7ca5e4dae52afcfe6a6078225bf18c9056f9791da38c9496bce6"
+    },
+    {
+      "file": "riskgnnpp-uk-20261013-ext/seed_7/training.json",
+      "source": "models/runs/riskgnnpp-uk-20261013-ext/seed_7/training.json",
+      "bytes": 3550,
+      "sha256": "c22294a64751a21017a97a3652486f0bfa761ff193398b5c15e5154a1e2b57cc"
+    },
+    {
+      "file": "riskgnnpp-uk-20261013-ext/seed_77/training.json",
+      "source": "models/runs/riskgnnpp-uk-20261013-ext/seed_77/training.json",
+      "bytes": 3545,
+      "sha256": "a2152fbdc6e8ddef3be8dea52a3e2df2de1252efae1f0e59e2315be8396fa72c"
+    },
+    {
+      "file": "riskgnnpp-uk-20261013-ext/seed_888/training.json",
+      "source": "models/runs/riskgnnpp-uk-20261013-ext/seed_888/training.json",
+      "bytes": 3556,
+      "sha256": "c88b4db5ab8a5d6542eb0c8c83d8e2cb80cfaa869a33039dca61f4dddcc5b47f"
+    }
+  ]
+}

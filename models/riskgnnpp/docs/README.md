@@ -5,6 +5,8 @@
 | 假设性论证版本（含三张插图） | [When to Trust Relational Evidence](riskgnnpp-paper-hypothetical.md) |
 | 插图、矢量文件与再生成说明 | [论文插图](figures/README.md) |
 | 当前英文论文工作稿 | [RiskGNN++ 论文](riskgnn_plus_plus_paper.md) |
+| 已归档实验指标、配置与十种子分析 | [2026-10-13 实验结果](../results/20261013/README.md) |
+| 早期给老师的复核讨论（历史材料） | [复核文档](../../../docs/给老师_论文复核.md) |
 | 数据、协议、消融与复现命令 | [实验补充](riskgnn-plus-plus-experiments.md) |
 | 实现一致性、引用和待证事项 | [中文核验报告](riskgnn-plus-plus-review.md) |
 | 逐 seed 复放指标与输入哈希 | [复放结果 JSON](riskgnn-plus-plus-replay.json) |

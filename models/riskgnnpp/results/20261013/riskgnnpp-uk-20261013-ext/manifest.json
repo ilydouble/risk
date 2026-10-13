@@ -1,0 +1,137 @@
+{
+  "dataset": "uk",
+  "data_dir": "/Users/liruirui/Documents/code/study/risk/datasets/uk_dataset_v1",
+  "data": {
+    "name": "uk-dataset-v1",
+    "company_num": 233251,
+    "features": [
+      "age_months",
+      "n_charges",
+      "n_charges_outstanding",
+      "addr_company_count",
+      "n_net_dir",
+      "max_span",
+      "sum_span"
+    ],
+    "relations": [
+      "SAME_ADDRESS",
+      "EQUITY",
+      "PREVNAME",
+      "SAME_NAME"
+    ],
+    "hyperedge_kinds": [
+      "sic_section",
+      "postcode_area",
+      "director_group"
+    ],
+    "uniform_weights": false,
+    "max_nodes": null,
+    "split_sizes": {
+      "train": 139956,
+      "valid": 23332,
+      "cal": 23332,
+      "test": 46631
+    },
+    "positive_rate": {
+      "train": 0.03650432993226443,
+      "valid": 0.035530601748671356,
+      "cal": 0.03634493399622835,
+      "test": 0.03422615856404538
+    },
+    "edge_counts": {
+      "train": 248517,
+      "valid": 84060,
+      "cal": 84060,
+      "test": 79771
+    }
+  },
+  "data_sha256": {
+    "train.json": "45d5c64320304eed4e4856c41b62d5bbd35d1f781cc57e7bed284a63f4f2e76b",
+    "valid.json": "3fbd6fb6f31e42c31696d6c0b1a82267fd7416793dd62651a9218678e357c0d3",
+    "test.json": "17e2ebd7c0996170a71028f3e4a07e944e9d14518602d84b8927d1ca407305e3"
+  },
+  "class_weights": [
+    1.0,
+    26.394010569583088
+  ],
+  "edge_weights": "dataset",
+  "arms": {
+    "comrisk": {
+      "kind": "backbone",
+      "use_prior": false
+    },
+    "riskgnn": {
+      "kind": "backbone",
+      "use_prior": true
+    },
+    "plus": {
+      "kind": "plus",
+      "use_prior": true
+    },
+    "plusplus": {
+      "kind": "plusplus",
+      "use_prior": true,
+      "use_topology_discount": true,
+      "use_degree_likelihood": true
+    }
+  },
+  "plusplus": {
+    "conflict_exponent": 1.0,
+    "degree_exponent": 0.25,
+    "degree_likelihood_lambda": 0.5
+  },
+  "protocol": {
+    "epochs": 250,
+    "lr": 0.01,
+    "eval_every": 5,
+    "grad_clip": 0.25,
+    "scheduler": "cosine",
+    "select": "best validation ROC-AUC"
+  },
+  "seeds": [
+    7,
+    21,
+    77,
+    101,
+    314,
+    555,
+    888
+  ],
+  "torch": "2.14.0",
+  "numpy": "2.5.3",
+  "device": "cpu",
+  "source_sha256": {
+    "riskgnn_plus/__init__.py": "aa6d97959cd2563b1b5ed08edb6464660ca3b274fc6536eb37042c30511c0fda",
+    "riskgnn_plus/conformal.py": "7e9bec00d898bc6c0dac0581c68ba621dcaddbed96e7245ee9879a7001535729",
+    "riskgnn_plus/dst.py": "e16ff895005e320b9ab9b9ff0c1c13cfe27cf94af581f48ae13a677d4a97000d",
+    "riskgnn_plus/evaluator.py": "c08a40bae96955ae9cae2e0c253af20482153c9062d189b0ddf111b2bba27b43",
+    "riskgnn_plus/loss.py": "87956a685562e34b444f8bee264decd173dc5464e0e491485730cae7ee38d7fc",
+    "riskgnn_plus/model.py": "d4e75ed87ecf0e212c6a82d59e791c57633b97650c3f763c3517561dc0f668d4",
+    "smesd_uncertainty/__init__.py": "d48b356e8de7c401e810dd1fb7fb4fc1270e6f3b0fc14a1c3645ad569628cc51",
+    "smesd_uncertainty/comrisk_base/__init__.py": "23295206616be3dab4fbe69530bf98cdb99a07930480f146385dc34e09068d7c",
+    "smesd_uncertainty/comrisk_base/gnn.py": "bcf4605e120c48384eca8603d3cabff63ac087e4ba7b3046c6e217de3b2eef99",
+    "smesd_uncertainty/comrisk_base/utils.py": "82e6023172ef7a1f2ddadd8e7747cd3b97cfcdbcbe8c0cb617017f19ca1d8f58",
+    "smesd_uncertainty/matrix.py": "47e811e969ff8dc76e675aea1ecca151646bfd4ab3de194f62964af9b098a1d4",
+    "smesd_uncertainty/pretraining.py": "49a01566cc59c686ec9c34dd9c9aa4b7952fb21678a6fd2f71c681f0ebdca463",
+    "smesd_uncertainty/protocol.py": "0042cf1ab6f81173ee1b9f67b9fecd16859c4a8d6d745d4862d5554914bb3e1c",
+    "smesd_uncertainty/simulation.py": "f84a9bc009f150157838914c5a862b5ded0a95610c2a037ab05cc921b6c8b9b7",
+    "smesd_uncertainty/summary.py": "aedb65a6fb6e7946aee6ca2a362a679e8435e4ae6f60ba2b38ed159b855e6c73",
+    "smesd_uncertainty/training.py": "b1aa0493f69006a35cfdf8755016dbadfabcf0a93fb3456ac27030b5d6c6fff1",
+    "smesd_uncertainty/triage.py": "c4926180bf1e584ab8be2be21492b6d143640dff60ecc23ba3707e33929ac6ac",
+    "smesd_uncertainty/triage_training.py": "cad3a12f86ee0f7393527f35b9a8e2bb30fe651933c7b8045a743767e5b32e49",
+    "uk_benchmark/__init__.py": "a1da28c11ab60c2f5c3351148827c8f1f4c33c1c98991b012b690db9c46424fc",
+    "uk_benchmark/data.py": "96e55c50e6febfaa221e13380895f075f3953ac2adfdd29c3ba504e79fa9ec44",
+    "uk_benchmark/training.py": "83727a4602ad5d7107224e52dd3ac67e6e904ea90ded26d69eb545f84e1b4090",
+    "riskgnn_pp/__init__.py": "c7cff835a1fe7ba3cf097ffff8e8baffeccfa400c02ee51854b9578087a683de",
+    "riskgnn_pp/conformal_triage.py": "94659306f69830ac5bdab837adc28e3df02e994e9ebe0b8ee4338ec2839305b3",
+    "riskgnn_pp/evaluate_conformal_comparison.py": "b83a6723d1768563038f1b85b0dc49a75cc736cc67be4844ca80bdcf2b2e0f66",
+    "riskgnn_pp/fusion.py": "41a17d9030ca3a1d913d98a7fd9dcd0f9b44025ca789f397eabf9439cd757b03",
+    "riskgnn_pp/model.py": "0c0f4ff59a3efaa36dae4a8bacf4ee36bfecc3c81c1cc01c6f8968082880510c",
+    "riskgnn_pp/triage_analysis.py": "6764a764d64ba58f2014b6df09b02749e20990d184407061801ed63f46b3f8f4",
+    "smesd_benchmark/__init__.py": "4ef999fec892dfd89c12acfe6410deffe8594e72b241bc8a956181210ee26371",
+    "smesd_benchmark/data.py": "af0d8fb382d2553d18f93f98a78dbd3a1779bdc35be7390069c03aa13baec4d1",
+    "riskgnn_benchmark/__init__.py": "dba097170a0a4b26fa27690b930f7cf8f0a75dc887f28aa3bb115b7400d827db",
+    "riskgnn_benchmark/training.py": "b58aae5686073258bcdf7f5b749325faff7a4b6c180e721585dfcbe386a12d0e"
+  },
+  "git_head": "d417d3ebef719a76cfbeeb1e5f4a3747ff096f50"
+}
