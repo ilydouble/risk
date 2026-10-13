@@ -12,7 +12,7 @@
 | 训练协议 | 各运行目录 `manifest.json` | 数据规模、参数、源码 SHA-256 |
 | 保存预测 | 各运行目录 `seed_{14,42,2026}/predictions.npz` | 无需重新训练的分流复放 |
 | 本轮复放 | [riskgnn-plus-plus-replay.json](riskgnn-plus-plus-replay.json) | CP 与固定预算逐 seed 结果及输入哈希 |
-| 本轮脚本 | [replay-riskgnn-paper.py](../../scripts/replay-riskgnn-paper.py) | 固定参数复放，未做测试集参数搜索 |
+| 本轮脚本 | [replay_paper.py](../replay_paper.py) | 固定参数复放，未做测试集参数搜索 |
 
 两个训练目录都有 `COMPLETE`。本轮未重新训练，也未改写训练制品。
 复放调用当前 `riskgnn_pp/conformal_triage.py`；其 SHA-256 与六个 NPZ 的 SHA-256 随结果记录。
@@ -21,7 +21,7 @@
 复放命令（仓库内任意目录；Python 环境需有 NumPy）：
 
 ```bash
-python /Users/liruirui/Documents/code/study/risk/scripts/replay-riskgnn-paper.py \
+python /Users/liruirui/Documents/code/study/risk/models/riskgnn+/riskgnn_pp/replay_paper.py \
   --output /tmp/riskgnn-paper-replay.json
 ```
 
@@ -57,7 +57,7 @@ python /Users/liruirui/Documents/code/study/risk/scripts/replay-riskgnn-paper.py
 RiskGNN/RiskGNN+/RiskGNN++ 使用训练标签拟合的先验；训练先验使用 leave-one-out。
 不能把所有架构间差值解释为某一个证据组件的独立作用。
 
-SMEsD 沿用发布划分。[既有协议复核](../../models/riskgnn+/docs/triage-comparison-results.md)
+SMEsD 沿用发布划分。[既有协议复核](../../docs/triage-comparison-results.md)
 记录 train/valid 重叠 35 家、train/test 重叠 17 家、valid/test 重叠 1 家、cal/test 重叠 1 家。
 本轮 loader 同样保留原划分，不应据此宣称互不重叠或无泄漏。
 原稿把 SMEsD 称为供应链图、称其高度同配，并使用平均度 3.8；这些描述尚缺一致的计算口径。

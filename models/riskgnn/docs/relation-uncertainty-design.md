@@ -10,12 +10,12 @@
 这个问题目前确实没有被充分表达。
 
 早期 Bundle 仅有快照、端点、关系类型和 weight，现已停止支持。
-当前数据结构见 [snapshot_schema.py](../../models/riskgnn/dataset_adapters/snapshot_schema.py)：
+当前数据结构见 [snapshot_schema.py](../dataset_adapters/snapshot_schema.py)：
 weight、strength、existence_confidence 分别保存，具体含义由数据适配器约定。
 
 源权重经过邻域归一化后只表达相对传播作用，不能因此解释为关系存在概率。
 例如只有一个邻居时，归一化权重可能接近 1；独立置信度需要在归一化之后作用于消息。
-当前研究实现见 [gnn.py](../../models/riskgnn/gnn.py)。UK 没有独立置信度时使用中性值 1，
+当前研究实现见 [gnn.py](../gnn.py)。UK 没有独立置信度时使用中性值 1，
 不能将其重标度后的 weight 再复制为概率。源文件中的 strength 也不能与 weight 无条件互换。
 
 ### 应当拆分的关系字段

@@ -5,8 +5,9 @@
 | 目录 | 定位 |
 | --- | --- |
 | `baseline/` | 上游 ComRisk Git 提交 `a80524b3…` 的原始实现，使用 SMEsD |
-| `riskgnn/` | 历史 RiskGNN 百万节点研究实现和邻居采样实验 |
-| `riskgnn+/` | SMEsD 边置信度不确定性实验（场景合成、预训练、配对训练与汇总） |
+| `riskgnn/` | RiskGNN 百万节点研究实现、邻居采样实验与[研究文档](riskgnn/docs/README.md) |
+| `riskgnn+/` | RiskGNN+ 证据学习、SMEsD/UK 对照与[研究文档](riskgnn+/docs/README.md) |
+| `riskgnn+/riskgnn_pp/` | 最新 RiskGNN++ 与 TACR 实现、[论文和实验材料](riskgnn+/riskgnn_pp/docs/README.md) |
 
 `service/` 是统一模型服务，提供数据校验与分析、执行管理、模型包及推理入口。
 业务后端通过内部 HTTP 调用服务；研究目录保持自己的 requirements 和 CLI。

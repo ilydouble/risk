@@ -21,7 +21,7 @@ riskgnn+/
   tests/
 ```
 
-顶层脚本名保持不变，因为 `docs/architecture/smesd-edge-confidence-experiment.md`
+顶层脚本名保持不变，因为 `models/riskgnn+/docs/smesd-edge-confidence-experiment.md`
 以 `python models/riskgnn+/<脚本>.py` 的形式引用它们。目录名含 `+`，不是合法
 Python 标识符，因此实现统一放在 `smesd_uncertainty/` 子包内，脚本运行时以所在
 目录为 `sys.path[0]` 直接 `import smesd_uncertainty`，不再修改 `sys.path` 去访问
@@ -57,10 +57,10 @@ python -m pytest models/riskgnn+/tests
 新增 `run_triage_comparison.py` 训练真实双分支证据模型与配对 ComRisk，
 `evaluate_triage_comparison.py` 从保存的预测重放概率/保形/固定预算分流比较。
 协议、校准边界、历史脚本的熵替代问题及命令见
-[复核分流对照](../../docs/architecture/triage-comparison.md)。
+[复核分流对照](docs/triage-comparison.md)。
 
 默认保留上游原论文划分；去重仅作敏感性分析。
-原划分三种子实测见[补充实验结果](../../docs/architecture/triage-comparison-results.md)。
+原划分三种子实测见[补充实验结果](docs/triage-comparison-results.md)。
 
 ## UK 数据集对照
 
@@ -68,5 +68,13 @@ python -m pytest models/riskgnn+/tests
 ComRisk / RiskGNN / RiskGNN+ 三臂对照，但训练真实证据双分支模型而非熵替代。
 实现位于 `uk_benchmark/`（`data.py` 加载契约不依赖 torch，`training.py` 负责训练与评估）。
 协议、数据差异与运行方式见
-[UK 对照](../../docs/architecture/uk-comparison.md)，实测结果见
-[UK 对照结果](../../docs/architecture/uk-comparison-results.md)。
+[UK 对照](docs/uk-comparison.md)，实测结果见
+[UK 对照结果](docs/uk-comparison-results.md)。
+
+## 研究文档
+
+- [RiskGNN+ 文档索引](docs/README.md)：原稿、受控实验与分流对照。
+- [RiskGNN++ 文档索引](riskgnn_pp/docs/README.md)：最新方法论文、实验复放与核验报告。
+
+RiskGNN++ 实现位于 `riskgnn_pp/`，共享训练入口为 `run_benchmark.py`；
+论文复放入口为 `riskgnn_pp/replay_paper.py`。训练制品统一保留在 `models/runs/`。

@@ -44,8 +44,8 @@ flowchart LR
 
 ## 研究与后续设计
 
-- [企业关系建图](graph-construction-design.md)与[关系不确定性](relation-uncertainty-design.md)
-- [数据与规模证据](comrisk-data-and-scale-evidence.md)、[置信度证据](comrisk-confidence-channel-evidence.md)
-- [SMEsD 受控实验](smesd-edge-confidence-experiment.md)
-- [RiskGNN+ 研究文稿](riskgnn_plus_paper.md)，与当前服务开放能力分开验收
-- [RiskGNN++ 研究工作稿](riskgnn_plus_plus_paper.md)、[实验复现补充](riskgnn-plus-plus-experiments.md)与[论文核验报告](riskgnn-plus-plus-review.md)
+- [企业关系建图](../../models/riskgnn/docs/graph-construction-design.md)与[关系不确定性](../../models/riskgnn/docs/relation-uncertainty-design.md)
+- [数据与规模证据](../../models/riskgnn/docs/comrisk-data-and-scale-evidence.md)、[置信度证据](../../models/riskgnn/docs/comrisk-confidence-channel-evidence.md)
+- [SMEsD 受控实验](../../models/riskgnn+/docs/smesd-edge-confidence-experiment.md)
+- [RiskGNN+ 研究文稿](../../models/riskgnn+/docs/riskgnn-plus-paper.md)，与当前服务开放能力分开验收
+- [RiskGNN++ 研究工作稿](../../models/riskgnn+/riskgnn_pp/docs/riskgnn_plus_plus_paper.md)、[实验复现补充](../../models/riskgnn+/riskgnn_pp/docs/riskgnn-plus-plus-experiments.md)与[论文核验报告](../../models/riskgnn+/riskgnn_pp/docs/riskgnn-plus-plus-review.md)

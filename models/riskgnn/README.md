@@ -187,3 +187,7 @@ experiments and does not claim to reproduce the historical metrics above.
 [UK Dataset V1](dataset_adapters/uk_dataset_v1/README.md)。
 专用说明与实现同目录；旧 Bundle 和合成演示生成器已删除。
 当前 node_edge 配置没有启用超图/事件分支，保留的数据不代表已参与训练。
+
+## 研究文档
+
+算法建图、关系不确定性和 ComRisk-family 证据复核见[研究文档索引](docs/README.md)。
