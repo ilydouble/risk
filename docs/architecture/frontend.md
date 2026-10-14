@@ -54,3 +54,11 @@ import { GraphView } from "@/shared/ui/graph";
 - 企业页面负责风险颜色、路径虚线与弱化、详情联动，业务数据在页面转换为通用展示类型。
 - 企业 API 接受 1–3 跳查询，前端直接传递所选跳数并展示返回结果。
 - 当前使用圆形与文字等基础样式；自定义图标节点和精细视觉留待后续。G6 随懒加载图谱路由加载。
+
+## Agent 消息流
+
+`/chat` 使用持久 Conversation / Turn / Item，见[会话架构](agent-conversation.md)与[协议](agent-protocol.md)。
+`entities/assistant` 管 API、SSE 订阅和事件归并；`features/assistant` 管会话状态与提交；
+`pages/chat` 管布局、Markdown、推理和工具卡片。DTO 全部来自 OpenAPI。
+SSE 使用 `@microsoft/fetch-event-source`；重连在 POST body 传最新序号，组件退出只中止订阅。
+普通 API 继续使用 Stellarmesh HTTP SDK。显式停止调用取消接口，不依赖浏览器断开。

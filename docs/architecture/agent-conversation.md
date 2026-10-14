@@ -29,6 +29,7 @@
 
 新增四张表：assistant_conversations、assistant_turns、assistant_items、assistant_events。
 事件与 Item 快照、Turn 状态在同一事务更新；事件序号在 Turn 内严格递增。
+首版列表最多返回最近 100 个会话，详情返回最近 100 个 Turn；旧记录仍保留。
 Item 快照用于历史展示，事件用于恢复订阅。首版不清理事件；上线前按保留政策归档。
 每次模型调用只重建最近完成 Turn 的用户文本和回答，限制 32,000 字符。
 工具审计和推理展示不自动作为下一轮历史；不把客户端历史当成权威记录。

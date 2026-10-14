@@ -151,7 +151,7 @@ def test_persistence_replay_and_execution():
             )
             assert created
             repeated, created = await repo.start(
-                owner, conversation.id, "key", "Hello", config.public(), "r"
+                owner, conversation.id, "key", "Hello", config.public(), "r", accept_new=False
             )
             assert not created and repeated.id == turn.id
             for who, key, message, code in [

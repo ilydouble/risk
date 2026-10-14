@@ -91,3 +91,11 @@ PostgreSQL 契约测试需设置 `RISK_TEST_DATABASE_URL`，在随机临时 sche
 模型研究脚本保持原使用方式；工作台不统一规定数据集的 load、split 或训练算法。
 
 新数据包必须包含 [risk_dataset_contract.json](docs/architecture/dataset-contract.md)。此次升级使旧工作台记录和模型失效，需按新契约重新上传；原研究脚本及企业演示功能保留。
+
+## 智能助手
+
+`/chat` 已接入 Strands Agents 1.60.0，支持持久会话、流式回答、公开推理片段、工具过程和停止执行。
+沿用智能体模型设置，默认使用 `RISK_LLM_*`；端点须支持 OpenAI 兼容流式工具调用。
+本轮提供只读 `current_time` 工具；工作台问数仍是独立的受控查询功能，尚未接为 Agent 工具。
+更新后重建后端和前端，后端启动自动迁移到 V0009；旧数据保留。
+详见[Agent 架构](docs/architecture/agent-conversation.md)和[消息协议](docs/architecture/agent-protocol.md)。

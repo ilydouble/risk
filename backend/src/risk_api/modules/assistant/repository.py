@@ -133,6 +133,8 @@ class AssistantRepository:
         message: str,
         configuration: dict[str, Any],
         request_id: str,
+        *,
+        accept_new: bool = True,
     ) -> tuple[Turn, bool]:
         digest = hashlib.sha256(
             json.dumps([message, configuration], sort_keys=True, ensure_ascii=False).encode()
@@ -156,6 +158,8 @@ class AssistantRepository:
                 if existing.input_digest != digest:
                     raise AppError(409, "ASSISTANT_KEY_CONFLICT", "Request key already used")
                 return await self.view(session, existing), False
+            if not accept_new:
+                raise AppError(503, "ASSISTANT_CAPACITY", "Assistant is busy, please retry")
             active = await session.scalar(
                 select(TurnRecord.id).where(
                     TurnRecord.conversation_id == conversation, TurnRecord.status == "running"

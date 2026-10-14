@@ -10,7 +10,7 @@ export default {
     aiSettings: "Agent Model Settings",
     dataPrep: "Data Preparation",
     dataQa: "Workbench Data Q&A",
-    chat: "Model Q&A",
+    chat: "Assistant",
     workspace: "Workspace",
     modeling: "Model Training",
     modelingWorkbench: "Model Training Workbench",

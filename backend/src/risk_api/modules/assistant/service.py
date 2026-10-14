@@ -4,7 +4,8 @@ from collections.abc import AsyncIterator
 from contextlib import aclosing
 from time import monotonic
 
-from risk_api.errors import AppError
+from anyio import CancelScope
+
 from risk_api.modules.assistant.protocol.events import TurnEvent
 from risk_api.modules.assistant.protocol.items import Item
 from risk_api.modules.assistant.protocol.turns import Turn, TurnError, TurnStatus
@@ -32,10 +33,14 @@ class AssistantService:
         request_id: str,
     ) -> Turn:
         async with self.start_lock:
-            if self.closed or len(self.tasks) >= 8:
-                raise AppError(503, "ASSISTANT_CAPACITY", "Assistant is busy, please retry")
             turn, created = await self.repository.start(
-                owner, conversation, key, message, settings.public(), request_id
+                owner,
+                conversation,
+                key,
+                message,
+                settings.public(),
+                request_id,
+                accept_new=not self.closed and len(self.tasks) < 8,
             )
             if created:
                 task = asyncio.create_task(self.execute(owner, turn, message, settings))
@@ -148,7 +153,11 @@ class AssistantService:
         yield ": connected\n\n"
         heartbeat = monotonic()
         while True:
-            events, done = await self.repository.events(owner, turn_id, after)
+            # A browser disconnect cancels Starlette's AnyIO scope repeatedly. Finish the
+            # short DB read/connection return before yielding to cancellation at sleep/yield.
+            with CancelScope(shield=True):
+                async with asyncio.timeout(5):
+                    events, done = await self.repository.events(owner, turn_id, after)
             for event in events:
                 yield self.encode(event)
                 after = event.sequence
