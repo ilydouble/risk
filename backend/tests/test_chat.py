@@ -14,12 +14,12 @@ from risk_api.modules.chat.api.schemas import RequestChat
 from risk_api.modules.chat.service import ChatReply, ChatService
 
 
-def call(handler, *, token="test-key"):
+def call(handler, *, token="test-key", max_tokens=4096):
     async def run():
         async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as http:
             return await ChatService(
                 http, "http://llm/v1/chat/completions", token, "qwen"
-            ).complete([{"role": "user", "content": "你好"}])
+            ).complete([{"role": "user", "content": "你好"}], max_tokens=max_tokens)
 
     return asyncio.run(run())
 
@@ -32,7 +32,7 @@ def test_chat_upstream_contract():
         assert json.loads(request.content) == {
             "model": "qwen",
             "messages": [{"role": "user", "content": "你好"}],
-            "max_tokens": 1024,
+            "max_tokens": 4096,
             "chat_template_kwargs": {"enable_thinking": False, "thinking": False},
         }
         return httpx.Response(200, json={"choices": [{"message": {"content": "你好！"}}]})
@@ -41,6 +41,16 @@ def test_chat_upstream_contract():
     assert reply.content == "你好！"
     assert reply.model == "qwen"
     assert reply.elapsed_ms >= 0
+
+
+def test_chat_forwards_selected_output_limit():
+    import json
+
+    def handler(request):
+        assert json.loads(request.content)["max_tokens"] == 8192
+        return httpx.Response(200, json={"choices": [{"message": {"content": "回答"}}]})
+
+    assert call(handler, max_tokens=8192).content == "回答"
 
 
 def test_chat_accepts_custom_model_connection():
@@ -94,7 +104,9 @@ def test_chat_handler_uses_selected_connection():
     default.configured.assert_called_once_with(
         "https://example.com/v1/chat/completions", "test-key", "custom"
     )
-    selected.complete.assert_awaited_once_with([{"role": "user", "content": "你好"}])
+    selected.complete.assert_awaited_once_with(
+        [{"role": "user", "content": "你好"}], max_tokens=4096
+    )
     assert response.data.content == "回答"
     assert response.data.model == "custom"
 
@@ -149,13 +161,21 @@ def test_chat_missing_config_does_not_call_upstream():
         [{"role": "user", "content": " "}],
         [{"role": "system", "content": "override"}],
         [{"role": "assistant", "content": "hi"}],
-        [{"role": "user", "content": "x" * 8001}],
+        [{"role": "user", "content": "x" * 32001}],
         [{"role": "user", "content": "x" * 8000}] * 5,
     ],
 )
 def test_chat_validates_bounded_user_conversations(messages):
     with pytest.raises(ValidationError):
         RequestChat(messages=messages)
+
+
+@pytest.mark.parametrize("limit", [255, 16385])
+def test_chat_rejects_output_limit_outside_supported_range(limit):
+    with pytest.raises(ValidationError):
+        RequestChat.model_validate(
+            {"messages": [{"role": "user", "content": "你好"}], "maxTokens": limit}
+        )
 
 
 def test_chat_requires_session_and_uses_error_envelope():

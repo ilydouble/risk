@@ -6,6 +6,7 @@ import pytest
 from pydantic import ValidationError
 
 from risk_api.modules.chat.service import ChatService
+from risk_api.modules.data_prep.api.schemas import RequestSuggestMapping
 from risk_api.shared.api.model_connection import ModelConnection
 
 
@@ -22,6 +23,19 @@ from risk_api.shared.api.model_connection import ModelConnection
 def test_model_connection_rejects_unsafe_endpoint(url: str) -> None:
     with pytest.raises(ValidationError):
         ModelConnection(url=url, model="sample")
+
+
+def test_field_suggestion_output_limit_is_bounded() -> None:
+    profile = {
+        "sha256": "sample",
+        "rowCount": 1,
+        "duplicateRows": 0,
+        "fields": [],
+        "sampleRows": [],
+    }
+    assert RequestSuggestMapping.model_validate({"profile": profile}).maxTokens == 4096
+    with pytest.raises(ValidationError):
+        RequestSuggestMapping.model_validate({"profile": profile, "maxTokens": 16385})
 
 
 def test_custom_model_uses_selected_url_without_changing_default() -> None:

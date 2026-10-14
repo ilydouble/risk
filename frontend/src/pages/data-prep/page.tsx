@@ -51,7 +51,7 @@ export default function DataPrepPage() {
     setBusy(true);
     setError("");
     try {
-      setSuggestion(await requestSuggestMapping({ profile, connection: modelConfig.connection }));
+      setSuggestion(await requestSuggestMapping({ profile, connection: modelConfig.connection, maxTokens: modelConfig.maxTokens }));
     } catch (cause) {
       setError(handleApiError(cause, {
         CHAT_NOT_CONFIGURED: "智能分析需要先配置后端大模型。数据体检结果仍可查看。",

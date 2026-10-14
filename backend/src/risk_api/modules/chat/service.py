@@ -33,11 +33,13 @@ class ChatService:
             self.http, url, token, model, require_token=False, disable_thinking=False
         )
 
-    async def complete(self, messages: list[dict[str, str]]) -> ChatReply:
+    async def complete(
+        self, messages: list[dict[str, str]], *, max_tokens: int = 4096
+    ) -> ChatReply:
         if self.require_token and not self.token.strip():
             raise AppError(503, "CHAT_NOT_CONFIGURED", "请配置后端 RISK_LLM_API_KEY")
         start = perf_counter()
-        payload = {"model": self.model, "messages": messages, "max_tokens": 1024}
+        payload = {"model": self.model, "messages": messages, "max_tokens": max_tokens}
         if self.disable_thinking:
             payload["chat_template_kwargs"] = {"enable_thinking": False, "thinking": False}
         try:

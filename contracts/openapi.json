@@ -1632,7 +1632,7 @@
         "additionalProperties": false,
         "properties": {
           "content": {
-            "maxLength": 8000,
+            "maxLength": 32000,
             "minLength": 1,
             "title": "Content",
             "type": "string"
@@ -5510,6 +5510,13 @@
               }
             ]
           },
+          "maxTokens": {
+            "default": 4096,
+            "maximum": 16384.0,
+            "minimum": 256.0,
+            "title": "Maxtokens",
+            "type": "integer"
+          },
           "messages": {
             "items": {
               "$ref": "#/components/schemas/ChatMessage"
@@ -6309,6 +6316,13 @@
                 "type": "null"
               }
             ]
+          },
+          "maxTokens": {
+            "default": 4096,
+            "maximum": 16384.0,
+            "minimum": 256.0,
+            "title": "Maxtokens",
+            "type": "integer"
           },
           "profile": {
             "$ref": "#/components/schemas/ResponseInspectData"

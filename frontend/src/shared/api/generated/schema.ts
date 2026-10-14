@@ -2761,6 +2761,11 @@ export interface components {
         /** RequestChat */
         RequestChat: {
             connection?: components["schemas"]["ModelConnection"] | null;
+            /**
+             * Maxtokens
+             * @default 4096
+             */
+            maxTokens: number;
             /** Messages */
             messages: components["schemas"]["ChatMessage"][];
         };
@@ -3114,6 +3119,11 @@ export interface components {
         /** RequestSuggestMapping */
         RequestSuggestMapping: {
             connection?: components["schemas"]["ModelConnection"] | null;
+            /**
+             * Maxtokens
+             * @default 4096
+             */
+            maxTokens: number;
             profile: components["schemas"]["ResponseInspectData"];
         };
         /** RequestTestModel */

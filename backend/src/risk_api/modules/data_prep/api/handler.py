@@ -68,7 +68,8 @@ async def suggest_mapping(
                 ),
             },
             {"role": "user", "content": json.dumps(context, ensure_ascii=False)},
-        ]
+        ],
+        max_tokens=body.maxTokens,
     )
     try:
         content = reply.content.strip().removeprefix("```json").removesuffix("```").strip()
@@ -111,6 +112,7 @@ async def test_model(
         [
             {"role": "system", "content": "Reply with OK."},
             {"role": "user", "content": "OK"},
-        ]
+        ],
+        max_tokens=128,
     )
     return success_response(ResponseTestModel(model=reply.model, elapsedMs=reply.elapsed_ms))

@@ -21,7 +21,9 @@ async def complete(
         chat = service.configured(
             body.connection.url, body.connection.apiKey, body.connection.model
         )
-    reply = await chat.complete([message.model_dump() for message in body.messages])
+    reply = await chat.complete(
+        [message.model_dump() for message in body.messages], max_tokens=body.maxTokens
+    )
     return success_response(
         ResponseChat(content=reply.content, model=reply.model, elapsedMs=reply.elapsed_ms)
     )

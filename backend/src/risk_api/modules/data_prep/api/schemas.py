@@ -29,6 +29,7 @@ class RequestSuggestMapping(BaseModel):
     model_config = ConfigDict(extra="forbid")
     profile: ResponseInspectData
     connection: ModelConnection | None = None
+    maxTokens: int = Field(default=4096, ge=256, le=16384)
 
 
 class RequestModelDefaults(BaseModel):

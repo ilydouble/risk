@@ -44,6 +44,12 @@ export default function AiSettingsPage() {
         <label className="text-sm">模型名<input className={input} value={config.model} placeholder="模型 ID" onChange={(event) => { config.setModel(event.target.value); setStatus(""); }} /></label>
         <label className="text-sm">API 密钥（无认证可留空）<input className={input} type="password" autoComplete="off" value={config.apiKey} onChange={(event) => { config.setApiKey(event.target.value); setStatus(""); }} /></label>
       </div>}
+      <label className="block max-w-xs text-sm">单次回答上限
+        <select className={input} value={config.maxTokens} onChange={(event) => config.setMaxTokens(Number(event.target.value))}>
+          {[1024, 2048, 4096, 8192, 16384].map((value) => <option key={value} value={value}>{value.toLocaleString()} tokens</option>)}
+        </select>
+      </label>
+      <p className="text-xs text-foreground-500">默认 4,096 tokens，设置后自动保存在此浏览器，同时用于模型问答和字段建议。实际可用长度受模型服务限制；设置更高也可能使回答更慢或超时。</p>
       <div className="flex flex-wrap items-center gap-3">
         {config.custom && <button type="button" className="rounded-md border border-background-300 px-4 py-2 text-sm" disabled={!config.url.trim() || !config.model.trim()} onClick={() => { config.save(); setStatus("地址和模型名已保存在此浏览器。密钥只在本次登录页面中保留。"); }}>保存地址和模型名</button>}
         <button type="button" className={button} disabled={busy || (!config.custom && !config.defaults) || (config.custom && (!config.url.trim() || !config.model.trim()))} onClick={() => void test()}>{busy ? "测试中…" : "测试连接"}</button>

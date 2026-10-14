@@ -8,11 +8,13 @@ export type AiModelConfig = {
   url: string;
   model: string;
   apiKey: string;
+  maxTokens: number;
   connection?: RequestTestModel["connection"];
   setCustom(value: boolean): void;
   setUrl(value: string): void;
   setModel(value: string): void;
   setApiKey(value: string): void;
+  setMaxTokens(value: number): void;
   useOpenLux(): void;
   save(): void;
 };

@@ -132,7 +132,7 @@ class InfrastructureProvider(Provider):
 
     @provide(scope=Scope.APP)
     async def chat_service(self) -> AsyncIterator[ChatService]:
-        async with httpx.AsyncClient(timeout=60, trust_env=False) as http:
+        async with httpx.AsyncClient(timeout=180, trust_env=False) as http:
             yield ChatService(http, settings.llm_url, settings.llm_api_key, settings.llm_model)
 
     @provide(scope=Scope.APP)

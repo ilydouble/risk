@@ -8,7 +8,26 @@ import type { components } from "@/shared/api/generated/schema";
 import "./chat-markdown.css";
 
 type Message = components["schemas"]["ChatMessage"];
-const complete = http.withTimeout(70000).post<
+const maxContextChars = 32000;
+
+function recentContext(messages: Message[]): Message[] {
+  const result: Message[] = [];
+  let remaining = maxContextChars;
+  for (let index = messages.length - 1; index >= 0 && result.length < 20 && remaining > 0; index -= 1) {
+    const message = messages[index];
+    if (message.content.length > remaining) {
+      if (message.role === "assistant" && remaining >= 256) {
+        result.unshift({ ...message, content: message.content.slice(-remaining) });
+      }
+      break;
+    }
+    result.unshift(message);
+    remaining -= message.content.length;
+  }
+  return result;
+}
+
+const complete = http.withTimeout(190000).post<
   components["schemas"]["RequestChat"], components["schemas"]["ResponseChat"]
 >("/chat/complete");
 const errors = {
@@ -35,16 +54,16 @@ export default function ChatPage() {
   async function send(question: string) {
     if (busy.current || !question.trim() || !modelReady) return;
     const next: Message[] = [...messages, { role: "user", content: question.trim() }];
-    if (next.length > 20 || next.reduce((n, m) => n + m.content.length, 0) > 32000) {
-      setError("对话已达到长度限制，请清空对话后继续。");
-      return;
-    }
     busy.current = true;
     setPending(true);
     setError("");
     setResult(null);
     try {
-      const answer = await complete({ messages: next, connection: config.connection });
+      const answer = await complete({
+        messages: recentContext(next),
+        connection: config.connection,
+        maxTokens: config.maxTokens,
+      });
       setMessages([...next, { role: "assistant", content: answer.content }]);
       setResult({ model: answer.model, elapsedMs: answer.elapsedMs });
       setInput("");
@@ -100,7 +119,7 @@ export default function ChatPage() {
         <label htmlFor="chat-question" className="text-sm font-medium">输入问题</label>
         <textarea id="chat-question" value={input} onChange={(event) => setInput(event.target.value)} maxLength={8000} disabled={pending} rows={4} placeholder="例如：经营风险分析通常需要哪些企业信息？" className="w-full rounded-lg border border-background-300 bg-background-100 p-3 text-sm outline-none focus:border-primary-500 disabled:opacity-50" />
         <div className="flex items-center justify-between">
-          <span className="text-xs text-foreground-500">{input.length} / 8000 · 单次回答最多 1024 tokens</span>
+          <span className="text-xs text-foreground-500">{input.length} / 8000 · 单次回答上限 {config.maxTokens.toLocaleString()} tokens · 自动选取最近对话作为上下文</span>
           <button type="submit" disabled={pending || !modelReady || !input.trim()} className="rounded-md bg-primary-500 px-5 py-2 text-sm text-white disabled:opacity-50">{pending ? "发送中…" : "发送"}</button>
         </div>
       </form>
