@@ -51,3 +51,6 @@ flowchart LR
 - [SMEsD 受控实验](../../models/riskgnn+/docs/smesd-edge-confidence-experiment.md)
 - [RiskGNN+ 研究文稿](../../models/riskgnn+/docs/riskgnn-plus-paper.md)，研究协议与工作台有界子图配置分别验收
 - [RiskGNN++ 研究工作稿](../../models/riskgnnpp/docs/riskgnn_plus_plus_paper.md)、[实验复现补充](../../models/riskgnnpp/docs/riskgnn-plus-plus-experiments.md)与[论文核验报告](../../models/riskgnnpp/docs/riskgnn-plus-plus-review.md)
+
+- [Agent 会话与执行](agent-conversation.md)：Strands、所有权、持久化与恢复。
+- [Agent Turn / Item 协议](agent-protocol.md)：类型、SSE、重放与错误边界。

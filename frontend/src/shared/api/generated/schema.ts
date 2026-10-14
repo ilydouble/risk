@@ -4,6 +4,108 @@
  */
 
 export interface paths {
+    "/api/v1/assistant/conversations/create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Conversation */
+        post: operations["create_conversation_api_v1_assistant_conversations_create_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/assistant/conversations/get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Get Conversation */
+        post: operations["get_conversation_api_v1_assistant_conversations_get_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/assistant/conversations/list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** List Conversations */
+        post: operations["list_conversations_api_v1_assistant_conversations_list_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/assistant/turns/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel Turn */
+        post: operations["cancel_turn_api_v1_assistant_turns_cancel_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/assistant/turns/create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Turn */
+        post: operations["create_turn_api_v1_assistant_turns_create_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/assistant/turns/events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Turn Events */
+        post: operations["turn_events_api_v1_assistant_turns_events_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/login": {
         parameters: {
             query?: never;
@@ -808,6 +910,16 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ApiEnvelope[ResponseCancelTurn] */
+        ApiEnvelope_ResponseCancelTurn_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseCancelTurn"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
         /** ApiEnvelope[ResponseChat] */
         ApiEnvelope_ResponseChat_: {
             /** Code */
@@ -838,6 +950,16 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ApiEnvelope[ResponseCreateConversation] */
+        ApiEnvelope_ResponseCreateConversation_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseCreateConversation"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
         /** ApiEnvelope[ResponseCreateDatasetUpload] */
         ApiEnvelope_ResponseCreateDatasetUpload_: {
             /** Code */
@@ -863,6 +985,16 @@ export interface components {
             /** Code */
             code: number;
             data: components["schemas"]["ResponseCreateRun"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseCreateTurn] */
+        ApiEnvelope_ResponseCreateTurn_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseCreateTurn"] | null;
             /** Internal Code */
             internal_code: string;
             /** Message */
@@ -933,6 +1065,16 @@ export interface components {
             /** Code */
             code: number;
             data: components["schemas"]["ResponseGetCompany"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseGetConversation] */
+        ApiEnvelope_ResponseGetConversation_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseGetConversation"] | null;
             /** Internal Code */
             internal_code: string;
             /** Message */
@@ -1023,6 +1165,16 @@ export interface components {
             /** Code */
             code: number;
             data: components["schemas"]["ResponseInspectData"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseListConversations] */
+        ApiEnvelope_ResponseListConversations_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseListConversations"] | null;
             /** Internal Code */
             internal_code: string;
             /** Message */
@@ -1391,6 +1543,18 @@ export interface components {
             /** Timeline */
             timeline: components["schemas"]["TimelineEvent"][];
         };
+        /** Conversation */
+        Conversation: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /**
+             * Updatedat
+             * Format: date-time
+             */
+            updatedAt: string;
+        };
         /** CorrelationDTO */
         CorrelationDTO: {
             /** Correlation */
@@ -1719,6 +1883,22 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ErrorEnvelope[Literal[404], Literal['ASSISTANT_NOT_FOUND']] */
+        ErrorEnvelope_Literal_404__Literal__ASSISTANT_NOT_FOUND___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 404;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @constant
+             */
+            internal_code: "ASSISTANT_NOT_FOUND";
+            /** Message */
+            message: string;
+        };
         /** ErrorEnvelope[Literal[404], Literal['COMPANY_NOT_FOUND']] */
         ErrorEnvelope_Literal_404__Literal__COMPANY_NOT_FOUND___: {
             /**
@@ -1812,6 +1992,22 @@ export interface components {
              * @constant
              */
             internal_code: "OVERVIEW_COMPANY_NOT_FOUND";
+            /** Message */
+            message: string;
+        };
+        /** ErrorEnvelope[Literal[409], Literal['ASSISTANT_BUSY', 'ASSISTANT_KEY_CONFLICT']] */
+        ErrorEnvelope_Literal_409__Literal__ASSISTANT_BUSY____ASSISTANT_KEY_CONFLICT___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 409;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @enum {string}
+             */
+            internal_code: "ASSISTANT_BUSY" | "ASSISTANT_KEY_CONFLICT";
             /** Message */
             message: string;
         };
@@ -2007,6 +2203,22 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ErrorEnvelope[Literal[503], Literal['ASSISTANT_CAPACITY']] */
+        ErrorEnvelope_Literal_503__Literal__ASSISTANT_CAPACITY___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 503;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @constant
+             */
+            internal_code: "ASSISTANT_CAPACITY";
+            /** Message */
+            message: string;
+        };
         /** ErrorEnvelope[Literal[503], Literal['AUTH_STORE_INVALID']] */
         ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___: {
             /**
@@ -2165,6 +2377,11 @@ export interface components {
             /** Sequence */
             sequence: number;
         };
+        /**
+         * EventType
+         * @enum {string}
+         */
+        EventType: "turn_started" | "item_updated" | "item_delta" | "turn_completed" | "turn_failed" | "turn_cancelled" | "turn_interrupted";
         /**
          * ExecutionEventKind
          * @enum {string}
@@ -2435,6 +2652,24 @@ export interface components {
              */
             type: "company" | "owner" | "subsidiary" | "supplier" | "guarantor" | "client" | "counterparty" | "person" | "bank" | "fund";
         };
+        /** ItemDelta */
+        ItemDelta: {
+            /**
+             * Field
+             * @enum {string}
+             */
+            field: "text" | "argumentsText";
+            /** Itemid */
+            itemId: string;
+            /** Text */
+            text: string;
+        };
+        /**
+         * ItemStatus
+         * @enum {string}
+         */
+        ItemStatus: "running" | "completed" | "failed" | "cancelled";
+        JsonValue: unknown;
         /** KeyCandidate */
         KeyCandidate: {
             /** Duplicatevalues */
@@ -2837,6 +3072,14 @@ export interface components {
              */
             runId: string;
         };
+        /** RequestCancelTurn */
+        RequestCancelTurn: {
+            /**
+             * Turnid
+             * Format: uuid
+             */
+            turnId: string;
+        };
         /** RequestChat */
         RequestChat: {
             connection?: components["schemas"]["ModelConnection"] | null;
@@ -2861,6 +3104,8 @@ export interface components {
             /** Documentid */
             documentId: string;
         };
+        /** RequestCreateConversation */
+        RequestCreateConversation: Record<string, never>;
         /** RequestCreateDatasetUpload */
         RequestCreateDatasetUpload: {
             /** Contenttype */
@@ -2904,6 +3149,27 @@ export interface components {
              */
             runnerId: "riskgnn";
         };
+        /** RequestCreateTurn */
+        RequestCreateTurn: {
+            connection?: components["schemas"]["ModelConnection"] | null;
+            /**
+             * Conversationid
+             * Format: uuid
+             */
+            conversationId: string;
+            /**
+             * Maxtokens
+             * @default 4096
+             */
+            maxTokens: number;
+            /** Message */
+            message: string;
+            /**
+             * Requestkey
+             * Format: uuid
+             */
+            requestKey: string;
+        };
         /** RequestCreateUpload */
         RequestCreateUpload: {
             /** Companyid */
@@ -2945,6 +3211,14 @@ export interface components {
         RequestGetCompany: {
             /** Id */
             id: string;
+        };
+        /** RequestGetConversation */
+        RequestGetConversation: {
+            /**
+             * Conversationid
+             * Format: uuid
+             */
+            conversationId: string;
         };
         /** RequestGetDataset */
         RequestGetDataset: {
@@ -3021,6 +3295,8 @@ export interface components {
             /** Filename */
             filename: string;
         };
+        /** RequestListConversations */
+        RequestListConversations: Record<string, never>;
         /** RequestListDatasets */
         RequestListDatasets: {
             pagination?: components["schemas"]["PageRequest"];
@@ -3209,6 +3485,19 @@ export interface components {
         RequestTestModel: {
             connection?: components["schemas"]["ModelConnection"] | null;
         };
+        /** RequestTurnEvents */
+        RequestTurnEvents: {
+            /**
+             * Aftersequence
+             * @default 0
+             */
+            afterSequence: number;
+            /**
+             * Turnid
+             * Format: uuid
+             */
+            turnId: string;
+        };
         /** ResponseAskData */
         ResponseAskData: {
             /** Answer */
@@ -3246,6 +3535,10 @@ export interface components {
         ResponseCancelRun: {
             run: components["schemas"]["RunDTO"];
         };
+        /** ResponseCancelTurn */
+        ResponseCancelTurn: {
+            turn: components["schemas"]["Turn"];
+        };
         /** ResponseChat */
         ResponseChat: {
             /** Content */
@@ -3262,6 +3555,10 @@ export interface components {
         /** ResponseCompleteUpload */
         ResponseCompleteUpload: {
             document: components["schemas"]["DocumentDTO"];
+        };
+        /** ResponseCreateConversation */
+        ResponseCreateConversation: {
+            conversation: components["schemas"]["Conversation"];
         };
         /** ResponseCreateDatasetUpload */
         ResponseCreateDatasetUpload: {
@@ -3289,6 +3586,10 @@ export interface components {
         /** ResponseCreateRun */
         ResponseCreateRun: {
             run: components["schemas"]["RunDTO"];
+        };
+        /** ResponseCreateTurn */
+        ResponseCreateTurn: {
+            turn: components["schemas"]["Turn"];
         };
         /** ResponseCreateUpload */
         ResponseCreateUpload: {
@@ -3369,6 +3670,11 @@ export interface components {
              */
             demo: true;
             profile: components["schemas"]["CompanyProfile"];
+        };
+        /** ResponseGetConversation */
+        ResponseGetConversation: {
+            /** Turns */
+            turns: components["schemas"]["Turn"][];
         };
         /** ResponseGetDataset */
         ResponseGetDataset: {
@@ -3484,6 +3790,11 @@ export interface components {
             }[];
             /** Sha256 */
             sha256: string;
+        };
+        /** ResponseListConversations */
+        ResponseListConversations: {
+            /** Conversations */
+            conversations: components["schemas"]["Conversation"][];
         };
         /** ResponseListDatasets */
         ResponseListDatasets: {
@@ -3667,6 +3978,25 @@ export interface components {
             /** Model */
             model: string;
         };
+        /** ResponseTurnEvent */
+        ResponseTurnEvent: {
+            delta?: components["schemas"]["ItemDelta"] | null;
+            error?: components["schemas"]["TurnError"] | null;
+            /** Item */
+            item?: (components["schemas"]["TextItem"] | components["schemas"]["ToolItem"]) | null;
+            /** Sequence */
+            sequence: number;
+            status?: components["schemas"]["TurnStatus"] | null;
+            /** Turnid */
+            turnId: string;
+            type: components["schemas"]["EventType"];
+            /**
+             * Version
+             * @default 1
+             * @constant
+             */
+            version: 1;
+        };
         /** RiskFlag */
         RiskFlag: {
             /** Category */
@@ -3804,6 +4134,23 @@ export interface components {
             /** Status */
             status: string;
         };
+        /** TextItem */
+        TextItem: {
+            /** Id */
+            id?: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "agent_message" | "reasoning" | "user_message";
+            /** @default running */
+            status: components["schemas"]["ItemStatus"];
+            /**
+             * Text
+             * @default
+             */
+            text: string;
+        };
         /** TimelineEvent */
         TimelineEvent: {
             /** Date */
@@ -3829,6 +4176,62 @@ export interface components {
              */
             type: "equity" | "legal" | "address" | "finance" | "risk" | "award";
         };
+        /** ToolItem */
+        ToolItem: {
+            /**
+             * Argumentstext
+             * @default
+             */
+            argumentsText: string;
+            /** Id */
+            id?: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "tool_call";
+            /** Name */
+            name: string;
+            result?: components["schemas"]["JsonValue"];
+            /** @default running */
+            status: components["schemas"]["ItemStatus"];
+            /** Toolcallid */
+            toolCallId: string;
+        };
+        /** Turn */
+        Turn: {
+            /** Conversationid */
+            conversationId: string;
+            /**
+             * Createdat
+             * Format: date-time
+             */
+            createdAt: string;
+            error?: components["schemas"]["TurnError"] | null;
+            /** Id */
+            id: string;
+            /** Items */
+            items?: (components["schemas"]["TextItem"] | components["schemas"]["ToolItem"])[];
+            /** Model */
+            model: string;
+            /** Requestid */
+            requestId: string;
+            /** Sequence */
+            sequence: number;
+            status: components["schemas"]["TurnStatus"];
+        };
+        /** TurnError */
+        TurnError: {
+            /** Code */
+            code: string;
+            /** Message */
+            message: string;
+        };
+        /**
+         * TurnStatus
+         * @enum {string}
+         */
+        TurnStatus: "running" | "completed" | "failed" | "cancelled" | "interrupted";
         /** ValueFrequency */
         ValueFrequency: {
             /** Count */
@@ -3845,6 +4248,528 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    create_conversation_api_v1_assistant_conversations_create_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestCreateConversation"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseCreateConversation_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__ASSISTANT_NOT_FOUND___"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__ASSISTANT_BUSY____ASSISTANT_KEY_CONFLICT___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__ASSISTANT_CAPACITY___"];
+                };
+            };
+        };
+    };
+    get_conversation_api_v1_assistant_conversations_get_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestGetConversation"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseGetConversation_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__ASSISTANT_NOT_FOUND___"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__ASSISTANT_BUSY____ASSISTANT_KEY_CONFLICT___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__ASSISTANT_CAPACITY___"];
+                };
+            };
+        };
+    };
+    list_conversations_api_v1_assistant_conversations_list_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestListConversations"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseListConversations_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__ASSISTANT_NOT_FOUND___"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__ASSISTANT_BUSY____ASSISTANT_KEY_CONFLICT___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__ASSISTANT_CAPACITY___"];
+                };
+            };
+        };
+    };
+    cancel_turn_api_v1_assistant_turns_cancel_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestCancelTurn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseCancelTurn_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__ASSISTANT_NOT_FOUND___"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__ASSISTANT_BUSY____ASSISTANT_KEY_CONFLICT___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__ASSISTANT_CAPACITY___"];
+                };
+            };
+        };
+    };
+    create_turn_api_v1_assistant_turns_create_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestCreateTurn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseCreateTurn_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__ASSISTANT_NOT_FOUND___"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__ASSISTANT_BUSY____ASSISTANT_KEY_CONFLICT___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__ASSISTANT_CAPACITY___"];
+                };
+            };
+        };
+    };
+    turn_events_api_v1_assistant_turns_events_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestTurnEvents"];
+            };
+        };
+        responses: {
+            /** @description Each SSE data field is a ResponseTurnEvent */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["ResponseTurnEvent"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["ErrorEnvelope_Literal_404__Literal__ASSISTANT_NOT_FOUND___"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["ErrorEnvelope_Literal_409__Literal__ASSISTANT_BUSY____ASSISTANT_KEY_CONFLICT___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["ErrorEnvelope_Literal_503__Literal__ASSISTANT_CAPACITY___"];
+                };
+            };
+        };
+    };
     login_api_v1_auth_login_post: {
         parameters: {
             query?: never;
@@ -7479,18 +8404,22 @@ export interface operations {
 
 export type RequestAskData = components["schemas"]["RequestAskData"];
 export type RequestCancelRun = components["schemas"]["RequestCancelRun"];
+export type RequestCancelTurn = components["schemas"]["RequestCancelTurn"];
 export type RequestChat = components["schemas"]["RequestChat"];
 export type RequestCompleteDatasetUpload = components["schemas"]["RequestCompleteDatasetUpload"];
 export type RequestCompleteUpload = components["schemas"]["RequestCompleteUpload"];
+export type RequestCreateConversation = components["schemas"]["RequestCreateConversation"];
 export type RequestCreateDatasetUpload = components["schemas"]["RequestCreateDatasetUpload"];
 export type RequestCreateDownload = components["schemas"]["RequestCreateDownload"];
 export type RequestCreateRun = components["schemas"]["RequestCreateRun"];
+export type RequestCreateTurn = components["schemas"]["RequestCreateTurn"];
 export type RequestCreateUpload = components["schemas"]["RequestCreateUpload"];
 export type RequestDataQACatalog = components["schemas"]["RequestDataQACatalog"];
 export type RequestDownloadModel = components["schemas"]["RequestDownloadModel"];
 export type RequestEnterpriseCompany = components["schemas"]["RequestEnterpriseCompany"];
 export type RequestEnterpriseSources = components["schemas"]["RequestEnterpriseSources"];
 export type RequestGetCompany = components["schemas"]["RequestGetCompany"];
+export type RequestGetConversation = components["schemas"]["RequestGetConversation"];
 export type RequestGetDataset = components["schemas"]["RequestGetDataset"];
 export type RequestGetGraph = components["schemas"]["RequestGetGraph"];
 export type RequestGetModel = components["schemas"]["RequestGetModel"];
@@ -7500,6 +8429,7 @@ export type RequestGetRun = components["schemas"]["RequestGetRun"];
 export type RequestGetScore = components["schemas"]["RequestGetScore"];
 export type RequestImportEnterprises = components["schemas"]["RequestImportEnterprises"];
 export type RequestInspectData = components["schemas"]["RequestInspectData"];
+export type RequestListConversations = components["schemas"]["RequestListConversations"];
 export type RequestListDatasets = components["schemas"]["RequestListDatasets"];
 export type RequestListDocuments = components["schemas"]["RequestListDocuments"];
 export type RequestListEnterpriseRecords = components["schemas"]["RequestListEnterpriseRecords"];
@@ -7520,14 +8450,18 @@ export type RequestSearchCompany = components["schemas"]["RequestSearchCompany"]
 export type RequestSearchOverviewCompany = components["schemas"]["RequestSearchOverviewCompany"];
 export type RequestSuggestMapping = components["schemas"]["RequestSuggestMapping"];
 export type RequestTestModel = components["schemas"]["RequestTestModel"];
+export type RequestTurnEvents = components["schemas"]["RequestTurnEvents"];
 export type ResponseAskData = components["schemas"]["ResponseAskData"];
 export type ResponseCancelRun = components["schemas"]["ResponseCancelRun"];
+export type ResponseCancelTurn = components["schemas"]["ResponseCancelTurn"];
 export type ResponseChat = components["schemas"]["ResponseChat"];
 export type ResponseCompleteDatasetUpload = components["schemas"]["ResponseCompleteDatasetUpload"];
 export type ResponseCompleteUpload = components["schemas"]["ResponseCompleteUpload"];
+export type ResponseCreateConversation = components["schemas"]["ResponseCreateConversation"];
 export type ResponseCreateDatasetUpload = components["schemas"]["ResponseCreateDatasetUpload"];
 export type ResponseCreateDownload = components["schemas"]["ResponseCreateDownload"];
 export type ResponseCreateRun = components["schemas"]["ResponseCreateRun"];
+export type ResponseCreateTurn = components["schemas"]["ResponseCreateTurn"];
 export type ResponseCreateUpload = components["schemas"]["ResponseCreateUpload"];
 export type ResponseDataQACatalog = components["schemas"]["ResponseDataQACatalog"];
 export type ResponseDownloadModel = components["schemas"]["ResponseDownloadModel"];
@@ -7535,6 +8469,7 @@ export type ResponseEnterpriseCompany = components["schemas"]["ResponseEnterpris
 export type ResponseEnterpriseOverview = components["schemas"]["ResponseEnterpriseOverview"];
 export type ResponseEnterpriseSources = components["schemas"]["ResponseEnterpriseSources"];
 export type ResponseGetCompany = components["schemas"]["ResponseGetCompany"];
+export type ResponseGetConversation = components["schemas"]["ResponseGetConversation"];
 export type ResponseGetDataset = components["schemas"]["ResponseGetDataset"];
 export type ResponseGetGraph = components["schemas"]["ResponseGetGraph"];
 export type ResponseGetModel = components["schemas"]["ResponseGetModel"];
@@ -7544,6 +8479,7 @@ export type ResponseGetRun = components["schemas"]["ResponseGetRun"];
 export type ResponseGetScore = components["schemas"]["ResponseGetScore"];
 export type ResponseImportEnterprises = components["schemas"]["ResponseImportEnterprises"];
 export type ResponseInspectData = components["schemas"]["ResponseInspectData"];
+export type ResponseListConversations = components["schemas"]["ResponseListConversations"];
 export type ResponseListDatasets = components["schemas"]["ResponseListDatasets"];
 export type ResponseListDocuments = components["schemas"]["ResponseListDocuments"];
 export type ResponseListEnterpriseRecords = components["schemas"]["ResponseListEnterpriseRecords"];
@@ -7564,3 +8500,4 @@ export type ResponseSearchCompany = components["schemas"]["ResponseSearchCompany
 export type ResponseSearchOverviewCompany = components["schemas"]["ResponseSearchOverviewCompany"];
 export type ResponseSuggestMapping = components["schemas"]["ResponseSuggestMapping"];
 export type ResponseTestModel = components["schemas"]["ResponseTestModel"];
+export type ResponseTurnEvent = components["schemas"]["ResponseTurnEvent"];

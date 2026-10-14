@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 5
 requires-python = "==3.12.*"
 resolution-markers = [
     "sys_platform == 'linux' or sys_platform == 'win32'",
@@ -1156,6 +1156,7 @@ source = { editable = "." }
 dependencies = [
     { name = "aioboto3" },
     { name = "alembic" },
+    { name = "anyio" },
     { name = "argon2-cffi" },
     { name = "asyncpg" },
     { name = "dishka" },
@@ -1182,6 +1183,7 @@ dev = [
 requires-dist = [
     { name = "aioboto3", specifier = ">=15.5,<16" },
     { name = "alembic", specifier = ">=1.15" },
+    { name = "anyio", specifier = ">=4.9,<5" },
     { name = "argon2-cffi", specifier = ">=23.1" },
     { name = "asyncpg", specifier = ">=0.30" },
     { name = "dishka", specifier = ">=1.6" },
@@ -1192,7 +1194,7 @@ requires-dist = [
     { name = "sqlalchemy", extras = ["asyncio"], specifier = ">=2.0" },
     { name = "stellarmesh-logging", specifier = "==0.5.1" },
     { name = "stellarmesh-objectstorage", specifier = "==0.1.0" },
-    { name = "strands-agents", extras = ["openai"], specifier = ">=1,<2" },
+    { name = "strands-agents", extras = ["openai"], specifier = "==1.60.0" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.34" },
 ]
 

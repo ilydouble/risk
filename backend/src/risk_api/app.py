@@ -10,6 +10,8 @@ from fastapi.responses import JSONResponse
 
 from risk_api.dependencies import InfrastructureProvider
 from risk_api.errors import register_error_handlers
+from risk_api.modules.assistant.api.route import router as assistant_router
+from risk_api.modules.assistant.service import AssistantService
 from risk_api.modules.auth.api.route import router as auth_router
 from risk_api.modules.chat.api.route import router as chat_router
 from risk_api.modules.company.api.route import router as company_router
@@ -35,14 +37,20 @@ logger = logging.getLogger("risk_api.http")
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     dispatcher = None
     enterprise_sync = None
+    assistant_maintenance = None
     try:
         configure_logging(settings.log_level, output_format=settings.log_format)
         client = await app.state.dishka_container.get(ModelClient)
         dispatcher = asyncio.create_task(dispatch_loop(session_factory, client))
         enterprise_sync = asyncio.create_task(enterprise_sync_loop(app.state.dishka_container))
+        assistant = await app.state.dishka_container.get(AssistantService)
+        assistant_maintenance = asyncio.create_task(assistant.maintain())
         logger.info("backend.started")
         yield
     finally:
+        if assistant_maintenance:
+            assistant_maintenance.cancel()
+            await asyncio.gather(assistant_maintenance, return_exceptions=True)
         if dispatcher:
             dispatcher.cancel()
             await asyncio.gather(dispatcher, return_exceptions=True)
@@ -64,6 +72,7 @@ def create_app() -> FastAPI:
     async def live() -> JSONResponse:
         return JSONResponse({"status": "ok"})
 
+    app.include_router(assistant_router, prefix="/api/v1/assistant", tags=["assistant"])
     app.include_router(auth_router, prefix="/api/v1/auth", tags=["auth"])
     app.include_router(data_qa_router, prefix="/api/v1/data-qa", tags=["data-qa"])
     app.include_router(data_prep_router, prefix="/api/v1/data-prep", tags=["data-prep"])

@@ -7,6 +7,7 @@ from sqlalchemy.pool import NullPool
 from alembic import context
 
 # Alembic must import every mapping before it reads Base.metadata.
+from risk_api.modules.assistant import model as assistant_model  # noqa: F401
 from risk_api.modules.auth import model as auth_model  # noqa: F401
 from risk_api.modules.company import model as company_model  # noqa: F401
 from risk_api.modules.document import model as document_model  # noqa: F401

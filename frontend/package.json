@@ -10,10 +10,12 @@
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "type-check": "tsc --noEmit --project tsconfig.app.json",
     "api:generate": "node scripts/generate-api.mjs",
-    "demo:generate": "node scripts/generate-demo-seed.mjs"
+    "demo:generate": "node scripts/generate-demo-seed.mjs",
+    "test:agent": "node tests/assistant-events.test.mjs"
   },
   "dependencies": {
     "@antv/g6": "5.1.1",
+    "@microsoft/fetch-event-source": "2.0.1",
     "@radix-ui/react-dialog": "1.1.23",
     "@radix-ui/react-select": "2.3.7",
     "@radix-ui/react-tooltip": "1.2.16",
