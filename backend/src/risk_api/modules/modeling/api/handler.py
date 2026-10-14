@@ -6,6 +6,7 @@ from fastapi import Request
 from risk_api.modules.auth.api.handler import authorize_request
 from risk_api.modules.auth.service import AuthService
 from risk_api.modules.modeling.api import schemas as dto
+from risk_api.modules.modeling.enterprise_browse import EnterpriseBrowseService
 from risk_api.modules.modeling.enterprise_service import EnterpriseService
 from risk_api.modules.modeling.service import ModelingService
 from risk_api.modules.modeling.workbench_model import Dataset, ModelVersion, Run
@@ -377,3 +378,42 @@ async def list_enterprise_records(
             pageSize=body.pagination.pageSize,
         )
     )
+
+
+async def enterprise_sources(
+    body: dto.RequestEnterpriseSources,
+    request: Request,
+    auth: FromDishka[AuthService],
+    service: FromDishka[ModelingService],
+) -> ApiEnvelope[dto.ResponseEnterpriseSources]:
+    result = await EnterpriseBrowseService(service).sources(
+        await owner(request, auth), body.pagination.page, body.pagination.pageSize
+    )
+    return success_response(dto.ResponseEnterpriseSources.model_validate(result))
+
+
+async def enterprise_overview(
+    body: dto.RequestGetDataset,
+    request: Request,
+    auth: FromDishka[AuthService],
+    service: FromDishka[ModelingService],
+) -> ApiEnvelope[dto.ResponseEnterpriseOverview]:
+    result = await EnterpriseBrowseService(service).overview(
+        await owner(request, auth), str(body.datasetId)
+    )
+    return success_response(dto.ResponseEnterpriseOverview.model_validate(result))
+
+
+async def enterprise_company(
+    body: dto.RequestEnterpriseCompany,
+    request: Request,
+    auth: FromDishka[AuthService],
+    service: FromDishka[ModelingService],
+) -> ApiEnvelope[dto.ResponseEnterpriseCompany]:
+    result = await EnterpriseBrowseService(service).company(
+        await owner(request, auth),
+        str(body.datasetId),
+        body.companyId,
+        str(body.modelId) if body.modelId else None,
+    )
+    return success_response(dto.ResponseEnterpriseCompany.model_validate(result))

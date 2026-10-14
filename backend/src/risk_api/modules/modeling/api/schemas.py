@@ -394,3 +394,67 @@ class ResponseListEnterpriseRecords(Page[EnterpriseRecordDTO]):
     imported: bool
     counts: dict[str, int]
     manifest: dict[str, Any]
+
+
+class RequestEnterpriseSources(BaseModel):
+    pagination: PageRequest = Field(default_factory=PageRequest)
+
+
+class EnterpriseSourceDTO(BaseModel):
+    id: str
+    name: str
+    status: str
+    importStatus: Literal["pending", "ready", "failed", "unavailable"]
+    importError: str | None
+    counts: dict[str, int]
+    createdAt: str
+
+
+class ResponseEnterpriseSources(Page[EnterpriseSourceDTO]):
+    pass
+
+
+class EnterpriseLabelCountsDTO(BaseModel):
+    positive: int
+    negative: int
+    unlabeled: int
+
+
+class EnterpriseModelSummaryDTO(BaseModel):
+    id: str
+    name: str
+    predictionCount: int
+    positiveCount: int
+    averageProbability: float | None
+    averageUncertainty: float | None
+
+
+class ResponseEnterpriseOverview(BaseModel):
+    dataset: EnterpriseSourceDTO
+    labels: EnterpriseLabelCountsDTO
+    target: Any = None
+    models: list[EnterpriseModelSummaryDTO]
+    companies: list[EnterpriseRecordDTO]
+
+
+class RequestEnterpriseCompany(RequestGetDataset):
+    companyId: str = Field(min_length=1, max_length=512)
+    modelId: UUID | None = None
+
+
+class EnterpriseRelatedDTO(BaseModel):
+    items: list[EnterpriseRecordDTO]
+    total: int
+
+
+class EnterpriseSavedPredictionDTO(BaseModel):
+    modelId: str
+    modelName: str
+    result: PredictionDTO
+
+
+class ResponseEnterpriseCompany(BaseModel):
+    dataset: EnterpriseSourceDTO
+    company: EnterpriseRecordDTO
+    related: dict[str, EnterpriseRelatedDTO]
+    predictions: list[EnterpriseSavedPredictionDTO]

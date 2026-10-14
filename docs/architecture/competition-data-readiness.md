@@ -41,7 +41,7 @@ docker compose up -d --build backend frontend
 | 字段映射 | 适配器负责类型、缺失值、特征顺序、单位、标签、划分、图方向和引用语义 |
 | 企业导入 | 校验任务生成 `risk-enterprise-data-v1` 标准 JSONL；业务端复核源摘要、大小、SHA256、计数与快照内引用，原子入库 |
 | 企业检索 | 工作台“企业数据”按当前用户/数据集查询名称或 ID，分页浏览企业、人物、边、超边与事件 |
-| 主导航检索 | `/search` 目前只查询 overview 的新加坡样本；不会自动纳入工作台上传数据 |
+| 主导航检索与总览 | 共用“当前数据集”选择；上传校验通过后自动导入，并可切换至该数据集浏览全量企业、总览和详情；新加坡样本保留为独立可选快照 |
 | RiskGNN+ | 新实验默认真实 Plus 核心，包含普通图、超图、事件与双证据头；运行器 ID 仍叫 riskgnn |
 | 预测输入 | 模型绑定训练保存的图与 ID，只支持其中的企业；导入库中存在不等于模型中存在 |
 | 预测展示 | 登记模型后，可在模型页按 ID 预测，也可在企业数据页选择同数据集模型后预测；结果持久化并关联企业 |
@@ -54,7 +54,8 @@ docker compose up -d --build backend frontend
 - `backend/src/risk_api/modules/modeling/enterprise_service.py`：导入、检索与预测关联。
 - `models/riskgnn+/riskgnn_plus/workbench/predictor.py`：检查绑定图企业 ID，重载权重推理。
 - `frontend/src/pages/modeling/components/EnterpriseDataPanel.tsx`：企业浏览、检索和预测入口。
-- `frontend/src/pages/search/page.tsx`：overview 样本检索，与上传数据查询独立。
+- `frontend/src/pages/search/page.tsx`：按当前数据集切换样本检索和上传企业检索。
+- 数据集切换及自动接入见 [企业数据浏览](enterprise-browser.md)。
 
 ## 比赛前需确定的事项
 

@@ -109,3 +109,16 @@ export const requestListEnterpriseRecords = http.post<
   import("@/shared/api/generated/schema").RequestListEnterpriseRecords,
   import("@/shared/api/generated/schema").ResponseListEnterpriseRecords
 >("/modeling/list-enterprise-records");
+
+export const requestEnterpriseSources = http.post<
+  import("@/shared/api/generated/schema").RequestEnterpriseSources,
+  import("@/shared/api/generated/schema").ResponseEnterpriseSources
+>("/modeling/enterprise-sources");
+export const requestEnterpriseOverview = http.post<
+  import("@/shared/api/generated/schema").RequestGetDataset,
+  import("@/shared/api/generated/schema").ResponseEnterpriseOverview
+>("/modeling/enterprise-overview");
+export const requestEnterpriseCompany = http.post<
+  import("@/shared/api/generated/schema").RequestEnterpriseCompany,
+  import("@/shared/api/generated/schema").ResponseEnterpriseCompany
+>("/modeling/enterprise-company");

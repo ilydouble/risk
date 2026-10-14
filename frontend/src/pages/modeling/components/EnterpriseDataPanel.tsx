@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   requestImportEnterprises,
@@ -79,7 +80,14 @@ export function EnterpriseDataPanel({ work }: { work: Workbench }) {
 
   return (
     <section className="space-y-3 border-t border-background-200 pt-4">
-      <h3 className="font-semibold">{t("modeling.enterprise.title")}</h3>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h3 className="font-semibold">{t("modeling.enterprise.title")}</h3>
+        <div className="flex gap-3 text-xs text-primary-400">
+          <Link to={`/?source=uploaded&dataset=${encodeURIComponent(work.datasetId)}`}>查看总览</Link>
+          <Link to={`/search?source=uploaded&dataset=${encodeURIComponent(work.datasetId)}`}>进入企业检索</Link>
+        </div>
+      </div>
+      <p className="text-xs text-foreground-500">校验完成后会自动导入，并接入总览与主导航企业检索；也可手动导入或重试。</p>
       <p className="text-xs text-foreground-500">{t("modeling.enterprise.note")}</p>
       {error && <p role="alert" className="text-sm text-danger-500">{error}</p>}
       {loading && <p role="status" className="text-sm">{t("modeling.enterprise.loading")}</p>}

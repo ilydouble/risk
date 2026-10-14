@@ -344,6 +344,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/modeling/enterprise-company": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Enterprise Company */
+        post: operations["enterprise_company_api_v1_modeling_enterprise_company_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/modeling/enterprise-overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Enterprise Overview */
+        post: operations["enterprise_overview_api_v1_modeling_enterprise_overview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/modeling/enterprise-sources": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Enterprise Sources */
+        post: operations["enterprise_sources_api_v1_modeling_enterprise_sources_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/modeling/get-dataset": {
         parameters: {
             query?: never;
@@ -774,6 +825,36 @@ export interface components {
             /** Code */
             code: number;
             data: components["schemas"]["ResponseDownloadModel"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseEnterpriseCompany] */
+        ApiEnvelope_ResponseEnterpriseCompany_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseEnterpriseCompany"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseEnterpriseOverview] */
+        ApiEnvelope_ResponseEnterpriseOverview_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseEnterpriseOverview"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseEnterpriseSources] */
+        ApiEnvelope_ResponseEnterpriseSources_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseEnterpriseSources"] | null;
             /** Internal Code */
             internal_code: string;
             /** Message */
@@ -1373,6 +1454,30 @@ export interface components {
             /** Type */
             type: string;
         };
+        /** EnterpriseLabelCountsDTO */
+        EnterpriseLabelCountsDTO: {
+            /** Negative */
+            negative: number;
+            /** Positive */
+            positive: number;
+            /** Unlabeled */
+            unlabeled: number;
+        };
+        /** EnterpriseModelSummaryDTO */
+        EnterpriseModelSummaryDTO: {
+            /** Averageprobability */
+            averageProbability: number | null;
+            /** Averageuncertainty */
+            averageUncertainty: number | null;
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Positivecount */
+            positiveCount: number;
+            /** Predictioncount */
+            predictionCount: number;
+        };
         /** EnterpriseRecordDTO */
         EnterpriseRecordDTO: {
             /** Data */
@@ -1397,6 +1502,43 @@ export interface components {
             source: string | null;
             /** Target */
             target: string | null;
+        };
+        /** EnterpriseRelatedDTO */
+        EnterpriseRelatedDTO: {
+            /** Items */
+            items: components["schemas"]["EnterpriseRecordDTO"][];
+            /** Total */
+            total: number;
+        };
+        /** EnterpriseSavedPredictionDTO */
+        EnterpriseSavedPredictionDTO: {
+            /** Modelid */
+            modelId: string;
+            /** Modelname */
+            modelName: string;
+            result: components["schemas"]["PredictionDTO"];
+        };
+        /** EnterpriseSourceDTO */
+        EnterpriseSourceDTO: {
+            /** Counts */
+            counts: {
+                [key: string]: number;
+            };
+            /** Createdat */
+            createdAt: string;
+            /** Id */
+            id: string;
+            /** Importerror */
+            importError: string | null;
+            /**
+             * Importstatus
+             * @enum {string}
+             */
+            importStatus: "pending" | "ready" | "failed" | "unavailable";
+            /** Name */
+            name: string;
+            /** Status */
+            status: string;
         };
         /** ErrorDetail */
         ErrorDetail: {
@@ -1533,8 +1675,8 @@ export interface components {
             /** Message */
             message: string;
         };
-        /** ErrorEnvelope[Literal[404], Literal['MODELING_RESOURCE_NOT_FOUND', 'MODEL_RESOURCE_NOT_FOUND']] */
-        ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___: {
+        /** ErrorEnvelope[Literal[404], Literal['MODELING_RESOURCE_NOT_FOUND', 'MODEL_RESOURCE_NOT_FOUND', 'MODELING_COMPANY_NOT_FOUND']] */
+        ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___: {
             /**
              * Code
              * @constant
@@ -1545,7 +1687,7 @@ export interface components {
              * Internal Code
              * @enum {string}
              */
-            internal_code: "MODELING_RESOURCE_NOT_FOUND" | "MODEL_RESOURCE_NOT_FOUND";
+            internal_code: "MODELING_RESOURCE_NOT_FOUND" | "MODEL_RESOURCE_NOT_FOUND" | "MODELING_COMPANY_NOT_FOUND";
             /** Message */
             message: string;
         };
@@ -2524,6 +2666,22 @@ export interface components {
              */
             modelId: string;
         };
+        /** RequestEnterpriseCompany */
+        RequestEnterpriseCompany: {
+            /** Companyid */
+            companyId: string;
+            /**
+             * Datasetid
+             * Format: uuid
+             */
+            datasetId: string;
+            /** Modelid */
+            modelId?: string | null;
+        };
+        /** RequestEnterpriseSources */
+        RequestEnterpriseSources: {
+            pagination?: components["schemas"]["PageRequest"];
+        };
         /** RequestGetCompany */
         RequestGetCompany: {
             /** Id */
@@ -2885,6 +3043,39 @@ export interface components {
             sha256: string;
             /** Url */
             url: string;
+        };
+        /** ResponseEnterpriseCompany */
+        ResponseEnterpriseCompany: {
+            company: components["schemas"]["EnterpriseRecordDTO"];
+            dataset: components["schemas"]["EnterpriseSourceDTO"];
+            /** Predictions */
+            predictions: components["schemas"]["EnterpriseSavedPredictionDTO"][];
+            /** Related */
+            related: {
+                [key: string]: components["schemas"]["EnterpriseRelatedDTO"];
+            };
+        };
+        /** ResponseEnterpriseOverview */
+        ResponseEnterpriseOverview: {
+            /** Companies */
+            companies: components["schemas"]["EnterpriseRecordDTO"][];
+            dataset: components["schemas"]["EnterpriseSourceDTO"];
+            labels: components["schemas"]["EnterpriseLabelCountsDTO"];
+            /** Models */
+            models: components["schemas"]["EnterpriseModelSummaryDTO"][];
+            /** Target */
+            target?: unknown;
+        };
+        /** ResponseEnterpriseSources */
+        ResponseEnterpriseSources: {
+            /** Items */
+            items: components["schemas"]["EnterpriseSourceDTO"][];
+            /** Page */
+            page: number;
+            /** Pagesize */
+            pageSize: number;
+            /** Total */
+            total: number;
         };
         /** ResponseGetCompany */
         ResponseGetCompany: {
@@ -4441,7 +4632,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"];
                 };
             };
             /** @description Conflict */
@@ -4528,7 +4719,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"];
                 };
             };
             /** @description Conflict */
@@ -4615,7 +4806,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"];
                 };
             };
             /** @description Conflict */
@@ -4702,7 +4893,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"];
                 };
             };
             /** @description Conflict */
@@ -4789,7 +4980,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"];
                 };
             };
             /** @description Conflict */
@@ -4876,7 +5067,268 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE____MODELING_ENTERPRISE_UNAVAILABLE___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_ENTERPRISE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"];
+                };
+            };
+        };
+    };
+    enterprise_company_api_v1_modeling_enterprise_company_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestEnterpriseCompany"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseEnterpriseCompany_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE____MODELING_ENTERPRISE_UNAVAILABLE___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_ENTERPRISE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"];
+                };
+            };
+        };
+    };
+    enterprise_overview_api_v1_modeling_enterprise_overview_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestGetDataset"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseEnterpriseOverview_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE____MODELING_ENTERPRISE_UNAVAILABLE___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_ENTERPRISE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"];
+                };
+            };
+        };
+    };
+    enterprise_sources_api_v1_modeling_enterprise_sources_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestEnterpriseSources"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseEnterpriseSources_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"];
                 };
             };
             /** @description Conflict */
@@ -4963,7 +5415,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"];
                 };
             };
             /** @description Conflict */
@@ -5050,7 +5502,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"];
                 };
             };
             /** @description Conflict */
@@ -5137,7 +5589,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"];
                 };
             };
             /** @description Conflict */
@@ -5224,7 +5676,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"];
                 };
             };
             /** @description Conflict */
@@ -5311,7 +5763,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"];
                 };
             };
             /** @description Conflict */
@@ -5398,7 +5850,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"];
                 };
             };
             /** @description Conflict */
@@ -5485,7 +5937,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"];
                 };
             };
             /** @description Conflict */
@@ -5572,7 +6024,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"];
                 };
             };
             /** @description Conflict */
@@ -5659,7 +6111,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"];
                 };
             };
             /** @description Conflict */
@@ -5746,7 +6198,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"];
                 };
             };
             /** @description Conflict */
@@ -5833,7 +6285,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"];
                 };
             };
             /** @description Conflict */
@@ -5920,7 +6372,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"];
                 };
             };
             /** @description Conflict */
@@ -6007,7 +6459,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"];
                 };
             };
             /** @description Conflict */
@@ -6355,6 +6807,8 @@ export type RequestCreateRun = components["schemas"]["RequestCreateRun"];
 export type RequestCreateUpload = components["schemas"]["RequestCreateUpload"];
 export type RequestDataQACatalog = components["schemas"]["RequestDataQACatalog"];
 export type RequestDownloadModel = components["schemas"]["RequestDownloadModel"];
+export type RequestEnterpriseCompany = components["schemas"]["RequestEnterpriseCompany"];
+export type RequestEnterpriseSources = components["schemas"]["RequestEnterpriseSources"];
 export type RequestGetCompany = components["schemas"]["RequestGetCompany"];
 export type RequestGetDataset = components["schemas"]["RequestGetDataset"];
 export type RequestGetGraph = components["schemas"]["RequestGetGraph"];
@@ -6392,6 +6846,9 @@ export type ResponseCreateRun = components["schemas"]["ResponseCreateRun"];
 export type ResponseCreateUpload = components["schemas"]["ResponseCreateUpload"];
 export type ResponseDataQACatalog = components["schemas"]["ResponseDataQACatalog"];
 export type ResponseDownloadModel = components["schemas"]["ResponseDownloadModel"];
+export type ResponseEnterpriseCompany = components["schemas"]["ResponseEnterpriseCompany"];
+export type ResponseEnterpriseOverview = components["schemas"]["ResponseEnterpriseOverview"];
+export type ResponseEnterpriseSources = components["schemas"]["ResponseEnterpriseSources"];
 export type ResponseGetCompany = components["schemas"]["ResponseGetCompany"];
 export type ResponseGetDataset = components["schemas"]["ResponseGetDataset"];
 export type ResponseGetGraph = components["schemas"]["ResponseGetGraph"];

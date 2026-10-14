@@ -459,6 +459,108 @@
         "title": "ApiEnvelope[ResponseDownloadModel]",
         "type": "object"
       },
+      "ApiEnvelope_ResponseEnterpriseCompany_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseEnterpriseCompany"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseEnterpriseCompany]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseEnterpriseOverview_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseEnterpriseOverview"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseEnterpriseOverview]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseEnterpriseSources_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseEnterpriseSources"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseEnterpriseSources]",
+        "type": "object"
+      },
       "ApiEnvelope_ResponseGetCompany_": {
         "properties": {
           "code": {
@@ -2407,6 +2509,81 @@
         "title": "EdgeTypeItemDTO",
         "type": "object"
       },
+      "EnterpriseLabelCountsDTO": {
+        "properties": {
+          "negative": {
+            "title": "Negative",
+            "type": "integer"
+          },
+          "positive": {
+            "title": "Positive",
+            "type": "integer"
+          },
+          "unlabeled": {
+            "title": "Unlabeled",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "positive",
+          "negative",
+          "unlabeled"
+        ],
+        "title": "EnterpriseLabelCountsDTO",
+        "type": "object"
+      },
+      "EnterpriseModelSummaryDTO": {
+        "properties": {
+          "averageProbability": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Averageprobability"
+          },
+          "averageUncertainty": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Averageuncertainty"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "positiveCount": {
+            "title": "Positivecount",
+            "type": "integer"
+          },
+          "predictionCount": {
+            "title": "Predictioncount",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "predictionCount",
+          "positiveCount",
+          "averageProbability",
+          "averageUncertainty"
+        ],
+        "title": "EnterpriseModelSummaryDTO",
+        "type": "object"
+      },
       "EnterpriseRecordDTO": {
         "properties": {
           "data": {
@@ -2495,6 +2672,108 @@
           "data"
         ],
         "title": "EnterpriseRecordDTO",
+        "type": "object"
+      },
+      "EnterpriseRelatedDTO": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/EnterpriseRecordDTO"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ],
+        "title": "EnterpriseRelatedDTO",
+        "type": "object"
+      },
+      "EnterpriseSavedPredictionDTO": {
+        "properties": {
+          "modelId": {
+            "title": "Modelid",
+            "type": "string"
+          },
+          "modelName": {
+            "title": "Modelname",
+            "type": "string"
+          },
+          "result": {
+            "$ref": "#/components/schemas/PredictionDTO"
+          }
+        },
+        "required": [
+          "modelId",
+          "modelName",
+          "result"
+        ],
+        "title": "EnterpriseSavedPredictionDTO",
+        "type": "object"
+      },
+      "EnterpriseSourceDTO": {
+        "properties": {
+          "counts": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Counts",
+            "type": "object"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "importError": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Importerror"
+          },
+          "importStatus": {
+            "enum": [
+              "pending",
+              "ready",
+              "failed",
+              "unavailable"
+            ],
+            "title": "Importstatus",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "status",
+          "importStatus",
+          "importError",
+          "counts",
+          "createdAt"
+        ],
+        "title": "EnterpriseSourceDTO",
         "type": "object"
       },
       "ErrorDetail": {
@@ -2753,7 +3032,7 @@
         "title": "ErrorEnvelope[Literal[404], Literal['GRAPH_NOT_FOUND']]",
         "type": "object"
       },
-      "ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___": {
+      "ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___": {
         "properties": {
           "code": {
             "const": 404,
@@ -2766,7 +3045,8 @@
           "internal_code": {
             "enum": [
               "MODELING_RESOURCE_NOT_FOUND",
-              "MODEL_RESOURCE_NOT_FOUND"
+              "MODEL_RESOURCE_NOT_FOUND",
+              "MODELING_COMPANY_NOT_FOUND"
             ],
             "title": "Internal Code",
             "type": "string"
@@ -2782,7 +3062,7 @@
           "message",
           "data"
         ],
-        "title": "ErrorEnvelope[Literal[404], Literal['MODELING_RESOURCE_NOT_FOUND', 'MODEL_RESOURCE_NOT_FOUND']]",
+        "title": "ErrorEnvelope[Literal[404], Literal['MODELING_RESOURCE_NOT_FOUND', 'MODEL_RESOURCE_NOT_FOUND', 'MODELING_COMPANY_NOT_FOUND']]",
         "type": "object"
       },
       "ErrorEnvelope_Literal_404__Literal__OVERVIEW_COMPANY_NOT_FOUND___": {
@@ -5122,6 +5402,48 @@
         "title": "RequestDownloadModel",
         "type": "object"
       },
+      "RequestEnterpriseCompany": {
+        "properties": {
+          "companyId": {
+            "maxLength": 512,
+            "minLength": 1,
+            "title": "Companyid",
+            "type": "string"
+          },
+          "datasetId": {
+            "format": "uuid",
+            "title": "Datasetid",
+            "type": "string"
+          },
+          "modelId": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Modelid"
+          }
+        },
+        "required": [
+          "datasetId",
+          "companyId"
+        ],
+        "title": "RequestEnterpriseCompany",
+        "type": "object"
+      },
+      "RequestEnterpriseSources": {
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/PageRequest"
+          }
+        },
+        "title": "RequestEnterpriseSources",
+        "type": "object"
+      },
       "RequestGetCompany": {
         "properties": {
           "id": {
@@ -5935,6 +6257,108 @@
           "expiresIn"
         ],
         "title": "ResponseDownloadModel",
+        "type": "object"
+      },
+      "ResponseEnterpriseCompany": {
+        "properties": {
+          "company": {
+            "$ref": "#/components/schemas/EnterpriseRecordDTO"
+          },
+          "dataset": {
+            "$ref": "#/components/schemas/EnterpriseSourceDTO"
+          },
+          "predictions": {
+            "items": {
+              "$ref": "#/components/schemas/EnterpriseSavedPredictionDTO"
+            },
+            "title": "Predictions",
+            "type": "array"
+          },
+          "related": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/EnterpriseRelatedDTO"
+            },
+            "title": "Related",
+            "type": "object"
+          }
+        },
+        "required": [
+          "dataset",
+          "company",
+          "related",
+          "predictions"
+        ],
+        "title": "ResponseEnterpriseCompany",
+        "type": "object"
+      },
+      "ResponseEnterpriseOverview": {
+        "properties": {
+          "companies": {
+            "items": {
+              "$ref": "#/components/schemas/EnterpriseRecordDTO"
+            },
+            "title": "Companies",
+            "type": "array"
+          },
+          "dataset": {
+            "$ref": "#/components/schemas/EnterpriseSourceDTO"
+          },
+          "labels": {
+            "$ref": "#/components/schemas/EnterpriseLabelCountsDTO"
+          },
+          "models": {
+            "items": {
+              "$ref": "#/components/schemas/EnterpriseModelSummaryDTO"
+            },
+            "title": "Models",
+            "type": "array"
+          },
+          "target": {
+            "title": "Target"
+          }
+        },
+        "required": [
+          "dataset",
+          "labels",
+          "models",
+          "companies"
+        ],
+        "title": "ResponseEnterpriseOverview",
+        "type": "object"
+      },
+      "ResponseEnterpriseSources": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/EnterpriseSourceDTO"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "page": {
+            "minimum": 1.0,
+            "title": "Page",
+            "type": "integer"
+          },
+          "pageSize": {
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Pagesize",
+            "type": "integer"
+          },
+          "total": {
+            "minimum": 0.0,
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "page",
+          "pageSize"
+        ],
+        "title": "ResponseEnterpriseSources",
         "type": "object"
       },
       "ResponseGetCompany": {
@@ -8531,7 +8955,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"
                 }
               }
             },
@@ -8632,7 +9056,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"
                 }
               }
             },
@@ -8733,7 +9157,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"
                 }
               }
             },
@@ -8834,7 +9258,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"
                 }
               }
             },
@@ -8935,7 +9359,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"
                 }
               }
             },
@@ -9036,7 +9460,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"
                 }
               }
             },
@@ -9084,6 +9508,309 @@
           }
         },
         "summary": "Download Model",
+        "tags": [
+          "modeling"
+        ]
+      }
+    },
+    "/api/v1/modeling/enterprise-company": {
+      "post": {
+        "operationId": "enterprise_company_api_v1_modeling_enterprise_company_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestEnterpriseCompany"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseEnterpriseCompany_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE____MODELING_ENTERPRISE_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_ENTERPRISE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Enterprise Company",
+        "tags": [
+          "modeling"
+        ]
+      }
+    },
+    "/api/v1/modeling/enterprise-overview": {
+      "post": {
+        "operationId": "enterprise_overview_api_v1_modeling_enterprise_overview_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestGetDataset"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseEnterpriseOverview_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE____MODELING_ENTERPRISE_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_ENTERPRISE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Enterprise Overview",
+        "tags": [
+          "modeling"
+        ]
+      }
+    },
+    "/api/v1/modeling/enterprise-sources": {
+      "post": {
+        "operationId": "enterprise_sources_api_v1_modeling_enterprise_sources_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestEnterpriseSources"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseEnterpriseSources_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE____MODELING_ENTERPRISE_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_ENTERPRISE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Enterprise Sources",
         "tags": [
           "modeling"
         ]
@@ -9137,7 +9864,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"
                 }
               }
             },
@@ -9238,7 +9965,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"
                 }
               }
             },
@@ -9339,7 +10066,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"
                 }
               }
             },
@@ -9440,7 +10167,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"
                 }
               }
             },
@@ -9541,7 +10268,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"
                 }
               }
             },
@@ -9642,7 +10369,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"
                 }
               }
             },
@@ -9743,7 +10470,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"
                 }
               }
             },
@@ -9844,7 +10571,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"
                 }
               }
             },
@@ -9945,7 +10672,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"
                 }
               }
             },
@@ -10046,7 +10773,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"
                 }
               }
             },
@@ -10147,7 +10874,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"
                 }
               }
             },
@@ -10248,7 +10975,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"
                 }
               }
             },
@@ -10349,7 +11076,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"
                 }
               }
             },

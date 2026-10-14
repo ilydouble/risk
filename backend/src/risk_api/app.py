@@ -19,6 +19,7 @@ from risk_api.modules.graph.api.route import router as graph_router
 from risk_api.modules.modeling.api.route import router as modeling_router
 from risk_api.modules.modeling.client import ModelClient
 from risk_api.modules.modeling.dispatch import dispatch_loop
+from risk_api.modules.modeling.enterprise_sync import enterprise_sync_loop
 from risk_api.modules.overview.api.route import router as overview_router
 from risk_api.modules.score.api.route import router as score_router
 from risk_api.shared.api.middleware import request_policy
@@ -32,16 +33,21 @@ logger = logging.getLogger("risk_api.http")
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     dispatcher = None
+    enterprise_sync = None
     try:
         configure_logging(settings.log_level, output_format=settings.log_format)
         client = await app.state.dishka_container.get(ModelClient)
         dispatcher = asyncio.create_task(dispatch_loop(session_factory, client))
+        enterprise_sync = asyncio.create_task(enterprise_sync_loop(app.state.dishka_container))
         logger.info("backend.started")
         yield
     finally:
         if dispatcher:
             dispatcher.cancel()
             await asyncio.gather(dispatcher, return_exceptions=True)
+        if enterprise_sync:
+            enterprise_sync.cancel()
+            await asyncio.gather(enterprise_sync, return_exceptions=True)
         await app.state.dishka_container.close()
         logger.info("backend.stopped")
 

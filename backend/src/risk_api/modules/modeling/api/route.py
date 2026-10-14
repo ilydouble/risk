@@ -143,3 +143,27 @@ router.add_api_route(
     response_model=ApiEnvelope[schemas.ResponseListEnterpriseRecords],
     responses=COMMON_ERROR_RESPONSES | WORKBENCH_ERRORS,
 )
+
+router.add_api_route(
+    "/enterprise-sources",
+    handler.enterprise_sources,
+    methods=["POST"],
+    response_model=ApiEnvelope[schemas.ResponseEnterpriseSources],
+    responses=COMMON_ERROR_RESPONSES | WORKBENCH_ERRORS,
+)
+
+router.add_api_route(
+    "/enterprise-overview",
+    handler.enterprise_overview,
+    methods=["POST"],
+    response_model=ApiEnvelope[schemas.ResponseEnterpriseOverview],
+    responses=COMMON_ERROR_RESPONSES | WORKBENCH_ERRORS,
+)
+
+router.add_api_route(
+    "/enterprise-company",
+    handler.enterprise_company,
+    methods=["POST"],
+    response_model=ApiEnvelope[schemas.ResponseEnterpriseCompany],
+    responses=COMMON_ERROR_RESPONSES | WORKBENCH_ERRORS,
+)

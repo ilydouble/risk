@@ -7,7 +7,12 @@ WORKBENCH_ERRORS = {
     **SESSION_ERRORS,
     404: {
         "model": ErrorEnvelope[
-            Literal[404], Literal["MODELING_RESOURCE_NOT_FOUND", "MODEL_RESOURCE_NOT_FOUND"]
+            Literal[404],
+            Literal[
+                "MODELING_RESOURCE_NOT_FOUND",
+                "MODEL_RESOURCE_NOT_FOUND",
+                "MODELING_COMPANY_NOT_FOUND",
+            ],
         ]
     },
     409: {
