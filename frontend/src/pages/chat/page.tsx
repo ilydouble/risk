@@ -1,8 +1,11 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { useAiModelConfig } from "@/features/ai-model-config/model/context";
 import { http, handleApiError } from "@/shared/api/http";
 import type { components } from "@/shared/api/generated/schema";
+import "./chat-markdown.css";
 
 type Message = components["schemas"]["ChatMessage"];
 const complete = http.withTimeout(70000).post<
@@ -76,7 +79,21 @@ export default function ChatPage() {
         {messages.length === 0 && <p className="py-16 text-center text-sm text-foreground-500">点击“一键测试连接”，或输入问题开始对话。</p>}
         {messages.map((message, index) => <div key={index} className={`rounded-lg p-4 ${message.role === "user" ? "bg-primary-500/10" : "bg-background-50"}`}>
           <p className="mb-2 text-xs font-medium text-foreground-500">{message.role === "user" ? "你" : "大模型"}</p>
-          <p className="whitespace-pre-wrap break-words text-sm leading-7">{message.content}</p>
+          {message.role === "assistant" ? (
+            <div className="chat-markdown break-words text-sm leading-7">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                skipHtml
+                components={{
+                  a: ({ children, href }) => <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>,
+                  img: ({ alt }) => <span>[图片：{alt || "无描述"}]</span>,
+                  table: ({ children }) => <div className="overflow-x-auto"><table>{children}</table></div>,
+                }}
+              >{message.content}</ReactMarkdown>
+            </div>
+          ) : (
+            <p className="whitespace-pre-wrap break-words text-sm leading-7">{message.content}</p>
+          )}
         </div>)}
       </div>
       <form onSubmit={(event) => { event.preventDefault(); void send(input); }} className="space-y-3">
