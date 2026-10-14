@@ -7,6 +7,12 @@ import { handleApiError } from "@/shared/api/http";
 
 const panel = "rounded-xl border border-background-200 bg-background-100 p-5";
 const button = "rounded-md bg-primary-500 px-4 py-2 text-sm text-white disabled:opacity-50";
+const typeLabels: Record<string, string> = {
+  empty: "全缺失", identifier: "标识符线索", number: "数值", date: "日期", mixed: "混合格式", category: "类别", text: "文本",
+};
+const roleLabels: Record<string, string> = {
+  identity: "实体标识", feature: "候选特征", label: "候选标签", relation: "关系键", time: "时间", ignore: "暂不使用", unknown: "待确认",
+};
 
 function fileBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -83,12 +89,42 @@ export default function DataPrepPage() {
       {profile && <>
         <section className={`${panel} space-y-3`}>
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <div><h2 className="font-semibold">体检结果</h2><p className="text-sm text-foreground-500">{profile.rowCount} 行 · {profile.fields.length} 列 · {profile.duplicateRows} 行完全重复</p></div>
+            <div><h2 className="font-semibold">体检结果</h2><p className="text-sm text-foreground-500">统计基于整份文件；类型、键和异常只是待核对线索。</p></div>
             <button className={button} disabled={busy || (modelConfig.custom && (!modelConfig.url.trim() || !modelConfig.model.trim()))} onClick={() => void suggest()}>{busy ? "分析中…" : "让智能体建议字段用途"}</button>
           </div>
-          <div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr className="border-b border-background-200"><th className="py-2">字段</th><th>缺失</th><th>不同值</th><th>数值占比</th><th>常见值</th></tr></thead><tbody>{profile.fields.map((field) => <tr key={field.name} className="border-b border-background-200"><td className="py-2 font-medium">{field.name}</td><td>{field.missingCount}（{Math.round(field.missingCount / profile.rowCount * 100)}%）</td><td>{field.distinctCount}</td><td>{Math.round(field.numericRate * 100)}%</td><td className="max-w-64 truncate">{field.examples.join("、") || "—"}</td></tr>)}</tbody></table></div>
+          <div className="grid gap-3 sm:grid-cols-4">
+            {[
+              ["记录", profile.rowCount],
+              ["字段", profile.fields.length],
+              ["含缺失值的记录", profile.rowsWithMissing],
+              ["完全重复记录", profile.duplicateRows],
+            ].map(([label, value]) => <div key={label} className="rounded-lg bg-background-50 p-3"><p className="text-xs text-foreground-500">{label}</p><p className="mt-1 text-xl font-semibold">{value}</p></div>)}
+          </div>
+          <p className="text-xs text-foreground-500">文件 SHA-256：<span className="break-all font-mono">{profile.sha256}</span> · 仅用于核对本次文件版本</p>
         </section>
-        {suggestion && <section className={`${panel} space-y-3`}><h2 className="font-semibold">智能体建议 · 待确认</h2><p className="text-sm">{suggestion.summary}</p><div className="space-y-2">{suggestion.suggestions.map((item) => <div key={item.field} className="rounded-md bg-background-50 p-3 text-sm"><strong>{item.field}</strong> · {item.role}<p className="text-foreground-500">{item.reason}</p></div>)}</div>{suggestion.questions.length > 0 && <div><h3 className="font-medium">需要确认</h3><ul className="list-disc pl-5 text-sm">{suggestion.questions.map((question) => <li key={question}>{question}</li>)}</ul></div>}</section>}
+        <section className={`${panel} space-y-3`}>
+          <h2 className="font-semibold">数据质量线索 · {profile.issues?.length ?? 0} 项</h2>
+          <p className="text-xs text-foreground-500">“未知”、空串、null、n/a 等按缺失统计；疑似离群值按四分位距筛出，不能直接认定为错误。</p>
+          {(profile.issues?.length ?? 0) === 0 ? <p className="text-sm text-foreground-500">当前规则未发现明显问题，仍需核对字段语义和取值口径。</p> :
+            <div className="grid gap-2 sm:grid-cols-2">{profile.issues?.map((item, index) => <div key={`${item.code}-${item.field ?? "row"}-${index}`} className="rounded-md border border-amber-500/20 bg-amber-500/5 p-3 text-sm"><strong>{item.field || "整表"}</strong> · {item.count} 处<p className="mt-1 text-foreground-500">{item.message}</p></div>)}</div>}
+        </section>
+        <section className={`${panel} space-y-3`}>
+          <h2 className="font-semibold">字段画像</h2>
+          <p className="text-xs text-foreground-500">标识列保持文本，尤其是含前导零的企业编号；常见值显示出现次数。</p>
+          <div className="overflow-x-auto"><table className="min-w-full text-left text-sm"><thead><tr className="border-b border-background-200"><th className="min-w-36 py-2">字段</th><th className="min-w-28">类型线索</th><th className="min-w-28">缺失</th><th className="min-w-24">不同值</th><th className="min-w-64">常见值</th><th className="min-w-72">数值分布</th></tr></thead><tbody>{profile.fields.map((field) => <tr key={field.name} className="border-b border-background-200 align-top"><td className="py-3 font-medium">{field.name}</td><td className="py-3">{typeLabels[field.typeHint] ?? field.typeHint}{field.dateRate > 0 && field.typeHint !== "date" ? <p className="text-xs text-foreground-500">日期格式 {Math.round(field.dateRate * 100)}%</p> : null}</td><td className="py-3">{field.missingCount}（{Math.round(field.missingCount / profile.rowCount * 100)}%）</td><td className="py-3">{field.distinctCount}</td><td className="py-3">{field.topValues?.length ? field.topValues.map((item) => `${item.value} (${item.count})`).join(" · ") : "—"}</td><td className="py-3 text-foreground-500">{field.numericSummary ? <>最小 {field.numericSummary.min} · 中位 {field.numericSummary.median} · 最大 {field.numericSummary.max}<br />Q1 {field.numericSummary.q1} · Q3 {field.numericSummary.q3} · 疑似离群 {field.numericSummary.outlierCount}</> : "—"}</td></tr>)}</tbody></table></div>
+        </section>
+        <section className={`${panel} space-y-3`}>
+          <h2 className="font-semibold">实体与关联键候选</h2>
+          <p className="text-xs text-foreground-500">仅按列名和重复度提示，单张表无法验证外键是否能关联到系统企业表；需要目标表和业务口径确认。</p>
+          {(profile.keyCandidates?.length ?? 0) === 0 ? <p className="text-sm text-foreground-500">未发现典型 ID/编号字段，请人工指定企业标识及关联字段。</p> : <div className="grid gap-2 sm:grid-cols-2">{profile.keyCandidates?.map((item) => <div key={item.field} className="rounded-md bg-background-50 p-3 text-sm"><strong>{item.field}</strong> · {item.kind === "entity_key" ? "实体标识候选" : "关联键候选"}<p className="mt-1 text-foreground-500">非缺失 {item.nonMissingCount} · 重复值 {item.duplicateValues}</p></div>)}</div>}
+        </section>
+        <section className={`${panel} space-y-3`}>
+          <h2 className="font-semibold">疑似标签分布</h2>
+          <p className="text-xs text-foreground-500">仅按字段名识别候选。类别比例来自本次文件，不能据此判断 0 或 1 的业务含义。</p>
+          {(profile.labelCandidates?.length ?? 0) === 0 ? <p className="text-sm text-foreground-500">未发现典型标签字段名，需人工指定预测目标。</p> : <div className="grid gap-2 sm:grid-cols-2">{profile.labelCandidates?.map((item) => <div key={item.field} className="rounded-md bg-background-50 p-3 text-sm"><strong>{item.field}</strong><p className="mt-1">{item.values.map((value) => `${value.value}：${value.count}`).join(" · ") || "无有效值"}</p><p className="mt-1 text-foreground-500">不同值 {item.distinctCount} · 缺失 {item.missingCount}{item.minorityShare != null ? ` · 少数类 ${Math.round(item.minorityShare * 100)}%` : ""}</p></div>)}</div>}
+        </section>
+        <details className={panel}><summary className="cursor-pointer font-semibold">查看前 5 行数据预览</summary><div className="mt-3 overflow-x-auto"><table className="min-w-full text-left text-xs"><thead><tr>{profile.fields.map((field) => <th key={field.name} className="min-w-28 border-b border-background-200 px-2 py-2">{field.name}</th>)}</tr></thead><tbody>{profile.sampleRows.map((row, index) => <tr key={index}>{profile.fields.map((field) => <td key={field.name} className="max-w-64 break-words border-b border-background-200 px-2 py-2">{row[field.name] || "—"}</td>)}</tr>)}</tbody></table></div><p className="mt-2 text-xs text-foreground-500">预览中的长值仅展示前 80 个字符；原始文件不会被修改。</p></details>
+        {suggestion && <section className={`${panel} space-y-3`}><h2 className="font-semibold">智能体分析 · 待确认</h2><p className="text-sm">{suggestion.summary}</p>{(suggestion.qualityFindings?.length ?? 0) > 0 && <div><h3 className="font-medium">质量与训练风险</h3><ul className="mt-2 list-disc space-y-1 pl-5 text-sm">{suggestion.qualityFindings?.map((finding, index) => <li key={index}>{finding}</li>)}</ul></div>}<div className="space-y-2">{suggestion.suggestions.map((item) => <div key={item.field} className="rounded-md bg-background-50 p-3 text-sm"><strong>{item.field}</strong> · {roleLabels[item.role] ?? item.role}<p className="text-foreground-500">{item.reason}</p></div>)}</div>{suggestion.questions.length > 0 && <div><h3 className="font-medium">需要确认</h3><ul className="list-disc pl-5 text-sm">{suggestion.questions.map((question, index) => <li key={index}>{question}</li>)}</ul></div>}{(suggestion.nextChecks?.length ?? 0) > 0 && <div><h3 className="font-medium">建议的下一步核查</h3><ol className="mt-2 list-decimal space-y-1 pl-5 text-sm">{suggestion.nextChecks?.map((step, index) => <li key={index}>{step}</li>)}</ol></div>}</section>}
         <p className="text-sm text-foreground-500">当前仅做分析；确认数据含义和构建训练集的功能仍在开发。已有标准数据包可前往 <Link className="text-primary-400 underline" to="/modeling">模型训练工作台</Link>。</p>
       </>}
     </div>

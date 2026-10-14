@@ -2302,16 +2302,40 @@ export interface components {
         };
         /** FieldProfile */
         FieldProfile: {
+            /**
+             * Daterate
+             * @default 0
+             */
+            dateRate: number;
             /** Distinctcount */
             distinctCount: number;
             /** Examples */
             examples: string[];
+            /**
+             * Leadingzerocount
+             * @default 0
+             */
+            leadingZeroCount: number;
             /** Missingcount */
             missingCount: number;
             /** Name */
             name: string;
             /** Numericrate */
             numericRate: number;
+            numericSummary?: components["schemas"]["NumericSummary"] | null;
+            /** Topvalues */
+            topValues?: components["schemas"]["ValueFrequency"][];
+            /**
+             * Typehint
+             * @default text
+             * @enum {string}
+             */
+            typeHint: "empty" | "identifier" | "number" | "date" | "mixed" | "category" | "text";
+            /**
+             * Whitespacecount
+             * @default 0
+             */
+            whitespaceCount: number;
         };
         /** FileDTO */
         FileDTO: {
@@ -2411,6 +2435,33 @@ export interface components {
              */
             type: "company" | "owner" | "subsidiary" | "supplier" | "guarantor" | "client" | "counterparty" | "person" | "bank" | "fund";
         };
+        /** KeyCandidate */
+        KeyCandidate: {
+            /** Duplicatevalues */
+            duplicateValues: number;
+            /** Field */
+            field: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "entity_key" | "relation_key";
+            /** Nonmissingcount */
+            nonMissingCount: number;
+        };
+        /** LabelCandidate */
+        LabelCandidate: {
+            /** Distinctcount */
+            distinctCount: number;
+            /** Field */
+            field: string;
+            /** Minorityshare */
+            minorityShare?: number | null;
+            /** Missingcount */
+            missingCount: number;
+            /** Values */
+            values: components["schemas"]["ValueFrequency"][];
+        };
         /** MappingSuggestion */
         MappingSuggestion: {
             /** Field */
@@ -2475,6 +2526,23 @@ export interface components {
             sha256: string;
             /** Size */
             size: number;
+        };
+        /** NumericSummary */
+        NumericSummary: {
+            /** Max */
+            max: string;
+            /** Mean */
+            mean: string;
+            /** Median */
+            median: string;
+            /** Min */
+            min: string;
+            /** Outliercount */
+            outlierCount: number;
+            /** Q1 */
+            q1: string;
+            /** Q3 */
+            q3: string;
         };
         /** OverviewCompanyFactsDTO */
         OverviewCompanyFactsDTO: {
@@ -2718,6 +2786,17 @@ export interface components {
             probability: number;
             /** Uncertainty */
             uncertainty?: number | null;
+        };
+        /** QualityIssue */
+        QualityIssue: {
+            /** Code */
+            code: string;
+            /** Count */
+            count: number;
+            /** Field */
+            field?: string | null;
+            /** Message */
+            message: string;
         };
         /** RelatedParty */
         RelatedParty: {
@@ -3386,8 +3465,19 @@ export interface components {
             duplicateRows: number;
             /** Fields */
             fields: components["schemas"]["FieldProfile"][];
+            /** Issues */
+            issues?: components["schemas"]["QualityIssue"][];
+            /** Keycandidates */
+            keyCandidates?: components["schemas"]["KeyCandidate"][];
+            /** Labelcandidates */
+            labelCandidates?: components["schemas"]["LabelCandidate"][];
             /** Rowcount */
             rowCount: number;
+            /**
+             * Rowswithmissing
+             * @default 0
+             */
+            rowsWithMissing: number;
             /** Samplerows */
             sampleRows: {
                 [key: string]: string;
@@ -3552,6 +3642,10 @@ export interface components {
         };
         /** ResponseSuggestMapping */
         ResponseSuggestMapping: {
+            /** Nextchecks */
+            nextChecks?: string[];
+            /** Qualityfindings */
+            qualityFindings?: string[];
             /** Questions */
             questions: string[];
             /** Suggestions */
@@ -3727,6 +3821,13 @@ export interface components {
              * @enum {string}
              */
             type: "equity" | "legal" | "address" | "finance" | "risk" | "award";
+        };
+        /** ValueFrequency */
+        ValueFrequency: {
+            /** Count */
+            count: number;
+            /** Value */
+            value: string;
         };
     };
     responses: never;

@@ -4202,6 +4202,11 @@
       },
       "FieldProfile": {
         "properties": {
+          "dateRate": {
+            "default": 0,
+            "title": "Daterate",
+            "type": "number"
+          },
           "distinctCount": {
             "title": "Distinctcount",
             "type": "integer"
@@ -4212,6 +4217,11 @@
             },
             "title": "Examples",
             "type": "array"
+          },
+          "leadingZeroCount": {
+            "default": 0,
+            "title": "Leadingzerocount",
+            "type": "integer"
           },
           "missingCount": {
             "title": "Missingcount",
@@ -4224,6 +4234,42 @@
           "numericRate": {
             "title": "Numericrate",
             "type": "number"
+          },
+          "numericSummary": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/NumericSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "topValues": {
+            "items": {
+              "$ref": "#/components/schemas/ValueFrequency"
+            },
+            "title": "Topvalues",
+            "type": "array"
+          },
+          "typeHint": {
+            "default": "text",
+            "enum": [
+              "empty",
+              "identifier",
+              "number",
+              "date",
+              "mixed",
+              "category",
+              "text"
+            ],
+            "title": "Typehint",
+            "type": "string"
+          },
+          "whitespaceCount": {
+            "default": 0,
+            "title": "Whitespacecount",
+            "type": "integer"
           }
         },
         "required": [
@@ -4523,6 +4569,80 @@
         "title": "GraphNode",
         "type": "object"
       },
+      "KeyCandidate": {
+        "properties": {
+          "duplicateValues": {
+            "title": "Duplicatevalues",
+            "type": "integer"
+          },
+          "field": {
+            "title": "Field",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "entity_key",
+              "relation_key"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "nonMissingCount": {
+            "title": "Nonmissingcount",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "field",
+          "kind",
+          "nonMissingCount",
+          "duplicateValues"
+        ],
+        "title": "KeyCandidate",
+        "type": "object"
+      },
+      "LabelCandidate": {
+        "properties": {
+          "distinctCount": {
+            "title": "Distinctcount",
+            "type": "integer"
+          },
+          "field": {
+            "title": "Field",
+            "type": "string"
+          },
+          "minorityShare": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minorityshare"
+          },
+          "missingCount": {
+            "title": "Missingcount",
+            "type": "integer"
+          },
+          "values": {
+            "items": {
+              "$ref": "#/components/schemas/ValueFrequency"
+            },
+            "title": "Values",
+            "type": "array"
+          }
+        },
+        "required": [
+          "field",
+          "values",
+          "missingCount",
+          "distinctCount"
+        ],
+        "title": "LabelCandidate",
+        "type": "object"
+      },
       "MappingSuggestion": {
         "properties": {
           "field": {
@@ -4678,6 +4798,49 @@
           "createdAt"
         ],
         "title": "ModelVersionDTO",
+        "type": "object"
+      },
+      "NumericSummary": {
+        "properties": {
+          "max": {
+            "title": "Max",
+            "type": "string"
+          },
+          "mean": {
+            "title": "Mean",
+            "type": "string"
+          },
+          "median": {
+            "title": "Median",
+            "type": "string"
+          },
+          "min": {
+            "title": "Min",
+            "type": "string"
+          },
+          "outlierCount": {
+            "title": "Outliercount",
+            "type": "integer"
+          },
+          "q1": {
+            "title": "Q1",
+            "type": "string"
+          },
+          "q3": {
+            "title": "Q3",
+            "type": "string"
+          }
+        },
+        "required": [
+          "min",
+          "median",
+          "max",
+          "mean",
+          "q1",
+          "q3",
+          "outlierCount"
+        ],
+        "title": "NumericSummary",
         "type": "object"
       },
       "OverviewCompanyFactsDTO": {
@@ -5370,6 +5533,40 @@
           "predictedLabel"
         ],
         "title": "PredictionDTO",
+        "type": "object"
+      },
+      "QualityIssue": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "field": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Field"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "count"
+        ],
+        "title": "QualityIssue",
         "type": "object"
       },
       "RelatedParty": {
@@ -7046,8 +7243,34 @@
             "title": "Fields",
             "type": "array"
           },
+          "issues": {
+            "items": {
+              "$ref": "#/components/schemas/QualityIssue"
+            },
+            "title": "Issues",
+            "type": "array"
+          },
+          "keyCandidates": {
+            "items": {
+              "$ref": "#/components/schemas/KeyCandidate"
+            },
+            "title": "Keycandidates",
+            "type": "array"
+          },
+          "labelCandidates": {
+            "items": {
+              "$ref": "#/components/schemas/LabelCandidate"
+            },
+            "title": "Labelcandidates",
+            "type": "array"
+          },
           "rowCount": {
             "title": "Rowcount",
+            "type": "integer"
+          },
+          "rowsWithMissing": {
+            "default": 0,
+            "title": "Rowswithmissing",
             "type": "integer"
           },
           "sampleRows": {
@@ -7532,6 +7755,22 @@
       },
       "ResponseSuggestMapping": {
         "properties": {
+          "nextChecks": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 8,
+            "title": "Nextchecks",
+            "type": "array"
+          },
+          "qualityFindings": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 8,
+            "title": "Qualityfindings",
+            "type": "array"
+          },
           "questions": {
             "items": {
               "type": "string"
@@ -8036,6 +8275,24 @@
           "impact"
         ],
         "title": "TimelineEvent",
+        "type": "object"
+      },
+      "ValueFrequency": {
+        "properties": {
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "value": {
+            "title": "Value",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value",
+          "count"
+        ],
+        "title": "ValueFrequency",
         "type": "object"
       }
     }

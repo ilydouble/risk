@@ -48,8 +48,26 @@ async def suggest_mapping(
     await authorize_request(request, auth)
     context = {
         "rowCount": body.profile.rowCount,
+        "rowsWithMissing": body.profile.rowsWithMissing,
         "duplicateRows": body.profile.duplicateRows,
-        "fields": [field.model_dump() for field in body.profile.fields],
+        "fields": [
+            {
+                "name": field.name,
+                "typeHint": field.typeHint,
+                "missingCount": field.missingCount,
+                "distinctCount": field.distinctCount,
+                "numericRate": field.numericRate,
+                "dateRate": field.dateRate,
+                "topValues": [item.model_dump() for item in field.topValues],
+                "numericSummary": field.numericSummary.model_dump()
+                if field.numericSummary
+                else None,
+            }
+            for field in body.profile.fields
+        ],
+        "qualityIssues": [item.model_dump() for item in body.profile.issues[:30]],
+        "keyCandidates": [item.model_dump() for item in body.profile.keyCandidates],
+        "labelCandidates": [item.model_dump() for item in body.profile.labelCandidates],
     }
     selected = chat
     if body.connection is not None:
@@ -61,9 +79,14 @@ async def suggest_mapping(
             {
                 "role": "system",
                 "content": (
-                    "你是企业不良状态数据分析助手。只根据提供的字段统计给出待人工确认的建议。"
-                    "只能使用已有字段名，不得编造事实或断言标签含义。只输出 JSON："
-                    '{"summary":"...","suggestions":[{"field":"...","role":"identity|feature|label|relation|time|ignore|unknown","reason":"..."}],"questions":["..."]}。'
+                    "你是企业不良状态数据分析助手。只根据提供的统计信息提出待人工确认的建议。"
+                    "先分析缺失、重复、混合格式、离群值、疑似标识/关联键和标签分布，"
+                    "再建议字段用途与下一步核查。不得根据 0/1 推断哪类是不良状态；"
+                    "只能引用已有字段名，不得编造事实、标签含义或跨表关系。"
+                    "统计线索不是字段语义的证明。只输出 JSON："
+                    '{"summary":"...","qualityFindings":["..."],"suggestions":[{"field":"...",'
+                    '"role":"identity|feature|label|relation|time|ignore|unknown","reason":"..."}],'
+                    '"questions":["..."],"nextChecks":["..."]}。'
                     "角色不确定时填 unknown；不要要求执行 SQL、修改数据或训练模型。"
                 ),
             },
