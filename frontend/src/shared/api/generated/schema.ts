@@ -72,6 +72,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/chat/complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Complete */
+        post: operations["complete_api_v1_chat_complete_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/company/get": {
         parameters: {
             query?: never;
@@ -628,6 +645,16 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ApiEnvelope[ResponseChat] */
+        ApiEnvelope_ResponseChat_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseChat"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
         /** ApiEnvelope[ResponseCompleteDatasetUpload] */
         ApiEnvelope_ResponseCompleteDatasetUpload_: {
             /** Code */
@@ -970,6 +997,16 @@ export interface components {
             startedAt: string;
             /** Status */
             status: string;
+        };
+        /** ChatMessage */
+        ChatMessage: {
+            /** Content */
+            content: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "user" | "assistant";
         };
         /** CommunityBenchmark */
         CommunityBenchmark: {
@@ -1531,6 +1568,22 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ErrorEnvelope[Literal[502], Literal['CHAT_AUTH_FAILED', 'CHAT_UPSTREAM_ERROR', 'CHAT_INVALID_RESPONSE']] */
+        ErrorEnvelope_Literal_502__Literal__CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 502;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @enum {string}
+             */
+            internal_code: "CHAT_AUTH_FAILED" | "CHAT_UPSTREAM_ERROR" | "CHAT_INVALID_RESPONSE";
+            /** Message */
+            message: string;
+        };
         /** ErrorEnvelope[Literal[503], Literal['AUTH_STORE_INVALID']] */
         ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___: {
             /**
@@ -1560,6 +1613,22 @@ export interface components {
              * @constant
              */
             internal_code: "AUTH_STORE_UNAVAILABLE";
+            /** Message */
+            message: string;
+        };
+        /** ErrorEnvelope[Literal[503], Literal['CHAT_NOT_CONFIGURED', 'CHAT_UNREACHABLE']] */
+        ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 503;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @enum {string}
+             */
+            internal_code: "CHAT_NOT_CONFIGURED" | "CHAT_UNREACHABLE";
             /** Message */
             message: string;
         };
@@ -1608,6 +1677,22 @@ export interface components {
              * @constant
              */
             internal_code: "OVERVIEW_DATA_UNAVAILABLE";
+            /** Message */
+            message: string;
+        };
+        /** ErrorEnvelope[Literal[504], Literal['CHAT_TIMEOUT']] */
+        ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 504;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @constant
+             */
+            internal_code: "CHAT_TIMEOUT";
             /** Message */
             message: string;
         };
@@ -2175,6 +2260,11 @@ export interface components {
              */
             runId: string;
         };
+        /** RequestChat */
+        RequestChat: {
+            /** Messages */
+            messages: components["schemas"]["ChatMessage"][];
+        };
         /** RequestCompleteDatasetUpload */
         RequestCompleteDatasetUpload: {
             /**
@@ -2498,6 +2588,15 @@ export interface components {
         /** ResponseCancelRun */
         ResponseCancelRun: {
             run: components["schemas"]["RunDTO"];
+        };
+        /** ResponseChat */
+        ResponseChat: {
+            /** Content */
+            content: string;
+            /** Elapsedms */
+            elapsedMs: number;
+            /** Model */
+            model: string;
         };
         /** ResponseCompleteDatasetUpload */
         ResponseCompleteDatasetUpload: {
@@ -3230,6 +3329,93 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+        };
+    };
+    complete_api_v1_chat_complete_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestChat"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseChat_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Bad Gateway */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE___"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
                 };
             };
         };
@@ -5739,6 +5925,7 @@ export interface operations {
 }
 
 export type RequestCancelRun = components["schemas"]["RequestCancelRun"];
+export type RequestChat = components["schemas"]["RequestChat"];
 export type RequestCompleteDatasetUpload = components["schemas"]["RequestCompleteDatasetUpload"];
 export type RequestCompleteUpload = components["schemas"]["RequestCompleteUpload"];
 export type RequestCreateDatasetUpload = components["schemas"]["RequestCreateDatasetUpload"];
@@ -5773,6 +5960,7 @@ export type RequestRunEvents = components["schemas"]["RequestRunEvents"];
 export type RequestSearchCompany = components["schemas"]["RequestSearchCompany"];
 export type RequestSearchOverviewCompany = components["schemas"]["RequestSearchOverviewCompany"];
 export type ResponseCancelRun = components["schemas"]["ResponseCancelRun"];
+export type ResponseChat = components["schemas"]["ResponseChat"];
 export type ResponseCompleteDatasetUpload = components["schemas"]["ResponseCompleteDatasetUpload"];
 export type ResponseCompleteUpload = components["schemas"]["ResponseCompleteUpload"];
 export type ResponseCreateDatasetUpload = components["schemas"]["ResponseCreateDatasetUpload"];

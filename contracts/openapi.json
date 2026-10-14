@@ -119,6 +119,40 @@
         "title": "ApiEnvelope[ResponseCancelRun]",
         "type": "object"
       },
+      "ApiEnvelope_ResponseChat_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseChat"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseChat]",
+        "type": "object"
+      },
       "ApiEnvelope_ResponseCompleteDatasetUpload_": {
         "properties": {
           "code": {
@@ -1286,6 +1320,31 @@
           "finishedAt"
         ],
         "title": "AttemptDTO",
+        "type": "object"
+      },
+      "ChatMessage": {
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "maxLength": 8000,
+            "minLength": 1,
+            "title": "Content",
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "user",
+              "assistant"
+            ],
+            "title": "Role",
+            "type": "string"
+          }
+        },
+        "required": [
+          "role",
+          "content"
+        ],
+        "title": "ChatMessage",
         "type": "object"
       },
       "CommunityBenchmark": {
@@ -2774,6 +2833,39 @@
         "title": "ErrorEnvelope[Literal[500], Literal['INTERNAL_ERROR']]",
         "type": "object"
       },
+      "ErrorEnvelope_Literal_502__Literal__CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___": {
+        "properties": {
+          "code": {
+            "const": 502,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "enum": [
+              "CHAT_AUTH_FAILED",
+              "CHAT_UPSTREAM_ERROR",
+              "CHAT_INVALID_RESPONSE"
+            ],
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[502], Literal['CHAT_AUTH_FAILED', 'CHAT_UPSTREAM_ERROR', 'CHAT_INVALID_RESPONSE']]",
+        "type": "object"
+      },
       "ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___": {
         "properties": {
           "code": {
@@ -2830,6 +2922,38 @@
           "data"
         ],
         "title": "ErrorEnvelope[Literal[503], Literal['AUTH_STORE_UNAVAILABLE']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE___": {
+        "properties": {
+          "code": {
+            "const": 503,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "enum": [
+              "CHAT_NOT_CONFIGURED",
+              "CHAT_UNREACHABLE"
+            ],
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[503], Literal['CHAT_NOT_CONFIGURED', 'CHAT_UNREACHABLE']]",
         "type": "object"
       },
       "ErrorEnvelope_Literal_503__Literal__DOCUMENT_STORAGE_UNAVAILABLE___": {
@@ -2920,6 +3044,35 @@
           "data"
         ],
         "title": "ErrorEnvelope[Literal[503], Literal['OVERVIEW_DATA_UNAVAILABLE']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___": {
+        "properties": {
+          "code": {
+            "const": 504,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "CHAT_TIMEOUT",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[504], Literal['CHAT_TIMEOUT']]",
         "type": "object"
       },
       "EventDTO": {
@@ -4397,6 +4550,25 @@
         "title": "RequestCancelRun",
         "type": "object"
       },
+      "RequestChat": {
+        "additionalProperties": false,
+        "properties": {
+          "messages": {
+            "items": {
+              "$ref": "#/components/schemas/ChatMessage"
+            },
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Messages",
+            "type": "array"
+          }
+        },
+        "required": [
+          "messages"
+        ],
+        "title": "RequestChat",
+        "type": "object"
+      },
       "RequestCompleteDatasetUpload": {
         "properties": {
           "datasetId": {
@@ -5101,6 +5273,29 @@
           "run"
         ],
         "title": "ResponseCancelRun",
+        "type": "object"
+      },
+      "ResponseChat": {
+        "properties": {
+          "content": {
+            "title": "Content",
+            "type": "string"
+          },
+          "elapsedMs": {
+            "title": "Elapsedms",
+            "type": "integer"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          }
+        },
+        "required": [
+          "content",
+          "model",
+          "elapsedMs"
+        ],
+        "title": "ResponseChat",
         "type": "object"
       },
       "ResponseCompleteDatasetUpload": {
@@ -6734,6 +6929,107 @@
         "summary": "Register",
         "tags": [
           "auth"
+        ]
+      }
+    },
+    "/api/v1/chat/complete": {
+      "post": {
+        "operationId": "complete_api_v1_chat_complete_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestChat"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseChat_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_502__Literal__CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"
+                }
+              }
+            },
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"
+                }
+              }
+            },
+            "description": "Gateway Timeout"
+          }
+        },
+        "summary": "Complete",
+        "tags": [
+          "chat"
         ]
       }
     },

@@ -5,6 +5,7 @@ import AuthGate from "@/app/router/AuthGate";
 import NotFound from "@/pages/NotFound";
 
 const Overview = lazy(() => import("@/pages/overview/page"));
+const ChatPage = lazy(() => import("@/pages/chat/page"));
 const SearchPage = lazy(() => import("@/pages/search/page"));
 const CompanyPage = lazy(() => import("@/pages/company/page"));
 const RealCompanyProfilePage = lazy(() => import("@/pages/company/real/page"));
@@ -33,6 +34,7 @@ const routes: RouteObject[] = [
       element: <AppLayout />,
       children: [
         { path: "/", element: load(<Overview />) },
+        { path: "/chat", element: load(<ChatPage />) },
         { path: "/search", element: load(<SearchPage />) },
         { path: "/company/:datasetId/:companyId", element: load(<RealCompanyProfilePage />) },
         { path: "/company/:id", element: load(<CompanyPage />) },

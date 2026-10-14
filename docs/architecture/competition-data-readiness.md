@@ -1,0 +1,68 @@
+# 比赛数据接入与内网问答
+
+## 内网问答
+
+登录后从侧栏“模型问答”进入 `/chat`，可一键测试或连续提问。
+页面显示实际回答、配置的模型名、耗时，以及连接、认证、超时和返回格式错误。
+问答未接入企业检索/RAG，也不调用风险预测；对话仅保留在当前页面内存中。
+
+后端 `POST /api/v1/chat/complete` 使用现有会话认证、请求 ID 和四字段响应信封。
+后端直接访问配置的内网地址，禁用环境 HTTP 代理；超时 60 秒，前端等待 70 秒。
+上游请求固定 `max_tokens=1024`，并关闭 thinking；消息总长不超过 32000 字符。
+密钥只配置在后端环境中，不通过页面输入、不写入前端构建或 OpenAPI。
+
+在根目录 `.env` 配置：
+
+```dotenv
+RISK_LLM_URL=http://172.16.4.3:8080/v1/chat/completions
+RISK_LLM_MODEL=Qwen3.6-35B-A3B
+RISK_LLM_API_KEY=现场提供的密钥
+```
+
+Compose 会将上述值传给 backend。修改后重建并启动：
+
+```sh
+docker compose up -d --build backend frontend
+```
+
+直接运行后端时需先将这些变量导入进程环境；Settings 不自动加载根目录 `.env`。
+现场须保证 backend 所在机器/容器能访问该内网服务。
+本次开发机尝试直连该地址时连接超时，尚未确认现场服务可用。
+
+## 数据与模型链路结论
+
+现有结构支持 **已注册适配器的数据 → 上传校验 → 企业导入与检索 → 训练 → 登记模型 → 预测展示**。
+仅字段名相同不能保证可训练，更不能保证新分布上的效果。
+
+| 环节 | 当前能力与前提 |
+| --- | --- |
+| 原始数据 | ZIP 内必须有 `risk_dataset_contract.json`，选择已注册适配器和版本 |
+| 已有适配器 | ACRA、新加坡数据；SMEsD JSON；UK JSON。未注册的 adapter/version 会拒绝 |
+| 字段映射 | 适配器负责类型、缺失值、特征顺序、单位、标签、划分、图方向和引用语义 |
+| 企业导入 | 校验任务生成 `risk-enterprise-data-v1` 标准 JSONL；业务端复核源摘要、大小、SHA256、计数与快照内引用，原子入库 |
+| 企业检索 | 工作台“企业数据”按当前用户/数据集查询名称或 ID，分页浏览企业、人物、边、超边与事件 |
+| 主导航检索 | `/search` 目前只查询 overview 的新加坡样本；不会自动纳入工作台上传数据 |
+| RiskGNN+ | 新实验默认真实 Plus 核心，包含普通图、超图、事件与双证据头；运行器 ID 仍叫 riskgnn |
+| 预测输入 | 模型绑定训练保存的图与 ID，只支持其中的企业；导入库中存在不等于模型中存在 |
+| 预测展示 | 登记模型后，可在模型页按 ID 预测，也可在企业数据页选择同数据集模型后预测；结果持久化并关联企业 |
+| 诊断输出 | 主分类概率、类别、融合概率、不确定性、冲突；未拟合校准，不等于已校准违约概率 |
+
+现有实现证据：
+
+- `models/riskgnn/dataset_adapters/registry.py`：显式注册三个适配器。
+- `models/riskgnn/dataset_adapters/enterprise.py`：标准企业数据导出。
+- `backend/src/risk_api/modules/modeling/enterprise_service.py`：导入、检索与预测关联。
+- `models/riskgnn+/riskgnn_plus/workbench/predictor.py`：检查绑定图企业 ID，重载权重推理。
+- `frontend/src/pages/modeling/components/EnterpriseDataPanel.tsx`：企业浏览、检索和预测入口。
+- `frontend/src/pages/search/page.tsx`：overview 样本检索，与上传数据查询独立。
+
+## 比赛前需确定的事项
+
+1. 取得脱敏字段清单与小样本；确认唯一企业 ID、关系端点、时间、特征单位、标签定义和缺失值。
+2. 可复用现有格式时在外部转换并打包；语义不兼容时新增适配器，不能只改 ZIP 清单。
+3. 训练需要可用监督标签与划分。只有无标签新企业时，当前链路不能直接训练，也不能直接用旧图模型预测。
+4. 确认比赛是固定图内预测还是训练后新增企业预测。后者需新增图输入和特征变换重放能力；当前接口只接收企业 ID。
+5. 工作台默认 CPU 两线程、两轮，允许 1–20 轮，单准备图最多 100000 节点及 500000 成员关联。目标抽样会限制可预测企业范围。
+6. 真数据上检查缺失率、类别比例、关系类型、时间泄漏和与训练分布的差异；格式验收与效果验收分别记录。
+
+详细 Plus 实现及使用范围见 [RiskGNN+ 工作台接入](riskgnn-plus-workbench.md)。

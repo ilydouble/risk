@@ -171,6 +171,9 @@ services:
       COOKIE_SECURE: ${COOKIE_SECURE:-false}
       RISK_LOG_LEVEL: ${RISK_LOG_LEVEL:-INFO}
       RISK_LOG_FORMAT: ${RISK_LOG_FORMAT:-pretty}
+      RISK_LLM_URL: ${RISK_LLM_URL:-http://172.16.4.3:8080/v1/chat/completions}
+      RISK_LLM_API_KEY: ${RISK_LLM_API_KEY:-}
+      RISK_LLM_MODEL: ${RISK_LLM_MODEL:-Qwen3.6-35B-A3B}
       RISK_GNN_URL: http://riskgnn:8000
       RISK_GNN_API_TOKEN: ${RISK_GNN_API_TOKEN:-local-riskgnn-change-me}
       MODELING_STORAGE_BUCKET: ${MODELING_STORAGE_BUCKET:-risk-modeling}

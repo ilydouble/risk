@@ -11,6 +11,7 @@ from fastapi.responses import JSONResponse
 from risk_api.dependencies import InfrastructureProvider
 from risk_api.errors import register_error_handlers
 from risk_api.modules.auth.api.route import router as auth_router
+from risk_api.modules.chat.api.route import router as chat_router
 from risk_api.modules.company.api.route import router as company_router
 from risk_api.modules.document.api.route import router as document_router
 from risk_api.modules.graph.api.route import router as graph_router
@@ -56,6 +57,7 @@ def create_app() -> FastAPI:
         return JSONResponse({"status": "ok"})
 
     app.include_router(auth_router, prefix="/api/v1/auth", tags=["auth"])
+    app.include_router(chat_router, prefix="/api/v1/chat", tags=["chat"])
     app.include_router(company_router, prefix="/api/v1/company", tags=["company"])
     app.include_router(graph_router, prefix="/api/v1/graph", tags=["graph"])
     app.include_router(score_router, prefix="/api/v1/score", tags=["score"])

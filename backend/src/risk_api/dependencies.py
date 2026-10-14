@@ -10,6 +10,7 @@ from stellarmesh_objectstorage import AsyncClient, ClientConfig
 
 from risk_api.modules.auth.repository import UserRepository
 from risk_api.modules.auth.service import AuthService
+from risk_api.modules.chat.service import ChatService
 from risk_api.modules.company.repository import CompanyRepository
 from risk_api.modules.company.service import CompanyService
 from risk_api.modules.document.repository import DocumentRepository
@@ -118,6 +119,11 @@ class InfrastructureProvider(Provider):
     @provide(scope=Scope.REQUEST)
     def overview_service(self, repository: OverviewRepository) -> OverviewService:
         return OverviewService(repository)
+
+    @provide(scope=Scope.APP)
+    async def chat_service(self) -> AsyncIterator[ChatService]:
+        async with httpx.AsyncClient(timeout=60, trust_env=False) as http:
+            yield ChatService(http, settings.llm_url, settings.llm_api_key, settings.llm_model)
 
     @provide(scope=Scope.APP)
     async def model_client(self) -> AsyncIterator[ModelClient]:
