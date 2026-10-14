@@ -6231,6 +6231,16 @@
             "title": "Conversationid",
             "type": "string"
           },
+          "dataPrep": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RequestDataPrepContext"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "maxTokens": {
             "default": 4096,
             "maximum": 16384.0,
@@ -6290,6 +6300,36 @@
           "size"
         ],
         "title": "RequestCreateUpload",
+        "type": "object"
+      },
+      "RequestDataPrepContext": {
+        "additionalProperties": false,
+        "properties": {
+          "filename": {
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Filename",
+            "type": "string"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/ResponseInspectData"
+          },
+          "report": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseSuggestMapping"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "filename",
+          "profile"
+        ],
+        "title": "RequestDataPrepContext",
         "type": "object"
       },
       "RequestDataQACatalog": {

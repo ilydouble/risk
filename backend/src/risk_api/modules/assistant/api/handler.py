@@ -15,6 +15,7 @@ from risk_api.modules.assistant.api.schemas import (
     ResponseGetConversation,
     ResponseListConversations,
 )
+from risk_api.modules.assistant.assets import SessionAsset
 from risk_api.modules.assistant.runtime import ModelSettings
 from risk_api.modules.assistant.service import AssistantService
 from risk_api.modules.auth.api.handler import authorize_request
@@ -74,11 +75,26 @@ async def create_turn(
 ) -> ApiEnvelope[ResponseCreateTurn]:
     user = await authorize_request(request, auth)
     connection = body.connection
+    session_assets = []
+    if body.dataPrep is not None:
+        context = body.dataPrep
+        case_id = f"case:{context.profile.sha256}"
+        session_assets.append(SessionAsset(
+            case_id, context.filename, "uploaded_case", context.profile.rowCount,
+            {"profile": context.profile.model_dump()},
+        ))
+        if context.report is not None:
+            session_assets.append(SessionAsset(
+                f"report:{context.profile.sha256}", f"{context.filename} · 数据分析报告",
+                "analysis_report", None,
+                {"sourceAssetId": case_id, "report": context.report.model_dump()},
+            ))
     model = ModelSettings(
         url=connection.url if connection else settings.llm_url,
         model=connection.model if connection else settings.llm_model,
         api_key=connection.apiKey if connection else settings.llm_api_key,
         max_tokens=body.maxTokens,
+        session_assets=session_assets,
     )
     turn = await service.start(
         user["user_id"],

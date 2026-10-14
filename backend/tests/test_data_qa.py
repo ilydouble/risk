@@ -380,6 +380,14 @@ def test_postgres_owner_scope_counts_and_readonly_transactions():
                         await session.execute(text("DELETE FROM workbench_datasets"))
                 assert await repo.execute(compile_query(owner, first, None, value)) == [{"n": 1}]
 
+                from risk_api.modules.assistant.assets import AssetRepository
+
+                assets = AssetRepository(session)
+                owned = await assets.datasets(owner)
+                assert [(a["datasetId"], a["rowCount"]) for a in owned] == [(first, 1)]
+                assert await assets.datasets(owner, second) == []
+                assert [a["datasetId"] for a in await assets.datasets(other)] == [second]
+
             from risk_api.modules.assistant.tools.data_qa import data_qa_tools
 
             class Planner:
@@ -390,7 +398,7 @@ def test_postgres_owner_scope_counts_and_readonly_transactions():
                         json.dumps({"plan": value.model_dump(), "reason": None}), "test", 1
                     )
 
-            catalog_tool, ask_tool = data_qa_tools(sessions, owner, Planner())
+            catalog_tool, ask_tool, *_ = data_qa_tools(sessions, owner, Planner())
             listed = await catalog_tool()
             assert [d["id"] for d in listed["content"][0]["json"]["datasets"]] == [first]
             result = await ask_tool("企业有多少家？", dataset_id=first)
@@ -400,7 +408,7 @@ def test_postgres_owner_scope_counts_and_readonly_transactions():
             assert denied["status"] == "error"
             assert denied["content"][0]["json"]["code"] == "DATA_QA_SCOPE_NOT_FOUND"
             # Two owners share the runtime/session factory, never a mutable account context.
-            _, other_ask = data_qa_tools(sessions, other, Planner())
+            _, other_ask, *_ = data_qa_tools(sessions, other, Planner())
             own_result, other_result = await asyncio.gather(
                 ask_tool("企业有多少家？", dataset_id=first),
                 other_ask("企业有多少家？", dataset_id=first),

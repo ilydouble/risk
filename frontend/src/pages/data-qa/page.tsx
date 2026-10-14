@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { requestAskData, requestDataQACatalog } from "@/features/data-qa/api/dataQaApi";
 import type { ResponseAskData, ResponseDataQACatalog } from "@/shared/api/generated/schema";
@@ -118,7 +119,7 @@ export default function DataQAPage() {
         {loading && <p role="status" className="text-sm text-foreground-500">正在读取可查询的数据范围…</p>}
         {catalogError && <p role="alert" className="text-sm text-red-500">{catalogError}</p>}
         {!loading && <button type="button" disabled={busy} onClick={() => setRevision((value) => value + 1)} className="text-xs text-primary-400 disabled:opacity-50">刷新查询范围</button>}
-        {catalog && catalog.datasets.length === 0 && <p className="text-sm text-foreground-500">当前账号尚未上传数据集。可以先统计数据集数量，或前往模型训练工作台上传数据。</p>}
+        {catalog && catalog.datasets.length === 0 && <p className="text-sm text-foreground-500">当前账号尚未登记训练数据集。企业演示数据、页面案例及报告请前往 <Link className="text-primary-400 underline" to="/chat">智能助手的统一数据资产目录</Link> 查看。</p>}
         {catalog?.truncated && <p className="text-xs text-amber-500">范围选择器显示最近200个数据集/模型；全部范围查询仍包含当前账号的全部记录。</p>}
         <label htmlFor="data-question" className="block text-sm font-medium">你的问题
           <textarea id="data-question" value={question} disabled={busy} onChange={(event) => setQuestion(event.target.value)} maxLength={2000} rows={3} className={input} placeholder="例如：各数据集分别导入了多少家企业？" />

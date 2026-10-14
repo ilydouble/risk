@@ -3,6 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { ArrowDown, ArrowUp, Bot, MessageSquare, Plus, RefreshCw, Settings2, Square } from "lucide-react";
 import { motion } from "motion/react";
 import { useAiModelConfig } from "@/features/ai-model-config/model/context";
+import { useDataPrepSession } from "@/features/data-prep/model/context";
 import { useConversation } from "@/features/assistant/model/useConversation";
 import SelectMenu from "@/shared/ui/SelectMenu";
 import { useLang } from "@/shared/lib/useLang";
@@ -11,6 +12,7 @@ import "./chat-markdown.css";
 
 export default function ChatPage() {
   const config = useAiModelConfig();
+  const dataPrep = useDataPrepSession();
   const { pick } = useLang();
   const [params, setParams] = useSearchParams();
   const id = params.get("conversation");
@@ -31,7 +33,12 @@ export default function ChatPage() {
 
   async function send() {
     if (!input.trim() || blocked || !ready) return;
-    if (await chat.send(input, { connection: config.connection, maxTokens: config.maxTokens })) setInput("");
+    if (await chat.send(input, {
+      connection: config.connection, maxTokens: config.maxTokens,
+      dataPrep: dataPrep.profile && dataPrep.file ? {
+        filename: dataPrep.file.name, profile: dataPrep.profile, report: dataPrep.suggestion,
+      } : undefined,
+    })) setInput("");
   }
   const errorText = chat.error === "STREAM_DISCONNECTED" ? pick("连接已中断，执行记录已保留。点击重新连接。", "Connection lost. Your work is saved. Reconnect to continue.")
     : chat.error === "ASSISTANT_BUSY" ? pick("这个对话已有任务执行中，请重新加载。", "This conversation is already running. Reload it.")
@@ -68,8 +75,8 @@ export default function ChatPage() {
           {!chat.loading && chat.turns.length === 0 && <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-lg py-16 text-center">
             <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-500/10 text-primary-500"><Bot size={28} /></div>
             <h2 className="text-2xl font-semibold tracking-tight">{pick("从一个问题开始", "Start with a question")}</h2>
-            <p className="mt-3 text-sm leading-7 text-foreground-500">{pick("可查询当前账号的数据集、训练实验、企业记录和已保存预测，并查看回答与工具执行过程。", "Query your datasets, training runs, enterprise records and saved predictions, and follow tool activity here.")}</p>
-            <button onClick={() => setInput(pick("请查询我有哪些数据集，列出名称和校验状态。", "List my datasets with their names and validation status."))} className="mt-7 rounded-xl border border-background-200 px-4 py-3 text-sm text-foreground-600 hover:border-primary-400">{pick("查询我的数据集", "Query my datasets")}</button>
+            <p className="mt-3 text-sm leading-7 text-foreground-500">{pick("先发现企业演示数据、当前账号训练数据集，以及本页面会话的案例与报告，再按来源查询。", "Discover enterprise demo data, your training datasets, and cases and reports from this browser session before querying each source.")}</p>
+            <button onClick={() => setInput(pick("请列出我能查看的数据资产，包括演示数据、上传案例和分析报告，说明来源与记录数。", "List available data assets, including demo data, uploaded cases and analysis reports, with their sources and record counts."))} className="mt-7 rounded-xl border border-background-200 px-4 py-3 text-sm text-foreground-600 hover:border-primary-400">{pick("查看统一数据资产目录", "Explore data assets")}</button>
           </motion.div>}
           {chat.loading && <p role="status" className="py-10 text-center text-sm text-foreground-400">{pick("正在恢复会话…", "Restoring conversation…")}</p>}
           {chat.turns.map(turn => <TurnTimeline key={turn.id} turn={turn} />)}
@@ -88,7 +95,7 @@ export default function ChatPage() {
                 : <button type="submit" disabled={blocked || !input.trim() || !ready} aria-label={pick("发送", "Send")} className="rounded-xl bg-primary-500 p-2.5 text-white disabled:opacity-30"><ArrowUp size={17} /></button>}
             </div>
           </form>
-          <p className="mt-2 text-center text-[11px] text-foreground-400">{pick("推理内容取决于模型端点支持；请核验重要信息。", "Reasoning availability depends on the model endpoint. Verify important information.")}</p>
+          <p className="mt-2 text-center text-[11px] text-foreground-400">{dataPrep.profile ? pick("本轮将携带当前案例统计和已有报告供模型查询；刷新后失效。", "This turn includes the current case profile and report for model queries; they expire on refresh.") : pick("目录覆盖共享演示数据与当前账号训练数据；本轮未携带页面案例。", "The catalog covers shared demo data and your training datasets; no browser case is attached.")}</p>
         </div>
       </div>
     </main>

@@ -3157,6 +3157,7 @@ export interface components {
              * Format: uuid
              */
             conversationId: string;
+            dataPrep?: components["schemas"]["RequestDataPrepContext"] | null;
             /**
              * Maxtokens
              * @default 4096
@@ -3180,6 +3181,13 @@ export interface components {
             filename: string;
             /** Size */
             size: number;
+        };
+        /** RequestDataPrepContext */
+        RequestDataPrepContext: {
+            /** Filename */
+            filename: string;
+            profile: components["schemas"]["ResponseInspectData"];
+            report?: components["schemas"]["ResponseSuggestMapping"] | null;
         };
         /** RequestDataQACatalog */
         RequestDataQACatalog: Record<string, never>;
@@ -8414,6 +8422,7 @@ export type RequestCreateDownload = components["schemas"]["RequestCreateDownload
 export type RequestCreateRun = components["schemas"]["RequestCreateRun"];
 export type RequestCreateTurn = components["schemas"]["RequestCreateTurn"];
 export type RequestCreateUpload = components["schemas"]["RequestCreateUpload"];
+export type RequestDataPrepContext = components["schemas"]["RequestDataPrepContext"];
 export type RequestDataQACatalog = components["schemas"]["RequestDataQACatalog"];
 export type RequestDownloadModel = components["schemas"]["RequestDownloadModel"];
 export type RequestEnterpriseCompany = components["schemas"]["RequestEnterpriseCompany"];

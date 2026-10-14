@@ -73,7 +73,9 @@ def test_real_strands_workbench_loop_binds_owner_and_returns_safe_results(
         requests.append(payload)
         if len(requests) == 1:
             schemas = {t["function"]["name"]: t["function"] for t in payload["tools"]}
-            assert set(schemas) == {"current_time", "workbench_catalog", "workbench_ask"}
+            assert set(schemas) == {
+                "current_time", "workbench_catalog", "workbench_ask", "asset_catalog", "asset_read",
+            }
             assert "owner" not in json.dumps(schemas["workbench_ask"]["parameters"])
             delta = {"tool_calls": [{
                 "index": 0, "id": "query-1", "type": "function",

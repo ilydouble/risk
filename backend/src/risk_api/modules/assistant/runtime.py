@@ -1,3 +1,5 @@
+import hashlib
+import json
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass, field
 
@@ -8,6 +10,7 @@ from strands import Agent
 from strands.models.openai import OpenAIModel
 from strands.types.content import Messages
 
+from risk_api.modules.assistant.assets import SessionAsset
 from risk_api.modules.assistant.projector import ItemProjector
 from risk_api.modules.assistant.protocol.items import Item
 from risk_api.modules.assistant.protocol.turns import Turn
@@ -22,9 +25,18 @@ class ModelSettings:
     model: str
     max_tokens: int
     api_key: str = field(repr=False)
+    session_assets: list[SessionAsset] = field(default_factory=list, repr=False)
 
     def public(self) -> dict[str, str | int]:
-        return {"url": self.url, "model": self.model, "maxTokens": self.max_tokens}
+        result: dict[str, str | int] = {
+            "url": self.url, "model": self.model, "maxTokens": self.max_tokens,
+        }
+        if self.session_assets:
+            # Include context in idempotency without putting its contents in model configuration.
+            result["assetSnapshotHash"] = hashlib.sha256(json.dumps(
+                [vars(asset) for asset in self.session_assets], sort_keys=True, ensure_ascii=False,
+            ).encode()).hexdigest()
+        return result
 
 
 def conversation_messages(history: list[Turn]) -> Messages:
@@ -87,12 +99,22 @@ class StrandsRuntime:
                             owner,
                             ChatService(http, settings.url, settings.api_key, settings.model)
                             .configured(settings.url, settings.api_key, settings.model),
+                            settings.session_assets,
                         ),
                     ],
                     callback_handler=None,
                     messages=conversation_messages(history),
                     system_prompt=(
                         "You are the Risk Workbench assistant. Answer in the user's language. "
+                        "For questions about available data, datasets, uploaded cases or reports, "
+                        "first call asset_catalog for the unified directory. Use asset_read to "
+                        "inspect enterprise demo data or browser case/report snapshots. Always "
+                        "distinguish shared demo, account workbench and temporary browser assets. "
+                        "Report counts with their source and meaning. Never infer that the entire "
+                        "system is empty from an empty workbench. Missing browser context means "
+                        "not provided this turn, not never uploaded. Empty query results are "
+                        "authoritative within their stated scope; do not repeat or broaden queries "
+                        "to manufacture results. Generated reports are unverified analysis. "
                         "Use current_time for actual time. For factual workbench questions, "
                         "use workbench_catalog and workbench_ask; never invent database results. "
                         "Resolve dataset/model IDs with the catalog when needed. Each query is "
