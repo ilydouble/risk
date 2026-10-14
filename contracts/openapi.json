@@ -153,6 +153,40 @@
         "title": "ApiEnvelope[ResponseCancelRun]",
         "type": "object"
       },
+      "ApiEnvelope_ResponseCancelTurn_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseCancelTurn"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseCancelTurn]",
+        "type": "object"
+      },
       "ApiEnvelope_ResponseChat_": {
         "properties": {
           "code": {
@@ -255,6 +289,40 @@
         "title": "ApiEnvelope[ResponseCompleteUpload]",
         "type": "object"
       },
+      "ApiEnvelope_ResponseCreateConversation_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseCreateConversation"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseCreateConversation]",
+        "type": "object"
+      },
       "ApiEnvelope_ResponseCreateDatasetUpload_": {
         "properties": {
           "code": {
@@ -355,6 +423,40 @@
           "data"
         ],
         "title": "ApiEnvelope[ResponseCreateRun]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseCreateTurn_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseCreateTurn"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseCreateTurn]",
         "type": "object"
       },
       "ApiEnvelope_ResponseCreateUpload_": {
@@ -593,6 +695,40 @@
           "data"
         ],
         "title": "ApiEnvelope[ResponseGetCompany]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseGetConversation_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseGetConversation"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseGetConversation]",
         "type": "object"
       },
       "ApiEnvelope_ResponseGetDataset_": {
@@ -899,6 +1035,40 @@
           "data"
         ],
         "title": "ApiEnvelope[ResponseInspectData]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseListConversations_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseListConversations"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseListConversations]",
         "type": "object"
       },
       "ApiEnvelope_ResponseListDatasets_": {
@@ -2136,6 +2306,30 @@
         "title": "CompanyProfile",
         "type": "object"
       },
+      "Conversation": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "title": "Updatedat",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "updatedAt"
+        ],
+        "title": "Conversation",
+        "type": "object"
+      },
       "CorrelationDTO": {
         "properties": {
           "correlation": {
@@ -3052,6 +3246,35 @@
         "title": "ErrorEnvelope[Literal[403], Literal['REQUEST_ORIGIN_INVALID']]",
         "type": "object"
       },
+      "ErrorEnvelope_Literal_404__Literal__ASSISTANT_NOT_FOUND___": {
+        "properties": {
+          "code": {
+            "const": 404,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "ASSISTANT_NOT_FOUND",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[404], Literal['ASSISTANT_NOT_FOUND']]",
+        "type": "object"
+      },
       "ErrorEnvelope_Literal_404__Literal__COMPANY_NOT_FOUND___": {
         "properties": {
           "code": {
@@ -3228,6 +3451,38 @@
           "data"
         ],
         "title": "ErrorEnvelope[Literal[404], Literal['OVERVIEW_COMPANY_NOT_FOUND']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_409__Literal__ASSISTANT_BUSY____ASSISTANT_KEY_CONFLICT___": {
+        "properties": {
+          "code": {
+            "const": 409,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "enum": [
+              "ASSISTANT_BUSY",
+              "ASSISTANT_KEY_CONFLICT"
+            ],
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[409], Literal['ASSISTANT_BUSY', 'ASSISTANT_KEY_CONFLICT']]",
         "type": "object"
       },
       "ErrorEnvelope_Literal_409__Literal__AUTH_USERNAME_TAKEN___": {
@@ -3619,6 +3874,35 @@
         "title": "ErrorEnvelope[Literal[502], Literal['DATA_PREP_SUGGESTION_INVALID', 'CHAT_AUTH_FAILED', 'CHAT_UPSTREAM_ERROR', 'CHAT_INVALID_RESPONSE']]",
         "type": "object"
       },
+      "ErrorEnvelope_Literal_503__Literal__ASSISTANT_CAPACITY___": {
+        "properties": {
+          "code": {
+            "const": 503,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "ASSISTANT_CAPACITY",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[503], Literal['ASSISTANT_CAPACITY']]",
+        "type": "object"
+      },
       "ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___": {
         "properties": {
           "code": {
@@ -3926,6 +4210,19 @@
         ],
         "title": "EventDTO",
         "type": "object"
+      },
+      "EventType": {
+        "enum": [
+          "turn_started",
+          "item_updated",
+          "item_delta",
+          "turn_completed",
+          "turn_failed",
+          "turn_cancelled",
+          "turn_interrupted"
+        ],
+        "title": "EventType",
+        "type": "string"
       },
       "ExecutionEventKind": {
         "enum": [
@@ -4523,6 +4820,44 @@
         "title": "GraphNode",
         "type": "object"
       },
+      "ItemDelta": {
+        "properties": {
+          "field": {
+            "enum": [
+              "text",
+              "argumentsText"
+            ],
+            "title": "Field",
+            "type": "string"
+          },
+          "itemId": {
+            "title": "Itemid",
+            "type": "string"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "itemId",
+          "field",
+          "text"
+        ],
+        "title": "ItemDelta",
+        "type": "object"
+      },
+      "ItemStatus": {
+        "enum": [
+          "running",
+          "completed",
+          "failed",
+          "cancelled"
+        ],
+        "title": "ItemStatus",
+        "type": "string"
+      },
+      "JsonValue": {},
       "MappingSuggestion": {
         "properties": {
           "field": {
@@ -5497,6 +5832,20 @@
         "title": "RequestCancelRun",
         "type": "object"
       },
+      "RequestCancelTurn": {
+        "properties": {
+          "turnId": {
+            "format": "uuid",
+            "title": "Turnid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "turnId"
+        ],
+        "title": "RequestCancelTurn",
+        "type": "object"
+      },
       "RequestChat": {
         "additionalProperties": false,
         "properties": {
@@ -5558,6 +5907,11 @@
           "documentId"
         ],
         "title": "RequestCompleteUpload",
+        "type": "object"
+      },
+      "RequestCreateConversation": {
+        "properties": {},
+        "title": "RequestCreateConversation",
         "type": "object"
       },
       "RequestCreateDatasetUpload": {
@@ -5660,6 +6014,51 @@
           "requestKey"
         ],
         "title": "RequestCreateRun",
+        "type": "object"
+      },
+      "RequestCreateTurn": {
+        "additionalProperties": false,
+        "properties": {
+          "connection": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ModelConnection"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "conversationId": {
+            "format": "uuid",
+            "title": "Conversationid",
+            "type": "string"
+          },
+          "maxTokens": {
+            "default": 4096,
+            "maximum": 16384.0,
+            "minimum": 256.0,
+            "title": "Maxtokens",
+            "type": "integer"
+          },
+          "message": {
+            "maxLength": 8000,
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          },
+          "requestKey": {
+            "format": "uuid",
+            "title": "Requestkey",
+            "type": "string"
+          }
+        },
+        "required": [
+          "conversationId",
+          "requestKey",
+          "message"
+        ],
+        "title": "RequestCreateTurn",
         "type": "object"
       },
       "RequestCreateUpload": {
@@ -5769,6 +6168,20 @@
           "id"
         ],
         "title": "RequestGetCompany",
+        "type": "object"
+      },
+      "RequestGetConversation": {
+        "properties": {
+          "conversationId": {
+            "format": "uuid",
+            "title": "Conversationid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "conversationId"
+        ],
+        "title": "RequestGetConversation",
         "type": "object"
       },
       "RequestGetDataset": {
@@ -5928,6 +6341,11 @@
           "contentBase64"
         ],
         "title": "RequestInspectData",
+        "type": "object"
+      },
+      "RequestListConversations": {
+        "properties": {},
+        "title": "RequestListConversations",
         "type": "object"
       },
       "RequestListDatasets": {
@@ -6351,6 +6769,26 @@
         "title": "RequestTestModel",
         "type": "object"
       },
+      "RequestTurnEvents": {
+        "properties": {
+          "afterSequence": {
+            "default": 0,
+            "minimum": 0.0,
+            "title": "Aftersequence",
+            "type": "integer"
+          },
+          "turnId": {
+            "format": "uuid",
+            "title": "Turnid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "turnId"
+        ],
+        "title": "RequestTurnEvents",
+        "type": "object"
+      },
       "ResponseAskData": {
         "properties": {
           "answer": {
@@ -6450,6 +6888,18 @@
         "title": "ResponseCancelRun",
         "type": "object"
       },
+      "ResponseCancelTurn": {
+        "properties": {
+          "turn": {
+            "$ref": "#/components/schemas/Turn"
+          }
+        },
+        "required": [
+          "turn"
+        ],
+        "title": "ResponseCancelTurn",
+        "type": "object"
+      },
       "ResponseChat": {
         "properties": {
           "content": {
@@ -6495,6 +6945,18 @@
           "document"
         ],
         "title": "ResponseCompleteUpload",
+        "type": "object"
+      },
+      "ResponseCreateConversation": {
+        "properties": {
+          "conversation": {
+            "$ref": "#/components/schemas/Conversation"
+          }
+        },
+        "required": [
+          "conversation"
+        ],
+        "title": "ResponseCreateConversation",
         "type": "object"
       },
       "ResponseCreateDatasetUpload": {
@@ -6556,6 +7018,18 @@
           "run"
         ],
         "title": "ResponseCreateRun",
+        "type": "object"
+      },
+      "ResponseCreateTurn": {
+        "properties": {
+          "turn": {
+            "$ref": "#/components/schemas/Turn"
+          }
+        },
+        "required": [
+          "turn"
+        ],
+        "title": "ResponseCreateTurn",
         "type": "object"
       },
       "ResponseCreateUpload": {
@@ -6771,6 +7245,22 @@
           "profile"
         ],
         "title": "ResponseGetCompany",
+        "type": "object"
+      },
+      "ResponseGetConversation": {
+        "properties": {
+          "turns": {
+            "items": {
+              "$ref": "#/components/schemas/Turn"
+            },
+            "title": "Turns",
+            "type": "array"
+          }
+        },
+        "required": [
+          "turns"
+        ],
+        "title": "ResponseGetConversation",
         "type": "object"
       },
       "ResponseGetDataset": {
@@ -7073,6 +7563,22 @@
           "sampleRows"
         ],
         "title": "ResponseInspectData",
+        "type": "object"
+      },
+      "ResponseListConversations": {
+        "properties": {
+          "conversations": {
+            "items": {
+              "$ref": "#/components/schemas/Conversation"
+            },
+            "title": "Conversations",
+            "type": "array"
+          }
+        },
+        "required": [
+          "conversations"
+        ],
+        "title": "ResponseListConversations",
         "type": "object"
       },
       "ResponseListDatasets": {
@@ -7577,6 +8083,92 @@
         "title": "ResponseTestModel",
         "type": "object"
       },
+      "ResponseTurnEvent": {
+        "additionalProperties": false,
+        "properties": {
+          "delta": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ItemDelta"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TurnError"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "item": {
+            "anyOf": [
+              {
+                "discriminator": {
+                  "mapping": {
+                    "agent_message": "#/components/schemas/TextItem",
+                    "reasoning": "#/components/schemas/TextItem",
+                    "tool_call": "#/components/schemas/ToolItem",
+                    "user_message": "#/components/schemas/TextItem"
+                  },
+                  "propertyName": "kind"
+                },
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/TextItem"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ToolItem"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Item"
+          },
+          "sequence": {
+            "title": "Sequence",
+            "type": "integer"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TurnStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "turnId": {
+            "title": "Turnid",
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/EventType"
+          },
+          "version": {
+            "const": 1,
+            "default": 1,
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "turnId",
+          "sequence",
+          "type"
+        ],
+        "title": "ResponseTurnEvent",
+        "type": "object"
+      },
       "RiskFlag": {
         "properties": {
           "category": {
@@ -7965,6 +8557,38 @@
         "title": "StatusDistributionItemDTO",
         "type": "object"
       },
+      "TextItem": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "user_message",
+              "reasoning",
+              "agent_message"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus",
+            "default": "running"
+          },
+          "text": {
+            "default": "",
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "title": "TextItem",
+        "type": "object"
+      },
       "TimelineEvent": {
         "properties": {
           "date": {
@@ -8037,6 +8661,152 @@
         ],
         "title": "TimelineEvent",
         "type": "object"
+      },
+      "ToolItem": {
+        "additionalProperties": false,
+        "properties": {
+          "argumentsText": {
+            "default": "",
+            "title": "Argumentstext",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "const": "tool_call",
+            "default": "tool_call",
+            "title": "Kind",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "result": {
+            "$ref": "#/components/schemas/JsonValue"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus",
+            "default": "running"
+          },
+          "toolCallId": {
+            "title": "Toolcallid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "toolCallId",
+          "name"
+        ],
+        "title": "ToolItem",
+        "type": "object"
+      },
+      "Turn": {
+        "properties": {
+          "conversationId": {
+            "title": "Conversationid",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "title": "Createdat",
+            "type": "string"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TurnError"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "items": {
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "agent_message": "#/components/schemas/TextItem",
+                  "reasoning": "#/components/schemas/TextItem",
+                  "tool_call": "#/components/schemas/ToolItem",
+                  "user_message": "#/components/schemas/TextItem"
+                },
+                "propertyName": "kind"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/TextItem"
+                },
+                {
+                  "$ref": "#/components/schemas/ToolItem"
+                }
+              ]
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "requestId": {
+            "title": "Requestid",
+            "type": "string"
+          },
+          "sequence": {
+            "title": "Sequence",
+            "type": "integer"
+          },
+          "status": {
+            "$ref": "#/components/schemas/TurnStatus"
+          }
+        },
+        "required": [
+          "id",
+          "conversationId",
+          "status",
+          "model",
+          "requestId",
+          "sequence",
+          "createdAt"
+        ],
+        "title": "Turn",
+        "type": "object"
+      },
+      "TurnError": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "TurnError",
+        "type": "object"
+      },
+      "TurnStatus": {
+        "enum": [
+          "running",
+          "completed",
+          "failed",
+          "cancelled",
+          "interrupted"
+        ],
+        "title": "TurnStatus",
+        "type": "string"
       }
     }
   },
@@ -8046,6 +8816,613 @@
   },
   "openapi": "3.1.0",
   "paths": {
+    "/api/v1/assistant/conversations/create": {
+      "post": {
+        "operationId": "create_conversation_api_v1_assistant_conversations_create_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestCreateConversation"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseCreateConversation_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__ASSISTANT_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__ASSISTANT_BUSY____ASSISTANT_KEY_CONFLICT___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__ASSISTANT_CAPACITY___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Create Conversation",
+        "tags": [
+          "assistant"
+        ]
+      }
+    },
+    "/api/v1/assistant/conversations/get": {
+      "post": {
+        "operationId": "get_conversation_api_v1_assistant_conversations_get_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestGetConversation"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseGetConversation_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__ASSISTANT_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__ASSISTANT_BUSY____ASSISTANT_KEY_CONFLICT___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__ASSISTANT_CAPACITY___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Get Conversation",
+        "tags": [
+          "assistant"
+        ]
+      }
+    },
+    "/api/v1/assistant/conversations/list": {
+      "post": {
+        "operationId": "list_conversations_api_v1_assistant_conversations_list_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestListConversations"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseListConversations_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__ASSISTANT_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__ASSISTANT_BUSY____ASSISTANT_KEY_CONFLICT___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__ASSISTANT_CAPACITY___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "List Conversations",
+        "tags": [
+          "assistant"
+        ]
+      }
+    },
+    "/api/v1/assistant/turns/cancel": {
+      "post": {
+        "operationId": "cancel_turn_api_v1_assistant_turns_cancel_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestCancelTurn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseCancelTurn_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__ASSISTANT_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__ASSISTANT_BUSY____ASSISTANT_KEY_CONFLICT___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__ASSISTANT_CAPACITY___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Cancel Turn",
+        "tags": [
+          "assistant"
+        ]
+      }
+    },
+    "/api/v1/assistant/turns/create": {
+      "post": {
+        "operationId": "create_turn_api_v1_assistant_turns_create_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestCreateTurn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseCreateTurn_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__ASSISTANT_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__ASSISTANT_BUSY____ASSISTANT_KEY_CONFLICT___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__ASSISTANT_CAPACITY___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Create Turn",
+        "tags": [
+          "assistant"
+        ]
+      }
+    },
+    "/api/v1/assistant/turns/events": {
+      "post": {
+        "operationId": "turn_events_api_v1_assistant_turns_events_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestTurnEvents"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseTurnEvent",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Each SSE data field is a ResponseTurnEvent"
+          },
+          "401": {
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__ASSISTANT_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__ASSISTANT_BUSY____ASSISTANT_KEY_CONFLICT___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__ASSISTANT_CAPACITY___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Turn Events",
+        "tags": [
+          "assistant"
+        ]
+      }
+    },
     "/api/v1/auth/login": {
       "post": {
         "operationId": "login_api_v1_auth_login_post",

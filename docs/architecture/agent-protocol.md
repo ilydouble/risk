@@ -9,10 +9,12 @@ Item 使用 kind 判别：user_message、reasoning、agent_message、tool_call�
 Item 状态：running、completed、failed、cancelled。
 工具结果为 JSON 值，错误是工具 Item 的 failed 状态；不会因此伪造 Turn 成功。
 
-Event 包含 version=1、turnId、sequence、type、item、status、error。
-事件 type：turn_started、item_updated、turn_completed、turn_failed、turn_cancelled、turn_interrupted。
+Event 包含 version=1、turnId、sequence、type、item、delta、status、error。
+事件 type：turn_started、item_updated、item_delta、turn_completed、turn_failed、turn_cancelled、turn_interrupted。
 item_updated 携带完整 Item 当前快照，前端按 id 替换，重复事件按 sequence 忽略。
-采用快照事件减少增量拼接状态；服务端对模型 token 合并后写入，避免逐 token 事务。
+item_delta 包含 itemId、field（text 或 argumentsText）与追加文本。
+服务端约每 120 ms 合并 token 后持久化；开始与完成使用完整 Item，期间发送追加增量。
+Item 快照与增量事件同事务提交，避免长回答造成事件存储平方增长。
 事件均使用 Pydantic 定义并进入 OpenAPI，前端从生成文件导入类型。
 未来协议不兼容变更递增 version；不把 Strands 原始事件直接发送给浏览器。
 
