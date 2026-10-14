@@ -4,6 +4,7 @@
 
 - 单一框架：Strands Agents 1.60.0，Python 3.12，OpenAI 兼容模型端点。
 - `modules/assistant/runtime.py` 负责 Strands、模型和工具装配；不建立框架插件体系。
+- `tools/` 按业务领域组织工具，`example_tools.py` 放通用链路示例；runtime 显式选择可用工具。
 - `protocol/` 定义与框架无关的 Conversation、Turn、Item 和 Event。
 - Repository 管持久化；Service 管执行、取消、超时和恢复；HTTP 层只做鉴权、DTO 和 SSE。
 - `/chat` 改为持久会话界面。原 `/chat/complete` 与问数接口保留兼容，不能称为 Agent。

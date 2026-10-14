@@ -1,17 +1,16 @@
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass, field
-from datetime import datetime
-from zoneinfo import ZoneInfo
 
 import httpx
 from openai import AsyncOpenAI
-from strands import Agent, tool
+from strands import Agent
 from strands.models.openai import OpenAIModel
 from strands.types.content import Messages
 
 from risk_api.modules.assistant.projector import ItemProjector
 from risk_api.modules.assistant.protocol.items import Item
 from risk_api.modules.assistant.protocol.turns import Turn
+from risk_api.modules.assistant.tools.example_tools import current_time
 
 
 @dataclass(frozen=True)
@@ -23,16 +22,6 @@ class ModelSettings:
 
     def public(self) -> dict[str, str | int]:
         return {"url": self.url, "model": self.model, "maxTokens": self.max_tokens}
-
-
-@tool
-async def current_time(timezone: str = "Asia/Shanghai") -> dict[str, str]:
-    """Get the actual current time in an IANA timezone, for example Asia/Shanghai or UTC.
-
-    Args:
-        timezone: IANA timezone identifier.
-    """
-    return {"timezone": timezone, "time": datetime.now(ZoneInfo(timezone)).isoformat()}
 
 
 def conversation_messages(history: list[Turn]) -> Messages:
