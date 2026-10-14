@@ -6,6 +6,7 @@ export default {
     title: "信用智评 品牌标识 青花钴蓝方形印标",
   },
   nav: {
+    dataPrep: "数据准备",
     dataQa: "工作台问数",
     chat: "模型问答",
     workspace: "工作台",

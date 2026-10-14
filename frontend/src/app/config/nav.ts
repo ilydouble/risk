@@ -18,6 +18,7 @@ export const NAV_GROUPS: NavGroup[] = [
     key: "workspace",
     labelKey: "nav.workspace",
     items: [
+      { key: "data-prep", labelKey: "nav.dataPrep", path: "/data-prep", icon: "ri-file-search-line" },
       {
         key: "overview",
         labelKey: "nav.overview",

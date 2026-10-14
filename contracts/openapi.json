@@ -867,6 +867,40 @@
         "title": "ApiEnvelope[ResponseImportEnterprises]",
         "type": "object"
       },
+      "ApiEnvelope_ResponseInspectData_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseInspectData"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseInspectData]",
+        "type": "object"
+      },
       "ApiEnvelope_ResponseListDatasets_": {
         "properties": {
           "code": {
@@ -1443,6 +1477,40 @@
           "data"
         ],
         "title": "ApiEnvelope[ResponseSearchOverviewCompany]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseSuggestMapping_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseSuggestMapping"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseSuggestMapping]",
         "type": "object"
       },
       "AttemptDTO": {
@@ -3217,6 +3285,45 @@
         "title": "ErrorEnvelope[Literal[409], Literal['MODELING_STATE_INVALID', 'MODELING_DATASET_NOT_READY', 'MODELING_UPLOAD_INCOMPLETE', 'MODEL_STATE_INVALID', 'MODELING_CONFIG_STALE', 'MODELING_ENTERPRISE_UNAVAILABLE']]",
         "type": "object"
       },
+      "ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID___": {
+        "properties": {
+          "code": {
+            "const": 422,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "enum": [
+              "DATA_PREP_SIZE_INVALID",
+              "DATA_PREP_ENCODING_INVALID",
+              "DATA_PREP_HEADER_INVALID",
+              "DATA_PREP_HEADER_DUPLICATE",
+              "DATA_PREP_ROW_INVALID",
+              "DATA_PREP_ROWS_EXCEEDED",
+              "DATA_PREP_EMPTY",
+              "DATA_PREP_FORMAT_UNSUPPORTED",
+              "DATA_PREP_CONTENT_INVALID"
+            ],
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[422], Literal['DATA_PREP_SIZE_INVALID', 'DATA_PREP_ENCODING_INVALID', 'DATA_PREP_HEADER_INVALID', 'DATA_PREP_HEADER_DUPLICATE', 'DATA_PREP_ROW_INVALID', 'DATA_PREP_ROWS_EXCEEDED', 'DATA_PREP_EMPTY', 'DATA_PREP_FORMAT_UNSUPPORTED', 'DATA_PREP_CONTENT_INVALID']]",
+        "type": "object"
+      },
       "ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___": {
         "properties": {
           "code": {
@@ -3408,6 +3515,40 @@
           "data"
         ],
         "title": "ErrorEnvelope[Literal[502], Literal['CHAT_AUTH_FAILED', 'CHAT_UPSTREAM_ERROR', 'CHAT_INVALID_RESPONSE', 'DATA_QA_PLAN_INVALID']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___": {
+        "properties": {
+          "code": {
+            "const": 502,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "enum": [
+              "DATA_PREP_SUGGESTION_INVALID",
+              "CHAT_AUTH_FAILED",
+              "CHAT_UPSTREAM_ERROR",
+              "CHAT_INVALID_RESPONSE"
+            ],
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[502], Literal['DATA_PREP_SUGGESTION_INVALID', 'CHAT_AUTH_FAILED', 'CHAT_UPSTREAM_ERROR', 'CHAT_INVALID_RESPONSE']]",
         "type": "object"
       },
       "ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___": {
@@ -3991,6 +4132,42 @@
         "title": "FeatureAnalysisDTO",
         "type": "object"
       },
+      "FieldProfile": {
+        "properties": {
+          "distinctCount": {
+            "title": "Distinctcount",
+            "type": "integer"
+          },
+          "examples": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Examples",
+            "type": "array"
+          },
+          "missingCount": {
+            "title": "Missingcount",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "numericRate": {
+            "title": "Numericrate",
+            "type": "number"
+          }
+        },
+        "required": [
+          "name",
+          "missingCount",
+          "distinctCount",
+          "numericRate",
+          "examples"
+        ],
+        "title": "FieldProfile",
+        "type": "object"
+      },
       "FileDTO": {
         "properties": {
           "path": {
@@ -4276,6 +4453,29 @@
           "exposure"
         ],
         "title": "GraphNode",
+        "type": "object"
+      },
+      "MappingSuggestion": {
+        "properties": {
+          "field": {
+            "title": "Field",
+            "type": "string"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "role": {
+            "title": "Role",
+            "type": "string"
+          }
+        },
+        "required": [
+          "field",
+          "role",
+          "reason"
+        ],
+        "title": "MappingSuggestion",
         "type": "object"
       },
       "ModelCapabilityDTO": {
@@ -5593,6 +5793,29 @@
         "title": "RequestImportEnterprises",
         "type": "object"
       },
+      "RequestInspectData": {
+        "additionalProperties": false,
+        "properties": {
+          "contentBase64": {
+            "maxLength": 3000000,
+            "minLength": 1,
+            "title": "Contentbase64",
+            "type": "string"
+          },
+          "filename": {
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Filename",
+            "type": "string"
+          }
+        },
+        "required": [
+          "filename",
+          "contentBase64"
+        ],
+        "title": "RequestInspectData",
+        "type": "object"
+      },
       "RequestListDatasets": {
         "properties": {
           "pagination": {
@@ -5959,6 +6182,19 @@
           }
         },
         "title": "RequestSearchOverviewCompany",
+        "type": "object"
+      },
+      "RequestSuggestMapping": {
+        "additionalProperties": false,
+        "properties": {
+          "profile": {
+            "$ref": "#/components/schemas/ResponseInspectData"
+          }
+        },
+        "required": [
+          "profile"
+        ],
+        "title": "RequestSuggestMapping",
         "type": "object"
       },
       "ResponseAskData": {
@@ -6643,6 +6879,48 @@
         "title": "ResponseImportEnterprises",
         "type": "object"
       },
+      "ResponseInspectData": {
+        "properties": {
+          "duplicateRows": {
+            "title": "Duplicaterows",
+            "type": "integer"
+          },
+          "fields": {
+            "items": {
+              "$ref": "#/components/schemas/FieldProfile"
+            },
+            "title": "Fields",
+            "type": "array"
+          },
+          "rowCount": {
+            "title": "Rowcount",
+            "type": "integer"
+          },
+          "sampleRows": {
+            "items": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            "title": "Samplerows",
+            "type": "array"
+          },
+          "sha256": {
+            "title": "Sha256",
+            "type": "string"
+          }
+        },
+        "required": [
+          "sha256",
+          "rowCount",
+          "duplicateRows",
+          "fields",
+          "sampleRows"
+        ],
+        "title": "ResponseInspectData",
+        "type": "object"
+      },
       "ResponseListDatasets": {
         "properties": {
           "items": {
@@ -7073,6 +7351,35 @@
           "industryCodes"
         ],
         "title": "ResponseSearchOverviewCompany",
+        "type": "object"
+      },
+      "ResponseSuggestMapping": {
+        "properties": {
+          "questions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Questions",
+            "type": "array"
+          },
+          "suggestions": {
+            "items": {
+              "$ref": "#/components/schemas/MappingSuggestion"
+            },
+            "title": "Suggestions",
+            "type": "array"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "summary",
+          "suggestions",
+          "questions"
+        ],
+        "title": "ResponseSuggestMapping",
         "type": "object"
       },
       "RiskFlag": {
@@ -8142,6 +8449,208 @@
         "summary": "Search",
         "tags": [
           "company"
+        ]
+      }
+    },
+    "/api/v1/data-prep/inspect": {
+      "post": {
+        "operationId": "inspect_data_api_v1_data_prep_inspect_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestInspectData"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseInspectData_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"
+                }
+              }
+            },
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"
+                }
+              }
+            },
+            "description": "Gateway Timeout"
+          }
+        },
+        "summary": "Inspect Data",
+        "tags": [
+          "data-prep"
+        ]
+      }
+    },
+    "/api/v1/data-prep/suggest-mapping": {
+      "post": {
+        "operationId": "suggest_mapping_api_v1_data_prep_suggest_mapping_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestSuggestMapping"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseSuggestMapping_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"
+                }
+              }
+            },
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"
+                }
+              }
+            },
+            "description": "Gateway Timeout"
+          }
+        },
+        "summary": "Suggest Mapping",
+        "tags": [
+          "data-prep"
         ]
       }
     },

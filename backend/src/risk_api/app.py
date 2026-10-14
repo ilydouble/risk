@@ -13,6 +13,7 @@ from risk_api.errors import register_error_handlers
 from risk_api.modules.auth.api.route import router as auth_router
 from risk_api.modules.chat.api.route import router as chat_router
 from risk_api.modules.company.api.route import router as company_router
+from risk_api.modules.data_prep.api.route import router as data_prep_router
 from risk_api.modules.data_qa.api.route import router as data_qa_router
 from risk_api.modules.document.api.route import router as document_router
 from risk_api.modules.graph.api.route import router as graph_router
@@ -65,6 +66,7 @@ def create_app() -> FastAPI:
 
     app.include_router(auth_router, prefix="/api/v1/auth", tags=["auth"])
     app.include_router(data_qa_router, prefix="/api/v1/data-qa", tags=["data-qa"])
+    app.include_router(data_prep_router, prefix="/api/v1/data-prep", tags=["data-prep"])
     app.include_router(chat_router, prefix="/api/v1/chat", tags=["chat"])
     app.include_router(company_router, prefix="/api/v1/company", tags=["company"])
     app.include_router(graph_router, prefix="/api/v1/graph", tags=["graph"])

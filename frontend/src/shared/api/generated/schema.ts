@@ -123,6 +123,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/data-prep/inspect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Inspect Data */
+        post: operations["inspect_data_api_v1_data_prep_inspect_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/data-prep/suggest-mapping": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Suggest Mapping */
+        post: operations["suggest_mapping_api_v1_data_prep_suggest_mapping_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/data-qa/ask": {
         parameters: {
             query?: never;
@@ -950,6 +984,16 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ApiEnvelope[ResponseInspectData] */
+        ApiEnvelope_ResponseInspectData_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseInspectData"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
         /** ApiEnvelope[ResponseListDatasets] */
         ApiEnvelope_ResponseListDatasets_: {
             /** Code */
@@ -1115,6 +1159,16 @@ export interface components {
             /** Code */
             code: number;
             data: components["schemas"]["ResponseSearchOverviewCompany"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseSuggestMapping] */
+        ApiEnvelope_ResponseSuggestMapping_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseSuggestMapping"] | null;
             /** Internal Code */
             internal_code: string;
             /** Message */
@@ -1771,6 +1825,22 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ErrorEnvelope[Literal[422], Literal['DATA_PREP_SIZE_INVALID', 'DATA_PREP_ENCODING_INVALID', 'DATA_PREP_HEADER_INVALID', 'DATA_PREP_HEADER_DUPLICATE', 'DATA_PREP_ROW_INVALID', 'DATA_PREP_ROWS_EXCEEDED', 'DATA_PREP_EMPTY', 'DATA_PREP_FORMAT_UNSUPPORTED', 'DATA_PREP_CONTENT_INVALID']] */
+        ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 422;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @enum {string}
+             */
+            internal_code: "DATA_PREP_SIZE_INVALID" | "DATA_PREP_ENCODING_INVALID" | "DATA_PREP_HEADER_INVALID" | "DATA_PREP_HEADER_DUPLICATE" | "DATA_PREP_ROW_INVALID" | "DATA_PREP_ROWS_EXCEEDED" | "DATA_PREP_EMPTY" | "DATA_PREP_FORMAT_UNSUPPORTED" | "DATA_PREP_CONTENT_INVALID";
+            /** Message */
+            message: string;
+        };
         /** ErrorEnvelope[Literal[422], Literal['REQUEST_INVALID']] */
         ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___: {
             /**
@@ -1864,6 +1934,22 @@ export interface components {
              * @enum {string}
              */
             internal_code: "CHAT_AUTH_FAILED" | "CHAT_UPSTREAM_ERROR" | "CHAT_INVALID_RESPONSE" | "DATA_QA_PLAN_INVALID";
+            /** Message */
+            message: string;
+        };
+        /** ErrorEnvelope[Literal[502], Literal['DATA_PREP_SUGGESTION_INVALID', 'CHAT_AUTH_FAILED', 'CHAT_UPSTREAM_ERROR', 'CHAT_INVALID_RESPONSE']] */
+        ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 502;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @enum {string}
+             */
+            internal_code: "DATA_PREP_SUGGESTION_INVALID" | "CHAT_AUTH_FAILED" | "CHAT_UPSTREAM_ERROR" | "CHAT_INVALID_RESPONSE";
             /** Message */
             message: string;
         };
@@ -2160,6 +2246,19 @@ export interface components {
             /** Univariateauc */
             univariateAuc?: number | null;
         };
+        /** FieldProfile */
+        FieldProfile: {
+            /** Distinctcount */
+            distinctCount: number;
+            /** Examples */
+            examples: string[];
+            /** Missingcount */
+            missingCount: number;
+            /** Name */
+            name: string;
+            /** Numericrate */
+            numericRate: number;
+        };
         /** FileDTO */
         FileDTO: {
             /** Path */
@@ -2257,6 +2356,15 @@ export interface components {
              * @enum {string}
              */
             type: "company" | "owner" | "subsidiary" | "supplier" | "guarantor" | "client" | "counterparty" | "person" | "bank" | "fund";
+        };
+        /** MappingSuggestion */
+        MappingSuggestion: {
+            /** Field */
+            field: string;
+            /** Reason */
+            reason: string;
+            /** Role */
+            role: string;
         };
         /** ModelCapabilityDTO */
         ModelCapabilityDTO: {
@@ -2755,6 +2863,13 @@ export interface components {
              */
             datasetId: string;
         };
+        /** RequestInspectData */
+        RequestInspectData: {
+            /** Contentbase64 */
+            contentBase64: string;
+            /** Filename */
+            filename: string;
+        };
         /** RequestListDatasets */
         RequestListDatasets: {
             pagination?: components["schemas"]["PageRequest"];
@@ -2926,6 +3041,10 @@ export interface components {
              * @enum {string}
              */
             sort: "name_asc" | "age_desc" | "relations_desc";
+        };
+        /** RequestSuggestMapping */
+        RequestSuggestMapping: {
+            profile: components["schemas"]["ResponseInspectData"];
         };
         /** ResponseAskData */
         ResponseAskData: {
@@ -3177,6 +3296,21 @@ export interface components {
             /** Sha256 */
             sha256: string;
         };
+        /** ResponseInspectData */
+        ResponseInspectData: {
+            /** Duplicaterows */
+            duplicateRows: number;
+            /** Fields */
+            fields: components["schemas"]["FieldProfile"][];
+            /** Rowcount */
+            rowCount: number;
+            /** Samplerows */
+            sampleRows: {
+                [key: string]: string;
+            }[];
+            /** Sha256 */
+            sha256: string;
+        };
         /** ResponseListDatasets */
         ResponseListDatasets: {
             /** Items */
@@ -3322,6 +3456,15 @@ export interface components {
             sampling: components["schemas"]["OverviewSamplingDTO"];
             /** Total */
             total: number;
+        };
+        /** ResponseSuggestMapping */
+        ResponseSuggestMapping: {
+            /** Questions */
+            questions: string[];
+            /** Suggestions */
+            suggestions: components["schemas"]["MappingSuggestion"][];
+            /** Summary */
+            summary: string;
         };
         /** RiskFlag */
         RiskFlag: {
@@ -3982,6 +4125,180 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"] | components["schemas"]["ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"];
+                };
+            };
+        };
+    };
+    inspect_data_api_v1_data_prep_inspect_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestInspectData"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseInspectData_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Bad Gateway */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE___"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
+                };
+            };
+        };
+    };
+    suggest_mapping_api_v1_data_prep_suggest_mapping_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestSuggestMapping"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseSuggestMapping_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Bad Gateway */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE___"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
                 };
             };
         };
@@ -6818,6 +7135,7 @@ export type RequestGetOverviewCompany = components["schemas"]["RequestGetOvervie
 export type RequestGetRun = components["schemas"]["RequestGetRun"];
 export type RequestGetScore = components["schemas"]["RequestGetScore"];
 export type RequestImportEnterprises = components["schemas"]["RequestImportEnterprises"];
+export type RequestInspectData = components["schemas"]["RequestInspectData"];
 export type RequestListDatasets = components["schemas"]["RequestListDatasets"];
 export type RequestListDocuments = components["schemas"]["RequestListDocuments"];
 export type RequestListEnterpriseRecords = components["schemas"]["RequestListEnterpriseRecords"];
@@ -6835,6 +7153,7 @@ export type RequestRunConfiguration = components["schemas"]["RequestRunConfigura
 export type RequestRunEvents = components["schemas"]["RequestRunEvents"];
 export type RequestSearchCompany = components["schemas"]["RequestSearchCompany"];
 export type RequestSearchOverviewCompany = components["schemas"]["RequestSearchOverviewCompany"];
+export type RequestSuggestMapping = components["schemas"]["RequestSuggestMapping"];
 export type ResponseAskData = components["schemas"]["ResponseAskData"];
 export type ResponseCancelRun = components["schemas"]["ResponseCancelRun"];
 export type ResponseChat = components["schemas"]["ResponseChat"];
@@ -6858,6 +7177,7 @@ export type ResponseGetOverviewCompany = components["schemas"]["ResponseGetOverv
 export type ResponseGetRun = components["schemas"]["ResponseGetRun"];
 export type ResponseGetScore = components["schemas"]["ResponseGetScore"];
 export type ResponseImportEnterprises = components["schemas"]["ResponseImportEnterprises"];
+export type ResponseInspectData = components["schemas"]["ResponseInspectData"];
 export type ResponseListDatasets = components["schemas"]["ResponseListDatasets"];
 export type ResponseListDocuments = components["schemas"]["ResponseListDocuments"];
 export type ResponseListEnterpriseRecords = components["schemas"]["ResponseListEnterpriseRecords"];
@@ -6875,3 +7195,4 @@ export type ResponseRunConfiguration = components["schemas"]["ResponseRunConfigu
 export type ResponseRunEvents = components["schemas"]["ResponseRunEvents"];
 export type ResponseSearchCompany = components["schemas"]["ResponseSearchCompany"];
 export type ResponseSearchOverviewCompany = components["schemas"]["ResponseSearchOverviewCompany"];
+export type ResponseSuggestMapping = components["schemas"]["ResponseSuggestMapping"];
