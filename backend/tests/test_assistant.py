@@ -83,11 +83,12 @@ def test_real_strands_stream_and_tool_loop(monkeypatch):
         )
         monkeypatch.setattr(runtime, "AsyncOpenAI", lambda **kwargs: client)
         items = {}
-        async for batch in StrandsRuntime().stream(
+        async for batch in StrandsRuntime(async_sessionmaker()).stream(
             "Check time",
             [],
             ModelSettings("http://model/v1/chat/completions", "test", 1024, "key"),
             "request-1",
+            "owner-1",
         ):
             for item in batch:
                 items[item.id] = item
@@ -201,7 +202,7 @@ def test_persistence_replay_and_execution():
                     yield [TextItem(kind="reasoning", text="Working")]
                     await asyncio.sleep(60)
 
-            service = AssistantService(repo, SlowRuntime())
+            service = AssistantService(repo, SlowRuntime(sessions))
             running = await service.start(owner, conversation.id, "cancel", "Hi", config, "r")
             await asyncio.sleep(0.2)
             await service.cancel(owner, running.id)
@@ -217,7 +218,7 @@ def test_persistence_replay_and_execution():
                     await asyncio.sleep(0.2)
                     raise RuntimeError("secret upstream body")
 
-            failed_service = AssistantService(repo, FailedRuntime())
+            failed_service = AssistantService(repo, FailedRuntime(sessions))
             failed = await failed_service.start(
                 owner, conversation.id, "failure", "Hi", config, "r"
             )
@@ -227,7 +228,7 @@ def test_persistence_replay_and_execution():
             assert "secret" not in failed_turn.model_dump_json()
             assert failed_turn.items[-1].status == "failed"
             await failed_service.close()
-            shutdown_service = AssistantService(repo, SlowRuntime())
+            shutdown_service = AssistantService(repo, SlowRuntime(sessions))
             shutdown = await shutdown_service.start(
                 owner, conversation.id, "shutdown", "Hi", config, "r"
             )

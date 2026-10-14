@@ -20,6 +20,10 @@
 默认模型为内网 Qwen3.6-35B-A3B，关闭 thinking。
 环境配置见 [比赛接入说明](competition-data-readiness.md)。
 
+也可在 `/chat` 中提问，由助手调用 `workbench_catalog` / `workbench_ask`。
+助手沿用当前登录账号和本轮模型配置，工具卡片展示结果、SQL、计划及警告。
+每次工具问数独立执行，追问由助手补全查询条件；原问数页面继续保留。
+
 ## 参考与实现取舍
 
 参考本地 `kgraph-studio` 的 metadata_qa 流程：提供表结构与语义、

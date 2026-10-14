@@ -35,7 +35,9 @@ from risk_api.shared.db import session_factory
 class InfrastructureProvider(Provider):
     @provide(scope=Scope.APP)
     async def assistant_service(self) -> AsyncIterator[AssistantService]:
-        service = AssistantService(AssistantRepository(session_factory), StrandsRuntime())
+        service = AssistantService(
+            AssistantRepository(session_factory), StrandsRuntime(session_factory)
+        )
         try:
             yield service
         finally:

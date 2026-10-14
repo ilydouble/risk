@@ -68,8 +68,8 @@ export default function ChatPage() {
           {!chat.loading && chat.turns.length === 0 && <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-lg py-16 text-center">
             <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-500/10 text-primary-500"><Bot size={28} /></div>
             <h2 className="text-2xl font-semibold tracking-tight">{pick("从一个问题开始", "Start with a question")}</h2>
-            <p className="mt-3 text-sm leading-7 text-foreground-500">{pick("在这里查看回答、推理和工具执行过程。当前已接入时间工具，企业数据工具将逐步开放。", "Follow answers, reasoning, and tool activity here. The time tool is available; enterprise data tools will follow.")}</p>
-            <button onClick={() => setInput(pick("请用工具查一下上海现在的时间，再告诉我结果。", "Use the tool to check the current time in Shanghai."))} className="mt-7 rounded-xl border border-background-200 px-4 py-3 text-sm text-foreground-600 hover:border-primary-400">{pick("查询当前时间，体验工具调用", "Try a live time lookup")}</button>
+            <p className="mt-3 text-sm leading-7 text-foreground-500">{pick("可查询当前账号的数据集、训练实验、企业记录和已保存预测，并查看回答与工具执行过程。", "Query your datasets, training runs, enterprise records and saved predictions, and follow tool activity here.")}</p>
+            <button onClick={() => setInput(pick("请查询我有哪些数据集，列出名称和校验状态。", "List my datasets with their names and validation status."))} className="mt-7 rounded-xl border border-background-200 px-4 py-3 text-sm text-foreground-600 hover:border-primary-400">{pick("查询我的数据集", "Query my datasets")}</button>
           </motion.div>}
           {chat.loading && <p role="status" className="py-10 text-center text-sm text-foreground-400">{pick("正在恢复会话…", "Restoring conversation…")}</p>}
           {chat.turns.map(turn => <TurnTimeline key={turn.id} turn={turn} />)}

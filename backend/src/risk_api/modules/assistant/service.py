@@ -79,7 +79,7 @@ class AssistantService:
                 async def produce() -> None:
                     try:
                         async with aclosing(
-                            self.runtime.stream(message, history, settings, turn.requestId)
+                            self.runtime.stream(message, history, settings, turn.requestId, owner)
                         ) as stream:
                             async for items in stream:
                                 await queue.put(items)
