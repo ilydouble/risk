@@ -11,14 +11,33 @@ from risk_api.modules.auth.api.handler import authorize_request
 from risk_api.modules.auth.service import AuthService
 from risk_api.modules.chat.service import ChatService
 from risk_api.modules.data_prep.api.schemas import (
+    ModelConnection,
     RequestInspectData,
+    RequestModelDefaults,
     RequestSuggestMapping,
+    RequestTestModel,
     ResponseInspectData,
+    ResponseModelDefaults,
     ResponseSuggestMapping,
+    ResponseTestModel,
 )
 from risk_api.modules.data_prep.profile import inspect_csv
 from risk_api.shared.api.envelope import ApiEnvelope
 from risk_api.shared.api.response import success_response
+from risk_api.shared.config import settings
+
+
+def selected_chat(default: ChatService, connection: ModelConnection | None) -> ChatService:
+    if connection is None:
+        return default
+    return ChatService(
+        default.http,
+        connection.url,
+        connection.apiKey,
+        connection.model,
+        require_token=False,
+        disable_thinking=False,
+    )
 
 
 async def inspect_data(
@@ -46,7 +65,7 @@ async def suggest_mapping(
         "duplicateRows": body.profile.duplicateRows,
         "fields": [field.model_dump() for field in body.profile.fields],
     }
-    reply = await chat.complete(
+    reply = await selected_chat(chat, body.connection).complete(
         [
             {
                 "role": "system",
@@ -70,3 +89,32 @@ async def suggest_mapping(
     if any(item.field not in names or item.role not in roles for item in output.suggestions):
         raise AppError(502, "DATA_PREP_SUGGESTION_INVALID", "智能分析引用了未知字段或用途")
     return success_response(output)
+
+
+async def model_defaults(
+    _: RequestModelDefaults, request: Request, auth: FromDishka[AuthService]
+) -> ApiEnvelope[ResponseModelDefaults]:
+    await authorize_request(request, auth)
+    return success_response(
+        ResponseModelDefaults(
+            url=settings.llm_url,
+            model=settings.llm_model,
+            keyConfigured=bool(settings.llm_api_key.strip()),
+        )
+    )
+
+
+async def test_model(
+    body: RequestTestModel,
+    request: Request,
+    auth: FromDishka[AuthService],
+    chat: FromDishka[ChatService],
+) -> ApiEnvelope[ResponseTestModel]:
+    await authorize_request(request, auth)
+    reply = await selected_chat(chat, body.connection).complete(
+        [
+            {"role": "system", "content": "Reply with OK."},
+            {"role": "user", "content": "OK"},
+        ]
+    )
+    return success_response(ResponseTestModel(model=reply.model, elapsedMs=reply.elapsed_ms))

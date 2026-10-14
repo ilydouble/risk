@@ -14,23 +14,32 @@ class ChatReply:
 
 
 class ChatService:
-    def __init__(self, http: httpx.AsyncClient, url: str, token: str, model: str):
+    def __init__(
+        self,
+        http: httpx.AsyncClient,
+        url: str,
+        token: str,
+        model: str,
+        *,
+        require_token: bool = True,
+        disable_thinking: bool = True,
+    ):
         self.http, self.url, self.token, self.model = http, url, token, model
+        self.require_token = require_token
+        self.disable_thinking = disable_thinking
 
     async def complete(self, messages: list[dict[str, str]]) -> ChatReply:
-        if not self.token.strip():
+        if self.require_token and not self.token.strip():
             raise AppError(503, "CHAT_NOT_CONFIGURED", "请配置后端 RISK_LLM_API_KEY")
         start = perf_counter()
+        payload = {"model": self.model, "messages": messages, "max_tokens": 1024}
+        if self.disable_thinking:
+            payload["chat_template_kwargs"] = {"enable_thinking": False, "thinking": False}
         try:
             response = await self.http.post(
                 self.url,
-                headers={"Authorization": f"Bearer {self.token}"},
-                json={
-                    "model": self.model,
-                    "messages": messages,
-                    "max_tokens": 1024,
-                    "chat_template_kwargs": {"enable_thinking": False, "thinking": False},
-                },
+                headers={"Authorization": f"Bearer {self.token}"} if self.token.strip() else {},
+                json=payload,
             )
         except httpx.ConnectTimeout as error:
             raise AppError(

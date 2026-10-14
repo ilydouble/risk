@@ -140,6 +140,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/data-prep/model-defaults": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Model Defaults */
+        post: operations["model_defaults_api_v1_data_prep_model_defaults_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/data-prep/suggest-mapping": {
         parameters: {
             query?: never;
@@ -151,6 +168,23 @@ export interface paths {
         put?: never;
         /** Suggest Mapping */
         post: operations["suggest_mapping_api_v1_data_prep_suggest_mapping_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/data-prep/test-model": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Test Model */
+        post: operations["test_model_api_v1_data_prep_test_model_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1074,6 +1108,16 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ApiEnvelope[ResponseModelDefaults] */
+        ApiEnvelope_ResponseModelDefaults_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseModelDefaults"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
         /** ApiEnvelope[ResponseModelingCapabilities] */
         ApiEnvelope_ResponseModelingCapabilities_: {
             /** Code */
@@ -1169,6 +1213,16 @@ export interface components {
             /** Code */
             code: number;
             data: components["schemas"]["ResponseSuggestMapping"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseTestModel] */
+        ApiEnvelope_ResponseTestModel_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseTestModel"] | null;
             /** Internal Code */
             internal_code: string;
             /** Message */
@@ -2379,6 +2433,18 @@ export interface components {
             /** Trainable */
             trainable: boolean;
         };
+        /** ModelConnection */
+        ModelConnection: {
+            /**
+             * Apikey
+             * @default
+             */
+            apiKey: string;
+            /** Model */
+            model: string;
+            /** Url */
+            url: string;
+        };
         /** ModelVersionDTO */
         ModelVersionDTO: {
             /**
@@ -2924,6 +2990,8 @@ export interface components {
         RequestLogout: Record<string, never>;
         /** RequestMe */
         RequestMe: Record<string, never>;
+        /** RequestModelDefaults */
+        RequestModelDefaults: Record<string, never>;
         /** RequestModelingCapabilities */
         RequestModelingCapabilities: Record<string, never>;
         /** RequestPredictModel */
@@ -3044,7 +3112,12 @@ export interface components {
         };
         /** RequestSuggestMapping */
         RequestSuggestMapping: {
+            connection?: components["schemas"]["ModelConnection"] | null;
             profile: components["schemas"]["ResponseInspectData"];
+        };
+        /** RequestTestModel */
+        RequestTestModel: {
+            connection?: components["schemas"]["ModelConnection"] | null;
         };
         /** ResponseAskData */
         ResponseAskData: {
@@ -3395,6 +3468,15 @@ export interface components {
             /** Username */
             username: string;
         };
+        /** ResponseModelDefaults */
+        ResponseModelDefaults: {
+            /** Keyconfigured */
+            keyConfigured: boolean;
+            /** Model */
+            model: string;
+            /** Url */
+            url: string;
+        };
         /** ResponseModelingCapabilities */
         ResponseModelingCapabilities: {
             /** Items */
@@ -3465,6 +3547,13 @@ export interface components {
             suggestions: components["schemas"]["MappingSuggestion"][];
             /** Summary */
             summary: string;
+        };
+        /** ResponseTestModel */
+        ResponseTestModel: {
+            /** Elapsedms */
+            elapsedMs: number;
+            /** Model */
+            model: string;
         };
         /** RiskFlag */
         RiskFlag: {
@@ -4216,6 +4305,75 @@ export interface operations {
             };
         };
     };
+    model_defaults_api_v1_data_prep_model_defaults_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestModelDefaults"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseModelDefaults_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"] | components["schemas"]["ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"];
+                };
+            };
+        };
+    };
     suggest_mapping_api_v1_data_prep_suggest_mapping_post: {
         parameters: {
             query?: never;
@@ -4236,6 +4394,93 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ApiEnvelope_ResponseSuggestMapping_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Bad Gateway */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE___"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
+                };
+            };
+        };
+    };
+    test_model_api_v1_data_prep_test_model_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestTestModel"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseTestModel_"];
                 };
             };
             /** @description Unauthorized */
@@ -7144,6 +7389,7 @@ export type RequestListRuns = components["schemas"]["RequestListRuns"];
 export type RequestLogin = components["schemas"]["RequestLogin"];
 export type RequestLogout = components["schemas"]["RequestLogout"];
 export type RequestMe = components["schemas"]["RequestMe"];
+export type RequestModelDefaults = components["schemas"]["RequestModelDefaults"];
 export type RequestModelingCapabilities = components["schemas"]["RequestModelingCapabilities"];
 export type RequestPredictModel = components["schemas"]["RequestPredictModel"];
 export type RequestPublishModel = components["schemas"]["RequestPublishModel"];
@@ -7154,6 +7400,7 @@ export type RequestRunEvents = components["schemas"]["RequestRunEvents"];
 export type RequestSearchCompany = components["schemas"]["RequestSearchCompany"];
 export type RequestSearchOverviewCompany = components["schemas"]["RequestSearchOverviewCompany"];
 export type RequestSuggestMapping = components["schemas"]["RequestSuggestMapping"];
+export type RequestTestModel = components["schemas"]["RequestTestModel"];
 export type ResponseAskData = components["schemas"]["ResponseAskData"];
 export type ResponseCancelRun = components["schemas"]["ResponseCancelRun"];
 export type ResponseChat = components["schemas"]["ResponseChat"];
@@ -7186,6 +7433,7 @@ export type ResponseListRuns = components["schemas"]["ResponseListRuns"];
 export type ResponseLogin = components["schemas"]["ResponseLogin"];
 export type ResponseLogout = components["schemas"]["ResponseLogout"];
 export type ResponseMe = components["schemas"]["ResponseMe"];
+export type ResponseModelDefaults = components["schemas"]["ResponseModelDefaults"];
 export type ResponseModelingCapabilities = components["schemas"]["ResponseModelingCapabilities"];
 export type ResponsePredictModel = components["schemas"]["ResponsePredictModel"];
 export type ResponsePublishModel = components["schemas"]["ResponsePublishModel"];
@@ -7196,3 +7444,4 @@ export type ResponseRunEvents = components["schemas"]["ResponseRunEvents"];
 export type ResponseSearchCompany = components["schemas"]["ResponseSearchCompany"];
 export type ResponseSearchOverviewCompany = components["schemas"]["ResponseSearchOverviewCompany"];
 export type ResponseSuggestMapping = components["schemas"]["ResponseSuggestMapping"];
+export type ResponseTestModel = components["schemas"]["ResponseTestModel"];

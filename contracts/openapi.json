@@ -1173,6 +1173,40 @@
         "title": "ApiEnvelope[ResponseMe]",
         "type": "object"
       },
+      "ApiEnvelope_ResponseModelDefaults_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseModelDefaults"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseModelDefaults]",
+        "type": "object"
+      },
       "ApiEnvelope_ResponseModelingCapabilities_": {
         "properties": {
           "code": {
@@ -1511,6 +1545,40 @@
           "data"
         ],
         "title": "ApiEnvelope[ResponseSuggestMapping]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseTestModel_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseTestModel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseTestModel]",
         "type": "object"
       },
       "AttemptDTO": {
@@ -4521,6 +4589,35 @@
         "title": "ModelCapabilityDTO",
         "type": "object"
       },
+      "ModelConnection": {
+        "additionalProperties": false,
+        "properties": {
+          "apiKey": {
+            "default": "",
+            "maxLength": 4096,
+            "title": "Apikey",
+            "type": "string"
+          },
+          "model": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Model",
+            "type": "string"
+          },
+          "url": {
+            "maxLength": 2048,
+            "minLength": 1,
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url",
+          "model"
+        ],
+        "title": "ModelConnection",
+        "type": "object"
+      },
       "ModelVersionDTO": {
         "properties": {
           "algorithm": {
@@ -5956,6 +6053,12 @@
         "title": "RequestMe",
         "type": "object"
       },
+      "RequestModelDefaults": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "RequestModelDefaults",
+        "type": "object"
+      },
       "RequestModelingCapabilities": {
         "properties": {},
         "title": "RequestModelingCapabilities",
@@ -6187,6 +6290,16 @@
       "RequestSuggestMapping": {
         "additionalProperties": false,
         "properties": {
+          "connection": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ModelConnection"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "profile": {
             "$ref": "#/components/schemas/ResponseInspectData"
           }
@@ -6195,6 +6308,23 @@
           "profile"
         ],
         "title": "RequestSuggestMapping",
+        "type": "object"
+      },
+      "RequestTestModel": {
+        "additionalProperties": false,
+        "properties": {
+          "connection": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ModelConnection"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "title": "RequestTestModel",
         "type": "object"
       },
       "ResponseAskData": {
@@ -7160,6 +7290,29 @@
         "title": "ResponseMe",
         "type": "object"
       },
+      "ResponseModelDefaults": {
+        "properties": {
+          "keyConfigured": {
+            "title": "Keyconfigured",
+            "type": "boolean"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url",
+          "model",
+          "keyConfigured"
+        ],
+        "title": "ResponseModelDefaults",
+        "type": "object"
+      },
       "ResponseModelingCapabilities": {
         "properties": {
           "items": {
@@ -7380,6 +7533,24 @@
           "questions"
         ],
         "title": "ResponseSuggestMapping",
+        "type": "object"
+      },
+      "ResponseTestModel": {
+        "properties": {
+          "elapsedMs": {
+            "title": "Elapsedms",
+            "type": "integer"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          }
+        },
+        "required": [
+          "model",
+          "elapsedMs"
+        ],
+        "title": "ResponseTestModel",
         "type": "object"
       },
       "RiskFlag": {
@@ -8553,6 +8724,95 @@
         ]
       }
     },
+    "/api/v1/data-prep/model-defaults": {
+      "post": {
+        "operationId": "model_defaults_api_v1_data_prep_model_defaults_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestModelDefaults"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseModelDefaults_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"
+                    }
+                  ],
+                  "title": "Response 503 Model Defaults Api V1 Data Prep Model Defaults Post"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Model Defaults",
+        "tags": [
+          "data-prep"
+        ]
+      }
+    },
     "/api/v1/data-prep/suggest-mapping": {
       "post": {
         "operationId": "suggest_mapping_api_v1_data_prep_suggest_mapping_post",
@@ -8649,6 +8909,107 @@
           }
         },
         "summary": "Suggest Mapping",
+        "tags": [
+          "data-prep"
+        ]
+      }
+    },
+    "/api/v1/data-prep/test-model": {
+      "post": {
+        "operationId": "test_model_api_v1_data_prep_test_model_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestTestModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseTestModel_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"
+                }
+              }
+            },
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"
+                }
+              }
+            },
+            "description": "Gateway Timeout"
+          }
+        },
+        "summary": "Test Model",
         "tags": [
           "data-prep"
         ]
