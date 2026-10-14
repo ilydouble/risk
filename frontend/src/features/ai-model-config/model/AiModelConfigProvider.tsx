@@ -56,7 +56,7 @@ export function AiModelConfigProvider({ children }: { children: ReactNode }) {
     useOpenLux() {
       setCustom(true);
       setUrl("https://api.openlux.ai/v1/chat/completions");
-      setModel("Qwen3.6-35B-A3B");
+      setModel("qwen3.6-35b-a3b");
       setApiKey("");
     },
     save() {

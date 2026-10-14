@@ -1,9 +1,12 @@
+import logging
 from dataclasses import dataclass
 from time import perf_counter
 
 import httpx
 
 from risk_api.errors import AppError
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -64,6 +67,10 @@ class ChatService:
                 503, "CHAT_UNREACHABLE", "无法连接大模型，请检查后端到模型服务的网络"
             ) from error
         # Never expose upstream bodies: they may contain credentials or internal diagnostics.
+        if not response.is_success:
+            logger.warning(
+                "chat.upstream_rejected", extra={"upstream_status": response.status_code}
+            )
         if response.status_code in {401, 403}:
             raise AppError(502, "CHAT_AUTH_FAILED", "大模型认证失败，请检查所选模型的密钥")
         if not response.is_success:

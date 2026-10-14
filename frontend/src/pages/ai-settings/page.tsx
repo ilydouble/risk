@@ -38,7 +38,7 @@ export default function AiSettingsPage() {
     <section className={`${panel} space-y-4`}>
       <label className="flex items-center gap-2 text-sm"><input type="radio" name="model-source" checked={!config.custom} onChange={() => { config.setCustom(false); setStatus(""); }} />使用后端默认模型 {config.defaults ? `· ${config.defaults.model}${config.defaults.keyConfigured ? "" : "（未配置密钥）"}` : config.loading ? "· 正在读取…" : "· 读取失败"}</label>
       <label className="flex items-center gap-2 text-sm"><input type="radio" name="model-source" checked={config.custom} onChange={() => { config.setCustom(true); setStatus(""); }} />自定义兼容 Chat Completions 的模型</label>
-      <button type="button" className="rounded-md border border-background-300 px-3 py-1.5 text-xs" onClick={() => { config.useOpenLux(); setStatus(""); }}>预填 OpenLux · Qwen3.6-35B-A3B</button>
+      <button type="button" className="rounded-md border border-background-300 px-3 py-1.5 text-xs" onClick={() => { config.useOpenLux(); setStatus(""); }}>预填 OpenLux · qwen3.6-35b-a3b</button>
       {config.custom && <div className="grid gap-3 sm:grid-cols-2">
         <label className="text-sm sm:col-span-2">接口地址<input className={input} value={config.url} placeholder="https://host/v1/chat/completions" onChange={(event) => { config.setUrl(event.target.value); setStatus(""); }} /></label>
         <label className="text-sm">模型名<input className={input} value={config.model} placeholder="模型 ID" onChange={(event) => { config.setModel(event.target.value); setStatus(""); }} /></label>
