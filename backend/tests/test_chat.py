@@ -68,6 +68,15 @@ def test_chat_accepts_custom_model_connection():
     assert request.connection.model == "Qwen3.6-35B-A3B"
 
 
+def test_custom_qwen36_disables_thinking_without_changing_other_models():
+    default = ChatService(
+        Mock(spec=httpx.AsyncClient), "https://example.com/v1/chat/completions", "", "default"
+    )
+    url = "https://example.com/v1/chat/completions"
+    assert default.configured(url, "key", "qwen3.6-35b-a3b").disable_thinking
+    assert not default.configured(url, "key", "other").disable_thinking
+
+
 def test_chat_rejects_unsafe_custom_model_connection():
     with pytest.raises(ValidationError):
         RequestChat.model_validate(

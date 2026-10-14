@@ -30,7 +30,12 @@ class ChatService:
 
     def configured(self, url: str, token: str, model: str) -> "ChatService":
         return ChatService(
-            self.http, url, token, model, require_token=False, disable_thinking=False
+            self.http,
+            url,
+            token,
+            model,
+            require_token=False,
+            disable_thinking=model.casefold().startswith("qwen3.6"),
         )
 
     async def complete(

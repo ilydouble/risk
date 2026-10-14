@@ -5,6 +5,7 @@ import openai
 from pydantic import ValidationError
 from strands import Agent, tool
 from strands.models.openai import OpenAIModel
+from strands.types.exceptions import MaxTokensReachedException
 
 from risk_api.errors import AppError
 from risk_api.modules.chat.service import ChatService
@@ -132,6 +133,10 @@ async def analyze_profile(
         ) from error
     except openai.AuthenticationError as error:
         raise AppError(502, "CHAT_AUTH_FAILED", "大模型认证失败，请检查所选模型的密钥") from error
+    except MaxTokensReachedException as error:
+        raise AppError(
+            502, "CHAT_OUTPUT_LIMIT", "模型输出达到本次上限，请提高单次回答上限后重试"
+        ) from error
     except Exception as error:
         raise AppError(502, "CHAT_UPSTREAM_ERROR", "数据体检智能体调用模型失败") from error
     if result.stop_reason != "end_turn" or not REQUIRED_TOOLS.issubset(set(trace)):

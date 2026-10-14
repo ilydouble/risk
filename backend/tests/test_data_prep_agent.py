@@ -6,6 +6,7 @@ import httpx2
 import pytest
 from openai import AsyncOpenAI
 from strands.models.openai import OpenAIModel
+from strands.types.exceptions import MaxTokensReachedException
 
 from risk_api.errors import AppError
 from risk_api.modules.chat.service import ChatService
@@ -87,6 +88,23 @@ def test_agent_rejects_unknown_tool_and_field() -> None:
     with pytest.raises(AppError) as caught:
         tool_result(profile(), "get_field_profile", "not_a_field")
     assert caught.value.code == "DATA_PREP_SUGGESTION_INVALID"
+
+
+def test_agent_explains_output_limit() -> None:
+    selected = Mock(spec=ChatService)
+    selected.url = "https://example.com/v1/chat/completions"
+    selected.token = "test-key"
+    selected.model = "qwen3.6-35b-a3b"
+    selected.require_token = False
+    selected.disable_thinking = True
+    with (
+        patch("risk_api.modules.data_prep.agent.OpenAIModel"),
+        patch("risk_api.modules.data_prep.agent.Agent") as agent,
+    ):
+        agent.return_value.invoke_async.side_effect = MaxTokensReachedException("limit")
+        with pytest.raises(AppError) as caught:
+            asyncio.run(analyze_profile(profile(), selected, 4096))
+    assert caught.value.code == "CHAT_OUTPUT_LIMIT"
 
 
 def test_strands_executes_model_tool_calls_with_mock_provider() -> None:

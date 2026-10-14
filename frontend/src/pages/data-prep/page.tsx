@@ -66,6 +66,8 @@ export default function DataPrepPage() {
         CHAT_NOT_CONFIGURED: "智能分析需要先配置后端大模型。数据体检结果仍可查看。",
         CHAT_UNREACHABLE: "暂时无法连接大模型，请稍后重试。",
         CHAT_TIMEOUT: "模型服务连接或响应超时，请检查后端到模型服务的网络。",
+        CHAT_AUTH_FAILED: "模型认证失败，请在智能体模型设置中检查 API 密钥。",
+        CHAT_OUTPUT_LIMIT: "模型输出达到本次上限，请在智能体模型设置中提高“单次回答上限”后重试。",
         CHAT_UPSTREAM_ERROR: "模型服务未能完成工具调用，请确认所选接口支持 Chat Completions 工具调用。",
         DATA_PREP_SUGGESTION_INVALID: "智能体未完成工具分析或报告格式无效，请重试。",
       }));
