@@ -5500,6 +5500,16 @@
       "RequestChat": {
         "additionalProperties": false,
         "properties": {
+          "connection": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ModelConnection"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "messages": {
             "items": {
               "$ref": "#/components/schemas/ChatMessage"

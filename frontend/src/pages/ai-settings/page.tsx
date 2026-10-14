@@ -34,7 +34,7 @@ export default function AiSettingsPage() {
   }
 
   return <div className="mx-auto max-w-4xl space-y-5">
-    <header><h1 className="text-2xl font-semibold">智能体模型设置</h1><p className="mt-2 text-sm text-foreground-500">配置用于数据分析的语言模型。RiskGNN+ 的训练和测试在模型工作台中进行。</p></header>
+    <header><h1 className="text-2xl font-semibold">智能体模型设置</h1><p className="mt-2 text-sm text-foreground-500">配置用于数据准备和模型问答的语言模型。RiskGNN+ 的训练和测试在模型工作台中进行。</p></header>
     <section className={`${panel} space-y-4`}>
       <label className="flex items-center gap-2 text-sm"><input type="radio" name="model-source" checked={!config.custom} onChange={() => { config.setCustom(false); setStatus(""); }} />使用后端默认模型 {config.defaults ? `· ${config.defaults.model}${config.defaults.keyConfigured ? "" : "（未配置密钥）"}` : config.loading ? "· 正在读取…" : "· 读取失败"}</label>
       <label className="flex items-center gap-2 text-sm"><input type="radio" name="model-source" checked={config.custom} onChange={() => { config.setCustom(true); setStatus(""); }} />自定义兼容 Chat Completions 的模型</label>
@@ -50,8 +50,8 @@ export default function AiSettingsPage() {
         {status && <span role="status" className="text-sm text-foreground-500">{status}</span>}
       </div>
       {error && <p role="alert" className="text-sm text-red-500">{error}</p>}
-      <p className="text-xs text-foreground-500">自定义密钥只保留在本次登录的页面内存中，刷新后需重新输入。数据准备的字段统计和常见值会发送到所选模型地址。</p>
+      <p className="text-xs text-foreground-500">自定义密钥只保留在本次登录的页面内存中，刷新后需重新输入。数据准备的字段统计、常见值以及模型问答的对话内容会发送到所选模型地址。</p>
     </section>
-    <Link className="text-sm text-primary-400 underline" to="/data-prep">返回数据准备</Link>
+    <div className="flex gap-4"><Link className="text-sm text-primary-400 underline" to="/chat">前往模型问答</Link><Link className="text-sm text-primary-400 underline" to="/data-prep">返回数据准备</Link></div>
   </div>;
 }

@@ -2760,6 +2760,7 @@ export interface components {
         };
         /** RequestChat */
         RequestChat: {
+            connection?: components["schemas"]["ModelConnection"] | null;
             /** Messages */
             messages: components["schemas"]["ChatMessage"][];
         };

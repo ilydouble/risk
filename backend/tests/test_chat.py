@@ -1,14 +1,17 @@
 import asyncio
+from unittest.mock import AsyncMock, Mock, patch
 
 import httpx
 import pytest
+from fastapi import Request
 from fastapi.testclient import TestClient
 from pydantic import ValidationError
 
 from risk_api.app import create_app
 from risk_api.errors import AppError
+from risk_api.modules.chat.api.handler import complete
 from risk_api.modules.chat.api.schemas import RequestChat
-from risk_api.modules.chat.service import ChatService
+from risk_api.modules.chat.service import ChatReply, ChatService
 
 
 def call(handler, *, token="test-key"):
@@ -38,6 +41,62 @@ def test_chat_upstream_contract():
     assert reply.content == "你好！"
     assert reply.model == "qwen"
     assert reply.elapsed_ms >= 0
+
+
+def test_chat_accepts_custom_model_connection():
+    request = RequestChat.model_validate(
+        {
+            "messages": [{"role": "user", "content": "你好"}],
+            "connection": {
+                "url": "https://example.com/v1/chat/completions",
+                "model": "Qwen3.6-35B-A3B",
+                "apiKey": "test-key",
+            },
+        }
+    )
+    assert request.connection is not None
+    assert request.connection.model == "Qwen3.6-35B-A3B"
+
+
+def test_chat_rejects_unsafe_custom_model_connection():
+    with pytest.raises(ValidationError):
+        RequestChat.model_validate(
+            {
+                "messages": [{"role": "user", "content": "你好"}],
+                "connection": {
+                    "url": "http://127.0.0.1:8080/v1/chat/completions",
+                    "model": "test",
+                },
+            }
+        )
+
+
+def test_chat_handler_uses_selected_connection():
+    body = RequestChat.model_validate(
+        {
+            "messages": [{"role": "user", "content": "你好"}],
+            "connection": {
+                "url": "https://example.com/v1/chat/completions",
+                "model": "custom",
+                "apiKey": "test-key",
+            },
+        }
+    )
+    default = Mock(spec=ChatService)
+    selected = default.configured.return_value
+    selected.complete = AsyncMock(return_value=ChatReply("回答", "custom", 12))
+
+    async def run():
+        with patch("risk_api.modules.chat.api.handler.authorize_request", new_callable=AsyncMock):
+            return await complete(body, Request({"type": "http"}), Mock(), default)
+
+    response = asyncio.run(run())
+    default.configured.assert_called_once_with(
+        "https://example.com/v1/chat/completions", "test-key", "custom"
+    )
+    selected.complete.assert_awaited_once_with([{"role": "user", "content": "你好"}])
+    assert response.data.content == "回答"
+    assert response.data.model == "custom"
 
 
 @pytest.mark.parametrize(

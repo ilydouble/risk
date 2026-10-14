@@ -6,8 +6,7 @@ import pytest
 from pydantic import ValidationError
 
 from risk_api.modules.chat.service import ChatService
-from risk_api.modules.data_prep.api.handler import selected_chat
-from risk_api.modules.data_prep.api.schemas import ModelConnection
+from risk_api.shared.api.model_connection import ModelConnection
 
 
 @pytest.mark.parametrize(
@@ -37,10 +36,8 @@ def test_custom_model_uses_selected_url_without_changing_default() -> None:
             default = ChatService(
                 client, "https://default.test/v1/chat/completions", "secret", "old"
             )
-            custom = selected_chat(
-                default,
-                ModelConnection(url="https://example.com/v1/chat/completions", model="new"),
-            )
+            connection = ModelConnection(url="https://example.com/v1/chat/completions", model="new")
+            custom = default.configured(connection.url, connection.apiKey, connection.model)
             reply = await custom.complete([{"role": "user", "content": "ping"}])
             assert reply.model == "new"
             assert default.model == "old"

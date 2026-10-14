@@ -2,6 +2,8 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
+from risk_api.shared.api.model_connection import ModelConnection
+
 
 class ChatMessage(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -19,6 +21,7 @@ class ChatMessage(BaseModel):
 class RequestChat(BaseModel):
     model_config = ConfigDict(extra="forbid")
     messages: list[ChatMessage] = Field(min_length=1, max_length=20)
+    connection: ModelConnection | None = None
 
     @field_validator("messages")
     @classmethod

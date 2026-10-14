@@ -16,7 +16,12 @@ async def complete(
     service: FromDishka[ChatService],
 ) -> ApiEnvelope[ResponseChat]:
     await authorize_request(request, auth)
-    reply = await service.complete([message.model_dump() for message in body.messages])
+    chat = service
+    if body.connection is not None:
+        chat = service.configured(
+            body.connection.url, body.connection.apiKey, body.connection.model
+        )
+    reply = await chat.complete([message.model_dump() for message in body.messages])
     return success_response(
         ResponseChat(content=reply.content, model=reply.model, elapsedMs=reply.elapsed_ms)
     )

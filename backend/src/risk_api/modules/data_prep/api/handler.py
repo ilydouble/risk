@@ -11,7 +11,6 @@ from risk_api.modules.auth.api.handler import authorize_request
 from risk_api.modules.auth.service import AuthService
 from risk_api.modules.chat.service import ChatService
 from risk_api.modules.data_prep.api.schemas import (
-    ModelConnection,
     RequestInspectData,
     RequestModelDefaults,
     RequestSuggestMapping,
@@ -25,19 +24,6 @@ from risk_api.modules.data_prep.profile import inspect_csv
 from risk_api.shared.api.envelope import ApiEnvelope
 from risk_api.shared.api.response import success_response
 from risk_api.shared.config import settings
-
-
-def selected_chat(default: ChatService, connection: ModelConnection | None) -> ChatService:
-    if connection is None:
-        return default
-    return ChatService(
-        default.http,
-        connection.url,
-        connection.apiKey,
-        connection.model,
-        require_token=False,
-        disable_thinking=False,
-    )
 
 
 async def inspect_data(
@@ -65,7 +51,12 @@ async def suggest_mapping(
         "duplicateRows": body.profile.duplicateRows,
         "fields": [field.model_dump() for field in body.profile.fields],
     }
-    reply = await selected_chat(chat, body.connection).complete(
+    selected = chat
+    if body.connection is not None:
+        selected = chat.configured(
+            body.connection.url, body.connection.apiKey, body.connection.model
+        )
+    reply = await selected.complete(
         [
             {
                 "role": "system",
@@ -111,7 +102,12 @@ async def test_model(
     chat: FromDishka[ChatService],
 ) -> ApiEnvelope[ResponseTestModel]:
     await authorize_request(request, auth)
-    reply = await selected_chat(chat, body.connection).complete(
+    selected = chat
+    if body.connection is not None:
+        selected = chat.configured(
+            body.connection.url, body.connection.apiKey, body.connection.model
+        )
+    reply = await selected.complete(
         [
             {"role": "system", "content": "Reply with OK."},
             {"role": "user", "content": "OK"},
