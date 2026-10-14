@@ -6,6 +6,7 @@ import { requestInspectData, requestSuggestMapping } from "@/features/data-prep/
 import { useAiModelConfig } from "@/features/ai-model-config/model/context";
 import { useDataPrepSession } from "@/features/data-prep/model/context";
 import { handleApiError } from "@/shared/api/http";
+import { ReportGenerationStatus } from "./ReportGenerationStatus";
 
 const panel = "rounded-xl border border-background-200 bg-background-100 p-5";
 const button = "rounded-md bg-primary-500 px-4 py-2 text-sm text-white disabled:opacity-50";
@@ -29,6 +30,7 @@ export default function DataPrepPage() {
   const modelConfig = useAiModelConfig();
   const { file, profile, suggestion, setFile, setProfile, setSuggestion } = useDataPrepSession();
   const [busy, setBusy] = useState(false);
+  const [generating, setGenerating] = useState(false);
   const [error, setError] = useState("");
   const legacyProfile = profile?.fields.some((field) => !Array.isArray(field.topValues));
 
@@ -58,6 +60,7 @@ export default function DataPrepPage() {
   async function suggest() {
     if (!profile || busy) return;
     setBusy(true);
+    setGenerating(true);
     setError("");
     try {
       setSuggestion(await requestSuggestMapping({ profile, connection: modelConfig.connection, maxTokens: modelConfig.maxTokens }));
@@ -72,6 +75,7 @@ export default function DataPrepPage() {
         DATA_PREP_SUGGESTION_INVALID: "智能体未完成工具分析或报告格式无效，请重试。",
       }));
     } finally {
+      setGenerating(false);
       setBusy(false);
     }
   }
@@ -90,7 +94,7 @@ export default function DataPrepPage() {
         <h2 className="font-semibold">上传一张表进行体检</h2>
         <p className="text-sm text-foreground-500">试用版支持 UTF-8 CSV，最多 2 MiB、50000 行。分析结果只在当前页面展示，刷新后清空。</p>
         <input aria-label="选择 CSV 文件" type="file" accept=".csv,text/csv" disabled={busy} onChange={(event) => { setFile(event.target.files?.[0]); setProfile(undefined); setSuggestion(undefined); }} />
-        <div><button className={button} disabled={!file || busy} onClick={() => void inspect()}>{busy ? "分析中…" : "开始体检"}</button></div>
+        <div><button className={button} disabled={!file || busy} onClick={() => void inspect()}>{busy && !generating ? "分析中…" : "开始体检"}</button></div>
       </section>
       {error && <p role="alert" className="text-sm text-red-500">{error}</p>}
       {profile && legacyProfile && <section className={`${panel} space-y-3`} role="status">
@@ -104,6 +108,7 @@ export default function DataPrepPage() {
             <div><h2 className="font-semibold">体检结果</h2><p className="text-sm text-foreground-500">统计基于整份文件；类型、键和异常只是待核对线索。</p></div>
             <button className={button} disabled={busy || (modelConfig.custom && (!modelConfig.url.trim() || !modelConfig.model.trim()))} onClick={() => void suggest()}>{busy ? "智能体正在分析…" : "让智能体生成分析报告"}</button>
           </div>
+          {generating && <ReportGenerationStatus />}
           <div className="grid gap-3 sm:grid-cols-4">
             {[
               ["记录", profile.rowCount],
