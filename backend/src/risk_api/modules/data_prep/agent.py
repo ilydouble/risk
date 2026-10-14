@@ -1,4 +1,5 @@
 import json
+import logging
 from typing import Any
 
 import openai
@@ -13,6 +14,7 @@ from risk_api.modules.data_prep.api.schemas import ResponseInspectData, Response
 
 REQUIRED_TOOLS = {"get_overview", "get_quality_issues", "get_training_context"}
 MAX_TOOL_CALLS = 8
+logger = logging.getLogger(__name__)
 
 
 def tool_result(profile: ResponseInspectData, tool: str, field: str | None) -> dict[str, Any]:
@@ -114,17 +116,47 @@ async def analyze_profile(
         ),
         callback_handler=None,
     )
+    prompt = json.dumps(
+        {
+            "task": "分析上传文件并形成数据分析报告",
+            "fieldNames": [f.name for f in profile.fields],
+        },
+        ensure_ascii=False,
+    )
+    names = {item.name for item in profile.fields}
+    roles = {"identity", "feature", "label", "relation", "time", "ignore", "unknown"}
     try:
-        result = await agent.invoke_async(
-            json.dumps(
-                {
-                    "task": "分析上传文件并形成数据分析报告",
-                    "fieldNames": [f.name for f in profile.fields],
-                },
-                ensure_ascii=False,
-            ),
-            limits={"turns": 10},
-        )
+        for attempt in range(2):
+            result = await agent.invoke_async(prompt, limits={"turns": 10})
+            missing = REQUIRED_TOOLS - set(trace)
+            if result.stop_reason != "end_turn" or missing:
+                logger.warning(
+                    "data_prep.agent_incomplete attempt=%s stop_reason=%s missing_tools=%s",
+                    attempt + 1,
+                    result.stop_reason,
+                    sorted(missing),
+                )
+                prompt = (
+                    f"尚未完成的统计工具：{', '.join(sorted(missing)) or '无'}。"
+                    "请先调用这些工具，再依据工具结果输出完整 JSON 报告。"
+                )
+                continue
+            try:
+                output = ResponseSuggestMapping.model_validate_json(str(result))
+            except ValidationError:
+                logger.warning("data_prep.agent_invalid_json attempt=%s", attempt + 1)
+                prompt = "上一份报告未符合指定 JSON 格式。请输出完整的 JSON 对象，不要代码围栏。"
+                continue
+            if not output.reportMarkdown.strip() or any(
+                item.field not in names or item.role not in roles for item in output.suggestions
+            ):
+                logger.warning("data_prep.agent_invalid_content attempt=%s", attempt + 1)
+                prompt = (
+                    "上一份报告缺少 reportMarkdown，或 suggestions 中含有未知字段或角色。"
+                    "请仅使用已给出的字段名和角色，重新输出完整 JSON 报告。"
+                )
+                continue
+            return output.model_copy(update={"toolTrace": trace})
     except openai.APITimeoutError as error:
         raise AppError(504, "CHAT_TIMEOUT", "大模型响应超时，请检查模型服务负载") from error
     except openai.APIConnectionError as error:
@@ -139,16 +171,4 @@ async def analyze_profile(
         ) from error
     except Exception as error:
         raise AppError(502, "CHAT_UPSTREAM_ERROR", "数据体检智能体调用模型失败") from error
-    if result.stop_reason != "end_turn" or not REQUIRED_TOOLS.issubset(set(trace)):
-        raise AppError(502, "DATA_PREP_SUGGESTION_INVALID", "智能体未完成必要的统计工具调用")
-    try:
-        output = ResponseSuggestMapping.model_validate_json(str(result))
-    except ValidationError as error:
-        raise AppError(502, "DATA_PREP_SUGGESTION_INVALID", "数据分析报告格式异常") from error
-    names = {item.name for item in profile.fields}
-    roles = {"identity", "feature", "label", "relation", "time", "ignore", "unknown"}
-    if not output.reportMarkdown.strip() or any(
-        item.field not in names or item.role not in roles for item in output.suggestions
-    ):
-        raise AppError(502, "DATA_PREP_SUGGESTION_INVALID", "数据分析报告内容无效")
-    return output.model_copy(update={"toolTrace": trace})
+    raise AppError(502, "DATA_PREP_SUGGESTION_INVALID", "智能体未完成工具分析或报告校验")

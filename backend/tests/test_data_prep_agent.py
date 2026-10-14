@@ -10,7 +10,7 @@ from strands.types.exceptions import MaxTokensReachedException
 
 from risk_api.errors import AppError
 from risk_api.modules.chat.service import ChatService
-from risk_api.modules.data_prep.agent import analyze_profile, tool_result
+from risk_api.modules.data_prep.agent import REQUIRED_TOOLS, analyze_profile, tool_result
 from risk_api.modules.data_prep.api.schemas import ResponseInspectData
 from risk_api.modules.data_prep.profile import inspect_csv
 
@@ -105,6 +105,35 @@ def test_agent_explains_output_limit() -> None:
         with pytest.raises(AppError) as caught:
             asyncio.run(analyze_profile(profile(), selected, 4096))
     assert caught.value.code == "CHAT_OUTPUT_LIMIT"
+
+
+def test_agent_recovers_when_model_skips_required_tools() -> None:
+    class RetryingAgent(FakeAgent):
+        calls = 0
+
+        async def invoke_async(self, prompt: str, *, limits: dict) -> FakeResult:
+            self.calls += 1
+            if self.calls == 1:
+                self.tools["get_overview"]()
+            else:
+                assert "get_quality_issues" in prompt
+                assert "get_training_context" in prompt
+                self.tools["get_quality_issues"]()
+                self.tools["get_training_context"]()
+            return FakeResult()
+
+    selected = Mock(spec=ChatService)
+    selected.url = "https://example.com/v1/chat/completions"
+    selected.token = "test-key"
+    selected.model = "qwen3.6-35b-a3b"
+    selected.require_token = False
+    selected.disable_thinking = True
+    with (
+        patch("risk_api.modules.data_prep.agent.OpenAIModel"),
+        patch("risk_api.modules.data_prep.agent.Agent", RetryingAgent),
+    ):
+        output = asyncio.run(analyze_profile(profile(), selected, 4096))
+    assert set(output.toolTrace) == REQUIRED_TOOLS
 
 
 def test_strands_executes_model_tool_calls_with_mock_provider() -> None:

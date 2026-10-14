@@ -18,6 +18,26 @@ import (
 
 const requestIDHeader = "X-Request-ID"
 
+type reportTimeoutTransport struct {
+	normal http.RoundTripper
+	report http.RoundTripper
+}
+
+func (transport reportTimeoutTransport) RoundTrip(request *http.Request) (*http.Response, error) {
+	if request.URL.Path == "/api/v1/data-prep/suggest-mapping" {
+		return transport.report.RoundTrip(request)
+	}
+	return transport.normal.RoundTrip(request)
+}
+
+func upstreamTransport() http.RoundTripper {
+	normal := http.DefaultTransport.(*http.Transport).Clone()
+	normal.ResponseHeaderTimeout = 30 * time.Second
+	report := normal.Clone()
+	report.ResponseHeaderTimeout = 5 * time.Minute
+	return reportTimeoutTransport{normal: normal, report: report}
+}
+
 type sessionIdentity struct {
 	Version     int      `json:"version"`
 	UserID      string   `json:"user_id"`
@@ -93,6 +113,7 @@ func newHandler(client *redis.Client, upstreamURL, allowedOrigin string) (http.H
 			gateway.Route{Name: "openapi", Match: gateway.RouteMatch{ExactPath: "/openapi.json", Methods: []string{"GET"}}, Upstream: "api", Access: gateway.AccessPublic},
 		),
 		gateway.WithUpstreams(gateway.Upstream{Name: "api", URL: upstreamURL}),
+		gateway.WithTransport(upstreamTransport()),
 		gateway.WithRequestID(gateway.RequestIDConfig{Header: requestIDHeader, TrustIncoming: false}),
 		gateway.WithAuthenticator(sessionAuthenticator(client), cookie),
 		gateway.WithBeforeProxyPolicy(gateway.BeforeProxyPolicyFunc(func(_ context.Context, request *http.Request, _ gateway.RequestContext) (gateway.PolicyDecision, error) {
