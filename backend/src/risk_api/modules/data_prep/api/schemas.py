@@ -113,3 +113,5 @@ class ResponseSuggestMapping(BaseModel):
     questions: list[str]
     qualityFindings: list[str] = Field(default_factory=list, max_length=8)
     nextChecks: list[str] = Field(default_factory=list, max_length=8)
+    reportMarkdown: str = Field(default="", max_length=20000)
+    toolTrace: list[str] = Field(default_factory=list, max_length=8)

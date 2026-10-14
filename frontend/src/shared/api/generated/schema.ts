@@ -3648,10 +3648,17 @@ export interface components {
             qualityFindings?: string[];
             /** Questions */
             questions: string[];
+            /**
+             * Reportmarkdown
+             * @default
+             */
+            reportMarkdown: string;
             /** Suggestions */
             suggestions: components["schemas"]["MappingSuggestion"][];
             /** Summary */
             summary: string;
+            /** Tooltrace */
+            toolTrace?: string[];
         };
         /** ResponseTestModel */
         ResponseTestModel: {

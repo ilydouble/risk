@@ -7778,6 +7778,12 @@
             "title": "Questions",
             "type": "array"
           },
+          "reportMarkdown": {
+            "default": "",
+            "maxLength": 20000,
+            "title": "Reportmarkdown",
+            "type": "string"
+          },
           "suggestions": {
             "items": {
               "$ref": "#/components/schemas/MappingSuggestion"
@@ -7788,6 +7794,14 @@
           "summary": {
             "title": "Summary",
             "type": "string"
+          },
+          "toolTrace": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 8,
+            "title": "Tooltrace",
+            "type": "array"
           }
         },
         "required": [

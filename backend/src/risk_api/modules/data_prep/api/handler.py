@@ -1,15 +1,14 @@
 import base64
 import binascii
-import json
 
 from dishka.integrations.fastapi import FromDishka
 from fastapi import Request
-from pydantic import ValidationError
 
 from risk_api.errors import AppError
 from risk_api.modules.auth.api.handler import authorize_request
 from risk_api.modules.auth.service import AuthService
 from risk_api.modules.chat.service import ChatService
+from risk_api.modules.data_prep.agent import analyze_profile
 from risk_api.modules.data_prep.api.schemas import (
     RequestInspectData,
     RequestModelDefaults,
@@ -46,64 +45,12 @@ async def suggest_mapping(
     chat: FromDishka[ChatService],
 ) -> ApiEnvelope[ResponseSuggestMapping]:
     await authorize_request(request, auth)
-    context = {
-        "rowCount": body.profile.rowCount,
-        "rowsWithMissing": body.profile.rowsWithMissing,
-        "duplicateRows": body.profile.duplicateRows,
-        "fields": [
-            {
-                "name": field.name,
-                "typeHint": field.typeHint,
-                "missingCount": field.missingCount,
-                "distinctCount": field.distinctCount,
-                "numericRate": field.numericRate,
-                "dateRate": field.dateRate,
-                "topValues": [item.model_dump() for item in field.topValues],
-                "numericSummary": field.numericSummary.model_dump()
-                if field.numericSummary
-                else None,
-            }
-            for field in body.profile.fields
-        ],
-        "qualityIssues": [item.model_dump() for item in body.profile.issues[:30]],
-        "keyCandidates": [item.model_dump() for item in body.profile.keyCandidates],
-        "labelCandidates": [item.model_dump() for item in body.profile.labelCandidates],
-    }
     selected = chat
     if body.connection is not None:
         selected = chat.configured(
             body.connection.url, body.connection.apiKey, body.connection.model
         )
-    reply = await selected.complete(
-        [
-            {
-                "role": "system",
-                "content": (
-                    "你是企业不良状态数据分析助手。只根据提供的统计信息提出待人工确认的建议。"
-                    "先分析缺失、重复、混合格式、离群值、疑似标识/关联键和标签分布，"
-                    "再建议字段用途与下一步核查。不得根据 0/1 推断哪类是不良状态；"
-                    "只能引用已有字段名，不得编造事实、标签含义或跨表关系。"
-                    "统计线索不是字段语义的证明。只输出 JSON："
-                    '{"summary":"...","qualityFindings":["..."],"suggestions":[{"field":"...",'
-                    '"role":"identity|feature|label|relation|time|ignore|unknown","reason":"..."}],'
-                    '"questions":["..."],"nextChecks":["..."]}。'
-                    "角色不确定时填 unknown；不要要求执行 SQL、修改数据或训练模型。"
-                ),
-            },
-            {"role": "user", "content": json.dumps(context, ensure_ascii=False)},
-        ],
-        max_tokens=body.maxTokens,
-    )
-    try:
-        content = reply.content.strip().removeprefix("```json").removesuffix("```").strip()
-        output = ResponseSuggestMapping.model_validate_json(content)
-    except ValidationError as error:
-        raise AppError(502, "DATA_PREP_SUGGESTION_INVALID", "智能分析结果格式异常") from error
-    names = {field.name for field in body.profile.fields}
-    roles = {"identity", "feature", "label", "relation", "time", "ignore", "unknown"}
-    if any(item.field not in names or item.role not in roles for item in output.suggestions):
-        raise AppError(502, "DATA_PREP_SUGGESTION_INVALID", "智能分析引用了未知字段或用途")
-    return success_response(output)
+    return success_response(await analyze_profile(body.profile, selected, body.maxTokens))
 
 
 async def model_defaults(

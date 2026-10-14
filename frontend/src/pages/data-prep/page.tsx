@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { requestInspectData, requestSuggestMapping } from "@/features/data-prep/api/dataPrepApi";
 import { useAiModelConfig } from "@/features/ai-model-config/model/context";
 import { useDataPrepSession } from "@/features/data-prep/model/context";
@@ -62,7 +64,9 @@ export default function DataPrepPage() {
       setError(handleApiError(cause, {
         CHAT_NOT_CONFIGURED: "智能分析需要先配置后端大模型。数据体检结果仍可查看。",
         CHAT_UNREACHABLE: "暂时无法连接大模型，请稍后重试。",
-        DATA_PREP_SUGGESTION_INVALID: "大模型未返回有效字段建议，请重试。",
+        CHAT_TIMEOUT: "模型服务连接或响应超时，请检查后端到模型服务的网络。",
+        CHAT_UPSTREAM_ERROR: "模型服务未能完成工具调用，请确认所选接口支持 Chat Completions 工具调用。",
+        DATA_PREP_SUGGESTION_INVALID: "智能体未完成工具分析或报告格式无效，请重试。",
       }));
     } finally {
       setBusy(false);
@@ -76,7 +80,7 @@ export default function DataPrepPage() {
         <p className="mt-2 text-sm text-foreground-500">先检查真实数据，再决定如何关联企业和构建 RiskGNN+ 数据集。</p>
       </header>
       <div className={`${panel} flex flex-wrap items-center justify-between gap-3 text-sm`}>
-        <span>字段建议使用：{modelConfig.custom ? modelConfig.model || "自定义模型（未填写）" : modelConfig.defaults?.model || "后端默认模型"}</span>
+        <span>报告使用模型：{modelConfig.custom ? `${modelConfig.model || "自定义模型（未填写）"} · 自定义` : `${modelConfig.defaults?.model || "后端默认模型"} · 后端默认`}</span>
         <Link className="text-primary-400 underline" to="/settings/ai-model">配置智能体模型</Link>
       </div>
       <section className={`${panel} space-y-3`}>
@@ -90,7 +94,7 @@ export default function DataPrepPage() {
         <section className={`${panel} space-y-3`}>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div><h2 className="font-semibold">体检结果</h2><p className="text-sm text-foreground-500">统计基于整份文件；类型、键和异常只是待核对线索。</p></div>
-            <button className={button} disabled={busy || (modelConfig.custom && (!modelConfig.url.trim() || !modelConfig.model.trim()))} onClick={() => void suggest()}>{busy ? "分析中…" : "让智能体建议字段用途"}</button>
+            <button className={button} disabled={busy || (modelConfig.custom && (!modelConfig.url.trim() || !modelConfig.model.trim()))} onClick={() => void suggest()}>{busy ? "智能体正在分析…" : "让智能体生成分析报告"}</button>
           </div>
           <div className="grid gap-3 sm:grid-cols-4">
             {[
@@ -124,7 +128,7 @@ export default function DataPrepPage() {
           {(profile.labelCandidates?.length ?? 0) === 0 ? <p className="text-sm text-foreground-500">未发现典型标签字段名，需人工指定预测目标。</p> : <div className="grid gap-2 sm:grid-cols-2">{profile.labelCandidates?.map((item) => <div key={item.field} className="rounded-md bg-background-50 p-3 text-sm"><strong>{item.field}</strong><p className="mt-1">{item.values.map((value) => `${value.value}：${value.count}`).join(" · ") || "无有效值"}</p><p className="mt-1 text-foreground-500">不同值 {item.distinctCount} · 缺失 {item.missingCount}{item.minorityShare != null ? ` · 少数类 ${Math.round(item.minorityShare * 100)}%` : ""}</p></div>)}</div>}
         </section>
         <details className={panel}><summary className="cursor-pointer font-semibold">查看前 5 行数据预览</summary><div className="mt-3 overflow-x-auto"><table className="min-w-full text-left text-xs"><thead><tr>{profile.fields.map((field) => <th key={field.name} className="min-w-28 border-b border-background-200 px-2 py-2">{field.name}</th>)}</tr></thead><tbody>{profile.sampleRows.map((row, index) => <tr key={index}>{profile.fields.map((field) => <td key={field.name} className="max-w-64 break-words border-b border-background-200 px-2 py-2">{row[field.name] || "—"}</td>)}</tr>)}</tbody></table></div><p className="mt-2 text-xs text-foreground-500">预览中的长值仅展示前 80 个字符；原始文件不会被修改。</p></details>
-        {suggestion && <section className={`${panel} space-y-3`}><h2 className="font-semibold">智能体分析 · 待确认</h2><p className="text-sm">{suggestion.summary}</p>{(suggestion.qualityFindings?.length ?? 0) > 0 && <div><h3 className="font-medium">质量与训练风险</h3><ul className="mt-2 list-disc space-y-1 pl-5 text-sm">{suggestion.qualityFindings?.map((finding, index) => <li key={index}>{finding}</li>)}</ul></div>}<div className="space-y-2">{suggestion.suggestions.map((item) => <div key={item.field} className="rounded-md bg-background-50 p-3 text-sm"><strong>{item.field}</strong> · {roleLabels[item.role] ?? item.role}<p className="text-foreground-500">{item.reason}</p></div>)}</div>{suggestion.questions.length > 0 && <div><h3 className="font-medium">需要确认</h3><ul className="list-disc pl-5 text-sm">{suggestion.questions.map((question, index) => <li key={index}>{question}</li>)}</ul></div>}{(suggestion.nextChecks?.length ?? 0) > 0 && <div><h3 className="font-medium">建议的下一步核查</h3><ol className="mt-2 list-decimal space-y-1 pl-5 text-sm">{suggestion.nextChecks?.map((step, index) => <li key={index}>{step}</li>)}</ol></div>}</section>}
+        {suggestion && <section className={`${panel} space-y-4`}><h2 className="font-semibold">智能体数据分析报告 · 待确认</h2><p className="text-xs text-foreground-500">报告依据本次 CSV 的统计画像，由所选模型通过只读统计工具生成；未验证跨表关系，也未训练模型。</p><div className="space-y-3 text-sm leading-7"><ReactMarkdown remarkPlugins={[remarkGfm]} skipHtml components={{ h2: ({ children }) => <h2 className="mt-4 text-base font-semibold">{children}</h2>, h3: ({ children }) => <h3 className="mt-3 font-semibold">{children}</h3>, ul: ({ children }) => <ul className="list-disc pl-5">{children}</ul>, ol: ({ children }) => <ol className="list-decimal pl-5">{children}</ol>, table: ({ children }) => <div className="overflow-x-auto"><table className="min-w-full border-collapse text-left">{children}</table></div>, th: ({ children }) => <th className="border border-background-300 p-2">{children}</th>, td: ({ children }) => <td className="border border-background-300 p-2">{children}</td>, a: ({ children, href }) => <a href={href} target="_blank" rel="noopener noreferrer" className="text-primary-400 underline">{children}</a>, img: ({ alt }) => <span>[图片：{alt || "无描述"}]</span> }}>{suggestion.reportMarkdown || suggestion.summary}</ReactMarkdown></div><details className="text-xs text-foreground-500"><summary className="cursor-pointer">查看工具调用记录（{suggestion.toolTrace?.length ?? 0} 次）</summary><ol className="mt-2 list-decimal pl-5">{suggestion.toolTrace?.map((tool, index) => <li key={index}>{tool}</li>)}</ol></details><details className="text-sm"><summary className="cursor-pointer font-medium">查看字段用途建议和核查清单</summary><div className="mt-3 space-y-2">{suggestion.suggestions.map((item) => <div key={item.field} className="rounded-md bg-background-50 p-3"><strong>{item.field}</strong> · {roleLabels[item.role] ?? item.role}<p className="text-foreground-500">{item.reason}</p></div>)}</div>{suggestion.questions.length > 0 && <ul className="mt-3 list-disc pl-5">{suggestion.questions.map((question, index) => <li key={index}>{question}</li>)}</ul>}{(suggestion.nextChecks?.length ?? 0) > 0 && <ol className="mt-3 list-decimal pl-5">{suggestion.nextChecks?.map((step, index) => <li key={index}>{step}</li>)}</ol>}</details></section>}
         <p className="text-sm text-foreground-500">当前仅做分析；确认数据含义和构建训练集的功能仍在开发。已有标准数据包可前往 <Link className="text-primary-400 underline" to="/modeling">模型训练工作台</Link>。</p>
       </>}
     </div>

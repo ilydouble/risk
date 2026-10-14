@@ -16,6 +16,7 @@ dependencies = [
   "stellarmesh-objectstorage==0.1.0",
   "httpx>=0.28",
   "aioboto3>=15.5,<16",
+  "strands-agents[openai]>=1,<2",
 ]
 
 [dependency-groups]
