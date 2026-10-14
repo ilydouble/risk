@@ -6,6 +6,8 @@ export default {
     title: "CreditScope brand mark cobalt blue seal",
   },
   nav: {
+    settings: "Settings",
+    aiSettings: "Agent Model Settings",
     dataPrep: "Data Preparation",
     dataQa: "Workbench Data Q&A",
     chat: "Model Q&A",

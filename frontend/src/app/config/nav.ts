@@ -53,6 +53,13 @@ export const NAV_GROUPS: NavGroup[] = [
       },
     ],
   },
+  {
+    key: "settings",
+    labelKey: "nav.settings",
+    items: [
+      { key: "settings", labelKey: "nav.aiSettings", path: "/settings/ai-model", icon: "ri-settings-3-line" },
+    ],
+  },
 ];
 
 export const NAV_ITEMS: NavItem[] = NAV_GROUPS.flatMap((group) => group.items);
