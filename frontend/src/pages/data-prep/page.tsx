@@ -30,6 +30,7 @@ export default function DataPrepPage() {
   const { file, profile, suggestion, setFile, setProfile, setSuggestion } = useDataPrepSession();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const legacyProfile = profile?.fields.some((field) => !Array.isArray(field.topValues));
 
   async function inspect() {
     if (!file || busy) return;
@@ -90,7 +91,12 @@ export default function DataPrepPage() {
         <div><button className={button} disabled={!file || busy} onClick={() => void inspect()}>{busy ? "分析中…" : "开始体检"}</button></div>
       </section>
       {error && <p role="alert" className="text-sm text-red-500">{error}</p>}
-      {profile && <>
+      {profile && legacyProfile && <section className={`${panel} space-y-3`} role="status">
+        <h2 className="font-semibold">这份结果需要重新体检</h2>
+        <p className="text-sm text-foreground-500">当前标签页保留的是旧版字段统计，因此常见值、数值分布等新分析无法显示。请用已选文件重新运行体检。</p>
+        <button className={button} disabled={!file || busy} onClick={() => void inspect()}>{busy ? "分析中…" : "重新体检"}</button>
+      </section>}
+      {profile && !legacyProfile && <>
         <section className={`${panel} space-y-3`}>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div><h2 className="font-semibold">体检结果</h2><p className="text-sm text-foreground-500">统计基于整份文件；类型、键和异常只是待核对线索。</p></div>
@@ -114,8 +120,8 @@ export default function DataPrepPage() {
         </section>
         <section className={`${panel} space-y-3`}>
           <h2 className="font-semibold">字段画像</h2>
-          <p className="text-xs text-foreground-500">标识列保持文本，尤其是含前导零的企业编号；常见值显示出现次数。</p>
-          <div className="overflow-x-auto"><table className="min-w-full text-left text-sm"><thead><tr className="border-b border-background-200"><th className="min-w-36 py-2">字段</th><th className="min-w-28">类型线索</th><th className="min-w-28">缺失</th><th className="min-w-24">不同值</th><th className="min-w-64">常见值</th><th className="min-w-72">数值分布</th></tr></thead><tbody>{profile.fields.map((field) => <tr key={field.name} className="border-b border-background-200 align-top"><td className="py-3 font-medium">{field.name}</td><td className="py-3">{typeLabels[field.typeHint] ?? field.typeHint}{field.dateRate > 0 && field.typeHint !== "date" ? <p className="text-xs text-foreground-500">日期格式 {Math.round(field.dateRate * 100)}%</p> : null}</td><td className="py-3">{field.missingCount}（{Math.round(field.missingCount / profile.rowCount * 100)}%）</td><td className="py-3">{field.distinctCount}</td><td className="py-3">{field.topValues?.length ? field.topValues.map((item) => `${item.value} (${item.count})`).join(" · ") : "—"}</td><td className="py-3 text-foreground-500">{field.numericSummary ? <>最小 {field.numericSummary.min} · 中位 {field.numericSummary.median} · 最大 {field.numericSummary.max}<br />Q1 {field.numericSummary.q1} · Q3 {field.numericSummary.q3} · 疑似离群 {field.numericSummary.outlierCount}</> : "—"}</td></tr>)}</tbody></table></div>
+          <p className="text-xs text-foreground-500">标识列保持文本，尤其是含前导零的企业编号；常见值显示出现次数。数值分布仅适用于数值字段。</p>
+          <div className="overflow-x-auto"><table className="min-w-full text-left text-sm"><thead><tr className="border-b border-background-200"><th className="min-w-36 py-2">字段</th><th className="min-w-28">类型线索</th><th className="min-w-28">缺失</th><th className="min-w-24">不同值</th><th className="min-w-64">常见值</th><th className="min-w-72">数值分布</th></tr></thead><tbody>{profile.fields.map((field) => <tr key={field.name} className="border-b border-background-200 align-top"><td className="py-3 font-medium">{field.name}</td><td className="py-3">{typeLabels[field.typeHint] ?? field.typeHint}{field.dateRate > 0 && field.typeHint !== "date" ? <p className="text-xs text-foreground-500">日期格式 {Math.round(field.dateRate * 100)}%</p> : null}</td><td className="py-3">{field.missingCount}（{Math.round(field.missingCount / profile.rowCount * 100)}%）</td><td className="py-3">{field.distinctCount}</td><td className="py-3">{field.topValues?.length ? field.topValues.map((item) => `${item.value} (${item.count})`).join(" · ") : "无有效值"}</td><td className="py-3 text-foreground-500">{field.numericSummary ? <>最小 {field.numericSummary.min} · 中位 {field.numericSummary.median} · 最大 {field.numericSummary.max}<br />Q1 {field.numericSummary.q1} · Q3 {field.numericSummary.q3} · 疑似离群 {field.numericSummary.outlierCount}</> : field.typeHint === "number" ? "无有效数值" : "不适用（非数值字段）"}</td></tr>)}</tbody></table></div>
         </section>
         <section className={`${panel} space-y-3`}>
           <h2 className="font-semibold">实体与关联键候选</h2>
