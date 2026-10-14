@@ -131,7 +131,7 @@ export default function DataPrepPage() {
         <p className="text-sm text-foreground-500">用于本页的字段建议。数据体检不依赖模型。</p>
         <label className="flex items-center gap-2 text-sm"><input type="radio" name="model-source" checked={!custom} onChange={() => { setCustom(false); setConnectionStatus(""); }} />使用后端默认模型 {defaults ? `· ${defaults.model}${defaults.keyConfigured ? "" : "（未配置密钥）"}` : "· 正在读取…"}</label>
         <label className="flex items-center gap-2 text-sm"><input type="radio" name="model-source" checked={custom} onChange={() => { setCustom(true); setConnectionStatus(""); }} />自定义兼容 Chat Completions 的模型</label>
-        <button type="button" className="rounded-md border border-background-300 px-3 py-1.5 text-xs" onClick={() => { setCustom(true); setUrl("https://api.openlux.ai/v1/chat/completions"); setModel("qwen3.5-27b"); setApiKey(""); setConnectionStatus(""); }}>预填 OpenLux · qwen3.5-27b</button>
+        <button type="button" className="rounded-md border border-background-300 px-3 py-1.5 text-xs" onClick={() => { setCustom(true); setUrl("https://api.openlux.ai/v1/chat/completions"); setModel("Qwen3.6-35B-A3B"); setApiKey(""); setConnectionStatus(""); }}>预填 OpenLux · Qwen3.6-35B-A3B</button>
         {custom && <div className="grid gap-3 sm:grid-cols-2">
           <label className="text-sm sm:col-span-2">接口地址<input className={input} value={url} placeholder="https://host/v1/chat/completions" onChange={(event) => { setUrl(event.target.value); setConnectionStatus(""); }} /></label>
           <label className="text-sm">模型名<input className={input} value={model} placeholder="模型 ID" onChange={(event) => { setModel(event.target.value); setConnectionStatus(""); }} /></label>
