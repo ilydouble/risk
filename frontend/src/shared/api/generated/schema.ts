@@ -123,6 +123,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/data-qa/ask": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Ask */
+        post: operations["ask_api_v1_data_qa_ask_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/data-qa/catalog": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Catalog */
+        post: operations["catalog_api_v1_data_qa_catalog_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/document/complete-upload": {
         parameters: {
             query?: never;
@@ -635,6 +669,16 @@ export interface components {
             /** Feature */
             feature: string;
         };
+        /** ApiEnvelope[ResponseAskData] */
+        ApiEnvelope_ResponseAskData_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseAskData"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
         /** ApiEnvelope[ResponseCancelRun] */
         ApiEnvelope_ResponseCancelRun_: {
             /** Code */
@@ -710,6 +754,16 @@ export interface components {
             /** Code */
             code: number;
             data: components["schemas"]["ResponseCreateUpload"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseDataQACatalog] */
+        ApiEnvelope_ResponseDataQACatalog_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseDataQACatalog"] | null;
             /** Internal Code */
             internal_code: string;
             /** Message */
@@ -1157,6 +1211,45 @@ export interface components {
             /** Right */
             right: string;
         };
+        /** DataQADataset */
+        DataQADataset: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+        };
+        /** DataQAField */
+        DataQAField: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "text" | "number" | "datetime" | "json";
+        };
+        /** DataQAModel */
+        DataQAModel: {
+            /** Datasetid */
+            datasetId: string;
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+        };
+        /** DataQATable */
+        DataQATable: {
+            /** Fields */
+            fields: components["schemas"]["DataQAField"][];
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Physicaltable */
+            physicalTable: string;
+        };
         /** DatasetAnalysisDTO */
         DatasetAnalysisDTO: {
             /** Analyzedrows */
@@ -1392,6 +1485,22 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ErrorEnvelope[Literal[404], Literal['DATA_QA_SCOPE_NOT_FOUND']] */
+        ErrorEnvelope_Literal_404__Literal__DATA_QA_SCOPE_NOT_FOUND___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 404;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @constant
+             */
+            internal_code: "DATA_QA_SCOPE_NOT_FOUND";
+            /** Message */
+            message: string;
+        };
         /** ErrorEnvelope[Literal[404], Literal['DOCUMENT_NOT_FOUND']] */
         ErrorEnvelope_Literal_404__Literal__DOCUMENT_NOT_FOUND___: {
             /**
@@ -1536,6 +1645,22 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ErrorEnvelope[Literal[422], Literal['REQUEST_INVALID', 'DATA_QA_UNSUPPORTED']] */
+        ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____DATA_QA_UNSUPPORTED___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 422;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @enum {string}
+             */
+            internal_code: "REQUEST_INVALID" | "DATA_QA_UNSUPPORTED";
+            /** Message */
+            message: string;
+        };
         /** ErrorEnvelope[Literal[422], Literal['REQUEST_INVALID', 'MODELING_FILE_INVALID', 'MODELING_ENTERPRISE_INVALID', 'MODELING_MODEL_INCOMPATIBLE', 'EXECUTION_PARAMETERS_INVALID', 'MODEL_INPUT_INVALID']] */
         ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_ENTERPRISE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___: {
             /**
@@ -1584,6 +1709,22 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ErrorEnvelope[Literal[502], Literal['CHAT_AUTH_FAILED', 'CHAT_UPSTREAM_ERROR', 'CHAT_INVALID_RESPONSE', 'DATA_QA_PLAN_INVALID']] */
+        ErrorEnvelope_Literal_502__Literal__CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE____DATA_QA_PLAN_INVALID___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 502;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @enum {string}
+             */
+            internal_code: "CHAT_AUTH_FAILED" | "CHAT_UPSTREAM_ERROR" | "CHAT_INVALID_RESPONSE" | "DATA_QA_PLAN_INVALID";
+            /** Message */
+            message: string;
+        };
         /** ErrorEnvelope[Literal[503], Literal['AUTH_STORE_INVALID']] */
         ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___: {
             /**
@@ -1629,6 +1770,22 @@ export interface components {
              * @enum {string}
              */
             internal_code: "CHAT_NOT_CONFIGURED" | "CHAT_UNREACHABLE";
+            /** Message */
+            message: string;
+        };
+        /** ErrorEnvelope[Literal[503], Literal['CHAT_NOT_CONFIGURED', 'CHAT_UNREACHABLE', 'DATA_QA_DATABASE_UNAVAILABLE', 'DATA_QA_QUERY_FAILED']] */
+        ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_QA_DATABASE_UNAVAILABLE____DATA_QA_QUERY_FAILED___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 503;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @enum {string}
+             */
+            internal_code: "CHAT_NOT_CONFIGURED" | "CHAT_UNREACHABLE" | "DATA_QA_DATABASE_UNAVAILABLE" | "DATA_QA_QUERY_FAILED";
             /** Message */
             message: string;
         };
@@ -1693,6 +1850,22 @@ export interface components {
              * @constant
              */
             internal_code: "CHAT_TIMEOUT";
+            /** Message */
+            message: string;
+        };
+        /** ErrorEnvelope[Literal[504], Literal['CHAT_TIMEOUT', 'DATA_QA_TIMEOUT']] */
+        ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT____DATA_QA_TIMEOUT___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 504;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @enum {string}
+             */
+            internal_code: "CHAT_TIMEOUT" | "DATA_QA_TIMEOUT";
             /** Message */
             message: string;
         };
@@ -2252,6 +2425,15 @@ export interface components {
              */
             riskLevel: "low" | "medium" | "high";
         };
+        /** RequestAskData */
+        RequestAskData: {
+            /** Datasetid */
+            datasetId?: string | null;
+            /** Modelid */
+            modelId?: string | null;
+            /** Question */
+            question: string;
+        };
         /** RequestCancelRun */
         RequestCancelRun: {
             /**
@@ -2332,6 +2514,8 @@ export interface components {
             /** Size */
             size: number;
         };
+        /** RequestDataQACatalog */
+        RequestDataQACatalog: Record<string, never>;
         /** RequestDownloadModel */
         RequestDownloadModel: {
             /**
@@ -2585,6 +2769,39 @@ export interface components {
              */
             sort: "name_asc" | "age_desc" | "relations_desc";
         };
+        /** ResponseAskData */
+        ResponseAskData: {
+            /** Answer */
+            answer: string;
+            /** Columns */
+            columns: components["schemas"]["DataQAField"][];
+            /** Elapsedms */
+            elapsedMs: number;
+            /** Model */
+            model: string;
+            /** Plan */
+            plan: {
+                [key: string]: unknown;
+            };
+            /** Promptversion */
+            promptVersion: string;
+            /** Question */
+            question: string;
+            /** Rows */
+            rows: {
+                [key: string]: unknown;
+            }[];
+            /** Sql */
+            sql: string;
+            /** Steps */
+            steps: string[];
+            /** Table */
+            table: string;
+            /** Truncated */
+            truncated: boolean;
+            /** Warnings */
+            warnings: string[];
+        };
         /** ResponseCancelRun */
         ResponseCancelRun: {
             run: components["schemas"]["RunDTO"];
@@ -2648,6 +2865,17 @@ export interface components {
             };
             /** Url */
             url: string;
+        };
+        /** ResponseDataQACatalog */
+        ResponseDataQACatalog: {
+            /** Datasets */
+            datasets: components["schemas"]["DataQADataset"][];
+            /** Models */
+            models: components["schemas"]["DataQAModel"][];
+            /** Tables */
+            tables: components["schemas"]["DataQATable"][];
+            /** Truncated */
+            truncated: boolean;
         };
         /** ResponseDownloadModel */
         ResponseDownloadModel: {
@@ -3563,6 +3791,198 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"] | components["schemas"]["ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"];
+                };
+            };
+        };
+    };
+    ask_api_v1_data_qa_ask_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestAskData"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseAskData_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_QA_SCOPE_NOT_FOUND___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____DATA_QA_UNSUPPORTED___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Bad Gateway */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE____DATA_QA_PLAN_INVALID___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_QA_DATABASE_UNAVAILABLE____DATA_QA_QUERY_FAILED___"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT____DATA_QA_TIMEOUT___"];
+                };
+            };
+        };
+    };
+    catalog_api_v1_data_qa_catalog_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestDataQACatalog"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseDataQACatalog_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_QA_SCOPE_NOT_FOUND___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____DATA_QA_UNSUPPORTED___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Bad Gateway */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE____DATA_QA_PLAN_INVALID___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_QA_DATABASE_UNAVAILABLE____DATA_QA_QUERY_FAILED___"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT____DATA_QA_TIMEOUT___"];
                 };
             };
         };
@@ -5924,6 +6344,7 @@ export interface operations {
     };
 }
 
+export type RequestAskData = components["schemas"]["RequestAskData"];
 export type RequestCancelRun = components["schemas"]["RequestCancelRun"];
 export type RequestChat = components["schemas"]["RequestChat"];
 export type RequestCompleteDatasetUpload = components["schemas"]["RequestCompleteDatasetUpload"];
@@ -5932,6 +6353,7 @@ export type RequestCreateDatasetUpload = components["schemas"]["RequestCreateDat
 export type RequestCreateDownload = components["schemas"]["RequestCreateDownload"];
 export type RequestCreateRun = components["schemas"]["RequestCreateRun"];
 export type RequestCreateUpload = components["schemas"]["RequestCreateUpload"];
+export type RequestDataQACatalog = components["schemas"]["RequestDataQACatalog"];
 export type RequestDownloadModel = components["schemas"]["RequestDownloadModel"];
 export type RequestGetCompany = components["schemas"]["RequestGetCompany"];
 export type RequestGetDataset = components["schemas"]["RequestGetDataset"];
@@ -5959,6 +6381,7 @@ export type RequestRunConfiguration = components["schemas"]["RequestRunConfigura
 export type RequestRunEvents = components["schemas"]["RequestRunEvents"];
 export type RequestSearchCompany = components["schemas"]["RequestSearchCompany"];
 export type RequestSearchOverviewCompany = components["schemas"]["RequestSearchOverviewCompany"];
+export type ResponseAskData = components["schemas"]["ResponseAskData"];
 export type ResponseCancelRun = components["schemas"]["ResponseCancelRun"];
 export type ResponseChat = components["schemas"]["ResponseChat"];
 export type ResponseCompleteDatasetUpload = components["schemas"]["ResponseCompleteDatasetUpload"];
@@ -5967,6 +6390,7 @@ export type ResponseCreateDatasetUpload = components["schemas"]["ResponseCreateD
 export type ResponseCreateDownload = components["schemas"]["ResponseCreateDownload"];
 export type ResponseCreateRun = components["schemas"]["ResponseCreateRun"];
 export type ResponseCreateUpload = components["schemas"]["ResponseCreateUpload"];
+export type ResponseDataQACatalog = components["schemas"]["ResponseDataQACatalog"];
 export type ResponseDownloadModel = components["schemas"]["ResponseDownloadModel"];
 export type ResponseGetCompany = components["schemas"]["ResponseGetCompany"];
 export type ResponseGetDataset = components["schemas"]["ResponseGetDataset"];

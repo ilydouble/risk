@@ -13,6 +13,8 @@ from risk_api.modules.auth.service import AuthService
 from risk_api.modules.chat.service import ChatService
 from risk_api.modules.company.repository import CompanyRepository
 from risk_api.modules.company.service import CompanyService
+from risk_api.modules.data_qa.repository import DataQARepository
+from risk_api.modules.data_qa.service import DataQAService
 from risk_api.modules.document.repository import DocumentRepository
 from risk_api.modules.document.service import DocumentService
 from risk_api.modules.graph.repository import GraphRepository
@@ -91,6 +93,14 @@ class InfrastructureProvider(Provider):
     @provide(scope=Scope.REQUEST)
     def graph_service(self, companies: CompanyService, repository: GraphRepository) -> GraphService:
         return GraphService(companies, repository)
+
+    @provide(scope=Scope.REQUEST)
+    def data_qa_repository(self, session: AsyncSession) -> DataQARepository:
+        return DataQARepository(session)
+
+    @provide(scope=Scope.REQUEST)
+    def data_qa_service(self, repository: DataQARepository, chat: ChatService) -> DataQAService:
+        return DataQAService(repository, chat)
 
     @provide(scope=Scope.REQUEST)
     def document_repository(self, session: AsyncSession) -> DocumentRepository:

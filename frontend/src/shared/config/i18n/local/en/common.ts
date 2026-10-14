@@ -6,6 +6,7 @@ export default {
     title: "CreditScope brand mark cobalt blue seal",
   },
   nav: {
+    dataQa: "Workbench Data Q&A",
     chat: "Model Q&A",
     workspace: "Workspace",
     modeling: "Model Training",
