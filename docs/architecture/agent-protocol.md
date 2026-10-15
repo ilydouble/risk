@@ -11,7 +11,7 @@ Item 使用 kind 判别：user_message、reasoning、agent_message、tool_call�
 Item 状态：running、completed、failed、cancelled。
 工具结果为 JSON 值，错误是工具 Item 的 failed 状态；不会因此伪造 Turn 成功。
 
-Event 包含 version=1、turnId、sequence、type、item、delta、status、error。
+Event 包含 version=1、turnId、sequence、type、item、delta、status、error，以及终态 finishedAt、durationMs。
 事件 type：turn_started、item_updated、item_delta、turn_completed、turn_failed、turn_cancelled、turn_interrupted。
 item_updated 携带完整 Item 当前快照，前端按 id 替换，重复事件按 sequence 忽略。
 item_delta 包含 itemId、field（text 或 argumentsText）与追加文本。
@@ -46,7 +46,26 @@ SSE `id` 为 sequence，`event: turn_event`，`data` 为 Event JSON。
 ## 推理展示
 
 Strands 的 reasoningText 映射为 AgentReasoningItem，普通 data 映射为 AgentMessageItem。
-前端 ReasoningItemView 独立展示推理，复用安全 Markdown 渲染，不解析正文中的推理标签。
-推理默认在执行时展开、结束后收起；用户手动展开或收起后，后续增量和状态更新保留选择。
-历史推理默认收起；多段推理、工具调用和回答按 Item 顺序展示，不合并跨工具的推理段。
+每个 Turn 内连续的 reasoning、tool_call 合并为独立过程区，遇到 Agent 或用户消息结束分段。
+所有 Item 保持服务端顺序；AgentMessageItem 始终显示，不跨 Turn 合并、不生成空过程区。
+过程区使用首个 Item ID 作为稳定标识；流式追加只扩充当前分段，避免重建组件丢失折叠选择。
+Turn 正在执行且过程区位于末尾时默认展开；出现下一条消息或 Turn 结束后默认收起。
+用户手动选择优先，后续增量和状态更新不覆盖选择；不同过程区和 Turn 的状态均独立。
+历史过程区默认收起。没有过程项时不显示空折叠区。
+ReasoningItemView 直接展示 Markdown，避免推理再套一层折叠；工具参数与结果保留卡片展开操作。
+过程区标题展示状态与推理、工具数量；整轮耗时由 Turn 的服务端计时字段提供。
+不解析正文中的推理标签。
 仅展示上游实际提供的推理文本；本协议不要求所有模型返回推理，也不规定供应商专属参数。
+
+## Turn 耗时与整轮折叠
+
+- `createdAt` 为后端接受并创建 Turn 的时间；`finishedAt` 为服务端首次确认终态的时间。
+- 两个时间使用 PostgreSQL 时钟，`durationMs` 为非负毫秒差，与终态及终态事件在同一事务保存。
+- 完成、失败、取消、中断均记录时间，重复终态请求不覆盖；恢复中断计到服务端确认中断时刻。
+- 此耗时是 Turn 生命周期，包含调度、模型、工具及结束处理，不代表纯模型计算耗时。
+- 运行快照的 `elapsedMs` 由服务端计算；终态快照返回持久化 `durationMs` 作为 `elapsedMs`。
+- 浏览器仅在执行中从该快照起用 `performance.now()` 每秒递增，刷新后重新获取服务端基准。
+- SSE 终态事件同时携带 `finishedAt` 和 `durationMs`，客户端停止递增并采用服务端值。
+- V0010 仅新增可空字段；旧终态记录不补猜测值，显示“耗时未记录”。旧事件缺少字段仍可读取。
+- UserMessage 始终显示在顶部，不参与整轮折叠；其下为耗时折叠按钮和水平分隔线。运行中的 Turn 初次显示时展开，完成时保持当前状态；加载已结束的历史 Turn 时默认保留 UserMessage 和最后一条 AgentMessageItem。
+- 手动选择优先；隐藏而非卸载内部过程区，展开后保留各段的选择。没有 Agent 回答时默认展开以便排查。

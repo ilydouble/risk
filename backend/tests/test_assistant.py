@@ -209,6 +209,8 @@ def test_persistence_replay_and_execution():
                 owner, conversation.id, "key", "Hello", config.public(), "r"
             )
             assert created
+            assert turn.finishedAt is None and turn.durationMs is None
+            assert turn.elapsedMs is not None and turn.elapsedMs >= 0
             repeated, created = await repo.start(
                 owner, conversation.id, "key", "Hello", config.public(), "r", accept_new=False
             )
@@ -228,8 +230,15 @@ def test_persistence_replay_and_execution():
             item.text += "wer"
             await repo.update_items(turn.id, [item])
             await repo.finish(turn.id, TurnStatus.COMPLETED)
+            completed = await repo.turn(owner, turn.id)
+            assert completed.finishedAt is not None and completed.durationMs is not None
+            expected_ms = (completed.finishedAt - completed.createdAt) // timedelta(milliseconds=1)
+            assert completed.durationMs == expected_ms
+            assert completed.elapsedMs == completed.durationMs
             events, done = await repo.events(owner, turn.id, 0)
             assert done and events[-1].type == "turn_completed"
+            assert events[-1].finishedAt == completed.finishedAt
+            assert events[-1].durationMs == completed.durationMs
             delta = next(e for e in events if e.type == "item_delta")
             assert delta.delta.text == "wer" and delta.item is None
             assert [e.sequence for e in events] == list(range(1, len(events) + 1))
@@ -241,6 +250,9 @@ def test_persistence_replay_and_execution():
                 assert "secret" not in json.dumps(row.configuration)
             await repo.finish(turn.id, TurnStatus.CANCELLED)
             assert (await repo.turn(owner, turn.id)).status == "completed"
+            refreshed = (await repo.history(owner, conversation.id))[0]
+            assert refreshed.finishedAt == completed.finishedAt
+            assert refreshed.durationMs == completed.durationMs
 
             expired, _ = await repo.start(
                 owner, conversation.id, "expired", "Hi", config.public(), "r"
@@ -292,6 +304,21 @@ def test_persistence_replay_and_execution():
             )
             await shutdown_service.close()
             assert (await repo.turn(owner, shutdown.id)).status == "interrupted"
+            # All terminal paths persist once and replay the same measured duration.
+            for finished_id in (expired.id, running.id, failed.id, shutdown.id):
+                snapshot = await repo.turn(owner, finished_id)
+                terminal_events, _ = await repo.events(owner, finished_id, 0)
+                assert snapshot.finishedAt is not None and snapshot.durationMs is not None
+                assert snapshot.durationMs >= 0
+                assert terminal_events[-1].durationMs == snapshot.durationMs
+                assert terminal_events[-1].finishedAt == snapshot.finishedAt
+            # Legacy terminal rows have no evidence of completion time; never infer it.
+            async with sessions.begin() as session:
+                row = await session.get(TurnRecord, turn.id)
+                row.finished_at = None
+                row.duration_ms = None
+            legacy = await repo.turn(owner, turn.id)
+            assert legacy.durationMs is None and legacy.elapsedMs is None
             async with sessions() as session:
                 assert len(list(await session.scalars(select(EventRecord)))) > 0
         finally:

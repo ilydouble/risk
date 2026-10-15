@@ -1,48 +1,54 @@
-import { Bot, Check, ChevronRight, Clock3, LoaderCircle, Wrench } from "lucide-react";
-import type { Item, Turn } from "@/entities/assistant/model/types";
+import { Bot, ChevronRight, Clock3, LoaderCircle } from "lucide-react";
+import { useId, useState } from "react";
+import type { Turn } from "@/entities/assistant/model/types";
 import { useLang } from "@/shared/lib/useLang";
 import { MessageMarkdown } from "./MessageMarkdown";
-import { ReasoningItemView } from "./ReasoningItemView";
-
-function ToolItemView({ item }: { item: Extract<Item, { kind: "tool_call" }> }) {
-  const { pick } = useLang();
-  const running = item.status === "running";
-  const failed = item.status === "failed";
-  return <details className="group rounded-xl border border-background-200 bg-background-50/60">
-    <summary className="flex cursor-pointer list-none items-center gap-2.5 px-3.5 py-3 text-sm text-foreground-600 [&::-webkit-details-marker]:hidden">
-      <Wrench size={15} />
-      <span className="min-w-0 flex-1 truncate">{item.name}</span>
-      {running ? <LoaderCircle size={14} className="animate-spin text-primary-500" /> : <Check size={14} />}
-      <span className={`text-xs ${failed ? "text-red-500" : "text-foreground-400"}`}>
-        {running ? pick("进行中", "In progress") : failed ? pick("失败", "Failed") : item.status === "cancelled" ? pick("已停止", "Stopped") : pick("已完成", "Completed")}
-      </span>
-      <ChevronRight size={14} className="transition-transform group-open:rotate-90" />
-    </summary>
-    <div className="border-t border-background-200 px-4 py-3 text-xs leading-6">
-      <p className="mb-1 font-medium text-foreground-500">{pick("调用参数", "Arguments")}</p>
-      <pre className="max-h-60 overflow-auto whitespace-pre-wrap break-all rounded-lg bg-background-100 p-3">{item.argumentsText || "…"}</pre>
-      {item.result != null && <>
-        <p className="mb-1 mt-3 font-medium text-foreground-500">{pick("执行结果", "Result")}</p>
-        <pre className="max-h-80 overflow-auto whitespace-pre-wrap break-all rounded-lg bg-background-100 p-3">{JSON.stringify(item.result, null, 2)}</pre>
-      </>}
-    </div>
-  </details>;
-}
+import { TurnProcess } from "./TurnProcess";
+import { TurnDuration } from "./TurnDuration";
+import { segmentTurnItems } from "../model/timeline";
 
 export function TurnTimeline({ turn }: { turn: Turn }) {
   const { pick } = useLang();
+  const userItems = turn.items.filter(item => item.kind === "user_message");
+  const blocks = segmentTurnItems(turn.items).filter(
+    block => block.kind === "process" || block.item.kind !== "user_message",
+  );
+  const detailsId = useId();
+  const lastAnswer = [...turn.items].reverse().find(item => item.kind === "agent_message");
+  // Choose only when mounting this Turn: live completion must not collapse the conversation.
+  // Historical turns without an answer remain inspectable.
+  const [expanded, setExpanded] = useState(() => turn.status === "running" || !lastAnswer);
   return <section aria-label={pick("对话轮次", "Conversation turn")} className="space-y-5">
-    {turn.items.map(item => item.kind === "user_message" ?
-      <div key={item.id} className="ml-auto max-w-[88%] rounded-2xl rounded-tr-md bg-background-200/70 px-5 py-3.5">
-        <p className="mb-1 text-xs text-foreground-400">{pick("你", "You")}</p>
-        <p className="whitespace-pre-wrap break-words text-sm leading-7">{item.text}</p>
-      </div> : item.kind === "agent_message" ?
-        <div key={item.id} className="flex gap-3">
-          <div className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary-500/10 text-primary-500"><Bot size={17} /></div>
-          <div className="chat-markdown min-w-0 flex-1 break-words pt-1 text-sm leading-7">
-            <MessageMarkdown text={item.text} />
-          </div>
-        </div> : <div key={item.id} className="sm:ml-10">{item.kind === "reasoning" ? <ReasoningItemView item={item} /> : <ToolItemView item={item} />}</div>)}
+    {userItems.map(item => <div key={item.id}
+      className="ml-auto max-w-[88%] rounded-2xl rounded-tr-md bg-background-200/70 px-5 py-3.5">
+      <p className="mb-1 text-xs text-foreground-400">{pick("你", "You")}</p>
+      <p className="whitespace-pre-wrap break-words text-sm leading-7">{item.text}</p>
+    </div>)}
+    <div>
+      <button type="button" aria-expanded={expanded} aria-controls={detailsId}
+        onClick={() => setExpanded(value => !value)}
+        title={pick("展开或收起本轮对话", "Expand or collapse this turn")}
+        className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-foreground-400 hover:bg-background-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500">
+        <TurnDuration turn={turn} />
+        <ChevronRight size={14} aria-hidden="true" className={`transition-transform motion-reduce:transition-none ${expanded ? "rotate-90" : ""}`} />
+      </button>
+      <hr className="mt-2 border-background-200" />
+    </div>
+    <div id={detailsId} className="space-y-5">
+    {blocks.map((block, index) => <div key={block.id}
+      hidden={!expanded && !(block.kind === "message" && block.id === lastAnswer?.id)}>
+      {block.kind === "process" ?
+      <TurnProcess key={block.id} items={block.items}
+        status={index === blocks.length - 1 ? turn.status : "completed"} />
+      :
+      <div key={block.id} className="flex gap-3">
+        <div className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary-500/10 text-primary-500"><Bot size={17} /></div>
+        <div className="chat-markdown min-w-0 flex-1 break-words pt-1 text-sm leading-7">
+          <MessageMarkdown text={block.item.text} />
+        </div>
+      </div>}
+    </div>)}
+    </div>
     {turn.status === "running" && <div role="status" className="flex items-center gap-2 text-xs text-foreground-400 sm:ml-10">
       <LoaderCircle size={14} className="animate-spin" />{pick("Agent 正在执行", "Agent is working")}
     </div>}

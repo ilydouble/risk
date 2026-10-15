@@ -43,3 +43,18 @@ test("reasoning deltas and history snapshots preserve order around tools and ans
   assert.equal(value.items[2].text, "整理结果");
   assert.deepEqual(applyTurnEvent(value, event(6, { type: "item_updated", item: nextItems[2] })), value);
 });
+
+
+test("terminal timing is authoritative and stable across replay and stale events", () => {
+  const started = { ...turn, elapsedMs: 1200, durationMs: null, finishedAt: null };
+  const finished = event(5, { type: "turn_completed", status: "completed", durationMs: 36250, finishedAt: "2026-10-15T12:00:36.250Z" });
+  const next = applyTurnEvent(started, finished);
+  assert.equal(next.durationMs, 36250);
+  assert.equal(next.elapsedMs, 36250);
+  assert.equal(next.finishedAt, finished.finishedAt);
+  assert.equal(applyTurnEvent(next, finished), next);
+  assert.equal(applyTurnEvent(next, event(4, { type: "turn_completed", durationMs: 1 })), next);
+  const zero = applyTurnEvent(started, { ...finished, durationMs: 0 });
+  assert.equal(zero.durationMs, 0);
+  assert.equal(applyTurnEvent(started, event(3, { type: "turn_completed", status: "completed" })).durationMs, null);
+});

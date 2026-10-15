@@ -4015,7 +4015,11 @@ export interface components {
         /** ResponseTurnEvent */
         ResponseTurnEvent: {
             delta?: components["schemas"]["ItemDelta"] | null;
+            /** Durationms */
+            durationMs?: number | null;
             error?: components["schemas"]["TurnError"] | null;
+            /** Finishedat */
+            finishedAt?: string | null;
             /** Item */
             item?: (components["schemas"]["UserMessageItem"] | components["schemas"]["AgentReasoningItem"] | components["schemas"]["AgentMessageItem"] | components["schemas"]["ToolItem"]) | null;
             /** Sequence */
@@ -4224,7 +4228,13 @@ export interface components {
              * Format: date-time
              */
             createdAt: string;
+            /** Durationms */
+            durationMs?: number | null;
+            /** Elapsedms */
+            elapsedMs?: number | null;
             error?: components["schemas"]["TurnError"] | null;
+            /** Finishedat */
+            finishedAt?: string | null;
             /** Id */
             id: string;
             /** Items */

@@ -21,5 +21,8 @@ export function applyTurnEvent(turn: Turn, event: ResponseTurnEvent): Turn {
   return {
     ...turn, items, sequence: event.sequence,
     status: event.status ?? turn.status, error: event.error ?? turn.error,
+    finishedAt: event.finishedAt ?? turn.finishedAt,
+    durationMs: event.durationMs ?? turn.durationMs,
+    elapsedMs: event.durationMs ?? turn.elapsedMs,
   };
 }
