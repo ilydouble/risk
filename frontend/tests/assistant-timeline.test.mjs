@@ -18,6 +18,18 @@ test("Turn rendering groups consecutive process items without changing order", a
     assert.equal(formatTurnDuration(36099, false), "36s");
     assert.equal(formatTurnDuration(364000, false), "6分 4秒");
     assert.equal(formatTurnDuration(3600000, true), "1h 0m 0s");
+    const { ToolItemView } = await server.ssrLoadModule("/src/pages/chat/ui/ToolItemView.tsx");
+    const graphTool = { id: "g", kind: "tool_call", status: "completed", toolCallId: "call", name: "show_company_graph", argumentsText: "{}", result: null,
+      graph: { kind: "company_graph", companyId: "C-1001", depth: 2, lang: "zh", title: "Demo company", summary: { nodeCount: 15, edgeCount: 14 }, demo: true } };
+    const card = renderToStaticMarkup(createElement(ToolItemView, { item: graphTool }));
+    assert(!card.includes("Demo company")); // Generic cards do not select business renderers.
+    const slotted = renderToStaticMarkup(createElement(ToolItemView, { item: graphTool }, createElement("button", null, "INTERACTION")));
+    assert(slotted.indexOf("INTERACTION") > slotted.indexOf("</details>"));
+    const { TurnProcess } = await server.ssrLoadModule("/src/pages/chat/ui/TurnProcess.tsx");
+    const graphProcess = renderToStaticMarkup(createElement(TurnProcess, { items: [graphTool], status: "running" }));
+    assert(graphProcess.includes("Demo company") && graphProcess.includes("演示数据"));
+    assert(!graphProcess.includes("查看图谱") && !graphProcess.includes('role="dialog"'));
+    assert(!renderToStaticMarkup(createElement(TurnProcess, { items: [{ ...graphTool, status: "failed" }], status: "failed" })).includes("Demo company"));
     const { segmentTurnItems } = await server.ssrLoadModule("/src/pages/chat/model/timeline.ts");
     const items = [
       { id: "u", kind: "user_message", text: "USER_REQUEST", status: "completed" },

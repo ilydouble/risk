@@ -1,10 +1,13 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { edgeTypeMeta, riskColor } from "@/features/demo-scenarios/lib/graph";
-import type { GraphEdge, GraphNode } from "@/entities/demo/model/types";
+import type { ResponseGetGraph } from "@/shared/api/generated/schema";
 import { GraphView } from "@/shared/ui/graph";
 
-interface GraphCanvasProps {
+type GraphNode = ResponseGetGraph["graph"]["nodes"][number];
+type GraphEdge = ResponseGetGraph["graph"]["edges"][number];
+
+interface CompanyGraphProps {
   nodes: GraphNode[];
   edges: GraphEdge[];
   selectedId: string | null;
@@ -14,9 +17,9 @@ interface GraphCanvasProps {
   height?: number;
 }
 
-export default function GraphCanvas({
+export default function CompanyGraph({
   nodes, edges, selectedId, onSelect, focusRisk, onRiskPath, height = 620,
-}: GraphCanvasProps) {
+}: CompanyGraphProps) {
   const { t } = useTranslation();
   const data = useMemo(() => ({
     nodes: nodes.map((node) => ({

@@ -6,7 +6,8 @@ Conversation 是用户拥有的对话。Turn 是一次用户输入触发的执�
 Turn 状态：running、completed、failed、cancelled、interrupted。
 Item 使用 kind 判别：user_message、reasoning、agent_message、tool_call。
 用户、推理、回答分别声明为 UserMessageItem、AgentReasoningItem、AgentMessageItem，均包含 text。
-工具 ToolItem 包含 toolCallId、name、argumentsText、result。
+工具 ToolItem 包含 toolCallId、name、argumentsText、result，以及可空的 graph 展示引用。
+图谱引用的产生与加载见[Agent 图谱工具](agent-graph.md)。
 拆分类型保留既有 kind 与 JSON 字段，历史 Item 无需数据迁移。
 Item 状态：running、completed、failed、cancelled。
 工具结果为 JSON 值，错误是工具 Item 的 failed 状态；不会因此伪造 Turn 成功。

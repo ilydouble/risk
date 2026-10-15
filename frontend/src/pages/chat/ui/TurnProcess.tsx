@@ -1,6 +1,7 @@
 import { ChevronRight, LoaderCircle } from "lucide-react";
 import { useId, useState } from "react";
 import type { Turn } from "@/entities/assistant/model/types";
+import { GraphResultCard } from "@/features/company-graph/ui/GraphResultCard";
 import { useLang } from "@/shared/lib/useLang";
 
 import type { ProcessItem } from "../model/timeline";
@@ -42,7 +43,9 @@ export function TurnProcess({ items, status }: {
       <div className="space-y-3 border-l border-background-200 pl-3 sm:pl-4">
         {items.map(item => item.kind === "reasoning"
           ? <ReasoningItemView key={item.id} item={item} />
-          : <ToolItemView key={item.id} item={item} />)}
+          : <ToolItemView key={item.id} item={item}>
+            {item.status === "completed" && item.graph && <GraphResultCard reference={item.graph} />}
+          </ToolItemView>)}
       </div>
     </div>
   </div>;

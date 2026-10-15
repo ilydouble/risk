@@ -98,6 +98,6 @@ PostgreSQL 契约测试需设置 `RISK_TEST_DATABASE_URL`，在随机临时 sche
 沿用智能体模型设置，默认使用 `RISK_LLM_*`；端点须支持 OpenAI 兼容流式工具调用。
 `RISK_LLM_CONNECTION_TYPE` 选择 `qwen_self_hosted`（默认）或 `minimax`，两者均显式关闭思考。
 推理消息协议和 UI 仍保留。配置示例及重建命令见[Agent 模型连接配置](docs/architecture/agent-model-config.md)。
-本轮提供只读 `current_time` 工具；工作台问数仍是独立的受控查询功能，尚未接为 Agent 工具。
+Agent 提供 `current_time`、`search_companies` 和 `show_company_graph`；图谱结果在工具卡片中直接展示交互预览，数据明确标为演示。详见[图谱工具](docs/architecture/agent-graph.md)。工作台问数仍是独立功能。
 更新后重建后端和前端，后端启动自动迁移到 V0009；旧数据保留。
 详见[Agent 架构](docs/architecture/agent-conversation.md)和[消息协议](docs/architecture/agent-protocol.md)。

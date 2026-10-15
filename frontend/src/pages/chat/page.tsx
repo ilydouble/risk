@@ -11,7 +11,7 @@ import "./chat-markdown.css";
 
 export default function ChatPage() {
   const config = useAiModelConfig();
-  const { pick } = useLang();
+  const { pick, lang } = useLang();
   const [params, setParams] = useSearchParams();
   const id = params.get("conversation");
   const select = useCallback((value: string) => setParams({ conversation: value }), [setParams]);
@@ -31,7 +31,7 @@ export default function ChatPage() {
 
   async function send() {
     if (!input.trim() || blocked || !ready) return;
-    if (await chat.send(input, { connection: config.connection, maxTokens: config.maxTokens })) setInput("");
+    if (await chat.send(input, { connection: config.connection, maxTokens: config.maxTokens, lang })) setInput("");
   }
   const errorText = chat.error === "STREAM_DISCONNECTED" ? pick("连接已中断，执行记录已保留。点击重新连接。", "Connection lost. Your work is saved. Reconnect to continue.")
     : chat.error === "ASSISTANT_BUSY" ? pick("这个对话已有任务执行中，请重新加载。", "This conversation is already running. Reload it.")
@@ -68,7 +68,7 @@ export default function ChatPage() {
           {!chat.loading && chat.turns.length === 0 && <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-lg py-16 text-center">
             <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-500/10 text-primary-500"><Bot size={28} /></div>
             <h2 className="text-2xl font-semibold tracking-tight">{pick("从一个问题开始", "Start with a question")}</h2>
-            <p className="mt-3 text-sm leading-7 text-foreground-500">{pick("在这里查看回答、推理和工具执行过程。当前已接入时间工具，企业数据工具将逐步开放。", "Follow answers, reasoning, and tool activity here. The time tool is available; enterprise data tools will follow.")}</p>
+            <p className="mt-3 text-sm leading-7 text-foreground-500">{pick("在这里查看回答、推理和工具执行过程。可查询时间、检索演示企业并查看关系图谱。", "Follow answers, reasoning, and tool activity here. Check the time, search demo companies and view their relationship graphs.")}</p>
             <button onClick={() => setInput(pick("请用工具查一下上海现在的时间，再告诉我结果。", "Use the tool to check the current time in Shanghai."))} className="mt-7 rounded-xl border border-background-200 px-4 py-3 text-sm text-foreground-600 hover:border-primary-400">{pick("查询当前时间，体验工具调用", "Try a live time lookup")}</button>
           </motion.div>}
           {chat.loading && <p role="status" className="py-10 text-center text-sm text-foreground-400">{pick("正在恢复会话…", "Restoring conversation…")}</p>}
