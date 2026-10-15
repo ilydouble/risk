@@ -142,7 +142,7 @@ export default function DataPrepPage() {
         <h2 className="font-semibold">上传一张表进行体检</h2>
         <p className="text-sm text-foreground-500">支持 UTF-8 CSV，最多 2 MiB、50000 行。体检后原文件和统计按账号保存，报告与映射沿用同一记录；可从已保存案例继续。</p>
         <input aria-label="选择 CSV 文件" type="file" accept=".csv,text/csv" disabled={busy} onChange={(event) => { setFile(event.target.files?.[0]); setProfile(undefined); setSuggestion(undefined); setPreparation(undefined); setParams({}); }} />
-        <div><button className={button} disabled={!file || busy} onClick={() => void inspect()}>{busy && !generating ? "分析中…" : "开始体检"}</button></div>
+        <div><button className={button} disabled={!file || busy} onClick={() => void inspect()}>{busy && !generating ? "分析中…" : "保存并开始体检"}</button></div>
       </section>
       {error && <p role="alert" className="text-sm text-red-500">{error}</p>}
       {profile && file && !preparation && <section className={`${panel} space-y-3`}><p className="text-sm">这是升级前保留在页面中的案例。保存现有文件和报告后即可确认映射、转入工作台，无需重新选择文件。</p><button className={button} disabled={busy} onClick={() => void persistCurrent()}>保存当前案例及报告</button></section>}
