@@ -18,8 +18,18 @@ class ItemBase(BaseModel):
     status: ItemStatus = ItemStatus.RUNNING
 
 
-class TextItem(ItemBase):
-    kind: Literal["user_message", "reasoning", "agent_message"]
+class UserMessageItem(ItemBase):
+    kind: Literal["user_message"] = "user_message"
+    text: str = ""
+
+
+class AgentReasoningItem(ItemBase):
+    kind: Literal["reasoning"] = "reasoning"
+    text: str = ""
+
+
+class AgentMessageItem(ItemBase):
+    kind: Literal["agent_message"] = "agent_message"
     text: str = ""
 
 
@@ -31,4 +41,7 @@ class ToolItem(ItemBase):
     result: JsonValue = None
 
 
-Item = Annotated[TextItem | ToolItem, Field(discriminator="kind")]
+Item = Annotated[
+    UserMessageItem | AgentReasoningItem | AgentMessageItem | ToolItem,
+    Field(discriminator="kind"),
+]

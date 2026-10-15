@@ -67,6 +67,58 @@
         "title": "AgeDistributionItemDTO",
         "type": "object"
       },
+      "AgentMessageItem": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "const": "agent_message",
+            "default": "agent_message",
+            "title": "Kind",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus",
+            "default": "running"
+          },
+          "text": {
+            "default": "",
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "title": "AgentMessageItem",
+        "type": "object"
+      },
+      "AgentReasoningItem": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "const": "reasoning",
+            "default": "reasoning",
+            "title": "Kind",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus",
+            "default": "running"
+          },
+          "text": {
+            "default": "",
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "title": "AgentReasoningItem",
+        "type": "object"
+      },
       "AnalysisWarningDTO": {
         "properties": {
           "code": {
@@ -8364,16 +8416,22 @@
               {
                 "discriminator": {
                   "mapping": {
-                    "agent_message": "#/components/schemas/TextItem",
-                    "reasoning": "#/components/schemas/TextItem",
+                    "agent_message": "#/components/schemas/AgentMessageItem",
+                    "reasoning": "#/components/schemas/AgentReasoningItem",
                     "tool_call": "#/components/schemas/ToolItem",
-                    "user_message": "#/components/schemas/TextItem"
+                    "user_message": "#/components/schemas/UserMessageItem"
                   },
                   "propertyName": "kind"
                 },
                 "oneOf": [
                   {
-                    "$ref": "#/components/schemas/TextItem"
+                    "$ref": "#/components/schemas/UserMessageItem"
+                  },
+                  {
+                    "$ref": "#/components/schemas/AgentReasoningItem"
+                  },
+                  {
+                    "$ref": "#/components/schemas/AgentMessageItem"
                   },
                   {
                     "$ref": "#/components/schemas/ToolItem"
@@ -8810,38 +8868,6 @@
         "title": "StatusDistributionItemDTO",
         "type": "object"
       },
-      "TextItem": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "kind": {
-            "enum": [
-              "user_message",
-              "reasoning",
-              "agent_message"
-            ],
-            "title": "Kind",
-            "type": "string"
-          },
-          "status": {
-            "$ref": "#/components/schemas/ItemStatus",
-            "default": "running"
-          },
-          "text": {
-            "default": "",
-            "title": "Text",
-            "type": "string"
-          }
-        },
-        "required": [
-          "kind"
-        ],
-        "title": "TextItem",
-        "type": "object"
-      },
       "TimelineEvent": {
         "properties": {
           "date": {
@@ -8985,16 +9011,22 @@
             "items": {
               "discriminator": {
                 "mapping": {
-                  "agent_message": "#/components/schemas/TextItem",
-                  "reasoning": "#/components/schemas/TextItem",
+                  "agent_message": "#/components/schemas/AgentMessageItem",
+                  "reasoning": "#/components/schemas/AgentReasoningItem",
                   "tool_call": "#/components/schemas/ToolItem",
-                  "user_message": "#/components/schemas/TextItem"
+                  "user_message": "#/components/schemas/UserMessageItem"
                 },
                 "propertyName": "kind"
               },
               "oneOf": [
                 {
-                  "$ref": "#/components/schemas/TextItem"
+                  "$ref": "#/components/schemas/UserMessageItem"
+                },
+                {
+                  "$ref": "#/components/schemas/AgentReasoningItem"
+                },
+                {
+                  "$ref": "#/components/schemas/AgentMessageItem"
                 },
                 {
                   "$ref": "#/components/schemas/ToolItem"
@@ -9060,6 +9092,32 @@
         ],
         "title": "TurnStatus",
         "type": "string"
+      },
+      "UserMessageItem": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "const": "user_message",
+            "default": "user_message",
+            "title": "Kind",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus",
+            "default": "running"
+          },
+          "text": {
+            "default": "",
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "title": "UserMessageItem",
+        "type": "object"
       },
       "ValueFrequency": {
         "properties": {

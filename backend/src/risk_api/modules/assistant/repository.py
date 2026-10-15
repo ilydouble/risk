@@ -16,7 +16,7 @@ from risk_api.modules.assistant.model import (
     TurnRecord,
 )
 from risk_api.modules.assistant.protocol.events import EventType, ItemDelta, TurnEvent
-from risk_api.modules.assistant.protocol.items import Item, ItemStatus, TextItem
+from risk_api.modules.assistant.protocol.items import Item, ItemStatus, UserMessageItem
 from risk_api.modules.assistant.protocol.turns import Conversation, Turn, TurnError, TurnStatus
 
 item_parser: TypeAdapter[Item] = TypeAdapter(Item)
@@ -200,7 +200,7 @@ class AssistantRepository:
                     turnId=row.id,
                     sequence=0,
                     type=EventType.ITEM_UPDATED,
-                    item=TextItem(kind="user_message", text=message, status=ItemStatus.COMPLETED),
+                    item=UserMessageItem(text=message, status=ItemStatus.COMPLETED),
                 ),
             )
             await session.flush()

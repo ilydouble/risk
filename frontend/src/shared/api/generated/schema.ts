@@ -883,6 +883,40 @@ export interface components {
             /** Total */
             total: number;
         };
+        /** AgentMessageItem */
+        AgentMessageItem: {
+            /** Id */
+            id?: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "agent_message";
+            /** @default running */
+            status: components["schemas"]["ItemStatus"];
+            /**
+             * Text
+             * @default
+             */
+            text: string;
+        };
+        /** AgentReasoningItem */
+        AgentReasoningItem: {
+            /** Id */
+            id?: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "reasoning";
+            /** @default running */
+            status: components["schemas"]["ItemStatus"];
+            /**
+             * Text
+             * @default
+             */
+            text: string;
+        };
         /** AnalysisWarningDTO */
         AnalysisWarningDTO: {
             /** Code */
@@ -3983,7 +4017,7 @@ export interface components {
             delta?: components["schemas"]["ItemDelta"] | null;
             error?: components["schemas"]["TurnError"] | null;
             /** Item */
-            item?: (components["schemas"]["TextItem"] | components["schemas"]["ToolItem"]) | null;
+            item?: (components["schemas"]["UserMessageItem"] | components["schemas"]["AgentReasoningItem"] | components["schemas"]["AgentMessageItem"] | components["schemas"]["ToolItem"]) | null;
             /** Sequence */
             sequence: number;
             status?: components["schemas"]["TurnStatus"] | null;
@@ -4134,23 +4168,6 @@ export interface components {
             /** Status */
             status: string;
         };
-        /** TextItem */
-        TextItem: {
-            /** Id */
-            id?: string;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            kind: "agent_message" | "reasoning" | "user_message";
-            /** @default running */
-            status: components["schemas"]["ItemStatus"];
-            /**
-             * Text
-             * @default
-             */
-            text: string;
-        };
         /** TimelineEvent */
         TimelineEvent: {
             /** Date */
@@ -4211,7 +4228,7 @@ export interface components {
             /** Id */
             id: string;
             /** Items */
-            items?: (components["schemas"]["TextItem"] | components["schemas"]["ToolItem"])[];
+            items?: (components["schemas"]["UserMessageItem"] | components["schemas"]["AgentReasoningItem"] | components["schemas"]["AgentMessageItem"] | components["schemas"]["ToolItem"])[];
             /** Model */
             model: string;
             /** Requestid */
@@ -4232,6 +4249,23 @@ export interface components {
          * @enum {string}
          */
         TurnStatus: "running" | "completed" | "failed" | "cancelled" | "interrupted";
+        /** UserMessageItem */
+        UserMessageItem: {
+            /** Id */
+            id?: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "user_message";
+            /** @default running */
+            status: components["schemas"]["ItemStatus"];
+            /**
+             * Text
+             * @default
+             */
+            text: string;
+        };
         /** ValueFrequency */
         ValueFrequency: {
             /** Count */

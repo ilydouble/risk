@@ -19,7 +19,7 @@ from risk_api.modules.assistant.model import (
     ItemRecord,
     TurnRecord,
 )
-from risk_api.modules.assistant.protocol.items import TextItem
+from risk_api.modules.assistant.protocol.items import AgentMessageItem, AgentReasoningItem
 from risk_api.modules.assistant.protocol.turns import TurnStatus
 from risk_api.modules.assistant.repository import AssistantRepository
 from risk_api.modules.assistant.runtime import ModelSettings, StrandsRuntime
@@ -164,7 +164,7 @@ def test_persistence_replay_and_execution():
                 assert error.value.code == code
             with pytest.raises(AppError):
                 await repo.events(other, turn.id, 0)
-            item = TextItem(kind="agent_message", text="Ans")
+            item = AgentMessageItem(text="Ans")
             await repo.update_items(turn.id, [item])
             item.text += "wer"
             await repo.update_items(turn.id, [item])
@@ -193,12 +193,12 @@ def test_persistence_replay_and_execution():
             await repo.recover_expired()
             assert (await repo.turn(owner, expired.id)).status == "interrupted"
             assert not await repo.update_items(
-                expired.id, [TextItem(kind="agent_message", text="late")]
+                expired.id, [AgentMessageItem(text="late")]
             )
 
             class SlowRuntime(StrandsRuntime):
                 async def stream(self, *args):
-                    yield [TextItem(kind="reasoning", text="Working")]
+                    yield [AgentReasoningItem(text="Working")]
                     await asyncio.sleep(60)
 
             service = AssistantService(repo, SlowRuntime())
@@ -213,7 +213,7 @@ def test_persistence_replay_and_execution():
 
             class FailedRuntime(StrandsRuntime):
                 async def stream(self, *args):
-                    yield [TextItem(kind="reasoning", text="Partial")]
+                    yield [AgentReasoningItem(text="Partial")]
                     await asyncio.sleep(0.2)
                     raise RuntimeError("secret upstream body")
 

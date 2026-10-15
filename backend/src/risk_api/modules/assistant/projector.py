@@ -3,12 +3,18 @@
 import json
 from typing import Any, Literal
 
-from risk_api.modules.assistant.protocol.items import Item, ItemStatus, TextItem, ToolItem
+from risk_api.modules.assistant.protocol.items import (
+    AgentMessageItem,
+    AgentReasoningItem,
+    Item,
+    ItemStatus,
+    ToolItem,
+)
 
 
 class ItemProjector:
     def __init__(self) -> None:
-        self.text: TextItem | None = None
+        self.text: AgentReasoningItem | AgentMessageItem | None = None
         self.tools: dict[str, ToolItem] = {}
         self.answer = ""
 
@@ -24,7 +30,7 @@ class ItemProjector:
                 updates.append(self.text.model_copy(deep=True))
                 self.text = None
             if self.text is None:
-                self.text = TextItem(kind=kind)
+                self.text = AgentReasoningItem() if kind == "reasoning" else AgentMessageItem()
             self.text.text += token
             if kind == "agent_message":
                 self.answer += token
