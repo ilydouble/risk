@@ -1,6 +1,6 @@
 export default {
   overview: {
-    title: "Singapore company data overview",
+    title: "Singapore demo data overview",
     subtitle: "Real aggregates and stratified debugging samples from the ACRA/GLEIF ComRisk export",
     loading: "Loading the company data snapshot…",
     unavailable: "The Singapore company data snapshot has not been imported",
@@ -10,8 +10,8 @@ export default {
       modeling: "Model training workbench",
     },
     source: {
-      real: "Real data snapshot",
-      scope: "Only full-dataset aggregates are stored. Company rows below are fixed stratified debugging samples and are not representative.",
+      real: "Demo use · snapshot from real sources",
+      scope: "Full aggregates and fixed stratified samples are separate scopes. These shared records are excluded from personal upload statistics; observed labels are not live predictions.",
       generated: "Generated",
     },
     stats: {

@@ -1,6 +1,6 @@
 export default {
   overview: {
-    title: "新加坡企业数据概览",
+    title: "新加坡演示数据概览",
     subtitle: "基于 ACRA/GLEIF ComRisk 导出数据的真实统计与分层调试样本",
     loading: "正在读取企业数据快照…",
     unavailable: "新加坡企业数据快照尚未导入",
@@ -10,8 +10,8 @@ export default {
       modeling: "模型训练工作台",
     },
     source: {
-      real: "真实数据快照",
-      scope: "全量数据只保存聚合统计；下方企业明细为固定分层调试样本，不代表总体分布。",
+      real: "演示用途 · 真实来源统计快照",
+      scope: "仅保存全量聚合统计；明细为固定分层样本，不代表总体分布。不计入个人上传统计，已有标签不是实时模型预测。",
       generated: "数据生成日",
     },
     stats: {

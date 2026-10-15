@@ -90,14 +90,22 @@ def data_qa_tools(
             async with asyncio.timeout(5), sessions() as session:
                 repository = AssetRepository(session)
                 directory = await repository.enterprise_directory()
+                singapore = await repository.singapore_snapshot()
                 datasets = await repository.datasets(owner)
                 prepared, prepared_truncated = await repository.preparations(owner)
+            assets = [directory, *([singapore["asset"]] if singapore else []),
+                      *datasets[:200], *prepared,
+                      *[asset.descriptor() for asset in session_assets or []]]
             return {"status": "success", "content": [{"json": {
-                "assets": [directory, *datasets[:200], *prepared,
-                           *[asset.descriptor() for asset in session_assets or []]],
+                "assets": assets,
+                "sourceGroups": {
+                    scope: [asset["id"] for asset in assets if asset["scope"] == scope]
+                    for scope in ("shared_demo", "current_account", "current_browser_session")
+                },
                 "truncated": len(datasets) > 200 or prepared_truncated,
                 "coverage": "企业演示、账号训练数据集、已保存案例与报告、本轮临时快照。",
                 "limitations": ["未接入上传文档正文、任意数据库表或本地磁盘文件。",
+                                "共享演示、个人上传和临时快照分别统计，禁止相加为个人数据总量。",
                                 "未提供浏览器快照表示本轮无此上下文，不代表用户从未上传。",
                                 "此目录不清点模型或训练实验；请用工作台工具查询，不能推断其不存在。"],
             }}]}
@@ -127,6 +135,11 @@ def data_qa_tools(
                 if asset_id == "enterprise-directory":
                     result = {"asset": await repository.enterprise_directory(),
                               **await repository.enterprise_rows()}
+                elif asset_id.startswith("singapore-snapshot:"):
+                    snapshot = await repository.singapore_snapshot(asset_id.split(":", 1)[1])
+                    if snapshot is None:
+                        raise ValueError("Snapshot unavailable")
+                    result = snapshot
                 elif asset_id.startswith(("preparation:", "preparation-report:")):
                     identity = str(UUID(asset_id.split(":", 1)[1]))
                     result = await repository.preparation_content(

@@ -29,7 +29,7 @@ export default {
   },
   topbar: {
     openNav: "Open navigation",
-    searchPlaceholder: "Search Singapore company / UEN / status",
+    searchPlaceholder: "Search Singapore demo samples / UEN / status",
     presetCases: "Preset cases",
     init: "One-click init",
     presetTitle: "Preset demo cases",

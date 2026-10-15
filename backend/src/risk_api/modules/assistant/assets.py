@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from risk_api.modules.company.model import Company
 from risk_api.modules.data_prep.repository import PreparationRepository
 from risk_api.modules.modeling.workbench_model import Dataset, EnterpriseRecord
+from risk_api.modules.overview.repository import OverviewRepository
 
 
 @dataclass(frozen=True)
@@ -34,6 +35,27 @@ class AssetRepository:
     def __init__(self, session: AsyncSession):
         self.session = session
 
+    async def singapore_snapshot(self, identity: str | None = None) -> dict | None:
+        snapshot = await OverviewRepository(self.session).latest()
+        if snapshot is None or (identity is not None and snapshot.id != identity):
+            return None
+        payload = snapshot.payload
+        samples = payload.get("sampleCompanies", [])
+        asset = {
+            "id": f"singapore-snapshot:{snapshot.id}", "name": "新加坡演示数据 · 真实来源统计快照",
+            "kind": "enterprise_snapshot", "source": "singapore_demo",
+            "scope": "shared_demo", "persistence": "database",
+            "rowCount": payload["stats"]["companyCount"],
+            "countMeaning": "原始新加坡数据集全量企业聚合数，并非可检索样本数",
+            "searchableSampleCount": len(samples),
+            "sourceSha256": snapshot.source_sha256, "capabilities": ["asset_read"],
+            "warnings": ["共享演示用途，不计入当前账号的上传数量或个人企业统计。",
+                         "真实来源历史快照，固定样本不代表总体分布；标签不是实时模型预测。"],
+        }
+        return {"asset": asset, "dataset": payload["dataset"],
+                "statistics": payload["stats"], "sampling": payload.get("sampling", {}),
+                "rows": samples[:100], "truncated": len(samples) > 100}
+
     async def enterprise_directory(self) -> dict:
         regions = (await self.session.execute(
             select(Company.region, func.count().label("count"))
@@ -46,7 +68,8 @@ class AssetRepository:
             "rowCount": sum(row["count"] for row in regions),
             "countMeaning": "企业目录记录数", "regions": [dict(row) for row in regions],
             "capabilities": ["asset_read"],
-            "warnings": ["演示种子快照，评分和预测展示不代表真实在线模型结果。"],
+            "warnings": ["界面演示种子，评分和预测展示不代表真实在线模型结果。",
+                         "与新加坡来源统计快照不同；不计入个人上传统计，不能合并企业数。"],
         }
 
     async def preparations(self, owner: str) -> tuple[list[dict], bool]:

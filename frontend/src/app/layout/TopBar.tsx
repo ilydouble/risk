@@ -61,7 +61,7 @@ export default function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
 
   const submitSearch = () => {
     const q = query.trim();
-    navigate(q ? `/search?q=${encodeURIComponent(q)}` : "/search");
+    navigate(q ? `/search?source=sample&q=${encodeURIComponent(q)}` : "/search?source=sample");
     setSearchOpen(false);
   };
 
@@ -114,7 +114,7 @@ export default function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
                   <button
                     type="button"
                     onMouseDown={() => {
-                      navigate(`/search?q=${encodeURIComponent(c.companyId)}`);
+                      navigate(`/search?source=sample&q=${encodeURIComponent(c.companyId)}`);
                       setQuery("");
                       setSearchOpen(false);
                     }}

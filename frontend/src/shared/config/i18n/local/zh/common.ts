@@ -29,7 +29,7 @@ export default {
   },
   topbar: {
     openNav: "打开导航",
-    searchPlaceholder: "搜索新加坡企业名称 / UEN / 状态",
+    searchPlaceholder: "检索新加坡演示样本 / UEN / 状态",
     presetCases: "预置案例",
     init: "一键初始化",
     presetTitle: "预置演示案例",

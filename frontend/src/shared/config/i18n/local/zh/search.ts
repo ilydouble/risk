@@ -1,6 +1,6 @@
 export default {
   search: {
-    title: "新加坡企业检索",
+    title: "新加坡演示企业检索",
     subtitle: "检索已导入的真实 ACRA/GLEIF 分层调试样本，不展示虚构信用分或贷款违约概率",
     browseAll: "浏览全部样本",
     exportPage: "导出当前页",
@@ -8,7 +8,7 @@ export default {
     clearKeyword: "清空关键词",
     searchBtn: "检索",
     quickTrials: "快捷检索",
-    realDataset: "真实数据样本",
+    realDataset: "演示用途 · 真实来源样本",
     datasetLoading: "正在读取数据集…",
     sampleBoundary: "当前仅检索 {{count}} 家固定分层调试样本，不代表 211 万家企业的总体分布；可进入事实与关系画像，但没有模型评分。",
     filterCategory: "样本类别",
