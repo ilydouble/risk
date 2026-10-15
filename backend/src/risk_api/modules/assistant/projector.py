@@ -3,6 +3,9 @@
 import json
 from typing import Any, Literal
 
+from pydantic import ValidationError
+
+from risk_api.modules.assistant.protocol.graph import CompanyGraphReference
 from risk_api.modules.assistant.protocol.items import (
     AgentMessageItem,
     AgentReasoningItem,
@@ -70,5 +73,13 @@ class ItemProjector:
                 item.status = (
                     ItemStatus.FAILED if result.get("status") == "error" else ItemStatus.COMPLETED
                 )
+                if item.status == ItemStatus.COMPLETED and item.name == "show_company_graph":
+                    # Only this server-registered tool can produce a validated graph card.
+                    for content in result.get("content", []):
+                        if isinstance(content, dict) and "json" in content:
+                            try:
+                                item.graph = CompanyGraphReference.model_validate(content["json"])
+                            except ValidationError:
+                                pass
                 updates.append(item.model_copy(deep=True))
         return updates

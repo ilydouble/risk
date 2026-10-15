@@ -81,6 +81,7 @@ async def create_turn(
         max_tokens=body.maxTokens,
         connection_type=settings.llm_connection_type,
         thinking_enabled=settings.llm_thinking_enabled,
+        lang=body.lang,
     )
     turn = await service.start(
         user["user_id"],

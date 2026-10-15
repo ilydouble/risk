@@ -1560,6 +1560,33 @@ export interface components {
             /** Settlement */
             settlement?: string | null;
         };
+        /** CompanyGraphReference */
+        CompanyGraphReference: {
+            /** Companyid */
+            companyId: string;
+            /**
+             * Demo
+             * @default true
+             * @constant
+             */
+            demo: true;
+            /** Depth */
+            depth: number;
+            /**
+             * Kind
+             * @default company_graph
+             * @constant
+             */
+            kind: "company_graph";
+            /**
+             * Lang
+             * @enum {string}
+             */
+            lang: "zh" | "en";
+            summary: components["schemas"]["GraphSummary"];
+            /** Title */
+            title: string;
+        };
         /** CompanyProfile */
         CompanyProfile: {
             facts: components["schemas"]["CompanyFacts"];
@@ -2686,6 +2713,13 @@ export interface components {
              */
             type: "company" | "owner" | "subsidiary" | "supplier" | "guarantor" | "client" | "counterparty" | "person" | "bank" | "fund";
         };
+        /** GraphSummary */
+        GraphSummary: {
+            /** Edgecount */
+            edgeCount: number;
+            /** Nodecount */
+            nodeCount: number;
+        };
         /** ItemDelta */
         ItemDelta: {
             /**
@@ -3191,6 +3225,12 @@ export interface components {
              * Format: uuid
              */
             conversationId: string;
+            /**
+             * Lang
+             * @default zh
+             * @enum {string}
+             */
+            lang: "zh" | "en";
             /**
              * Maxtokens
              * @default 4096
@@ -4204,6 +4244,7 @@ export interface components {
              * @default
              */
             argumentsText: string;
+            graph?: components["schemas"]["CompanyGraphReference"] | null;
             /** Id */
             id?: string;
             /**

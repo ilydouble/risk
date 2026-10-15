@@ -11,6 +11,7 @@ from stellarmesh_objectstorage import AsyncClient, ClientConfig
 from risk_api.modules.assistant.repository import AssistantRepository
 from risk_api.modules.assistant.runtime import StrandsRuntime
 from risk_api.modules.assistant.service import AssistantService
+from risk_api.modules.assistant.tools.company_tools import CompanyGraphTools
 from risk_api.modules.auth.repository import UserRepository
 from risk_api.modules.auth.service import AuthService
 from risk_api.modules.chat.service import ChatService
@@ -34,8 +35,11 @@ from risk_api.shared.db import session_factory
 
 class InfrastructureProvider(Provider):
     @provide(scope=Scope.APP)
-    async def assistant_service(self) -> AsyncIterator[AssistantService]:
-        service = AssistantService(AssistantRepository(session_factory), StrandsRuntime())
+    async def assistant_service(self, driver: AsyncDriver) -> AsyncIterator[AssistantService]:
+        service = AssistantService(
+            AssistantRepository(session_factory),
+            StrandsRuntime(CompanyGraphTools(session_factory, driver)),
+        )
         try:
             yield service
         finally:

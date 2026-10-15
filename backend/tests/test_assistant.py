@@ -19,7 +19,8 @@ from risk_api.modules.assistant.model import (
     ItemRecord,
     TurnRecord,
 )
-from risk_api.modules.assistant.protocol.items import AgentMessageItem, AgentReasoningItem
+from risk_api.modules.assistant.protocol.graph import CompanyGraphReference, GraphSummary
+from risk_api.modules.assistant.protocol.items import AgentMessageItem, AgentReasoningItem, ToolItem
 from risk_api.modules.assistant.protocol.turns import TurnStatus
 from risk_api.modules.assistant.repository import AssistantRepository
 from risk_api.modules.assistant.runtime import ModelSettings, StrandsRuntime
@@ -229,6 +230,19 @@ def test_persistence_replay_and_execution():
             await repo.update_items(turn.id, [item])
             item.text += "wer"
             await repo.update_items(turn.id, [item])
+            graph_item = ToolItem(
+                toolCallId="graph-call",
+                name="show_company_graph",
+                status="completed",
+                graph=CompanyGraphReference(
+                    companyId="C-1001",
+                    depth=2,
+                    lang="zh",
+                    title="Demo",
+                    summary=GraphSummary(nodeCount=15, edgeCount=14),
+                ),
+            )
+            await repo.update_items(turn.id, [graph_item])
             await repo.finish(turn.id, TurnStatus.COMPLETED)
             completed = await repo.turn(owner, turn.id)
             assert completed.finishedAt is not None and completed.durationMs is not None
@@ -253,6 +267,12 @@ def test_persistence_replay_and_execution():
             refreshed = (await repo.history(owner, conversation.id))[0]
             assert refreshed.finishedAt == completed.finishedAt
             assert refreshed.durationMs == completed.durationMs
+            restored_graph = next(i for i in refreshed.items if i.kind == "tool_call")
+            assert restored_graph.graph == graph_item.graph
+            assert any(
+                e.item and e.item.kind == "tool_call" and e.item.graph == graph_item.graph
+                for e in events
+            )
 
             expired, _ = await repo.start(
                 owner, conversation.id, "expired", "Hi", config.public(), "r"
@@ -263,9 +283,7 @@ def test_persistence_replay_and_execution():
             assert not await repo.heartbeat(expired.id)
             await repo.recover_expired()
             assert (await repo.turn(owner, expired.id)).status == "interrupted"
-            assert not await repo.update_items(
-                expired.id, [AgentMessageItem(text="late")]
-            )
+            assert not await repo.update_items(expired.id, [AgentMessageItem(text="late")])
 
             class SlowRuntime(StrandsRuntime):
                 async def stream(self, *args):

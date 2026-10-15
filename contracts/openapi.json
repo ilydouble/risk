@@ -2288,6 +2288,59 @@
         "title": "CompanyFactsEn",
         "type": "object"
       },
+      "CompanyGraphReference": {
+        "additionalProperties": false,
+        "properties": {
+          "companyId": {
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Companyid",
+            "type": "string"
+          },
+          "demo": {
+            "const": true,
+            "default": true,
+            "title": "Demo",
+            "type": "boolean"
+          },
+          "depth": {
+            "maximum": 3.0,
+            "minimum": 1.0,
+            "title": "Depth",
+            "type": "integer"
+          },
+          "kind": {
+            "const": "company_graph",
+            "default": "company_graph",
+            "title": "Kind",
+            "type": "string"
+          },
+          "lang": {
+            "enum": [
+              "zh",
+              "en"
+            ],
+            "title": "Lang",
+            "type": "string"
+          },
+          "summary": {
+            "$ref": "#/components/schemas/GraphSummary"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "companyId",
+          "depth",
+          "lang",
+          "title",
+          "summary"
+        ],
+        "title": "CompanyGraphReference",
+        "type": "object"
+      },
       "CompanyProfile": {
         "properties": {
           "facts": {
@@ -4918,6 +4971,27 @@
         "title": "GraphNode",
         "type": "object"
       },
+      "GraphSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "edgeCount": {
+            "minimum": 0.0,
+            "title": "Edgecount",
+            "type": "integer"
+          },
+          "nodeCount": {
+            "minimum": 0.0,
+            "title": "Nodecount",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "nodeCount",
+          "edgeCount"
+        ],
+        "title": "GraphSummary",
+        "type": "object"
+      },
       "ItemDelta": {
         "properties": {
           "field": {
@@ -6281,6 +6355,15 @@
           "conversationId": {
             "format": "uuid",
             "title": "Conversationid",
+            "type": "string"
+          },
+          "lang": {
+            "default": "zh",
+            "enum": [
+              "zh",
+              "en"
+            ],
+            "title": "Lang",
             "type": "string"
           },
           "maxTokens": {
@@ -8972,6 +9055,16 @@
             "default": "",
             "title": "Argumentstext",
             "type": "string"
+          },
+          "graph": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CompanyGraphReference"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "id": {
             "title": "Id",

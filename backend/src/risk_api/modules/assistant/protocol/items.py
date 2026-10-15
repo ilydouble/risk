@@ -4,6 +4,8 @@ from uuid import uuid4
 
 from pydantic import BaseModel, ConfigDict, Field, JsonValue
 
+from risk_api.modules.assistant.protocol.graph import CompanyGraphReference
+
 
 class ItemStatus(StrEnum):
     RUNNING = "running"
@@ -39,6 +41,7 @@ class ToolItem(ItemBase):
     name: str
     argumentsText: str = ""
     result: JsonValue = None
+    graph: CompanyGraphReference | None = None
 
 
 Item = Annotated[
