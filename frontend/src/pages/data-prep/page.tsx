@@ -1,12 +1,15 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { requestInspectData, requestSuggestMapping } from "@/features/data-prep/api/dataPrepApi";
+import { requestInspectData, requestSuggestMapping, requestListPreparations, requestGetPreparation, requestSavePreparationReport } from "@/features/data-prep/api/dataPrepApi";
 import { useAiModelConfig } from "@/features/ai-model-config/model/context";
 import { useDataPrepSession } from "@/features/data-prep/model/context";
 import { handleApiError } from "@/shared/api/http";
 import { ReportGenerationStatus } from "./ReportGenerationStatus";
+
+import { PreparationMappingEditor } from "@/features/data-prep/ui/PreparationMappingEditor";
+import type { ResponsePreparation } from "@/shared/api/generated/schema";
 
 const panel = "rounded-xl border border-background-200 bg-background-100 p-5";
 const button = "rounded-md bg-primary-500 px-4 py-2 text-sm text-white disabled:opacity-50";
@@ -28,11 +31,47 @@ function fileBase64(file: File): Promise<string> {
 
 export default function DataPrepPage() {
   const modelConfig = useAiModelConfig();
-  const { file, profile, suggestion, setFile, setProfile, setSuggestion } = useDataPrepSession();
+  const { file, profile, suggestion, preparation, setPreparation, setFile, setProfile, setSuggestion } = useDataPrepSession();
+  const [params, setParams] = useSearchParams();
+  const preparationId = params.get("preparation");
+  const [saved, setSaved] = useState<ResponsePreparation[]>([]);
+  const [savedTruncated, setSavedTruncated] = useState(false);
   const [busy, setBusy] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState("");
   const legacyProfile = profile?.fields.some((field) => !Array.isArray(field.topValues));
+
+  useEffect(() => {
+    let active = true;
+    requestListPreparations({ workbenchOnly: false }).then(result => {
+      if (active) { setSaved(result.items); setSavedTruncated(result.truncated); }
+    }).catch(cause => { if (active) setError(handleApiError(cause)); });
+    return () => { active = false; };
+  }, []);
+  useEffect(() => {
+    if (!preparationId) return;
+    let active = true;
+    requestGetPreparation({ preparationId }).then(item => {
+      if (active) { setPreparation(item); setProfile(item.profile); setSuggestion(item.report ?? undefined); }
+    }).catch(cause => { if (active) setError(handleApiError(cause)); });
+    return () => { active = false; };
+  }, [preparationId, setPreparation, setProfile, setSuggestion]);
+
+  async function persistCurrent() {
+    if (!file || busy) return;
+    setBusy(true); setError("");
+    try {
+      const result = await requestInspectData({ filename: file.name, contentBase64: await fileBase64(file) });
+      if (!result.preparationId) throw new Error("Missing preparation ID");
+      const item = suggestion
+        ? await requestSavePreparationReport({ preparationId: result.preparationId, report: suggestion })
+        : await requestGetPreparation({ preparationId: result.preparationId });
+      setProfile(item.profile); setPreparation(item);
+      setSaved(current => [item, ...current.filter(value => value.id !== item.id)]);
+      setParams({ preparation: item.id });
+    } catch (cause) { setError(handleApiError(cause)); }
+    finally { setBusy(false); }
+  }
 
   async function inspect() {
     if (!file || busy) return;
@@ -41,13 +80,20 @@ export default function DataPrepPage() {
     setProfile(undefined);
     setSuggestion(undefined);
     try {
-      setProfile(await requestInspectData({ filename: file.name, contentBase64: await fileBase64(file) }));
+      const result = await requestInspectData({ filename: file.name, contentBase64: await fileBase64(file) });
+      setProfile(result);
+      if (result.preparationId) {
+        const item = await requestGetPreparation({ preparationId: result.preparationId });
+        setPreparation(item); setSuggestion(item.report ?? undefined);
+        setSaved(current => [item, ...current.filter(value => value.id !== item.id)]);
+        setParams({ preparation: item.id });
+      }
     } catch (cause) {
       setError(handleApiError(cause, {
         DATA_PREP_SIZE_INVALID: "请选择不超过 2 MiB 的 CSV 文件。",
         DATA_PREP_ENCODING_INVALID: "请将文件保存为 UTF-8 编码的 CSV。",
         DATA_PREP_FORMAT_UNSUPPORTED: "当前试用版仅支持 CSV 文件。",
-        DATA_PREP_HEADER_INVALID: "表头为空、列名为空或超过 100 列。",
+        DATA_PREP_HEADER_INVALID: "表头为空、列名为空或过长，或超过 100 列。",
         DATA_PREP_HEADER_DUPLICATE: "表头存在重复列名，请先修改。",
         DATA_PREP_ROW_INVALID: "部分数据行的列数超过表头。",
         DATA_PREP_ROWS_EXCEEDED: "文件超过 50000 行，请先拆分。",
@@ -64,6 +110,7 @@ export default function DataPrepPage() {
     setError("");
     try {
       setSuggestion(await requestSuggestMapping({ profile, connection: modelConfig.connection, maxTokens: modelConfig.maxTokens }));
+      if (profile.preparationId) setPreparation(await requestGetPreparation({ preparationId: profile.preparationId }));
     } catch (cause) {
       setError(handleApiError(cause, {
         CHAT_NOT_CONFIGURED: "智能分析需要先配置后端大模型。数据体检结果仍可查看。",
@@ -91,12 +138,14 @@ export default function DataPrepPage() {
         <Link className="text-primary-400 underline" to="/settings/ai-model">配置智能体模型</Link>
       </div>
       <section className={`${panel} space-y-3`}>
+        {saved.length > 0 && <label className="block text-sm">继续已保存的案例<select aria-label="已保存的数据准备" className="ml-3 rounded-md border border-background-300 bg-background-50 p-2" disabled={busy} value={preparation?.id ?? ""} onChange={event => { if (event.target.value) { setFile(undefined); setParams({ preparation: event.target.value }); } }}><option value="">选择案例</option>{saved.map(item => <option key={item.id} value={item.id}>{item.filename} · {item.profile.rowCount} 行{item.inWorkbench ? " · 已转入工作台" : ""}</option>)}</select>{savedTruncated && <span className="ml-2 text-xs text-foreground-500">显示最近100份</span>}</label>}
         <h2 className="font-semibold">上传一张表进行体检</h2>
-        <p className="text-sm text-foreground-500">试用版支持 UTF-8 CSV，最多 2 MiB、50000 行。分析结果只在当前页面展示，刷新后清空。</p>
-        <input aria-label="选择 CSV 文件" type="file" accept=".csv,text/csv" disabled={busy} onChange={(event) => { setFile(event.target.files?.[0]); setProfile(undefined); setSuggestion(undefined); }} />
+        <p className="text-sm text-foreground-500">支持 UTF-8 CSV，最多 2 MiB、50000 行。体检后原文件和统计按账号保存，报告与映射沿用同一记录；可从已保存案例继续。</p>
+        <input aria-label="选择 CSV 文件" type="file" accept=".csv,text/csv" disabled={busy} onChange={(event) => { setFile(event.target.files?.[0]); setProfile(undefined); setSuggestion(undefined); setPreparation(undefined); setParams({}); }} />
         <div><button className={button} disabled={!file || busy} onClick={() => void inspect()}>{busy && !generating ? "分析中…" : "开始体检"}</button></div>
       </section>
       {error && <p role="alert" className="text-sm text-red-500">{error}</p>}
+      {profile && file && !preparation && <section className={`${panel} space-y-3`}><p className="text-sm">这是升级前保留在页面中的案例。保存现有文件和报告后即可确认映射、转入工作台，无需重新选择文件。</p><button className={button} disabled={busy} onClick={() => void persistCurrent()}>保存当前案例及报告</button></section>}
       {profile && legacyProfile && <section className={`${panel} space-y-3`} role="status">
         <h2 className="font-semibold">这份结果需要重新体检</h2>
         <p className="text-sm text-foreground-500">当前标签页保留的是旧版字段统计，因此常见值、数值分布等新分析无法显示。请用已选文件重新运行体检。</p>
@@ -141,8 +190,9 @@ export default function DataPrepPage() {
           {(profile.labelCandidates?.length ?? 0) === 0 ? <p className="text-sm text-foreground-500">未发现典型标签字段名，需人工指定预测目标。</p> : <div className="grid gap-2 sm:grid-cols-2">{profile.labelCandidates?.map((item) => <div key={item.field} className="rounded-md bg-background-50 p-3 text-sm"><strong>{item.field}</strong><p className="mt-1">{item.values.map((value) => `${value.value}：${value.count}`).join(" · ") || "无有效值"}</p><p className="mt-1 text-foreground-500">不同值 {item.distinctCount} · 缺失 {item.missingCount}{item.minorityShare != null ? ` · 少数类 ${Math.round(item.minorityShare * 100)}%` : ""}</p></div>)}</div>}
         </section>
         <details className={panel}><summary className="cursor-pointer font-semibold">查看前 5 行数据预览</summary><div className="mt-3 overflow-x-auto"><table className="min-w-full text-left text-xs"><thead><tr>{profile.fields.map((field) => <th key={field.name} className="min-w-28 border-b border-background-200 px-2 py-2">{field.name}</th>)}</tr></thead><tbody>{profile.sampleRows.map((row, index) => <tr key={index}>{profile.fields.map((field) => <td key={field.name} className="max-w-64 break-words border-b border-background-200 px-2 py-2">{row[field.name] || "—"}</td>)}</tr>)}</tbody></table></div><p className="mt-2 text-xs text-foreground-500">预览中的长值仅展示前 80 个字符；原始文件不会被修改。</p></details>
+        {preparation && <PreparationMappingEditor preparation={preparation} onSaved={setPreparation} disabled={busy} />}
         {suggestion && <section className={`${panel} space-y-4`}><h2 className="font-semibold">智能体数据分析报告 · 待确认</h2><p className="text-xs text-foreground-500">报告依据本次 CSV 的统计画像，由所选模型通过只读统计工具生成；未验证跨表关系，也未训练模型。</p><div className="space-y-3 text-sm leading-7"><ReactMarkdown remarkPlugins={[remarkGfm]} skipHtml components={{ h2: ({ children }) => <h2 className="mt-4 text-base font-semibold">{children}</h2>, h3: ({ children }) => <h3 className="mt-3 font-semibold">{children}</h3>, ul: ({ children }) => <ul className="list-disc pl-5">{children}</ul>, ol: ({ children }) => <ol className="list-decimal pl-5">{children}</ol>, table: ({ children }) => <div className="overflow-x-auto"><table className="min-w-full border-collapse text-left">{children}</table></div>, th: ({ children }) => <th className="border border-background-300 p-2">{children}</th>, td: ({ children }) => <td className="border border-background-300 p-2">{children}</td>, a: ({ children, href }) => <a href={href} target="_blank" rel="noopener noreferrer" className="text-primary-400 underline">{children}</a>, img: ({ alt }) => <span>[图片：{alt || "无描述"}]</span> }}>{suggestion.reportMarkdown || suggestion.summary}</ReactMarkdown></div><details className="text-xs text-foreground-500"><summary className="cursor-pointer">查看工具调用记录（{suggestion.toolTrace?.length ?? 0} 次）</summary><ol className="mt-2 list-decimal pl-5">{suggestion.toolTrace?.map((tool, index) => <li key={index}>{tool}</li>)}</ol></details><details className="text-sm"><summary className="cursor-pointer font-medium">查看字段用途建议和核查清单</summary><div className="mt-3 space-y-2">{suggestion.suggestions.map((item) => <div key={item.field} className="rounded-md bg-background-50 p-3"><strong>{item.field}</strong> · {roleLabels[item.role] ?? item.role}<p className="text-foreground-500">{item.reason}</p></div>)}</div>{suggestion.questions.length > 0 && <ul className="mt-3 list-disc pl-5">{suggestion.questions.map((question, index) => <li key={index}>{question}</li>)}</ul>}{(suggestion.nextChecks?.length ?? 0) > 0 && <ol className="mt-3 list-decimal pl-5">{suggestion.nextChecks?.map((step, index) => <li key={index}>{step}</li>)}</ol>}</details></section>}
-        <p className="text-sm text-foreground-500">当前仅做分析；确认数据含义和构建训练集的功能仍在开发。已有标准数据包可前往 <Link className="text-primary-400 underline" to="/modeling">模型训练工作台</Link>。</p>
+        <p className="text-sm text-foreground-500">先分析并确认映射方案，再转入工作台继续适配。同一原始文件无需重复上传；已有标准数据包可直接前往 <Link className="text-primary-400 underline" to="/modeling">模型训练工作台</Link>。</p>
       </>}
     </div>
   );

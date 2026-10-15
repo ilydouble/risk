@@ -3,6 +3,7 @@ from typing import Any, Literal
 from risk_api.shared.api.envelope import ErrorEnvelope
 
 DATA_PREP_ERRORS: dict[int | str, dict[str, Any]] = {
+    404: {"model": ErrorEnvelope[Literal[404], Literal["DATA_PREP_NOT_FOUND"]]},
     422: {
         "model": ErrorEnvelope[
             Literal[422],
@@ -16,6 +17,7 @@ DATA_PREP_ERRORS: dict[int | str, dict[str, Any]] = {
                 "DATA_PREP_EMPTY",
                 "DATA_PREP_FORMAT_UNSUPPORTED",
                 "DATA_PREP_CONTENT_INVALID",
+                "DATA_PREP_MAPPING_INVALID",
             ],
         ]
     },

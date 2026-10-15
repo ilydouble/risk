@@ -76,7 +76,7 @@ async def create_turn(
     user = await authorize_request(request, auth)
     connection = body.connection
     session_assets = []
-    if body.dataPrep is not None:
+    if body.dataPrep is not None and not body.dataPrep.profile.preparationId:
         context = body.dataPrep
         case_id = f"case:{context.profile.sha256}"
         session_assets.append(SessionAsset(

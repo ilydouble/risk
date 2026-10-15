@@ -23,6 +23,8 @@ from risk_api.shared.db import Base
 
 class Dataset(Base):
     __tablename__ = "workbench_datasets"
+    source_preparation_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    mapping_snapshot: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
     protocol_generation: Mapped[int] = mapped_column(
         Integer, default=2, server_default="2", comment="Workbench execution contract generation"
     )

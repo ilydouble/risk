@@ -19,6 +19,8 @@ def dataset_dto(item: Dataset) -> dto.DatasetDTO:
     result = execution.get("result", {})
     status = execution.get("status", "queued" if item.confirmed else "pending_upload")
     return dto.DatasetDTO(
+        sourcePreparationId=item.source_preparation_id,
+        mappingSnapshot=item.mapping_snapshot or {},
         datasetIdentity=result.get("datasetContract", {}).get("dataset", {}).get("id"),
         datasetVersion=result.get("datasetContract", {}).get("dataset", {}).get("version"),
         adapterId=result.get("datasetContract", {}).get("adapter", {}).get("id"),
@@ -105,7 +107,8 @@ async def create_upload(
 ) -> ApiEnvelope[dto.ResponseCreateDatasetUpload]:
     user = await owner(request, auth)
     ticket = await service.create_upload(
-        user, body.name, body.filename, body.contentType, body.size
+        user, body.name, body.filename, body.contentType, body.size,
+        str(body.sourcePreparationId) if body.sourcePreparationId else None,
     )
     return success_response(dto.ResponseCreateDatasetUpload(**ticket))
 

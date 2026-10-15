@@ -164,6 +164,7 @@ export function useModelingWorkbench() {
       try {
         setUploadPercent(0);
         const ticket = await ModelingApi.requestCreateDatasetUpload({
+          sourcePreparationId: params.get("preparation") || undefined,
           name,
           filename: file.name,
           contentType: file.type || "application/zip",

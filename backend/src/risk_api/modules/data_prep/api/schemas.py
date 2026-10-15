@@ -1,4 +1,6 @@
+from datetime import datetime
 from typing import Literal
+from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -63,6 +65,7 @@ class FieldProfile(BaseModel):
 
 
 class ResponseInspectData(BaseModel):
+    preparationId: str | None = None
     sha256: str
     rowCount: int
     rowsWithMissing: int = 0
@@ -105,6 +108,8 @@ class MappingSuggestion(BaseModel):
     field: str
     role: str
     reason: str
+    target: str = Field(default="", max_length=128)
+    method: str = Field(default="", max_length=500)
 
 
 class ResponseSuggestMapping(BaseModel):
@@ -115,3 +120,51 @@ class ResponseSuggestMapping(BaseModel):
     nextChecks: list[str] = Field(default_factory=list, max_length=8)
     reportMarkdown: str = Field(default="", max_length=20000)
     toolTrace: list[str] = Field(default_factory=list, max_length=8)
+
+
+class FieldMapping(BaseModel):
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+    field: str = Field(min_length=1, max_length=4096)
+    role: Literal["identity", "feature", "label", "relation", "time", "ignore", "unknown"]
+    target: str = Field(default="", max_length=128)
+    method: str = Field(default="", max_length=500)
+    reason: str = Field(default="", max_length=2000)
+
+
+class RequestListPreparations(BaseModel):
+    workbenchOnly: bool = False
+
+
+class RequestGetPreparation(BaseModel):
+    preparationId: UUID
+
+
+class RequestSavePreparationReport(RequestGetPreparation):
+    report: ResponseSuggestMapping
+
+
+class RequestSavePreparationMapping(RequestGetPreparation):
+    mapping: list[FieldMapping] = Field(min_length=1, max_length=100)
+    confirmed: bool = False
+    handoff: bool = False
+
+
+class ResponsePreparation(BaseModel):
+    id: str
+    filename: str
+    profile: ResponseInspectData
+    report: ResponseSuggestMapping | None = None
+    mapping: list[FieldMapping]
+    confirmed: bool
+    inWorkbench: bool
+    updatedAt: datetime
+
+
+class ResponseListPreparations(BaseModel):
+    items: list[ResponsePreparation]
+    truncated: bool
+
+
+class ResponsePreparationBundle(BaseModel):
+    filename: str
+    contentBase64: str

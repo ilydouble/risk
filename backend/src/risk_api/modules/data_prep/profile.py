@@ -110,7 +110,8 @@ def inspect_csv(content: bytes) -> dict:
         dialect = csv.excel
     reader = csv.DictReader(io.StringIO(decoded, newline=""), dialect=dialect)
     headers = reader.fieldnames or []
-    if not headers or len(headers) > MAX_COLUMNS or any(not name.strip() for name in headers):
+    if (not headers or len(headers) > MAX_COLUMNS
+            or any(not name.strip() or len(name) > 4096 for name in headers)):
         raise AppError(422, "DATA_PREP_HEADER_INVALID", "CSV 表头为空、列名为空或超过 100 列")
     if len(headers) != len(set(headers)):
         raise AppError(422, "DATA_PREP_HEADER_DUPLICATE", "CSV 存在重复列名")

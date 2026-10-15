@@ -1,10 +1,12 @@
 import { createContext, useContext, type Dispatch, type SetStateAction } from "react";
-import type { ResponseInspectData, ResponseSuggestMapping } from "@/shared/api/generated/schema";
+import type { ResponseInspectData, ResponseSuggestMapping, ResponsePreparation } from "@/shared/api/generated/schema";
 
 export type DataPrepSession = {
   file?: File;
   profile?: ResponseInspectData;
   suggestion?: ResponseSuggestMapping;
+  preparation?: ResponsePreparation;
+  setPreparation: Dispatch<SetStateAction<ResponsePreparation | undefined>>;
   setFile: Dispatch<SetStateAction<File | undefined>>;
   setProfile: Dispatch<SetStateAction<ResponseInspectData | undefined>>;
   setSuggestion: Dispatch<SetStateAction<ResponseSuggestMapping | undefined>>;

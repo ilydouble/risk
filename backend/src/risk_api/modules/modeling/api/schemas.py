@@ -65,6 +65,8 @@ class DatasetAnalysisDTO(BaseModel):
 
 
 class DatasetDTO(BaseModel):
+    sourcePreparationId: str | None = None
+    mappingSnapshot: dict[str, Any] = Field(default_factory=dict)
     datasetIdentity: str | None = None
     datasetVersion: str | None = None
     adapterId: str | None = None
@@ -190,6 +192,7 @@ class EventDTO(BaseModel):
 
 
 class RequestCreateDatasetUpload(BaseModel):
+    sourcePreparationId: UUID | None = None
     name: str = Field(min_length=1, max_length=128, pattern=r"\S")
     filename: str = Field(min_length=1, max_length=255)
     contentType: str = Field(min_length=1, max_length=128)

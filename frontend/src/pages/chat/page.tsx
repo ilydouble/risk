@@ -35,7 +35,7 @@ export default function ChatPage() {
     if (!input.trim() || blocked || !ready) return;
     if (await chat.send(input, {
       connection: config.connection, maxTokens: config.maxTokens,
-      dataPrep: dataPrep.profile && dataPrep.file ? {
+      dataPrep: !dataPrep.preparation && dataPrep.profile && dataPrep.file ? {
         filename: dataPrep.file.name, profile: dataPrep.profile, report: dataPrep.suggestion,
       } : undefined,
     })) setInput("");
@@ -95,7 +95,7 @@ export default function ChatPage() {
                 : <button type="submit" disabled={blocked || !input.trim() || !ready} aria-label={pick("发送", "Send")} className="rounded-xl bg-primary-500 p-2.5 text-white disabled:opacity-30"><ArrowUp size={17} /></button>}
             </div>
           </form>
-          <p className="mt-2 text-center text-[11px] text-foreground-400">{dataPrep.profile ? pick("本轮将携带当前案例统计和已有报告供模型查询；刷新后失效。", "This turn includes the current case profile and report for model queries; they expire on refresh.") : pick("目录覆盖共享演示数据与当前账号训练数据；本轮未携带页面案例。", "The catalog covers shared demo data and your training datasets; no browser case is attached.")}</p>
+          <p className="mt-2 text-center text-[11px] text-foreground-400">{dataPrep.preparation ? pick("已保存案例与报告可通过资产目录查询；刷新后仍可用。", "Saved cases and reports are available through the asset catalog after refresh.") : dataPrep.profile ? pick("本轮将携带当前案例统计和已有报告供模型查询；刷新后失效。", "This turn includes the current case profile and report for model queries; they expire on refresh.") : pick("目录覆盖共享演示数据与当前账号训练数据；本轮未携带页面案例。", "The catalog covers shared demo data and your training datasets; no browser case is attached.")}</p>
         </div>
       </div>
     </main>

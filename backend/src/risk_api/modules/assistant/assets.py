@@ -4,6 +4,7 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from risk_api.modules.company.model import Company
+from risk_api.modules.data_prep.repository import PreparationRepository
 from risk_api.modules.modeling.workbench_model import Dataset, EnterpriseRecord
 
 
@@ -47,6 +48,37 @@ class AssetRepository:
             "capabilities": ["asset_read"],
             "warnings": ["演示种子快照，评分和预测展示不代表真实在线模型结果。"],
         }
+
+    async def preparations(self, owner: str) -> tuple[list[dict], bool]:
+        items = await PreparationRepository(self.session).list(owner)
+        assets = []
+        for item in items[:100]:
+            case = {
+                "id": f"preparation:{item.id}", "name": item.filename,
+                "kind": "uploaded_case", "source": "data_preparation",
+                "scope": "current_account", "persistence": "database",
+                "rowCount": item.profile["rowCount"], "countMeaning": "原始CSV体检行数",
+                "capabilities": ["asset_read"], "mappingConfirmed": item.confirmed,
+                "inWorkbench": item.in_workbench,
+                "warnings": ["字段映射是适配方案；移交不代表已经转换或训练就绪。"],
+            }
+            assets.append(case)
+            if item.report:
+                assets.append({**case, "id": f"preparation-report:{item.id}",
+                               "name": f"{item.filename} · 分析报告", "kind": "analysis_report",
+                               "rowCount": None, "countMeaning": "不适用（报告）",
+                               "warnings": ["模型生成的分析，结论仍需核实。"]})
+        return assets, len(items) > 100
+
+    async def preparation_content(self, owner: str, identity: str, report: bool) -> dict:
+        item = await PreparationRepository(self.session).get(owner, identity)
+        if report and not item.report:
+            raise ValueError("Report unavailable")
+        return {"preparationId": item.id, "filename": item.filename,
+                "content": item.report if report else {
+                    "profile": item.profile, "mapping": item.mapping,
+                    "confirmed": item.confirmed, "inWorkbench": item.in_workbench,
+                }}
 
     async def datasets(self, owner: str, dataset_id: str | None = None) -> list[dict]:
         record_count = (

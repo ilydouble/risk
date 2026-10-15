@@ -31,6 +31,7 @@ def test_catalog_keeps_demo_and_browser_assets_when_workbench_is_empty(monkeypat
         "id": "enterprise-directory", "rowCount": 8, "scope": "shared_demo",
     })
     repository.datasets = AsyncMock(return_value=[])
+    repository.preparations = AsyncMock(return_value=([], False))
     monkeypatch.setattr(data_qa, "AssetRepository", lambda _: repository)
     tools = {tool.tool_name: tool for tool in data_qa.data_qa_tools(
         sessions, "owner-a", Mock(), browser_assets(),
