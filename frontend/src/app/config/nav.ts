@@ -31,7 +31,6 @@ export const NAV_GROUPS: NavGroup[] = [
         path: "/search",
         icon: "ri-search-line",
       },
-      { key: "data-qa", labelKey: "nav.dataQa", path: "/data-qa", icon: "ri-database-2-line" },
       { key: "chat", labelKey: "nav.chat", path: "/chat", icon: "ri-chat-3-line" },
     ],
   },

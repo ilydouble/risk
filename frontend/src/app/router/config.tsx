@@ -1,11 +1,10 @@
 import { lazy, Suspense, type ReactNode } from "react";
-import type { RouteObject } from "react-router-dom";
+import { Navigate, type RouteObject } from "react-router-dom";
 import AppLayout from "@/app/layout/AppLayout";
 import AuthGate from "@/app/router/AuthGate";
 import NotFound from "@/pages/NotFound";
 
 const Overview = lazy(() => import("@/pages/overview/page"));
-const DataQAPage = lazy(() => import("@/pages/data-qa/page"));
 const DataPrepPage = lazy(() => import("@/pages/data-prep/page"));
 const AiSettingsPage = lazy(() => import("@/pages/ai-settings/page"));
 const ChatPage = lazy(() => import("@/pages/chat/page"));
@@ -37,7 +36,7 @@ const routes: RouteObject[] = [
       element: <AppLayout />,
       children: [
         { path: "/", element: load(<Overview />) },
-        { path: "/data-qa", element: load(<DataQAPage />) },
+        { path: "/data-qa", element: <Navigate to="/chat" replace /> },
         { path: "/data-prep", element: load(<DataPrepPage />) },
         { path: "/settings/ai-model", element: load(<AiSettingsPage />) },
         { path: "/chat", element: load(<ChatPage />) },

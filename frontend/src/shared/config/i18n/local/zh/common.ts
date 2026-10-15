@@ -9,7 +9,6 @@ export default {
     settings: "设置",
     aiSettings: "智能体模型设置",
     dataPrep: "数据准备",
-    dataQa: "工作台问数",
     chat: "智能助手",
     workspace: "工作台",
     modeling: "模型训练",
