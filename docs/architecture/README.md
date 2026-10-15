@@ -54,3 +54,4 @@ flowchart LR
 
 - [Agent 会话与执行](agent-conversation.md)：Strands、所有权、持久化与恢复。
 - [Agent Turn / Item 协议](agent-protocol.md)：类型、SSE、重放与错误边界。
+- [Agent 模型连接配置](agent-model-config.md)：Qwen 自部署、MiniMax 本地调试与显式关闭思考。

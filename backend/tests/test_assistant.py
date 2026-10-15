@@ -25,18 +25,31 @@ from risk_api.modules.assistant.repository import AssistantRepository
 from risk_api.modules.assistant.runtime import ModelSettings, StrandsRuntime
 from risk_api.modules.assistant.service import AssistantService
 from risk_api.modules.auth.model import User
+from risk_api.shared.config import LlmConnectionType, Settings
 from risk_api.shared.db import Base
 
 
-def test_real_strands_stream_and_tool_loop(monkeypatch):
+@pytest.mark.parametrize("connection_type", list(LlmConnectionType))
+@pytest.mark.parametrize("upstream_reasoning", [False, True])
+@pytest.mark.parametrize("thinking_enabled", [False, True])
+def test_real_strands_stream_and_tool_loop(
+    monkeypatch, connection_type, upstream_reasoning, thinking_enabled
+):
     requests = []
 
     def respond(request):
         payload = json.loads(request.content)
         requests.append(payload)
+        assert payload["max_tokens"] == 1024
+        if connection_type == LlmConnectionType.QWEN_SELF_HOSTED:
+            assert payload["chat_template_kwargs"] == {"enable_thinking": thinking_enabled}
+            assert "thinking" not in payload
+        else:
+            assert payload["thinking"] == {"type": "adaptive" if thinking_enabled else "disabled"}
+            assert payload.get("reasoning_split") is (True if thinking_enabled else None)
+            assert "chat_template_kwargs" not in payload
         if len(requests) == 1:
             deltas = [
-                {"reasoning_content": "Check current time."},
                 {"content": "I will check."},
                 {
                     "tool_calls": [
@@ -50,6 +63,9 @@ def test_real_strands_stream_and_tool_loop(monkeypatch):
                 },
                 {"tool_calls": [{"index": 0, "function": {"arguments": 'zone":"UTC"}'}}]},
             ]
+            # Keep the display contract even if an upstream ignores the disable request.
+            if upstream_reasoning:
+                deltas.insert(0, {"reasoning_content": "Check current time."})
             stop = "tool_calls"
         else:
             assert any(m["role"] == "tool" for m in payload["messages"])
@@ -86,7 +102,10 @@ def test_real_strands_stream_and_tool_loop(monkeypatch):
         async for batch in StrandsRuntime().stream(
             "Check time",
             [],
-            ModelSettings("http://model/v1/chat/completions", "test", 1024, "key"),
+            ModelSettings(
+                "http://model/v1/chat/completions", "test", 1024, "key", connection_type,
+                thinking_enabled=thinking_enabled,
+            ),
             "request-1",
         ):
             for item in batch:
@@ -94,9 +113,9 @@ def test_real_strands_stream_and_tool_loop(monkeypatch):
         assert len(requests) == 2
         assert requests[0]["stream"] is True
         assert requests[0]["tools"][0]["function"]["name"] == "current_time"
-        assert any(
-            i.kind == "reasoning" and i.text == "Check current time." for i in items.values()
-        )
+        reasoning = [i for i in items.values() if i.kind == "reasoning"]
+        expected_reasoning = ["Check current time."] if upstream_reasoning else []
+        assert [i.text for i in reasoning] == expected_reasoning
         tool = next(i for i in items.values() if i.kind == "tool_call")
         assert tool.status == "completed"
         assert json.loads(tool.argumentsText) == {"timezone": "UTC"}
@@ -107,6 +126,46 @@ def test_real_strands_stream_and_tool_loop(monkeypatch):
         ]
 
     asyncio.run(exercise())
+
+
+def test_connection_type_environment_and_public_execution_config(monkeypatch):
+    monkeypatch.delenv("RISK_LLM_CONNECTION_TYPE", raising=False)
+    assert Settings().llm_connection_type == LlmConnectionType.QWEN_SELF_HOSTED
+    for connection_type in LlmConnectionType:
+        monkeypatch.setenv("RISK_LLM_CONNECTION_TYPE", connection_type.value)
+        settings = Settings()
+        config = ModelSettings(
+            "http://model/v1/chat/completions", "test", 1024, "secret", settings.llm_connection_type
+        ).public()
+        assert config["connectionType"] == connection_type.value
+        assert config["thinking"] is False
+        assert "secret" not in json.dumps(config)
+    monkeypatch.setenv("RISK_LLM_CONNECTION_TYPE", "typo")
+    with pytest.raises(ValueError, match="LlmConnectionType"):
+        Settings()
+
+
+@pytest.mark.parametrize(
+    "value, expected", [(None, False), ("false", False), ("true", True), (" TRUE ", True)]
+)
+def test_thinking_environment_and_execution_config(monkeypatch, value, expected):
+    monkeypatch.delenv("RISK_LLM_THINKING_ENABLED", raising=False)
+    if value is not None:
+        monkeypatch.setenv("RISK_LLM_THINKING_ENABLED", value)
+    settings = Settings()
+    assert settings.llm_thinking_enabled is expected
+    config = ModelSettings(
+        "http://model/v1/chat/completions", "test", 1024, "secret",
+        thinking_enabled=settings.llm_thinking_enabled,
+    )
+    assert config.public()["thinking"] is expected
+    assert "secret" not in json.dumps(config.public())
+
+
+def test_invalid_thinking_environment_fails_explicitly(monkeypatch):
+    monkeypatch.setenv("RISK_LLM_THINKING_ENABLED", "typo")
+    with pytest.raises(ValueError, match="RISK_LLM_THINKING_ENABLED"):
+        Settings()
 
 
 def test_persistence_replay_and_execution():

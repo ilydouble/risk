@@ -11,6 +11,7 @@ from risk_api.modules.assistant.projector import ItemProjector
 from risk_api.modules.assistant.protocol.items import Item
 from risk_api.modules.assistant.protocol.turns import Turn
 from risk_api.modules.assistant.tools.example_tools import current_time
+from risk_api.shared.config import LlmConnectionType
 
 
 @dataclass(frozen=True)
@@ -19,9 +20,35 @@ class ModelSettings:
     model: str
     max_tokens: int
     api_key: str = field(repr=False)
+    connection_type: LlmConnectionType = LlmConnectionType.QWEN_SELF_HOSTED
+
+    thinking_enabled: bool = False
 
     def public(self) -> dict[str, str | int]:
-        return {"url": self.url, "model": self.model, "maxTokens": self.max_tokens}
+        return {
+            "url": self.url,
+            "model": self.model,
+            "maxTokens": self.max_tokens,
+            "connectionType": self.connection_type.value,
+            "thinking": self.thinking_enabled,
+        }
+
+    def request_params(self) -> dict[str, object]:
+        # Select by deployment contract, not model name; reuse on every tool-loop request.
+        thinking_params = {
+            LlmConnectionType.QWEN_SELF_HOSTED: {
+                "chat_template_kwargs": {"enable_thinking": self.thinking_enabled}
+            },
+            LlmConnectionType.MINIMAX: {
+                "thinking": {"type": "adaptive" if self.thinking_enabled else "disabled"},
+                # Separate reasoning from answer text for the existing Strands Item projection.
+                **({"reasoning_split": True} if self.thinking_enabled else {}),
+            },
+        }
+        return {
+            "max_tokens": self.max_tokens,
+            "extra_body": thinking_params[self.connection_type],
+        }
 
 
 def conversation_messages(history: list[Turn]) -> Messages:
@@ -68,7 +95,7 @@ class StrandsRuntime:
                 model = OpenAIModel(
                     client=client,
                     model_id=settings.model,
-                    params={"max_tokens": settings.max_tokens},
+                    params=settings.request_params(),
                     stream=True,
                 )
                 agent = Agent(
