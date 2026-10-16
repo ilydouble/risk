@@ -3,6 +3,7 @@
 from sqlalchemy import Float, cast, func, select
 
 from risk_api.errors import AppError
+from risk_api.modules.modeling.enterprise_provenance import enterprise_provenance
 from risk_api.modules.modeling.enterprise_service import EnterpriseService
 from risk_api.modules.modeling.service import ModelingService
 from risk_api.modules.modeling.workbench_model import (
@@ -163,6 +164,8 @@ class EnterpriseBrowseService:
         return {
             "dataset": source_data(dataset, imported),
             "company": company,
+            "provenance": await enterprise_provenance(self.session, owner, dataset,
+                                                       imported, company),
             "related": related,
             "predictions": [
                 {"modelId": mid, "modelName": name, "result": result}

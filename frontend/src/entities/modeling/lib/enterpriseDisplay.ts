@@ -5,6 +5,11 @@ export function displayEnterpriseValue(value: unknown): string {
   if (value === null || value === undefined) return "—";
   return typeof value === "object" ? JSON.stringify(value) : String(value);
 }
+export function displayEnterpriseProperty(value: unknown): string {
+  if (value === null || value === undefined) return "缺失（null）";
+  if (value === "") return "空字符串";
+  return displayEnterpriseValue(value);
+}
 export function enterpriseName(row: EnterpriseRecordDTO): string {
   return typeof row.data.name === "string" && row.data.name.trim() ? row.data.name : row.nodeId ?? "未命名企业";
 }

@@ -4,6 +4,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from risk_api.modules.data_prep.conversion import ConversionColumn
 from risk_api.shared.api.page import Page, PageRequest
 
 
@@ -456,8 +457,40 @@ class EnterpriseSavedPredictionDTO(BaseModel):
     result: PredictionDTO
 
 
+class EnterpriseFieldLineageDTO(BaseModel):
+    rule: ConversionColumn
+    originalValue: str
+    originalTruncated: bool
+    convertedValue: Any = None
+    convertedTruncated: bool
+    ignored: bool
+
+
+class ResponseEnterpriseProvenance(BaseModel):
+    status: Literal["available", "unavailable"]
+    message: str
+    preparationId: str | None = None
+    filename: str | None = None
+    taskId: str | None = None
+    engineVersion: str | None = None
+    planVersion: str | None = None
+    sourceSha256: str | None = None
+    outputSha256: str | None = None
+    importedAt: str | None = None
+    labelMeaning: str | None = None
+    deduplicate: Literal["exact", "reject"] | None = None
+    sourceRow: int | None = None
+    sourceLine: int | None = None
+    sourceEndLine: int | None = None
+    duplicateLines: list[int] = Field(default_factory=list)
+    duplicateCount: int = 0
+    duplicatesTruncated: bool = False
+    fields: list[EnterpriseFieldLineageDTO] = Field(default_factory=list)
+
+
 class ResponseEnterpriseCompany(BaseModel):
     dataset: EnterpriseSourceDTO
     company: EnterpriseRecordDTO
     related: dict[str, EnterpriseRelatedDTO]
     predictions: list[EnterpriseSavedPredictionDTO]
+    provenance: ResponseEnterpriseProvenance | None = None

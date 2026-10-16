@@ -3210,6 +3210,41 @@
         "title": "EdgeTypeItemDTO",
         "type": "object"
       },
+      "EnterpriseFieldLineageDTO": {
+        "properties": {
+          "convertedTruncated": {
+            "title": "Convertedtruncated",
+            "type": "boolean"
+          },
+          "convertedValue": {
+            "title": "Convertedvalue"
+          },
+          "ignored": {
+            "title": "Ignored",
+            "type": "boolean"
+          },
+          "originalTruncated": {
+            "title": "Originaltruncated",
+            "type": "boolean"
+          },
+          "originalValue": {
+            "title": "Originalvalue",
+            "type": "string"
+          },
+          "rule": {
+            "$ref": "#/components/schemas/ConversionColumn"
+          }
+        },
+        "required": [
+          "rule",
+          "originalValue",
+          "originalTruncated",
+          "convertedTruncated",
+          "ignored"
+        ],
+        "title": "EnterpriseFieldLineageDTO",
+        "type": "object"
+      },
       "EnterpriseLabelCountsDTO": {
         "properties": {
           "negative": {
@@ -8136,6 +8171,16 @@
             "title": "Predictions",
             "type": "array"
           },
+          "provenance": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseEnterpriseProvenance"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "related": {
             "additionalProperties": {
               "$ref": "#/components/schemas/EnterpriseRelatedDTO"
@@ -8186,6 +8231,199 @@
           "companies"
         ],
         "title": "ResponseEnterpriseOverview",
+        "type": "object"
+      },
+      "ResponseEnterpriseProvenance": {
+        "properties": {
+          "deduplicate": {
+            "anyOf": [
+              {
+                "enum": [
+                  "exact",
+                  "reject"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deduplicate"
+          },
+          "duplicateCount": {
+            "default": 0,
+            "title": "Duplicatecount",
+            "type": "integer"
+          },
+          "duplicateLines": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Duplicatelines",
+            "type": "array"
+          },
+          "duplicatesTruncated": {
+            "default": false,
+            "title": "Duplicatestruncated",
+            "type": "boolean"
+          },
+          "engineVersion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Engineversion"
+          },
+          "fields": {
+            "items": {
+              "$ref": "#/components/schemas/EnterpriseFieldLineageDTO"
+            },
+            "title": "Fields",
+            "type": "array"
+          },
+          "filename": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Filename"
+          },
+          "importedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Importedat"
+          },
+          "labelMeaning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Labelmeaning"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "outputSha256": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outputsha256"
+          },
+          "planVersion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Planversion"
+          },
+          "preparationId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preparationid"
+          },
+          "sourceEndLine": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sourceendline"
+          },
+          "sourceLine": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sourceline"
+          },
+          "sourceRow": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sourcerow"
+          },
+          "sourceSha256": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sourcesha256"
+          },
+          "status": {
+            "enum": [
+              "available",
+              "unavailable"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "taskId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Taskid"
+          }
+        },
+        "required": [
+          "status",
+          "message"
+        ],
+        "title": "ResponseEnterpriseProvenance",
         "type": "object"
       },
       "ResponseEnterpriseSources": {

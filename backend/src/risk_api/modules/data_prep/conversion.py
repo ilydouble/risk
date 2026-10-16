@@ -111,6 +111,37 @@ def convert_value(value: str, rule: ConversionColumn) -> str | float | int | Non
     return float(number)
 
 
+def convert_record(row: dict[str, str], plan: ConversionPlan) -> dict:
+    data: dict = {"attributes": {}, "features": {}}
+    node_id = ""
+    for rule in plan.columns:
+        if rule.type == "ignore":
+            continue
+        try:
+            value = convert_value(row[rule.field], rule)
+        except ValueError as error:
+            raise ValueError(f"{rule.field}: {error}") from error
+        if rule.target == "enterprise.id":
+            node_id = str(value)
+            if not node_id or len(node_id) > 512:
+                raise ValueError("企业标识为空或超过512字符")
+        elif rule.target.startswith("enterprise."):
+            data[rule.target.split(".", 1)[1]] = value
+        else:
+            group, key = rule.target.split(".", 1)
+            data[group][key] = value
+    data.setdefault("name", node_id)
+    return {
+        "kind": "company",
+        "snapshot": "import",
+        "nodeId": node_id,
+        "source": None,
+        "target": None,
+        "members": [],
+        "data": data,
+    }
+
+
 def execute(source: bytes, plan: ConversionPlan) -> tuple[list[dict], dict]:
     reader = csv.DictReader(io.StringIO(source.decode("utf-8-sig"), newline=""))
     if set(reader.fieldnames or []) != {item.field for item in plan.columns}:
@@ -128,38 +159,13 @@ def execute(source: bytes, plan: ConversionPlan) -> tuple[list[dict], dict]:
             duplicates += 1
             continue
         seen.add(raw)
-        data: dict = {"attributes": {}, "features": {}}
-        node_id = ""
         try:
-            for rule in plan.columns:
-                if rule.type == "ignore":
-                    continue
-                try:
-                    value = convert_value(row[rule.field], rule)
-                except ValueError as error:
-                    raise ValueError(f"{rule.field}: {error}") from error
-                if rule.target == "enterprise.id":
-                    node_id = str(value)
-                    if not node_id or len(node_id) > 512:
-                        raise ValueError("企业标识为空或超过512字符")
-                elif rule.target.startswith("enterprise."):
-                    data[rule.target.split(".", 1)[1]] = value
-                else:
-                    group, key = rule.target.split(".", 1)
-                    data[group][key] = value
+            record = convert_record(row, plan)
+            node_id = record["nodeId"]
+            data = record["data"]
             if node_id in identities:
                 raise ValueError("企业标识重复或观测冲突；需明确聚合规则，本版不自动合并")
             identities.add(node_id)
-            data.setdefault("name", node_id)
-            record: dict = {
-                "kind": "company",
-                "snapshot": "import",
-                "nodeId": node_id,
-                "source": None,
-                "target": None,
-                "members": [],
-                "data": data,
-            }
             output.append(record)
             if len(examples) < 5:
                 examples.append(

@@ -287,6 +287,36 @@ def test_persist_trial_import_isolated_stale_atomic_and_idempotent():
                 assert not (await modeling.get_dataset("a", dataset_id)).execution["result"][
                     "supportedRunnerIds"
                 ]
+                detail = await browse.company("a", dataset_id, "001", None)
+                provenance = detail["provenance"]
+                assert provenance["status"] == "available"
+                assert provenance["sourceLine"] == 2 and provenance["duplicateLines"] == [4]
+                assert provenance["preparationId"] == identity and provenance["taskId"] == task_id
+                assert detail["company"]["data"]["features"]["value"] == 10
+                # Editing today's plan must not reinterpret yesterday's imported record.
+                changed_plan = deepcopy(RULES)
+                changed_plan["labelMeaning"] = "updated current definition"
+                changed_plan["columns"][1].update(missing="fill", fill=999)
+                await ConversionService(session).save_plan(
+                    "a",
+                    identity,
+                    ConversionPlan.model_validate(changed_plan),
+                )
+                history = (await browse.company("a", dataset_id, "002", None))["provenance"]
+                assert history["status"] == "available"
+                assert history["labelMeaning"] == RULES["labelMeaning"]
+                field = next(f for f in history["fields"] if f["rule"]["field"] == "value")
+                assert field["convertedValue"] is None and field["rule"]["missing"] == "null"
+                with pytest.raises(AppError) as forbidden:
+                    await browse.company("b", dataset_id, "001", None)
+                assert forbidden.value.status == 404
+                await session.rollback()
+                original = await PreparationRepository(session).get("a", identity)
+                original.source = b"tampered"
+                await session.commit()
+                invalid = await browse.company("a", dataset_id, "001", None)
+                assert invalid["provenance"]["status"] == "unavailable"
+                assert invalid["company"]["data"]["features"]["value"] == 10
         finally:
             await engine.dispose()
             async with admin.begin() as connection:

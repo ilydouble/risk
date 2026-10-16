@@ -5,6 +5,8 @@ import { displayEnterpriseValue, enterpriseName } from "@/entities/modeling/lib/
 import type { ResponseEnterpriseCompany } from "@/shared/api/generated/schema";
 import { handleApiError } from "@/shared/api/http";
 import Card from "@/shared/ui/Card";
+import { EnterpriseProperties } from "./EnterpriseProperties";
+import { EnterpriseSourceTrace } from "./EnterpriseSourceTrace";
 
 export default function UploadedProfile() {
   const { datasetId = "", companyId = "" } = useParams();
@@ -29,16 +31,14 @@ export default function UploadedProfile() {
     finally { setBusy(false); }
   }
   const back = `/search?source=uploaded&dataset=${encodeURIComponent(datasetId)}${modelId ? `&model=${encodeURIComponent(modelId)}` : ""}`;
-  const attributes = data?.company.data.attributes;
   return <div className="space-y-5">
     <div className="flex items-center justify-between"><h1 className="text-2xl font-semibold">企业详情</h1><Link to={back} className="text-xs text-primary-400">← 返回本数据集检索</Link></div>
     {error && <p role="alert" className="rounded-lg border border-danger-500/30 p-4 text-sm text-danger-500">{error}</p>}
     {!data && !error && <p role="status" className="text-sm text-foreground-500">正在加载企业详情…</p>}
     {data && <>
       <section className="rounded-lg border border-background-200 bg-background-100 p-5"><h2 className="text-xl font-semibold">{enterpriseName(data.company)}</h2><p className="mt-2 break-all font-mono text-xs text-foreground-500">{companyId}</p><p className="mt-3 text-sm text-foreground-500">数据集：{data.dataset.name} · 快照：{data.company.snapshot} · 已有标签：{displayEnterpriseValue(data.company.data.label)}</p><Link className="mt-3 inline-block text-xs text-primary-400" to={`/?source=uploaded&dataset=${encodeURIComponent(datasetId)}`}>查看本数据集总览 →</Link></section>
-      <Card title="原始企业属性" subtitle="字段及单位以当前数据集定义为准，缺失信息不补造。" icon="ri-file-list-line" bodyClassName="p-5">
-        <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{attributes && typeof attributes === "object" && !Array.isArray(attributes) ? Object.entries(attributes).map(([key, value]) => <div key={key} className="rounded-md bg-background-50 p-3"><dt className="text-xs text-foreground-500">{key}</dt><dd className="mt-2 break-words text-sm">{displayEnterpriseValue(value)}</dd></div>) : <p className="text-sm text-foreground-500">没有可展示的属性。</p>}</dl>
-      </Card>
+      <EnterpriseProperties data={data.company.data} />
+      <EnterpriseSourceTrace provenance={data.provenance} />
       <Card title="模型预测" subtitle="以下为各模型已有预测，主分类概率未校准。" icon="ri-cpu-line" bodyClassName="space-y-3 p-5">
         {data.predictions.map((prediction) => <div key={prediction.modelId} className="rounded-md border border-background-200 p-4"><p className="text-sm font-medium">{prediction.modelName}</p><p className="mt-1 font-mono text-[10px] text-foreground-500">{prediction.modelId}</p><p className="mt-3 text-sm">主分类概率 {(prediction.result.probability * 100).toFixed(2)}% · 类别 {prediction.result.predictedLabel}</p><p className="mt-2 text-xs text-foreground-500">融合概率：{prediction.result.fusedProbability == null ? "—" : `${(prediction.result.fusedProbability * 100).toFixed(2)}%`} · 不确定性：{prediction.result.uncertainty == null ? "—" : `${(prediction.result.uncertainty * 100).toFixed(2)}%`} · 冲突：{prediction.result.conflict == null ? "—" : `${(prediction.result.conflict * 100).toFixed(2)}%`}</p></div>)}
         {data.predictions.length === 0 && <p className="text-sm text-foreground-500">该企业尚无已保存的预测结果。</p>}

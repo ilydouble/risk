@@ -2011,6 +2011,20 @@ export interface components {
             /** Type */
             type: string;
         };
+        /** EnterpriseFieldLineageDTO */
+        EnterpriseFieldLineageDTO: {
+            /** Convertedtruncated */
+            convertedTruncated: boolean;
+            /** Convertedvalue */
+            convertedValue?: unknown;
+            /** Ignored */
+            ignored: boolean;
+            /** Originaltruncated */
+            originalTruncated: boolean;
+            /** Originalvalue */
+            originalValue: string;
+            rule: components["schemas"]["ConversionColumn"];
+        };
         /** EnterpriseLabelCountsDTO */
         EnterpriseLabelCountsDTO: {
             /** Negative */
@@ -4110,6 +4124,7 @@ export interface components {
             dataset: components["schemas"]["EnterpriseSourceDTO"];
             /** Predictions */
             predictions: components["schemas"]["EnterpriseSavedPredictionDTO"][];
+            provenance?: components["schemas"]["ResponseEnterpriseProvenance"] | null;
             /** Related */
             related: {
                 [key: string]: components["schemas"]["EnterpriseRelatedDTO"];
@@ -4125,6 +4140,56 @@ export interface components {
             models: components["schemas"]["EnterpriseModelSummaryDTO"][];
             /** Target */
             target?: unknown;
+        };
+        /** ResponseEnterpriseProvenance */
+        ResponseEnterpriseProvenance: {
+            /** Deduplicate */
+            deduplicate?: ("exact" | "reject") | null;
+            /**
+             * Duplicatecount
+             * @default 0
+             */
+            duplicateCount: number;
+            /** Duplicatelines */
+            duplicateLines?: number[];
+            /**
+             * Duplicatestruncated
+             * @default false
+             */
+            duplicatesTruncated: boolean;
+            /** Engineversion */
+            engineVersion?: string | null;
+            /** Fields */
+            fields?: components["schemas"]["EnterpriseFieldLineageDTO"][];
+            /** Filename */
+            filename?: string | null;
+            /** Importedat */
+            importedAt?: string | null;
+            /** Labelmeaning */
+            labelMeaning?: string | null;
+            /** Message */
+            message: string;
+            /** Outputsha256 */
+            outputSha256?: string | null;
+            /** Planversion */
+            planVersion?: string | null;
+            /** Preparationid */
+            preparationId?: string | null;
+            /** Sourceendline */
+            sourceEndLine?: number | null;
+            /** Sourceline */
+            sourceLine?: number | null;
+            /** Sourcerow */
+            sourceRow?: number | null;
+            /** Sourcesha256 */
+            sourceSha256?: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "available" | "unavailable";
+            /** Taskid */
+            taskId?: string | null;
         };
         /** ResponseEnterpriseSources */
         ResponseEnterpriseSources: {
@@ -9989,6 +10054,7 @@ export type ResponseDataQACatalog = components["schemas"]["ResponseDataQACatalog
 export type ResponseDownloadModel = components["schemas"]["ResponseDownloadModel"];
 export type ResponseEnterpriseCompany = components["schemas"]["ResponseEnterpriseCompany"];
 export type ResponseEnterpriseOverview = components["schemas"]["ResponseEnterpriseOverview"];
+export type ResponseEnterpriseProvenance = components["schemas"]["ResponseEnterpriseProvenance"];
 export type ResponseEnterpriseSources = components["schemas"]["ResponseEnterpriseSources"];
 export type ResponseGetCompany = components["schemas"]["ResponseGetCompany"];
 export type ResponseGetConversation = components["schemas"]["ResponseGetConversation"];
