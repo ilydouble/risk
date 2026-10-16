@@ -38,7 +38,8 @@ export function TurnTimeline({ turn }: { turn: Turn }) {
     {turn.items.map(item => item.kind === "user_message" ?
       <div key={item.id} className="ml-auto max-w-[88%] rounded-2xl rounded-tr-md bg-background-200/70 px-5 py-3.5">
         <p className="mb-1 text-xs text-foreground-400">{pick("你", "You")}</p>
-        <p className="whitespace-pre-wrap break-words text-sm leading-7">{item.text}</p>
+        <p className="whitespace-pre-wrap break-words text-sm leading-7">{item.text.split("\n\n【当前案例上下文】只处理 preparation:")[0]}</p>
+        {item.text.includes("\n\n【当前案例上下文】只处理 preparation:") && <p className="mt-2 text-xs text-foreground-400">{pick("已关联数据准备案例", "Data preparation case attached")}</p>}
       </div> : item.kind === "agent_message" ?
         <div key={item.id} className="flex gap-3">
           <div className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary-500/10 text-primary-500"><Bot size={17} /></div>

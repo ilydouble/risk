@@ -152,6 +152,10 @@ export default function DataPrepPage() {
         <button className={button} disabled={!file || busy} onClick={() => void inspect()}>{busy ? "分析中…" : "重新体检"}</button>
       </section>}
       {profile && !legacyProfile && <>
+        {preparation && <section className={`${panel} flex flex-wrap items-center justify-between gap-4`}>
+          <div><h2 className="font-semibold">和助手一起确认映射</h2><p className="mt-2 text-sm text-foreground-500">携带这份案例的体检结果、已有报告和映射草稿，从不确定的问题开始梳理。无需再次上传文件。</p></div>
+          {busy ? <span className="text-sm text-foreground-500">当前分析完成后可进入助手</span> : <Link className={button} to={`/chat?preparation=${encodeURIComponent(preparation.id)}${params.get("conversation") ? `&conversation=${encodeURIComponent(params.get("conversation")!)}` : ""}`}>让助手确认映射</Link>}
+        </section>}
         <section className={`${panel} space-y-3`}>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div><h2 className="font-semibold">体检结果</h2><p className="text-sm text-foreground-500">统计基于整份文件；类型、键和异常只是待核对线索。</p></div>
