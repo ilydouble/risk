@@ -1,6 +1,6 @@
 import { http } from "@/shared/api/http";
 import type {
-  RequestInspectData,
+  RequestInspectData, RequestInspectCase,
   RequestModelDefaults,
   RequestSuggestMapping,
   RequestTestModel,
@@ -27,3 +27,5 @@ export const requestSaveConversionPlan = http.post<RequestSaveConversionPlan, Re
 export const requestGetConversion = http.post<RequestGetConversion, ResponseConversionState>("/data-prep/conversion/get");
 export const requestTrialConversion = http.withTimeout(60000).post<RequestGetPreparation, ResponseConversionState>("/data-prep/conversion/trial");
 export const requestImportConversion = http.withTimeout(60000).post<RequestImportConversion, ResponseConversionState>("/data-prep/conversion/import");
+
+export const requestInspectCase = http.withTimeout(120000).post<RequestInspectCase, ResponsePreparation>("/data-prep/inspect-case");

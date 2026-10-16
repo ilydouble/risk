@@ -1,5 +1,6 @@
 import asyncio
 import hashlib
+from collections import Counter
 from copy import deepcopy
 from datetime import UTC, datetime
 from uuid import uuid4
@@ -9,6 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import defer
 
 from risk_api.errors import AppError
+from risk_api.modules.data_prep.case_files import CASE_ENGINE, execute_case
 from risk_api.modules.data_prep.conversion import ENGINE, ConversionPlan, digest, execute
 from risk_api.modules.data_prep.model import PreparationConversion
 from risk_api.modules.data_prep.repository import PreparationRepository
@@ -71,8 +73,9 @@ class ConversionService:
         )
         if task_id:
             query = query.where(PreparationConversion.id == task_id)
+        engine = CASE_ENGINE if item.profile.get("caseFiles") else ENGINE
         fingerprint = digest(
-            [ENGINE, item.source_sha, digest(item.mapping), item.conversion_plan.get("rules")]
+            [engine, item.source_sha, digest(item.mapping), item.conversion_plan.get("rules")]
         )
         task = await self.session.scalar(
             query.order_by(
@@ -104,7 +107,7 @@ class ConversionService:
                 "report": task.report,
                 "datasetId": task.dataset_id,
                 "current": current
-                and task.engine_version == ENGINE
+                and task.engine_version == engine
                 and task.mapping_digest == digest(item.mapping)
                 and task.plan == item.conversion_plan.get("rules")
                 and task.source_sha == item.source_sha,
@@ -123,7 +126,8 @@ class ConversionService:
         if hashlib.sha256(item.source).hexdigest() != item.source_sha:
             raise AppError(409, "DATA_PREP_PLAN_STALE", "原文件摘要不一致，请重新保存案例")
         mapping_digest = digest(item.mapping)
-        fingerprint = digest([ENGINE, item.source_sha, mapping_digest, plan.model_dump()])
+        engine = CASE_ENGINE if item.profile.get("caseFiles") else ENGINE
+        fingerprint = digest([engine, item.source_sha, mapping_digest, plan.model_dump()])
         previous = await self.session.scalar(
             select(PreparationConversion).where(
                 PreparationConversion.owner_id == owner,
@@ -133,7 +137,11 @@ class ConversionService:
         )
         if previous is None:
             try:
-                output, report = await asyncio.to_thread(execute, item.source, plan)
+                if engine == CASE_ENGINE:
+                    output, report = await asyncio.to_thread(execute_case, item.source,
+                                                            item.profile, plan)
+                else:
+                    output, report = await asyncio.to_thread(execute, item.source, plan)
             except ValueError as error:
                 raise AppError(422, "DATA_PREP_RULE_INVALID", str(error)) from error
             task = PreparationConversion(
@@ -141,7 +149,7 @@ class ConversionService:
                 owner_id=owner,
                 preparation_id=identity,
                 fingerprint=fingerprint,
-                engine_version=ENGINE,
+                engine_version=engine,
                 source_sha=item.source_sha,
                 mapping_digest=mapping_digest,
                 plan=plan.model_dump(),
@@ -174,11 +182,13 @@ class ConversionService:
             raise AppError(404, "DATA_PREP_TASK_NOT_FOUND", "转换任务不存在或无权访问")
         if task.dataset_id:
             return await self.state(owner, identity, task_id)
+        engine = CASE_ENGINE if item.profile.get("caseFiles") else ENGINE
         if (
             task.status != "ready"
-            or task.engine_version != ENGINE
+            or task.engine_version != engine
             or not task.report.get("passed")
             or not task.output
+            or hashlib.sha256(item.source).hexdigest() != task.source_sha
             or task.source_sha != item.source_sha
             or task.mapping_digest != digest(item.mapping)
             or task.plan != item.conversion_plan.get("rules")
@@ -189,19 +199,26 @@ class ConversionService:
         # Revalidate the persisted artifact, not the assistant's interpretation of its report.
         for record in task.output:
             NormalizedRecord.model_validate(record)
-        if len({r["nodeId"] for r in task.output}) != len(task.output):
+        companies = {r["nodeId"] for r in task.output if r["kind"] == "company"}
+        if len(companies) != sum(r["kind"] == "company" for r in task.output):
             raise AppError(409, "DATA_PREP_PLAN_STALE", "转换产物标识冲突，请重新试运行")
         dataset_id = str(uuid4())
-        counts = {"company": len(task.output)}
+        for record in task.output:
+            refs = ([record["source"], record["target"]] if record["kind"] == "edge"
+                    else record.get("members", []))
+            if any(ref not in companies for ref in refs):
+                raise AppError(409, "DATA_PREP_PLAN_STALE", "关系引用无效，请重新试运行")
+        counts = dict(Counter(r["kind"] for r in task.output))
         manifest = {
             "format": FORMAT,
             "sourceSha256": task.source_sha,
             "target": task.plan.get("labelMeaning") or None,
-            "engine": ENGINE,
+            "engine": engine,
             "taskId": task.id,
             "browseOnly": True,
-            "protocol": ENGINE,
+            "protocol": engine,
             "counts": counts,
+            "caseFiles": item.profile.get("caseFiles", []),
             "datasetProfile": {"browseOnly": True},
         }
         self.session.add(
@@ -211,7 +228,7 @@ class ConversionService:
                 name=item.filename[:128],
                 filename=item.filename,
                 object_key=f"preparations/{owner}/{task.id}",
-                content_type="text/csv",
+                content_type="application/json" if engine == CASE_ENGINE else "text/csv",
                 size=len(item.source),
                 confirmed=True,
                 source_preparation_id=identity,
@@ -247,9 +264,9 @@ class ConversionService:
                     "kind": r["kind"],
                     "snapshot": r["snapshot"],
                     "node_id": r["nodeId"],
-                    "source": None,
-                    "target": None,
-                    "members": [],
+                    "source": r.get("source"),
+                    "target": r.get("target"),
+                    "members": r.get("members", []),
                     "data": r["data"],
                 }
                 for index, r in enumerate(task.output[offset : offset + 500])

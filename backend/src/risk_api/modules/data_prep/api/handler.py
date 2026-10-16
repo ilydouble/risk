@@ -15,6 +15,7 @@ from risk_api.modules.data_prep.api.schemas import (
     RequestGetConversion,
     RequestGetPreparation,
     RequestImportConversion,
+    RequestInspectCase,
     RequestInspectData,
     RequestListPreparations,
     RequestModelDefaults,
@@ -32,6 +33,7 @@ from risk_api.modules.data_prep.api.schemas import (
     ResponseSuggestMapping,
     ResponseTestModel,
 )
+from risk_api.modules.data_prep.case_files import unpack_source
 from risk_api.modules.data_prep.conversion_service import ConversionService
 from risk_api.modules.data_prep.model import Preparation
 from risk_api.modules.data_prep.service import PreparationService
@@ -95,6 +97,22 @@ async def inspect_data(
     return success_response(ResponseInspectData.model_validate(
         {**item.profile, "preparationId": item.id}
     ))
+
+
+async def inspect_case(
+    body: RequestInspectCase, request: Request, auth: FromDishka[AuthService],
+    preparations: FromDishka[PreparationService],
+) -> ApiEnvelope[ResponsePreparation]:
+    user = await authorize_request(request, auth)
+    try:
+        files = [(file.filename, base64.b64decode(file.contentBase64, validate=True))
+                 for file in body.files]
+    except binascii.Error as error:
+        raise AppError(422, "DATA_PREP_CONTENT_INVALID", "文件内容无效") from error
+    item = await preparations.create_case(
+        user["user_id"], files, str(body.preparationId) if body.preparationId else None,
+    )
+    return success_response(preparation_response(item))
 
 
 async def suggest_mapping(
@@ -179,7 +197,12 @@ async def export_preparation(body: RequestGetPreparation, request: Request,
     output = io.BytesIO()
     # This is an adaptation handoff, not a model-ready contract archive.
     with zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED) as archive:
-        archive.writestr("source.csv", item.source)
+        files = unpack_source(item.source, item.profile)
+        if not item.profile.get("caseFiles"):
+            files = [("source.csv", item.source)]
+        for filename, content in files:
+            path = f"sources/{filename}" if item.profile.get("caseFiles") else filename
+            archive.writestr(path, content)
         archive.writestr("preparation.json", preparation_response(item).model_dump_json())
         archive.writestr("README.txt", "原始案例与映射交付包，尚未执行转换，不是可训练数据包。\n"
                          "请按目标模型适配器补齐关系来源、标签语义和独立划分。\n")

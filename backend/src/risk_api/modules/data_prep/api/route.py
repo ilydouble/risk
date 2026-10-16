@@ -67,6 +67,11 @@ router.add_api_route(
     responses=COMMON_ERROR_RESPONSES | SESSION_ERRORS | DATA_PREP_ERRORS,
 )
 router.add_api_route(
+    "/inspect-case", handler.inspect_case, methods=["POST"],
+    response_model=ApiEnvelope[ResponsePreparation],
+    responses=COMMON_ERROR_RESPONSES | SESSION_ERRORS | DATA_PREP_ERRORS,
+)
+router.add_api_route(
     "/inspect",
     handler.inspect_data,
     methods=["POST"],

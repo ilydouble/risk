@@ -1,0 +1,605 @@
+{
+  "name": "UK演示案例的诱导子图",
+  "source": "datasets/uk_dataset_v1/train.json",
+  "note": "只保留CSV中100家企业，群组取其交集；不补造关系，不代表完整英国图。节点属性以CSV规则为准。",
+  "nodes": [
+    {
+      "id": "00197807",
+      "kind": "company"
+    },
+    {
+      "id": "00274745",
+      "kind": "company"
+    },
+    {
+      "id": "00348598",
+      "kind": "company"
+    },
+    {
+      "id": "00697581",
+      "kind": "company"
+    },
+    {
+      "id": "01631480",
+      "kind": "company"
+    },
+    {
+      "id": "02516794",
+      "kind": "company"
+    },
+    {
+      "id": "03365493",
+      "kind": "company"
+    },
+    {
+      "id": "03676212",
+      "kind": "company"
+    },
+    {
+      "id": "03677627",
+      "kind": "company"
+    },
+    {
+      "id": "03678195",
+      "kind": "company"
+    },
+    {
+      "id": "03680628",
+      "kind": "company"
+    },
+    {
+      "id": "03832515",
+      "kind": "company"
+    },
+    {
+      "id": "04391790",
+      "kind": "company"
+    },
+    {
+      "id": "04605120",
+      "kind": "company"
+    },
+    {
+      "id": "04610698",
+      "kind": "company"
+    },
+    {
+      "id": "04914323",
+      "kind": "company"
+    },
+    {
+      "id": "05288826",
+      "kind": "company"
+    },
+    {
+      "id": "05450419",
+      "kind": "company"
+    },
+    {
+      "id": "06174036",
+      "kind": "company"
+    },
+    {
+      "id": "06247818",
+      "kind": "company"
+    },
+    {
+      "id": "06360954",
+      "kind": "company"
+    },
+    {
+      "id": "06368721",
+      "kind": "company"
+    },
+    {
+      "id": "06429495",
+      "kind": "company"
+    },
+    {
+      "id": "06449517",
+      "kind": "company"
+    },
+    {
+      "id": "06516672",
+      "kind": "company"
+    },
+    {
+      "id": "06899643",
+      "kind": "company"
+    },
+    {
+      "id": "06910409",
+      "kind": "company"
+    },
+    {
+      "id": "07018036",
+      "kind": "company"
+    },
+    {
+      "id": "07033622",
+      "kind": "company"
+    },
+    {
+      "id": "07137222",
+      "kind": "company"
+    },
+    {
+      "id": "07187804",
+      "kind": "company"
+    },
+    {
+      "id": "07423652",
+      "kind": "company"
+    },
+    {
+      "id": "07507083",
+      "kind": "company"
+    },
+    {
+      "id": "08042186",
+      "kind": "company"
+    },
+    {
+      "id": "08063801",
+      "kind": "company"
+    },
+    {
+      "id": "08091210",
+      "kind": "company"
+    },
+    {
+      "id": "08113966",
+      "kind": "company"
+    },
+    {
+      "id": "08202966",
+      "kind": "company"
+    },
+    {
+      "id": "08272850",
+      "kind": "company"
+    },
+    {
+      "id": "08397690",
+      "kind": "company"
+    },
+    {
+      "id": "08492481",
+      "kind": "company"
+    },
+    {
+      "id": "08608225",
+      "kind": "company"
+    },
+    {
+      "id": "08812665",
+      "kind": "company"
+    },
+    {
+      "id": "08896230",
+      "kind": "company"
+    },
+    {
+      "id": "08957524",
+      "kind": "company"
+    },
+    {
+      "id": "08966125",
+      "kind": "company"
+    },
+    {
+      "id": "09327499",
+      "kind": "company"
+    },
+    {
+      "id": "09494146",
+      "kind": "company"
+    },
+    {
+      "id": "09687614",
+      "kind": "company"
+    },
+    {
+      "id": "09792375",
+      "kind": "company"
+    },
+    {
+      "id": "10155576",
+      "kind": "company"
+    },
+    {
+      "id": "10437690",
+      "kind": "company"
+    },
+    {
+      "id": "10536804",
+      "kind": "company"
+    },
+    {
+      "id": "10565818",
+      "kind": "company"
+    },
+    {
+      "id": "11044719",
+      "kind": "company"
+    },
+    {
+      "id": "11129109",
+      "kind": "company"
+    },
+    {
+      "id": "11183885",
+      "kind": "company"
+    },
+    {
+      "id": "11326882",
+      "kind": "company"
+    },
+    {
+      "id": "11475428",
+      "kind": "company"
+    },
+    {
+      "id": "11583519",
+      "kind": "company"
+    },
+    {
+      "id": "11711319",
+      "kind": "company"
+    },
+    {
+      "id": "11829910",
+      "kind": "company"
+    },
+    {
+      "id": "11865267",
+      "kind": "company"
+    },
+    {
+      "id": "12002211",
+      "kind": "company"
+    },
+    {
+      "id": "12080271",
+      "kind": "company"
+    },
+    {
+      "id": "12232465",
+      "kind": "company"
+    },
+    {
+      "id": "12403286",
+      "kind": "company"
+    },
+    {
+      "id": "12485431",
+      "kind": "company"
+    },
+    {
+      "id": "13211116",
+      "kind": "company"
+    },
+    {
+      "id": "13925437",
+      "kind": "company"
+    },
+    {
+      "id": "13991475",
+      "kind": "company"
+    },
+    {
+      "id": "14020860",
+      "kind": "company"
+    },
+    {
+      "id": "14330617",
+      "kind": "company"
+    },
+    {
+      "id": "14397651",
+      "kind": "company"
+    },
+    {
+      "id": "14438875",
+      "kind": "company"
+    },
+    {
+      "id": "14633753",
+      "kind": "company"
+    },
+    {
+      "id": "14701948",
+      "kind": "company"
+    },
+    {
+      "id": "14814307",
+      "kind": "company"
+    },
+    {
+      "id": "14871330",
+      "kind": "company"
+    },
+    {
+      "id": "15146733",
+      "kind": "company"
+    },
+    {
+      "id": "15353218",
+      "kind": "company"
+    },
+    {
+      "id": "15400212",
+      "kind": "company"
+    },
+    {
+      "id": "15588975",
+      "kind": "company"
+    },
+    {
+      "id": "15611081",
+      "kind": "company"
+    },
+    {
+      "id": "15659887",
+      "kind": "company"
+    },
+    {
+      "id": "15853917",
+      "kind": "company"
+    },
+    {
+      "id": "16168007",
+      "kind": "company"
+    },
+    {
+      "id": "16227481",
+      "kind": "company"
+    },
+    {
+      "id": "16453248",
+      "kind": "company"
+    },
+    {
+      "id": "16532420",
+      "kind": "company"
+    },
+    {
+      "id": "16927051",
+      "kind": "company"
+    },
+    {
+      "id": "17239979",
+      "kind": "company"
+    },
+    {
+      "id": "17251784",
+      "kind": "company"
+    },
+    {
+      "id": "17331786",
+      "kind": "company"
+    },
+    {
+      "id": "OC418123",
+      "kind": "company"
+    },
+    {
+      "id": "OC426238",
+      "kind": "company"
+    },
+    {
+      "id": "OC447685",
+      "kind": "company"
+    },
+    {
+      "id": "OC449847",
+      "kind": "company"
+    },
+    {
+      "id": "SC201401",
+      "kind": "company"
+    },
+    {
+      "id": "SC257737",
+      "kind": "company"
+    }
+  ],
+  "edges": [],
+  "hyperedges": [
+    {
+      "kind": "sic_section",
+      "members": [
+        "01631480",
+        "08113966"
+      ],
+      "originalPath": "hyperedges[37]",
+      "originalMemberCount": 5103
+    },
+    {
+      "kind": "sic_section",
+      "members": [
+        "11475428",
+        "08397690"
+      ],
+      "originalPath": "hyperedges[38]",
+      "originalMemberCount": 519
+    },
+    {
+      "kind": "sic_section",
+      "members": [
+        "00274745",
+        "08063801",
+        "15611081"
+      ],
+      "originalPath": "hyperedges[41]",
+      "originalMemberCount": 4614
+    },
+    {
+      "kind": "sic_section",
+      "members": [
+        "06429495",
+        "14397651",
+        "08957524",
+        "04391790",
+        "14020860",
+        "08272850"
+      ],
+      "originalPath": "hyperedges[42]",
+      "originalMemberCount": 4218
+    },
+    {
+      "kind": "sic_section",
+      "members": [
+        "08812665",
+        "11829910",
+        "11865267"
+      ],
+      "originalPath": "hyperedges[49]",
+      "originalMemberCount": 2188
+    },
+    {
+      "kind": "sic_section",
+      "members": [
+        "08042186",
+        "08492481",
+        "14330617",
+        "16453248",
+        "12403286"
+      ],
+      "originalPath": "hyperedges[51]",
+      "originalMemberCount": 1670
+    },
+    {
+      "kind": "sic_section",
+      "members": [
+        "06247818",
+        "05450419",
+        "09687614",
+        "03676212"
+      ],
+      "originalPath": "hyperedges[54]",
+      "originalMemberCount": 6877
+    },
+    {
+      "kind": "sic_section",
+      "members": [
+        "17239979",
+        "17331786",
+        "15353218",
+        "03680628",
+        "14871330",
+        "08966125",
+        "16168007",
+        "10565818",
+        "16927051",
+        "12002211",
+        "17251784"
+      ],
+      "originalPath": "hyperedges[56]",
+      "originalMemberCount": 16587
+    },
+    {
+      "kind": "sic_section",
+      "members": [
+        "11044719",
+        "15146733",
+        "13211116",
+        "07033622",
+        "06910409"
+      ],
+      "originalPath": "hyperedges[58]",
+      "originalMemberCount": 2324
+    },
+    {
+      "kind": "sic_section",
+      "members": [
+        "10536804",
+        "08091210",
+        "06360954",
+        "11183885",
+        "13925437",
+        "14814307",
+        "14633753",
+        "08896230",
+        "07423652",
+        "09494146"
+      ],
+      "originalPath": "hyperedges[59]",
+      "originalMemberCount": 16766
+    },
+    {
+      "kind": "sic_section",
+      "members": [
+        "14438875",
+        "09327499",
+        "16227481",
+        "03832515",
+        "08202966",
+        "10437690",
+        "12080271"
+      ],
+      "originalPath": "hyperedges[61]",
+      "originalMemberCount": 9439
+    },
+    {
+      "kind": "sic_section",
+      "members": [
+        "10155576",
+        "05288826"
+      ],
+      "originalPath": "hyperedges[62]",
+      "originalMemberCount": 1509
+    },
+    {
+      "kind": "sic_section",
+      "members": [
+        "15659887",
+        "09792375",
+        "06174036",
+        "07018036",
+        "12485431"
+      ],
+      "originalPath": "hyperedges[65]",
+      "originalMemberCount": 6440
+    },
+    {
+      "kind": "sic_section",
+      "members": [
+        "12232465",
+        "11129109",
+        "11711319"
+      ],
+      "originalPath": "hyperedges[68]",
+      "originalMemberCount": 1293
+    },
+    {
+      "kind": "sic_section",
+      "members": [
+        "11326882",
+        "04914323"
+      ],
+      "originalPath": "hyperedges[71]",
+      "originalMemberCount": 656
+    },
+    {
+      "kind": "sic_section",
+      "members": [
+        "03678195",
+        "11583519",
+        "SC201401"
+      ],
+      "originalPath": "hyperedges[82]",
+      "originalMemberCount": 610
+    },
+    {
+      "kind": "sic_section",
+      "members": [
+        "06368721",
+        "04605120"
+      ],
+      "originalPath": "hyperedges[87]",
+      "originalMemberCount": 4897
+    }
+  ],
+  "events": []
+}

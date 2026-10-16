@@ -14,6 +14,28 @@ class RequestInspectData(BaseModel):
     contentBase64: str = Field(min_length=1, max_length=3_000_000)
 
 
+class RequestCaseFile(RequestInspectData):
+    contentBase64: str = Field(min_length=1, max_length=90_000_000)
+
+
+class RequestInspectCase(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    files: list[RequestCaseFile] = Field(min_length=1, max_length=8)
+    preparationId: UUID | None = None
+
+
+class CaseFileProfile(BaseModel):
+    filename: str
+    sha256: str
+    size: int
+    role: Literal["enterprises", "graph"]
+    nodeCount: int = 0
+    edgeCount: int = 0
+    hyperedgeCount: int = 0
+    relationTypes: dict[str, int] = Field(default_factory=dict)
+    groupTypes: dict[str, int] = Field(default_factory=dict)
+
+
 class ValueFrequency(BaseModel):
     value: str
     count: int
@@ -67,6 +89,9 @@ class FieldProfile(BaseModel):
 
 class ResponseInspectData(BaseModel):
     preparationId: str | None = None
+    caseFiles: list[CaseFileProfile] = Field(default_factory=list)
+    primaryFilename: str | None = None
+    previousPreparationId: str | None = None
     sha256: str
     rowCount: int
     rowsWithMissing: int = 0
@@ -185,6 +210,8 @@ class RequestImportConversion(RequestGetPreparation):
 
 
 class ConversionIssue(BaseModel):
+    filename: str | None = None
+    path: str | None = None
     line: int
     message: str
 
@@ -195,7 +222,26 @@ class ConversionExample(BaseModel):
     after: dict[str, Any]
 
 
+class GraphFileCoverage(BaseModel):
+    filename: str
+    referencedCount: int
+    matchedCount: int
+    missingCount: int
+
+
+class GraphCoverage(BaseModel):
+    referencedCount: int
+    matchedCount: int
+    missingCount: int
+    missingIds: list[str]
+    conflictCount: int
+    duplicateCount: int
+    files: list[GraphFileCoverage]
+
+
 class ConversionReport(BaseModel):
+    counts: dict[str, int] = Field(default_factory=dict)
+    graph: GraphCoverage | None = None
     inputCount: int
     outputCount: int
     duplicateCount: int

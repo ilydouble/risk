@@ -1,9 +1,13 @@
+import asyncio
+import hashlib
+from copy import deepcopy
 from datetime import UTC, datetime
 from uuid import uuid4
 
 from sqlalchemy.exc import IntegrityError
 
 from risk_api.errors import AppError
+from risk_api.modules.data_prep.case_files import build_case, unpack_source
 from risk_api.modules.data_prep.model import Preparation
 from risk_api.modules.data_prep.profile import inspect_csv
 from risk_api.modules.data_prep.repository import PreparationRepository
@@ -72,14 +76,42 @@ class PreparationService:
     def __init__(self, repository: PreparationRepository):
         self.repository = repository
 
+    async def create_case(self, owner: str, files: list[tuple[str, bytes]],
+                          previous_id: str | None = None) -> Preparation:
+        previous = None
+        if previous_id:
+            previous = await self.repository.get(owner, previous_id)
+            if hashlib.sha256(previous.source).hexdigest() != previous.source_sha:
+                raise AppError(409, "DATA_PREP_PLAN_STALE", "原案例摘要异常，不能补充文件")
+            existing_files = unpack_source(previous.source, previous.profile)
+            if not previous.profile.get("caseFiles"):
+                existing_files = [(previous.filename, previous.source)]
+            files = existing_files + files
+        content, profile = await asyncio.to_thread(build_case, files)
+        if previous_id:
+            profile["previousPreparationId"] = previous_id
+        primary = next(name for name, _ in files if name.lower().endswith(".csv"))
+        filename = primary if len(files) == 1 else f"{primary} 等{len(files)}个文件"
+        return await self._persist(
+            owner, filename, content, profile,
+            deepcopy(previous.mapping) if previous else None,
+            deepcopy(previous.conversion_plan) if previous else None,
+        )
+
     async def create(self, owner: str, filename: str, content: bytes) -> Preparation:
-        profile = inspect_csv(content)
+        return await self._persist(owner, filename, content, inspect_csv(content))
+
+    async def _persist(self, owner: str, filename: str, content: bytes,
+                       profile: dict, mapping: list[dict] | None = None,
+                       plan: dict | None = None) -> Preparation:
         existing = await self.repository.by_sha(owner, profile["sha256"])
         if existing is not None:
             return existing
-        item = Preparation(id=str(uuid4()), owner_id=owner, filename=filename, source=content,
+        item = Preparation(id=str(uuid4()), owner_id=owner, filename=filename[:255], source=content,
                            source_sha=profile["sha256"], profile=profile, report=None,
-                           mapping=proposed_mapping(profile, None),
+                           mapping=(mapping if mapping is not None
+                                    else proposed_mapping(profile, None)),
+                           conversion_plan=plan or {},
                            confirmed=False, in_workbench=False)
         try:
             return await self.repository.save(item)

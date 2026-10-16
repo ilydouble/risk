@@ -84,6 +84,7 @@ class AssetRepository:
                 "capabilities": ["asset_read", "preparation_save_plan", "preparation_trial",
                                  "preparation_result"], "mappingConfirmed": item.confirmed,
                 "inWorkbench": item.in_workbench,
+                "files": item.profile.get("caseFiles", []),
                 "warnings": ["字段映射是适配方案；移交不代表已经转换或训练就绪。"],
             }
             assets.append(case)

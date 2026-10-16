@@ -47,8 +47,8 @@ export default function ChatPage() {
       : text;
     if (await chat.send(message, {
       connection: config.connection, maxTokens: config.maxTokens,
-      dataPrep: !preparationId && !dataPrep.preparation && dataPrep.profile && dataPrep.file ? {
-        filename: dataPrep.file.name, profile: dataPrep.profile, report: dataPrep.suggestion,
+      dataPrep: !preparationId && !dataPrep.preparation && dataPrep.profile && dataPrep.files[0] ? {
+        filename: dataPrep.files[0].name, profile: dataPrep.profile, report: dataPrep.suggestion,
       } : undefined,
     })) setInput("");
   }

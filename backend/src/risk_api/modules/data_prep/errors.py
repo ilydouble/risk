@@ -21,6 +21,7 @@ DATA_PREP_ERRORS: dict[int | str, dict[str, Any]] = {
                 "DATA_PREP_CONTENT_INVALID",
                 "DATA_PREP_MAPPING_INVALID",
                 "DATA_PREP_RULE_INVALID",
+                "DATA_PREP_GRAPH_INVALID",
             ],
         ]
     },

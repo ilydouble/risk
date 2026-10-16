@@ -6,6 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import defer
 
+from risk_api.modules.data_prep.case_files import CASE_ENGINE, primary_source
 from risk_api.modules.data_prep.conversion import ENGINE, ConversionPlan, digest
 from risk_api.modules.data_prep.lineage import trace_company
 from risk_api.modules.data_prep.model import Preparation, PreparationConversion
@@ -44,7 +45,7 @@ async def enterprise_provenance(
     if row is None:
         return unavailable("原始案例或已导入转换任务不可用，无法核验行级来源。")
     task, source = row
-    if task.engine_version != ENGINE:
+    if task.engine_version not in {ENGINE, CASE_ENGINE}:
         return unavailable("此转换版本暂不支持行级还原；未使用当前规则猜测历史来源。")
     if (
         hashlib.sha256(source.source).hexdigest() != task.source_sha
@@ -60,8 +61,11 @@ async def enterprise_provenance(
         return unavailable("原文件或冻结规则的摘要不一致，暂不展示未经核验的来源。")
     try:
         plan = ConversionPlan.model_validate(task.plan)
+        filename, csv_source = primary_source(source.source, source.profile)
+        if task.engine_version == ENGINE:
+            filename = source.filename
         lineage = await asyncio.to_thread(
-            trace_company, source.source, plan, company["nodeId"], company["data"]
+            trace_company, csv_source, plan, company["nodeId"], company["data"]
         )
     except (ValueError, KeyError, ValidationError):
         return unavailable("原始行与已保存企业记录无法对应，暂不展示未经核验的来源。")
@@ -69,7 +73,7 @@ async def enterprise_provenance(
         "status": "available",
         "message": "已按导入时冻结规则核验原始行与当前企业记录。",
         "preparationId": source.id,
-        "filename": source.filename,
+        "filename": filename,
         "taskId": task.id,
         "engineVersion": task.engine_version,
         "planVersion": task.fingerprint,

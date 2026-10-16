@@ -24,6 +24,7 @@ export function AssistantPreparationCard({ preparation, conversationId, disabled
         <Link className="text-primary-500 underline" to={`/data-prep?preparation=${encodeURIComponent(preparation.id)}${conversationId ? `&conversation=${encodeURIComponent(conversationId)}` : ""}`}>返回数据准备</Link>
       </div>
     </div>
+    {Boolean(preparation.profile.caseFiles?.length) && <p className="mt-3 text-xs leading-6 text-foreground-500">联合分析文件：{preparation.profile.caseFiles?.map(file => `${file.filename}（${file.role === "enterprises" ? "企业主表" : "图关系"}）`).join("、")}。关联覆盖与属性冲突以试运行结果为准。</p>}
     <details className="mt-3 text-xs">
       <summary className="cursor-pointer text-foreground-600">查看问题与映射方案 · 可修改并保存</summary>
       <div className="mt-3 space-y-3">

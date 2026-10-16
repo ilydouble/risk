@@ -2,12 +2,12 @@ import { createContext, useContext, type Dispatch, type SetStateAction } from "r
 import type { ResponseInspectData, ResponseSuggestMapping, ResponsePreparation } from "@/shared/api/generated/schema";
 
 export type DataPrepSession = {
-  file?: File;
+  files: File[];
   profile?: ResponseInspectData;
   suggestion?: ResponseSuggestMapping;
   preparation?: ResponsePreparation;
   setPreparation: Dispatch<SetStateAction<ResponsePreparation | undefined>>;
-  setFile: Dispatch<SetStateAction<File | undefined>>;
+  setFiles: Dispatch<SetStateAction<File[]>>;
   setProfile: Dispatch<SetStateAction<ResponseInspectData | undefined>>;
   setSuggestion: Dispatch<SetStateAction<ResponseSuggestMapping | undefined>>;
 };
