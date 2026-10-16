@@ -1,14 +1,19 @@
 import { Bot, Brain, Check, ChevronRight, Clock3, LoaderCircle, Wrench } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { Link, useSearchParams } from "react-router-dom";
 import type { Item, Turn } from "@/entities/assistant/model/types";
 import { useLang } from "@/shared/lib/useLang";
 
 function ProcessItem({ item }: { item: Item }) {
   const { pick } = useLang();
+  const [params] = useSearchParams();
   if (item.kind !== "tool_call" && item.kind !== "reasoning") return null;
   const running = item.status === "running";
   const failed = item.status === "failed";
+  const toolResult = item.kind === "tool_call" ? item.result : undefined;
+  const result = Array.isArray(toolResult) ? toolResult.find(block => block && typeof block === "object" && "json" in block)?.json : undefined;
+  const caseId = item.kind === "tool_call" && item.name.startsWith("preparation_") && result && typeof result === "object" && "preparationId" in result && typeof result.preparationId === "string" ? result.preparationId : undefined;
   return <details className="group rounded-xl border border-background-200 bg-background-50/60">
     <summary className="flex cursor-pointer list-none items-center gap-2.5 px-3.5 py-3 text-sm text-foreground-600 [&::-webkit-details-marker]:hidden">
       {item.kind === "tool_call" ? <Wrench size={15} /> : <Brain size={15} />}
@@ -26,6 +31,7 @@ function ProcessItem({ item }: { item: Item }) {
         {item.result != null && <>
           <p className="mb-1 mt-3 font-medium text-foreground-500">{pick("执行结果", "Result")}</p>
           <pre className="max-h-80 overflow-auto whitespace-pre-wrap break-all rounded-lg bg-background-100 p-3">{JSON.stringify(item.result, null, 2)}</pre>
+          {caseId && <Link className="mt-2 inline-block text-primary-500 underline" to={`/chat?preparation=${encodeURIComponent(caseId)}${params.get("conversation") ? `&conversation=${encodeURIComponent(params.get("conversation")!)}` : ""}`}>查看方案、核验结果与导入入口 →</Link>}
         </>}
       </>}
     </div>

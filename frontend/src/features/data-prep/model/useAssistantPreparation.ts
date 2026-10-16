@@ -3,7 +3,7 @@ import type { ResponsePreparation } from "@/shared/api/generated/schema";
 import { handleApiError } from "@/shared/api/http";
 import { requestGetPreparation } from "../api/dataPrepApi";
 
-export function useAssistantPreparation(id: string | null) {
+export function useAssistantPreparation(id: string | null, revision = "") {
   const [result, setResult] = useState<{ id: string; preparation?: ResponsePreparation; error?: string }>();
   useEffect(() => {
     if (!id) return;
@@ -14,7 +14,7 @@ export function useAssistantPreparation(id: string | null) {
       if (active) setResult({ id, error: handleApiError(cause) });
     });
     return () => { active = false; };
-  }, [id]);
+  }, [id, revision]);
   const current = result?.id === id ? result : undefined;
   return {
     preparation: current?.preparation,

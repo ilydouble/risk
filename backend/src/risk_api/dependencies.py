@@ -16,6 +16,7 @@ from risk_api.modules.auth.service import AuthService
 from risk_api.modules.chat.service import ChatService
 from risk_api.modules.company.repository import CompanyRepository
 from risk_api.modules.company.service import CompanyService
+from risk_api.modules.data_prep.conversion_service import ConversionService
 from risk_api.modules.data_prep.repository import PreparationRepository
 from risk_api.modules.data_prep.service import PreparationService
 from risk_api.modules.data_qa.repository import DataQARepository
@@ -35,6 +36,10 @@ from risk_api.shared.db import session_factory
 
 
 class InfrastructureProvider(Provider):
+    @provide(scope=Scope.REQUEST)
+    def conversion_service(self, session: AsyncSession) -> ConversionService:
+        return ConversionService(session)
+
     @provide(scope=Scope.REQUEST)
     def preparation_repository(self, session: AsyncSession) -> PreparationRepository:
         return PreparationRepository(session)

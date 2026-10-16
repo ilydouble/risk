@@ -4,6 +4,7 @@ from fastapi import APIRouter
 from risk_api.modules.auth.errors import SESSION_ERRORS
 from risk_api.modules.data_prep.api import handler
 from risk_api.modules.data_prep.api.schemas import (
+    ResponseConversionState,
     ResponseInspectData,
     ResponseListPreparations,
     ResponseModelDefaults,
@@ -17,6 +18,15 @@ from risk_api.shared.api.envelope import ApiEnvelope
 from risk_api.shared.api.response import COMMON_ERROR_RESPONSES
 
 router = APIRouter(route_class=DishkaRoute)
+for path, endpoint in (
+    ("/conversion/save-plan", handler.save_conversion_plan),
+    ("/conversion/trial", handler.trial_conversion),
+    ("/conversion/get", handler.get_conversion),
+    ("/conversion/import", handler.import_conversion),
+):
+    router.add_api_route(path, endpoint, methods=["POST"],
+                         response_model=ApiEnvelope[ResponseConversionState],
+                         responses=COMMON_ERROR_RESPONSES | SESSION_ERRORS | DATA_PREP_ERRORS)
 router.add_api_route(
     "/export", handler.export_preparation, methods=["POST"],
     response_model=ApiEnvelope[ResponsePreparationBundle],

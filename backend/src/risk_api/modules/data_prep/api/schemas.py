@@ -1,9 +1,10 @@
 from datetime import datetime
-from typing import Literal
+from typing import Any, Literal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from risk_api.modules.data_prep.conversion import ConversionPlan
 from risk_api.shared.api.model_connection import ModelConnection
 
 
@@ -168,3 +169,59 @@ class ResponseListPreparations(BaseModel):
 class ResponsePreparationBundle(BaseModel):
     filename: str
     contentBase64: str
+
+
+class RequestSaveConversionPlan(RequestGetPreparation):
+    plan: ConversionPlan
+
+
+class RequestGetConversion(RequestGetPreparation):
+    taskId: UUID | None = None
+
+
+class RequestImportConversion(RequestGetPreparation):
+    taskId: UUID
+    confirm: Literal[True]
+
+
+class ConversionIssue(BaseModel):
+    line: int
+    message: str
+
+
+class ConversionExample(BaseModel):
+    line: int
+    before: dict[str, str]
+    after: dict[str, Any]
+
+
+class ConversionReport(BaseModel):
+    inputCount: int
+    outputCount: int
+    duplicateCount: int
+    rejectedCount: int
+    issueCount: int
+    issues: list[ConversionIssue]
+    examples: list[ConversionExample]
+    warnings: list[str]
+    passed: bool
+
+
+class ResponseConversionTask(BaseModel):
+    id: str
+    engineVersion: str
+    planVersion: str
+    status: Literal["ready", "blocked", "imported"]
+    sourceSha256: str
+    outputSha256: str
+    plan: ConversionPlan
+    report: ConversionReport
+    datasetId: str | None
+    current: bool
+
+
+class ResponseConversionState(BaseModel):
+    preparationId: str
+    plan: ConversionPlan | None
+    planCurrent: bool
+    task: ResponseConversionTask | None

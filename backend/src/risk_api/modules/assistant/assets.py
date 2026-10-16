@@ -81,7 +81,8 @@ class AssetRepository:
                 "kind": "uploaded_case", "source": "data_preparation",
                 "scope": "current_account", "persistence": "database",
                 "rowCount": item.profile["rowCount"], "countMeaning": "原始CSV体检行数",
-                "capabilities": ["asset_read"], "mappingConfirmed": item.confirmed,
+                "capabilities": ["asset_read", "preparation_save_plan", "preparation_trial",
+                                 "preparation_result"], "mappingConfirmed": item.confirmed,
                 "inWorkbench": item.in_workbench,
                 "warnings": ["字段映射是适配方案；移交不代表已经转换或训练就绪。"],
             }
@@ -100,6 +101,7 @@ class AssetRepository:
         return {"preparationId": item.id, "filename": item.filename,
                 "content": item.report if report else {
                     "profile": item.profile, "mapping": item.mapping,
+                    "conversionPlan": item.conversion_plan,
                     "confirmed": item.confirmed, "inWorkbench": item.in_workbench,
                 }}
 
@@ -108,7 +110,8 @@ class AssetRepository:
             select(func.count()).select_from(EnterpriseRecord)
             .where(EnterpriseRecord.dataset_id == Dataset.id).correlate(Dataset).scalar_subquery()
         )
-        statement = select(Dataset.id, Dataset.name, Dataset.filename, record_count.label("count"))
+        statement = select(Dataset.id, Dataset.name, Dataset.filename, Dataset.execution,
+                           Dataset.source_preparation_id, record_count.label("count"))
         statement = statement.where(Dataset.owner_id == owner)
         if dataset_id is not None:
             statement = statement.where(Dataset.id == dataset_id)
@@ -117,11 +120,18 @@ class AssetRepository:
         )).mappings().all()
         return [{
             "id": f"workbench:{row['id']}", "datasetId": row["id"], "name": row["name"],
-            "filename": row["filename"], "kind": "training_dataset", "source": "workbench",
+            "filename": row["filename"],
+            "kind": "enterprise_dataset" if row["execution"].get("result", {}).get("browseOnly")
+            else "training_dataset", "source": "workbench",
+            "sourcePreparationId": row["source_preparation_id"],
+            "browseOnly": bool(row["execution"].get("result", {}).get("browseOnly")),
             "scope": "current_account", "persistence": "database", "rowCount": row["count"],
             "countMeaning": "已导入工作台的标准企业数据记录数（含关系、事件等）",
             "capabilities": ["asset_read", "workbench_ask"],
-            "warnings": ["导入记录数不等于原始文件行数；未导入时为0。"],
+            "warnings": ["导入记录数不等于原始文件行数；未导入时为0。",
+                         "原案例与派生数据集为同一来源的不同阶段，记录数不能相加。",
+                         *(["CSV转换企业数据只供浏览和问数，尚未形成训练输入。"]
+                           if row["execution"].get("result", {}).get("browseOnly") else [])],
         } for row in rows]
 
     async def enterprise_rows(self) -> dict:

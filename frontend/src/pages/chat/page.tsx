@@ -19,7 +19,6 @@ export default function ChatPage() {
   const [params, setParams] = useSearchParams();
   const id = params.get("conversation");
   const preparationId = params.get("preparation");
-  const preparation = useAssistantPreparation(preparationId);
   // Creating a conversation must retain its explicit case binding across navigation.
   const select = useCallback((value: string) => setParams(current => {
     const next = new URLSearchParams(current); next.set("conversation", value); return next;
@@ -34,6 +33,7 @@ export default function ChatPage() {
   const model = config.custom ? config.model : config.defaults?.model;
   const ready = !config.custom || Boolean(config.url.trim() && config.model.trim());
   const blocked = chat.sending || chat.loading || Boolean(chat.active);
+  const preparation = useAssistantPreparation(preparationId, `${blocked}:${chat.turns.length}`);
 
   useEffect(() => {
     if (follow.current) scroll.current?.scrollTo({ top: scroll.current.scrollHeight });
@@ -43,7 +43,7 @@ export default function ChatPage() {
   async function send(text = input) {
     if (text.length > (preparationId ? 7500 : 8000) || !text.trim() || blocked || !ready || (preparationId && !preparation.preparation)) return;
     const message = preparationId
-      ? `${text.trim()}\n\n【当前案例上下文】只处理 preparation:${preparationId}；先用 asset_catalog 确认权限及资产，再用 asset_read 读取该案例的最新统计、映射和关联报告。请围绕尚未确定的含义与处理规则逐项询问。对话建议不等于已保存映射；不要声称已执行转换或导入。`
+      ? `${text.trim()}\n\n【当前案例上下文】只处理 preparation:${preparationId}；先读取该案例的最新统计、映射和报告。不确定的规则先询问；规则明确后可用 preparation_save_plan 保存可执行草稿、preparation_trial 试运行、preparation_result 查询结果。试运行不等于导入，正式导入须由用户在结果卡片确认。`
       : text;
     if (await chat.send(message, {
       connection: config.connection, maxTokens: config.maxTokens,
@@ -79,7 +79,7 @@ export default function ChatPage() {
       </header>
       {preparation.loading && <p role="status" className="border-b border-background-200 px-5 py-3 text-sm">正在恢复当前案例…</p>}
       {preparation.error && <div role="alert" className="border-b border-background-200 px-5 py-3 text-sm text-red-500">案例无法读取：{preparation.error}。请返回数据准备重新选择。<Link className="ml-2 underline" to="/data-prep">返回数据准备</Link></div>}
-      {preparation.preparation && <AssistantPreparationCard preparation={preparation.preparation} conversationId={id} disabled={blocked || !ready} onStart={() => void send(mappingPrompt)} onSaved={preparation.onSaved} />}
+      {preparation.preparation && <AssistantPreparationCard preparation={preparation.preparation} conversationId={id} disabled={blocked} onStart={() => void send(mappingPrompt)} onConvert={() => void send("请读取当前案例和已确认的方案，将明确的字段映射、去重及缺失处理保存为可执行规则并试运行。如果仍有未确定的业务规则，先逐项询问，不要猜测。返回实际核验结果，提示我在卡片中查看并确认导入。")} onSaved={preparation.onSaved} />}
       {chat.conversations.length > 0 && !chat.sending && <div className="border-b border-background-200 px-5 py-2 md:hidden">
         <SelectMenu label={pick("历史对话", "History")} value={id || "new"}
           options={[{ value: "new", label: pick("新对话", "New conversation") }, ...chat.conversations.map(c => ({ value: c.id, label: c.title || pick("新对话", "New conversation") }))]}
@@ -110,7 +110,7 @@ export default function ChatPage() {
                 : <button type="submit" disabled={blocked || !input.trim() || input.length > (preparationId ? 7500 : 8000) || !ready || Boolean(preparationId && !preparation.preparation)} aria-label={pick("发送", "Send")} className="rounded-xl bg-primary-500 p-2.5 text-white disabled:opacity-30"><ArrowUp size={17} /></button>}
             </div>
           </form>
-          <p className="mt-2 text-center text-[11px] text-foreground-400">{preparationId ? "本轮围绕顶部案例展开；映射修改需在方案面板保存。" : dataPrep.preparation ? pick("已保存案例与报告可通过资产目录查询；刷新后仍可用。", "Saved cases and reports are available through the asset catalog after refresh.") : dataPrep.profile ? pick("本轮将携带当前案例统计和已有报告供模型查询；刷新后失效。", "This turn includes the current case profile and report for model queries; they expire on refresh.") : pick("目录覆盖共享演示数据与当前账号训练数据；本轮未携带页面案例。", "The catalog covers shared demo data and your training datasets; no browser case is attached.")}</p>
+          <p className="mt-2 text-center text-[11px] text-foreground-400">{preparationId ? "本轮围绕顶部案例展开；试运行通过后在核验卡片确认导入。" : dataPrep.preparation ? pick("已保存案例与报告可通过资产目录查询；刷新后仍可用。", "Saved cases and reports are available through the asset catalog after refresh.") : dataPrep.profile ? pick("本轮将携带当前案例统计和已有报告供模型查询；刷新后失效。", "This turn includes the current case profile and report for model queries; they expire on refresh.") : pick("目录覆盖共享演示数据与当前账号训练数据；本轮未携带页面案例。", "The catalog covers shared demo data and your training datasets; no browser case is attached.")}</p>
         </div>
       </div>
     </main>

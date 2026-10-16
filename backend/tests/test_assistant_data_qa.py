@@ -75,6 +75,7 @@ def test_real_strands_workbench_loop_binds_owner_and_returns_safe_results(
             schemas = {t["function"]["name"]: t["function"] for t in payload["tools"]}
             assert set(schemas) == {
                 "current_time", "workbench_catalog", "workbench_ask", "asset_catalog", "asset_read",
+                "preparation_save_plan", "preparation_trial", "preparation_result",
             }
             assert "owner" not in json.dumps(schemas["workbench_ask"]["parameters"])
             delta = {"tool_calls": [{

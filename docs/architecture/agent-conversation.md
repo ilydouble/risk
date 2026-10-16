@@ -8,7 +8,8 @@
 - `protocol/` 定义与框架无关的 Conversation、Turn、Item 和 Event。
 - Repository 管持久化；Service 管执行、取消、超时和恢复；HTTP 层只做鉴权、DTO 和 SSE。
 - `/chat` 改为持久会话界面。原 `/chat/complete` 与问数接口保留兼容，不能称为 Agent。
-- 工具包括服务器时间、工作台数据目录和只读问数；训练、推理及文档检索尚未接入。
+- 工具包括服务器时间、数据资产目录、只读问数和准备方案保存/试运行/结果查询；训练、推理及文档检索尚未接入。
+- 正式企业导入由界面结果卡片明确确认，助手没有导入工具；详见[案例转换与企业导入](preparation-conversion.md)。
 
 ## 执行与恢复
 

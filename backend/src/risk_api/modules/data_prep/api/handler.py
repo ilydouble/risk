@@ -12,14 +12,18 @@ from risk_api.modules.auth.service import AuthService
 from risk_api.modules.chat.service import ChatService
 from risk_api.modules.data_prep.agent import analyze_profile
 from risk_api.modules.data_prep.api.schemas import (
+    RequestGetConversion,
     RequestGetPreparation,
+    RequestImportConversion,
     RequestInspectData,
     RequestListPreparations,
     RequestModelDefaults,
+    RequestSaveConversionPlan,
     RequestSavePreparationMapping,
     RequestSavePreparationReport,
     RequestSuggestMapping,
     RequestTestModel,
+    ResponseConversionState,
     ResponseInspectData,
     ResponseListPreparations,
     ResponseModelDefaults,
@@ -28,11 +32,52 @@ from risk_api.modules.data_prep.api.schemas import (
     ResponseSuggestMapping,
     ResponseTestModel,
 )
+from risk_api.modules.data_prep.conversion_service import ConversionService
 from risk_api.modules.data_prep.model import Preparation
 from risk_api.modules.data_prep.service import PreparationService
 from risk_api.shared.api.envelope import ApiEnvelope
 from risk_api.shared.api.response import success_response
 from risk_api.shared.config import settings
+
+
+async def save_conversion_plan(
+    body: RequestSaveConversionPlan, request: Request, auth: FromDishka[AuthService],
+    conversions: FromDishka[ConversionService],
+) -> ApiEnvelope[ResponseConversionState]:
+    user = await authorize_request(request, auth)
+    return success_response(ResponseConversionState.model_validate(await conversions.save_plan(
+        user["user_id"], str(body.preparationId), body.plan,
+    )))
+
+
+async def trial_conversion(
+    body: RequestGetPreparation, request: Request, auth: FromDishka[AuthService],
+    conversions: FromDishka[ConversionService],
+) -> ApiEnvelope[ResponseConversionState]:
+    user = await authorize_request(request, auth)
+    return success_response(ResponseConversionState.model_validate(await conversions.trial(
+        user["user_id"], str(body.preparationId),
+    )))
+
+
+async def get_conversion(
+    body: RequestGetConversion, request: Request, auth: FromDishka[AuthService],
+    conversions: FromDishka[ConversionService],
+) -> ApiEnvelope[ResponseConversionState]:
+    user = await authorize_request(request, auth)
+    return success_response(ResponseConversionState.model_validate(await conversions.state(
+        user["user_id"], str(body.preparationId), str(body.taskId) if body.taskId else None,
+    )))
+
+
+async def import_conversion(
+    body: RequestImportConversion, request: Request, auth: FromDishka[AuthService],
+    conversions: FromDishka[ConversionService],
+) -> ApiEnvelope[ResponseConversionState]:
+    user = await authorize_request(request, auth)
+    return success_response(ResponseConversionState.model_validate(await conversions.import_task(
+        user["user_id"], str(body.preparationId), str(body.taskId),
+    )))
 
 
 async def inspect_data(

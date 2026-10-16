@@ -11,6 +11,7 @@ import type {
   RequestListPreparations, RequestGetPreparation, RequestSavePreparationMapping,
   RequestSavePreparationReport, ResponseListPreparations, ResponsePreparation,
   ResponsePreparationBundle,
+  RequestSaveConversionPlan, RequestGetConversion, RequestImportConversion, ResponseConversionState,
 } from "@/shared/api/generated/schema";
 
 export const requestInspectData = http.post<RequestInspectData, ResponseInspectData>("/data-prep/inspect");
@@ -22,3 +23,7 @@ export const requestGetPreparation = http.post<RequestGetPreparation, ResponsePr
 export const requestSavePreparationMapping = http.post<RequestSavePreparationMapping, ResponsePreparation>("/data-prep/save-mapping");
 export const requestSavePreparationReport = http.post<RequestSavePreparationReport, ResponsePreparation>("/data-prep/save-report");
 export const requestExportPreparation = http.post<RequestGetPreparation, ResponsePreparationBundle>("/data-prep/export");
+export const requestSaveConversionPlan = http.post<RequestSaveConversionPlan, ResponseConversionState>("/data-prep/conversion/save-plan");
+export const requestGetConversion = http.post<RequestGetConversion, ResponseConversionState>("/data-prep/conversion/get");
+export const requestTrialConversion = http.withTimeout(60000).post<RequestGetPreparation, ResponseConversionState>("/data-prep/conversion/trial");
+export const requestImportConversion = http.withTimeout(60000).post<RequestImportConversion, ResponseConversionState>("/data-prep/conversion/import");
