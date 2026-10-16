@@ -214,7 +214,9 @@ def test_persist_trial_import_isolated_stale_atomic_and_idempotent():
                 assert (await service.trial("a", identity))["task"]["id"] == task_id
                 assert await session.scalar(select(func.count()).select_from(Dataset)) == 0
                 broken = await prep.create(
-                    "a", "conflict.csv", b"id,value,status\n001,10,active\n001,20,active\n",
+                    "a",
+                    "conflict.csv",
+                    b"id,value,status\n001,10,active\n001,20,active\n",
                 )
                 broken_id = broken.id
                 await service.save_plan("a", broken_id, ConversionPlan.model_validate(RULES))
@@ -290,5 +292,36 @@ def test_persist_trial_import_isolated_stale_atomic_and_idempotent():
             async with admin.begin() as connection:
                 await connection.execute(text(f'DROP SCHEMA "{schema}" CASCADE'))
             await admin.dispose()
+
+    asyncio.run(run())
+
+
+def test_unknown_columns_report_exact_difference_without_saving():
+    from types import SimpleNamespace
+    from unittest.mock import AsyncMock
+
+    session = Mock()
+    session.commit = AsyncMock()
+    service = ConversionService(session)
+    service.preparations.get = AsyncMock(
+        return_value=SimpleNamespace(
+            profile={"fields": [{"name": "id"}, {"name": "actual_value"}]},
+        )
+    )
+    plan = ConversionPlan.model_validate(
+        {
+            "columns": [
+                {"field": "id", "type": "text", "target": "enterprise.id"},
+                {"field": "invented_value", "type": "number", "target": "features.value"},
+            ]
+        }
+    )
+
+    async def run():
+        with pytest.raises(AppError) as error:
+            await service.save_plan("owner", "case", plan)
+        assert error.value.code == "DATA_PREP_RULE_INVALID"
+        assert "actual_value" in error.value.message and "invented_value" in error.value.message
+        session.commit.assert_not_awaited()
 
     asyncio.run(run())

@@ -156,7 +156,9 @@ def data_qa_tools(
             return {"status": "success", "content": [{"json": result}]}
         except (ValueError, AppError):
             return {"status": "error", "content": [{"json": {
-                "code": "ASSET_NOT_FOUND", "message": "资产不存在、不在本轮快照中或无权访问",
+                "code": "ASSET_NOT_FOUND", "message": "资产不存在、不在本轮快照中或无权访问。"
+                "案例ID须为 preparation:<UUID>，报告ID须为 preparation-report:<UUID>；"
+                "请先调用asset_catalog取得完整ID，不要用裸UUID或凭历史猜测字段。",
             }}]}
         except Exception:
             return {"status": "error", "content": [{"json": {

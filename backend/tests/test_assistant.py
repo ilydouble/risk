@@ -228,6 +228,35 @@ def test_persistence_replay_and_execution():
             assert "secret" not in failed_turn.model_dump_json()
             assert failed_turn.items[-1].status == "failed"
             await failed_service.close()
+            for key, code, message in [
+                ("limited", "ASSISTANT_EXECUTION_LIMIT", "工具调用达到上限，请查看参数错误"),
+                ("unsafe", "UNEXPECTED", "secret upstream diagnostic"),
+            ]:
+
+                class LimitedRuntime(StrandsRuntime):
+                    async def stream(self, *args, code=code, message=message):
+                        yield [TextItem(kind="reasoning", text="Working")]
+                        raise AppError(422, code, message)
+
+                limited_service = AssistantService(repo, LimitedRuntime(sessions))
+                limited = await limited_service.start(
+                    owner,
+                    conversation.id,
+                    key,
+                    "Hi",
+                    config,
+                    "r",
+                )
+                await asyncio.gather(*limited_service.tasks.values())
+                result = await repo.turn(owner, limited.id)
+                assert result.status == "failed"
+                assert result.error.code == (
+                    code if key == "limited" else "ASSISTANT_EXECUTION_FAILED"
+                )
+                assert "secret" not in result.model_dump_json()
+                if key == "limited":
+                    assert result.error.message == message
+                await limited_service.close()
             shutdown_service = AssistantService(repo, SlowRuntime(sessions))
             shutdown = await shutdown_service.start(
                 owner, conversation.id, "shutdown", "Hi", config, "r"

@@ -6,6 +6,7 @@ from time import monotonic
 
 from anyio import CancelScope
 
+from risk_api.errors import AppError
 from risk_api.modules.assistant.protocol.events import TurnEvent
 from risk_api.modules.assistant.protocol.items import Item
 from risk_api.modules.assistant.protocol.turns import Turn, TurnError, TurnStatus
@@ -116,6 +117,14 @@ class AssistantService:
         except asyncio.CancelledError:
             status = TurnStatus.INTERRUPTED
             error = TurnError(code="ASSISTANT_INTERRUPTED", message="Execution interrupted")
+        except AppError as failure:
+            status = TurnStatus.FAILED
+            error = (TurnError(code=failure.code, message=failure.message)
+                     if failure.code == "ASSISTANT_EXECUTION_LIMIT" else
+                     TurnError(code="ASSISTANT_EXECUTION_FAILED", message="执行未完成，请稍后重试"))
+            logger.warning("assistant.turn_failed", extra={
+                "turn_id": turn.id, "request_id": turn.requestId, "internal_code": failure.code,
+            })
         except Exception as failure:
             status = TurnStatus.FAILED
             error = TurnError(

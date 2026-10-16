@@ -23,9 +23,15 @@ class ConversionService:
 
     async def save_plan(self, owner: str, identity: str, plan: ConversionPlan) -> dict:
         item = await self.preparations.get(owner, identity, lock=True)
-        if {rule.field for rule in plan.columns} != {f["name"] for f in item.profile["fields"]}:
+        source_fields = {f["name"] for f in item.profile["fields"]}
+        supplied = {rule.field for rule in plan.columns}
+        if supplied != source_fields:
             raise AppError(
-                422, "DATA_PREP_RULE_INVALID", "规则须覆盖每个源字段，未使用字段须显式忽略"
+                422,
+                "DATA_PREP_RULE_INVALID",
+                f"规则字段与当前CSV不一致。缺少：{sorted(source_fields - supplied)}；"
+                f"不存在：{sorted(supplied - source_fields)}。"
+                "请重新读取案例；未使用字段须显式忽略。",
             )
         mapping = []
         for rule in plan.columns:
@@ -194,9 +200,9 @@ class ConversionService:
             "engine": ENGINE,
             "taskId": task.id,
             "browseOnly": True,
-                    "protocol": ENGINE,
-                    "counts": counts,
-                    "datasetProfile": {"browseOnly": True},
+            "protocol": ENGINE,
+            "counts": counts,
+            "datasetProfile": {"browseOnly": True},
         }
         self.session.add(
             Dataset(

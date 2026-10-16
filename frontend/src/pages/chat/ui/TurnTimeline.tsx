@@ -62,7 +62,7 @@ export function TurnTimeline({ turn }: { turn: Turn }) {
     </div>}
     {turn.status !== "running" && <div className="flex flex-wrap items-center gap-2 text-xs text-foreground-400 sm:ml-10">
       <Clock3 size={12} />
-      <span>{turn.status === "completed" ? pick("完成", "Completed") : turn.status === "cancelled" ? pick("已停止", "Stopped") : turn.status === "interrupted" ? pick("执行已中断，可重新发送", "Interrupted — send again to retry") : pick("执行失败，请检查模型设置后重试", "Failed — check model settings and retry")}</span>
+      <span>{turn.status === "completed" ? pick("完成", "Completed") : turn.status === "cancelled" ? pick("已停止", "Stopped") : turn.status === "interrupted" ? pick("执行已中断，可重新发送", "Interrupted — send again to retry") : (turn.error?.message || pick("执行失败，请查看工具结果后重试", "Failed — check the tool result and retry"))}</span>
       <span>· {turn.model}</span>
       <span title={turn.requestId}>{pick("请求", "Request")} {turn.requestId.slice(0, 8)}</span>
     </div>}

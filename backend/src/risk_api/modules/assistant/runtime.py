@@ -1,7 +1,9 @@
 import hashlib
 import json
 from collections.abc import AsyncGenerator
+from contextlib import aclosing
 from dataclasses import dataclass, field
+from typing import cast
 
 import httpx
 from openai import AsyncOpenAI
@@ -10,6 +12,7 @@ from strands import Agent
 from strands.models.openai import OpenAIModel
 from strands.types.content import Messages
 
+from risk_api.errors import AppError
 from risk_api.modules.assistant.assets import SessionAsset
 from risk_api.modules.assistant.projector import ItemProjector
 from risk_api.modules.assistant.protocol.items import Item
@@ -131,9 +134,22 @@ class StrandsRuntime:
                         "predictions from calibrated default probabilities. On tool failure, "
                         "explain the failure without fabricating results or broadening scope. "
                         "For preparation mapping, use preparation_save_plan to persist an "
-                        "executable draft after resolving uncertainties with the user; then "
-                        "preparation_trial to execute fixed rules and preparation_result to "
+                        "executable draft after resolving uncertainties with the user. Its "
+                        "default run_trial=true immediately executes verification and returns "
+                        "the real report. Use preparation_trial to repeat saved rules and "
+                        "preparation_result to "
                         "check persisted results. Existing prose mappings are not executable. "
+                        "Read the current case successfully before constructing rules; for "
+                        "asset_read use the full preparation:<UUID> catalog ID, not bare UUID. "
+                        "If a read fails, fix it before saving; never invent source columns. "
+                        "Previous assistant guesses are not confirmed business definitions. "
+                        "On validation failure use its field paths to fix JSON structure only; "
+                        "do not silently change label meaning or missing-value policies. "
+                        "After two failed saves stop retrying and explain the exact errors. "
+                        "Never claim a plan was saved unless the tool returned success. "
+                        "Never report trial counts without a returned task.report. If task is "
+                        "null no trial ran. Blocked tasks cannot import "
+                        "even their successful rows. "
                         "Never guess label meanings, duplicate aggregation or fill policies. "
                         "Trial is not import. Formal import is only available via the UI "
                         "result card's explicit confirmation button. You have no import tool. "
@@ -143,12 +159,23 @@ class StrandsRuntime:
                     ),
                 )
                 projector = ItemProjector()
-                async for event in agent.stream_async(message, limits={"turns": 12}):
-                    updates = projector.project(event)
-                    if updates:
-                        yield updates
-                    result = event.get("result")
-                    if result is not None and result.stop_reason != "end_turn":
-                        raise RuntimeError("Agent stopped without a complete response")
+                stop_reason = "end_turn"
+                # SDK annotates AsyncIterator, but returns an async generator owning trace context.
+                stream = cast(AsyncGenerator[dict, None],
+                              agent.stream_async(message, limits={"turns": 12}))
+                async with aclosing(stream) as events:
+                    async for event in events:
+                        updates = projector.project(event)
+                        if updates:
+                            yield updates
+                        result = event.get("result")
+                        if result is not None:
+                            stop_reason = result.stop_reason
+                if stop_reason.startswith("limit_"):
+                    raise AppError(422, "ASSISTANT_EXECUTION_LIMIT",
+                                   "本轮工具调用或生成达到执行上限，尚未完成。请查看失败工具的"
+                                   "具体参数错误后重试；这不代表模型地址或模型名错误。")
+                if stop_reason != "end_turn":
+                    raise RuntimeError("Agent stopped without a complete response")
                 if not projector.answer.strip():
                     raise RuntimeError("Agent returned no answer")

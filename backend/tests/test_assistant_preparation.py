@@ -12,7 +12,19 @@ from risk_api.modules.assistant.runtime import ModelSettings, StrandsRuntime
 from risk_api.modules.assistant.tools import preparation
 
 
-@pytest.mark.parametrize("action", ["save_plan", "trial", "result", "invalid", "failure"])
+@pytest.mark.parametrize(
+    "action",
+    [
+        "save_plan",
+        "trial",
+        "result",
+        "invalid",
+        "failure",
+        "invalid_plan",
+        "invalid_label",
+        "save_only",
+    ],
+)
 def test_real_agent_preparation_tools_bind_owner_and_never_expose_import(monkeypatch, action):
     identity = str(uuid4())
     calls, requests = [], []
@@ -22,8 +34,27 @@ def test_real_agent_preparation_tools_bind_owner_and_never_expose_import(monkeyp
         else "preparation_trial"
     )
     args = {"preparation_id": identity if action != "invalid" else "not-a-uuid"}
-    if action == "save_plan":
+    if action in {"save_plan", "invalid_plan", "invalid_label", "save_only"}:
+        name = "preparation_save_plan"
         args["plan"] = {"columns": [{"field": "id", "target": "enterprise.id", "type": "text"}]}
+        if action == "save_only":
+            args["run_trial"] = False
+        if action == "invalid_label":
+            args["plan"] = {
+                "columns": [
+                    {"field": "id", "target": "enterprise.id", "type": "text"},
+                    {"field": "community", "target": "features.community", "type": "label"},
+                    {
+                        "field": "status",
+                        "target": "enterprise.label",
+                        "type": "label",
+                        "values": {"0": "0", "1": "1"},
+                    },
+                ],
+                "labelMeaning": "snapshot status",
+            }
+        if action == "invalid_plan":
+            args["plan"] = {"columns": {"id": {}}, "labelMeaning": {"status": "unknown"}}
 
     @asynccontextmanager
     async def sessions():
@@ -57,6 +88,13 @@ def test_real_agent_preparation_tools_bind_owner_and_never_expose_import(monkeyp
             schemas = {tool["function"]["name"]: tool["function"] for tool in payload["tools"]}
             assert not any("import" in tool for tool in schemas)
             assert "owner" not in json.dumps(schemas[name]["parameters"])
+            advertised = schemas["preparation_save_plan"]["parameters"]
+            plan_schema = advertised["$defs"]["ConversionPlan"]["properties"]
+            assert advertised["properties"]["run_trial"]["default"] is True
+            assert plan_schema["columns"]["type"] == "array"
+            assert plan_schema["labelMeaning"]["type"] == "string"
+            column_schema = advertised["$defs"]["ConversionColumn"]["properties"]
+            assert column_schema["values"]["additionalProperties"]["enum"] == [0, 1]
             delta = {
                 "tool_calls": [
                     {
@@ -72,10 +110,22 @@ def test_real_agent_preparation_tools_bind_owner_and_never_expose_import(monkeyp
             message = next(m for m in payload["messages"] if m["role"] == "tool")
             content = json.loads(message["content"])
             assert "secret-key" not in message["content"]
-            if action in {"failure", "invalid"}:
+            if action in {"failure", "invalid", "invalid_plan", "invalid_label"}:
                 assert content["code"] == (
                     "DATA_PREP_TOOL_FAILED" if action == "failure" else "DATA_PREP_RULE_INVALID"
                 )
+                if action == "invalid_label":
+                    assert {e["path"] for e in content["errors"]} == {
+                        "plan.columns.1",
+                        "plan.columns.2.values.0",
+                        "plan.columns.2.values.1",
+                    }
+                if action == "invalid_plan":
+                    assert {e["path"] for e in content["errors"]} == {
+                        "plan.columns",
+                        "plan.labelMeaning",
+                    }
+                    assert "input" not in json.dumps(content["errors"])
             else:
                 assert content["preparationId"] == identity
                 if content["task"]:
@@ -116,7 +166,55 @@ def test_real_agent_preparation_tools_bind_owner_and_never_expose_import(monkeyp
             for item in batch:
                 items[item.id] = item
         tool = next(item for item in items.values() if item.kind == "tool_call")
-        assert tool.status == ("failed" if action in {"failure", "invalid"} else "completed")
+        assert tool.status == (
+            "failed"
+            if action in {"failure", "invalid", "invalid_plan", "invalid_label"}
+            else "completed"
+        )
 
     asyncio.run(run())
-    assert calls == ([] if action == "invalid" else [("bound-owner", identity)])
+    expected = (
+        []
+        if action in {"invalid", "invalid_plan", "invalid_label"}
+        else [("bound-owner", identity)] * (2 if action == "save_plan" else 1)
+    )
+    assert calls == expected
+
+
+def test_execution_limit_is_actionable_and_agent_stream_closes_in_same_context(monkeypatch):
+    from contextvars import ContextVar
+    from types import SimpleNamespace
+
+    from risk_api.errors import AppError
+
+    context = ContextVar("test_agent_context", default="outside")
+    closed = []
+
+    class LimitedAgent:
+        def __init__(self, **kwargs):
+            pass
+
+        async def stream_async(self, *args, **kwargs):
+            token = context.set("inside")
+            try:
+                yield {"result": SimpleNamespace(stop_reason="limit_turns")}
+            finally:
+                context.reset(token)
+                closed.append(True)
+
+    monkeypatch.setattr(runtime, "Agent", LimitedAgent)
+
+    async def run():
+        with pytest.raises(AppError) as failure:
+            async for _ in StrandsRuntime(None).stream(
+                "test",
+                [],
+                ModelSettings("http://model/v1/chat/completions", "test", 1024, ""),
+                "request",
+                "owner",
+            ):
+                pass
+        assert failure.value.code == "ASSISTANT_EXECUTION_LIMIT"
+        assert context.get() == "outside" and closed == [True]
+
+    asyncio.run(run())

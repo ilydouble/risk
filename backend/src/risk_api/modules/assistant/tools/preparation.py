@@ -2,7 +2,7 @@
 
 from uuid import UUID
 
-from pydantic import ValidationError
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from strands import tool
 from strands.types.tools import AgentTool
@@ -12,10 +12,34 @@ from risk_api.modules.data_prep.conversion import ConversionPlan
 from risk_api.modules.data_prep.conversion_service import ConversionService
 
 
+class SavePlanArguments(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    preparation_id: str = Field(description="Owned preparation UUID, without preparation: prefix")
+    run_trial: bool = Field(
+        default=True,
+        description=(
+            "Immediately execute a non-importing trial after saving. Default true; set false "
+            "only when the user explicitly requests saving a draft without execution."
+        ),
+    )
+    plan: ConversionPlan = Field(
+        description=(
+            "Use the exact fields read from this case. columns must be an ARRAY, labelMeaning "
+            "must be a STRING. Categorical text uses type=text; type=label is only for "
+            "enterprise.label, with values mapping source strings to INTEGER 0 or 1."
+        )
+    )
+
+
 def preparation_tools(sessions: async_sessionmaker[AsyncSession], owner: str) -> list[AgentTool]:
     async def invoke(
-        action: str, preparation_id: str, plan: dict | None = None, task_id: str | None = None
+        action: str,
+        preparation_id: str,
+        plan: dict | None = None,
+        task_id: str | None = None,
+        run_trial: bool = False,
     ) -> dict:
+        plan_saved = False
         try:
             identity = str(UUID(preparation_id))
             task_id = str(UUID(task_id)) if task_id else None
@@ -25,37 +49,76 @@ def preparation_tools(sessions: async_sessionmaker[AsyncSession], owner: str) ->
                     result = await service.save_plan(
                         owner, identity, ConversionPlan.model_validate(plan)
                     )
+                    plan_saved = True
+                    if run_trial:
+                        result = await service.trial(owner, identity)
                 elif action == "trial":
                     result = await service.trial(owner, identity)
                 else:
                     result = await service.state(owner, identity, task_id)
             return {"status": "success", "content": [{"json": result}]}
-        except ValidationError:
-            code, message = (
-                "DATA_PREP_RULE_INVALID",
-                (
-                    "规则格式无效。须完整覆盖源字段、指定唯一文本enterprise.id；标签须明确values及labelMeaning。"
-                    "仅支持text/number/integer/label/ignore和reject/null/fill缺失策略。"
-                ),
-            )
+        except ValidationError as error:
+            details = [
+                {"path": "plan." + ".".join(map(str, item["loc"])), "message": item["msg"]}
+                for item in error.errors(
+                    include_url=False, include_input=False, include_context=False
+                )[:8]
+            ]
+            return {
+                "status": "error",
+                "content": [
+                    {
+                        "json": {
+                            "code": "DATA_PREP_RULE_INVALID",
+                            "message": "可执行规则参数校验未通过，未保存方案。",
+                            "errors": details,
+                            "hint": "columns须为数组，labelMeaning须为文本；分类用text；"
+                            "标签仅映射到enterprise.label，values的值须为整数0或1。"
+                            "根据具体路径修正，不能更改业务规则来绕过校验；两次失败后停止重试并说明问题。",
+                        }
+                    }
+                ],
+            }
         except ValueError:
             code, message = "DATA_PREP_RULE_INVALID", "准备ID和任务ID须为有效UUID"
         except AppError as error:
             code, message = error.code, error.message
         except Exception:
             code, message = "DATA_PREP_TOOL_FAILED", "转换服务暂不可用，请稍后重试"
-        return {"status": "error", "content": [{"json": {"code": code, "message": message}}]}
+        return {
+            "status": "error",
+            "content": [
+                {
+                    "json": {
+                        "code": code,
+                        "message": message,
+                        "planSaved": plan_saved,
+                    }
+                }
+            ],
+        }
 
-    @tool
-    async def preparation_save_plan(preparation_id: str, plan: dict) -> dict:
-        """Save an executable mapping DRAFT only after discussing uncertain business rules.
+    @tool(inputSchema={"json": SavePlanArguments.model_json_schema()})
+    async def preparation_save_plan(
+        preparation_id: str,
+        plan: dict,
+        run_trial: bool = True,
+    ) -> dict:
+        """Save executable rules and immediately trial them, without formal import.
 
         First read the exact case using asset_read. Do not guess label meanings or missing
         value rules. This replaces the case's mapping draft and invalidates old trials.
         Does not confirm mapping or import data. Ask the user to inspect rules and results.
+        Default run_trial=true returns a real persisted task and verification report;
+        blocked means rejected rows exist and import is forbidden. Never invent a trial
+        report if task is null. Set run_trial=false only for an explicit save-only request.
+        If reading the case fails, do not save a guessed plan. Fix the read first.
+        Never claim success unless this tool returns success. After two failed saves,
+        stop retrying and explain the precise errors. Do not alter business semantics.
 
         Args:
             preparation_id: Owned preparation UUID from asset_catalog, without the prefix.
+            run_trial: Run verification immediately after saving; defaults to true.
             plan: Object with columns (one per source field), deduplicate ('exact' to drop
                 identical raw rows, or 'reject'), labelMeaning (required when mapping labels).
                 Each column has field, target, type (text/number/integer/label/ignore),
@@ -67,7 +130,7 @@ def preparation_tools(sessions: async_sessionmaker[AsyncSession], owner: str) ->
                 To keep '未知' as a category, exclude it from that column's missingValues.
                 No arbitrary code, SQL, aggregation, random split or inferred graph edges.
         """
-        return await invoke("save", preparation_id, plan)
+        return await invoke("save", preparation_id, plan, run_trial=run_trial)
 
     @tool
     async def preparation_trial(preparation_id: str) -> dict:

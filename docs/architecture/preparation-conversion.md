@@ -3,14 +3,15 @@
 ## 使用流程
 
 数据准备保存原始 CSV 后进入助手。助手读取案例、报告与原映射，与用户确认不确定规则。
-通过 preparation_save_plan 保存可执行草稿，再调用 preparation_trial。
+通过 preparation_save_plan 保存可执行草稿，默认立即执行试运行并返回真实报告。
+明确只保存时传 run_trial=false，之后可调用 preparation_trial。
 顶部“转换核验与导入”卡片显示数量变化、拒绝原因、前后样例及摘要；用户核对规则与样例，
 勾选确认后点击“确认并导入”。成功后直接跳转到选中该数据集的概览或检索。
 原数据准备页也展示同一转换结果；刷新后可继续。
 
 ## 工具与 HTTP 契约
 
-- preparation_save_plan：绑定登录账号保存结构化规则；同步更新字段映射草稿，清除旧确认状态。
+- preparation_save_plan：绑定登录账号保存结构化规则，默认立即试运行；同步更新映射草稿，清除旧确认状态。
 - preparation_trial：执行固定规则并持久化核验结果；不写入正式企业记录。
 - preparation_result：查询最新匹配规则或指定任务的结果，包括状态与导入来源ID。
 - 助手没有正式导入工具；不能把口头确认或试运行通过等同于已经导入。
@@ -62,3 +63,19 @@ Dataset、EnterpriseImport、EnterpriseRecord 与任务导入状态在同一事�
 隔离 PostgreSQL 覆盖账号隔离、方案变更失效、试运行不写企业数据、并发幂等导入、
 以及导入后概览和检索。Strands MockTransport 测试验证真实工具协议调用、绑定账号、
 错误脱敏及无导入工具。
+
+
+## 工具参数与失败反馈
+
+保存工具向模型提供由 ConversionPlan 生成的完整 JSON Schema，避免裸 dict 被解释成任意对象。
+columns 为数组，labelMeaning 为字符串，values 为源文本到整数0/1的映射；分类字段使用text。
+工具内部仍执行独立校验，失败返回最多8个路径和错误消息，不回传原始参数或异常上下文。
+源字段覆盖校验会分别列出缺失和不存在的字段，不能凭历史回答补造字段。
+asset_read 必须使用目录中的 preparation:<UUID>，读取失败须先修复读取，不得继续生成方案。
+两次保存失败后助手应解释错误并停止修复尝试，不能改变业务语义绕过参数校验。
+调用次数或生成预算耗尽返回 ASSISTANT_EXECUTION_LIMIT，页面展示真实原因，
+不误报模型地址/模型名错误；异步Agent流在原执行上下文内关闭，避免trace清理异常。
+
+保存工具的 run_trial 默认为 true，避免模型漏调下一工具却虚报试运行结果。
+显式仅保存时可传 false；返回 task=null 不代表已执行。
+保存成功但试运行异常时返回 planSaved 标记，后续可查询或重新试运行，不误报草稿未保存。
