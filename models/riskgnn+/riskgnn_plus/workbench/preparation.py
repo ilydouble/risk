@@ -20,8 +20,13 @@ def prepare(adapter, validated: Path, output: Path, config: dict) -> dict:
     ids = read_json(output / "ids.json")
     context = dict(np.load(output / "context.npz", allow_pickle=False))
     company_count = meta.get("companyCount", len(ids))
-    if len(ids) > 100_000:
-        raise ValueError("RiskGNN+ full prepared graph exceeds 100,000 nodes; reduce target_count")
+    # UK full snapshots contain 233,251 companies and 789,487 memberships.
+    node_limit = 300_000 if adapter.id == "uk-dataset-v1" else 100_000
+    incidence_limit = 1_000_000 if adapter.id == "uk-dataset-v1" else 500_000
+    if len(ids) > node_limit:
+        raise ValueError(
+            f"RiskGNN+ prepared graph exceeds {node_limit:,} nodes; reduce target_count"
+        )
     index = {name: i for i, name in enumerate(ids[:company_count])}
     if "snapshots" not in context:
         context["snapshots"] = np.full(len(ids), "static")
@@ -76,7 +81,7 @@ def prepare(adapter, validated: Path, output: Path, config: dict) -> dict:
         context[f"hyper_groups_{i}"] = np.array(group, dtype=np.int64)
         context[f"hyper_count_{i}"] = np.array(len(typed), dtype=np.int64)
         incidence_count += len(node)
-    if incidence_count > 500_000:
+    if incidence_count > incidence_limit:
         raise ValueError("RiskGNN+ prepared incidence limit exceeded; reduce target_count")
     context["company_embedding"] = np.random.RandomState(0).normal(0, 0.1, (company_count, 32))
     context["person_embedding"] = np.random.RandomState(1).normal(

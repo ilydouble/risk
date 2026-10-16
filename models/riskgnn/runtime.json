@@ -104,7 +104,7 @@
         "properties": {
           "epochs": {
             "default": 2,
-            "maximum": 20,
+            "maximum": 250,
             "minimum": 1,
             "title": "Epochs",
             "type": "integer"
@@ -184,8 +184,8 @@
               "en": "Training epochs"
             },
             "description": {
-              "zh": "在固定数据子集上执行的训练轮数。",
-              "en": "Training epochs on the prepared subset."
+              "zh": "在选定数据范围上执行的训练轮数，最多 250 轮。",
+              "en": "Training epochs on the selected data, up to 250."
             }
           }
         ]

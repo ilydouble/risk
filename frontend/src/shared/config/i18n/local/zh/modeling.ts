@@ -1,7 +1,7 @@
 export default {
   "modeling": {
     "plus": {
-      "scopeNote": "当前为有界子图实验，使用固定随机初始嵌入，未进行概率或保形校准。",
+      "scopeNote": "使用固定随机初始嵌入，图网络与分类头参与训练；未进行概率或保形校准。",
       "counts": {"nodes": "节点", "edges": "普通边", "hyperedges": "超边", "incidences": "成员关联", "events": "事件"},
       "fused": "证据融合概率",
       "uncertainty": "证据不确定性",
@@ -63,7 +63,7 @@ export default {
     "adapter": "数据适配器",
     "title": "模型工作台",
     "subtitle": "上传数据、检查质量与划分，选择已接入的模型配置进行训练、测试和发布。",
-    "disclaimer": "当前为 CPU 真实数据子集实验，沿用数据集原有划分。输出反映对应数据集的企业状态标签，不是授信违约概率；训练使用的字段和未启用的图能力见实验档案。",
+    "disclaimer": "当前为 CPU 真实数据实验，支持英国全量或子集训练，沿用数据集原有划分。输出反映对应数据集的企业状态标签，不是授信违约概率；训练使用的字段和未启用的图能力见实验档案。",
     "refresh": "刷新",
     "loading": "正在加载…",
     "scope": "仅显示当前用户的数据集、实验与模型。旧协议记录保留，不自动转换为新版本。",
@@ -127,7 +127,7 @@ export default {
       "completed": "已完成",
       "starting": "启动中",
       "validating": "全量校验",
-      "preparing": "准备子集",
+      "preparing": "准备训练数据",
       "training": "训练",
       "testing": "独立测试",
       "uploading": "上传产物",

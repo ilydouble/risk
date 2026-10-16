@@ -43,7 +43,7 @@ def test_model_defaults_zip_defaults_and_explicit_parameters(adapter, default):
     "parameters",
     [
         {"epochs": 0},
-        {"epochs": 21},
+        {"epochs": 251},
         {"epochs": True},
         {"epochs": 1.5},
         {"dataset": {"target_count": 5}},
@@ -127,3 +127,18 @@ def test_requested_count_can_exceed_available_real_targets(datasets, tmp_path):
     )
     assert prepared["targetCount"] == 3976
     assert snapshot["resolvedParameters"]["dataset"]["target_count"] == 4000
+
+
+def test_uk_full_training_limits():
+    contract = dataset_contract("uk-dataset-v1")
+    snapshot = configuration.resolve(
+        contract, {"epochs": 250, "dataset": {"target_count": 233251}}
+    )
+    assert snapshot["resolvedParameters"]["dataset"]["target_count"] == 233251
+    assert snapshot["resolvedParameters"]["epochs"] == 250
+    dataset_schema = snapshot["parameterSchema"]["properties"]["dataset"]
+    count_schema = dataset_schema["properties"]["target_count"]
+    assert count_schema["maximum"] == 300000
+    for parameters in ({"epochs": 251}, {"dataset": {"target_count": 300001}}):
+        with pytest.raises(configuration.ConfigurationError):
+            configuration.resolve(contract, parameters)

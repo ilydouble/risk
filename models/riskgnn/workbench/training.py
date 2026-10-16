@@ -84,8 +84,8 @@ def train(
     if runner_id != "riskgnn":
         raise ValueError("Only RiskGNN is deployed in this workbench")
     verify(prepared, "riskgnn-prepared-v1")
-    if not 1 <= epochs <= 20:
-        raise ValueError("epochs must be between 1 and 20")
+    if not 1 <= epochs <= 250:
+        raise ValueError("epochs must be between 1 and 250")
     torch.set_num_threads(2)
     torch.manual_seed(0)
     np.random.seed(0)

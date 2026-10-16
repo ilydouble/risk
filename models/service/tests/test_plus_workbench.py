@@ -48,6 +48,16 @@ def test_real_plus_hypergraph_gradients_isolation_and_independent_reload(plus_so
     model(targets).primary_logits.sum().backward()
     gradient = model.core.hypergnn.proj.weight.grad
     assert gradient is not None and torch.isfinite(gradient).all() and gradient.abs().sum() > 0
+    before_hyper = model.core.hypergnn.proj.weight.detach().clone()
+    if meta["edgeCount"]:
+        assert any(
+            parameter.grad is not None
+            and torch.isfinite(parameter.grad).all()
+            and parameter.grad.abs().sum() > 0
+            for parameter in model.core.hetegnn.parameters()
+        ), "Directed graph layers must receive gradients"
+    torch.optim.Adam(model.parameters(), lr=0.01).step()
+    assert not torch.equal(before_hyper, model.core.hypergnn.proj.weight)
     if adapter.id == "smesd":
         assert events and meta["eventCount"] > 0 and "risk_events" in meta["usedInputs"]
         assert model.core.riskinfo.proj.weight.grad is not None

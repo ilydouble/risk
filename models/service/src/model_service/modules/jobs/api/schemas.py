@@ -18,7 +18,7 @@ class TrainInput(BaseModel):
     runnerId: Literal["riskgnn"] = "riskgnn"
     configuration: dict[str, Any] | None = None
     # Already queued legacy jobs remain executable; new submissions carry a frozen snapshot.
-    epochs: int | None = Field(default=None, ge=1, le=20)
+    epochs: int | None = Field(default=None, ge=1, le=250)
 
 
 class RequestSubmitJob(BaseModel):

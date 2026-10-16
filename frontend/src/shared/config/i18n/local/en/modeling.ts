@@ -1,7 +1,7 @@
 export default {
   "modeling": {
     "plus": {
-      "scopeNote": "Bounded subgraph experiment with fixed random initial embeddings; probability and conformal calibration are not fitted.",
+      "scopeNote": "Fixed random initial embeddings; graph networks and classifier heads are trained. Probability and conformal calibration are not fitted.",
       "counts": {"nodes": "Nodes", "edges": "Edges", "hyperedges": "Hyperedges", "incidences": "Incidences", "events": "Events"},
       "fused": "Evidence probability",
       "uncertainty": "Evidence uncertainty",
@@ -63,7 +63,7 @@ export default {
     "adapter": "Dataset adapter",
     "title": "Model workbench",
     "subtitle": "Upload data, inspect quality and splits, then train, test and publish an available model configuration.",
-    "disclaimer": "Real subset experiments on CPU preserve the dataset splits. Outputs reflect the dataset’s company status labels, not credit default probability. See the experiment profile for consumed inputs and inactive graph capabilities.",
+    "disclaimer": "Real CPU experiments support full UK data or subsets and preserve the dataset splits. Outputs reflect the dataset’s company status labels, not credit default probability. See the experiment profile for consumed inputs and inactive graph capabilities.",
     "refresh": "Refresh",
     "loading": "Loading…",
     "scope": "Only your datasets, runs and models are shown. Retired protocol records remain stored and are not converted automatically.",
@@ -127,7 +127,7 @@ export default {
       "completed": "Completed",
       "starting": "Starting",
       "validating": "Full validation",
-      "preparing": "Preparing subset",
+      "preparing": "Preparing training data",
       "training": "Training",
       "testing": "Independent test",
       "uploading": "Uploading artifacts",
