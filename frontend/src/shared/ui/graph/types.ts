@@ -14,6 +14,7 @@ export interface GraphViewEdge {
   color?: string;
   width?: number;
   dashed?: boolean;
+  directed?: boolean;
   opacity?: number;
 }
 
@@ -26,6 +27,7 @@ export interface GraphViewData {
 
 export interface GraphViewProps extends GraphViewData {
   onSelect?: (id: string | null) => void;
+  onSelectEdge?: (id: string) => void;
   height?: number;
   className?: string;
   ariaLabel?: string;

@@ -4,22 +4,25 @@ import { createGraphController, type GraphStatus } from "./controller";
 import type { GraphViewProps } from "./types";
 
 export function GraphView({
-  nodes, edges, centerId, selectedId = null, onSelect,
+  nodes, edges, centerId, selectedId = null, onSelect, onSelectEdge,
   height = 620, className = "", ariaLabel,
 }: GraphViewProps) {
   const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
   const controllerRef = useRef<ReturnType<typeof createGraphController> | null>(null);
   const selectRef = useRef(onSelect);
+  const edgeSelectRef = useRef(onSelectEdge);
   const [status, setStatus] = useState<GraphStatus>("loading");
   const [attempt, setAttempt] = useState(0);
   selectRef.current = onSelect;
+  edgeSelectRef.current = onSelectEdge;
 
   useEffect(() => {
     const controller = createGraphController(
       containerRef.current!,
       (id) => selectRef.current?.(id),
       setStatus,
+      (id) => edgeSelectRef.current?.(id),
     );
     controllerRef.current = controller;
     setStatus("loading");

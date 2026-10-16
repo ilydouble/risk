@@ -52,7 +52,7 @@ export function toGraphData(data: GraphViewData, previous: NodeData[] = []): Gra
         lineWidth: edge.width ?? 1.2,
         lineDash: edge.dashed ? [6, 6] : [],
         opacity: edge.opacity ?? 1,
-        endArrow: true,
+        endArrow: edge.directed ?? true,
         labelText: edge.label ?? "",
         labelFontSize: 10,
         labelFill: edge.color ?? chartPalette.secondary,

@@ -4,6 +4,7 @@ import { requestEnterpriseCompany, requestPredictModel } from "@/entities/modeli
 import { displayEnterpriseValue, enterpriseName } from "@/entities/modeling/lib/enterpriseDisplay";
 import type { ResponseEnterpriseCompany } from "@/shared/api/generated/schema";
 import { handleApiError } from "@/shared/api/http";
+import { EnterpriseRelationGraph } from "@/features/enterprise-browser/ui/EnterpriseRelationGraph";
 import Card from "@/shared/ui/Card";
 import { EnterpriseProperties } from "./EnterpriseProperties";
 import { EnterpriseSourceTrace } from "./EnterpriseSourceTrace";
@@ -37,6 +38,7 @@ export default function UploadedProfile() {
     {!data && !error && <p role="status" className="text-sm text-foreground-500">正在加载企业详情…</p>}
     {data && <>
       <section className="rounded-lg border border-background-200 bg-background-100 p-5"><h2 className="text-xl font-semibold">{enterpriseName(data.company)}</h2><p className="mt-2 break-all font-mono text-xs text-foreground-500">{companyId}</p><p className="mt-3 text-sm text-foreground-500">数据集：{data.dataset.name} · 快照：{data.company.snapshot} · 已有标签：{displayEnterpriseValue(data.company.data.label)}</p><Link className="mt-3 inline-block text-xs text-primary-400" to={`/?source=uploaded&dataset=${encodeURIComponent(datasetId)}`}>查看本数据集总览 →</Link></section>
+      <EnterpriseRelationGraph key={`${datasetId}:${companyId}`} data={data} />
       <EnterpriseProperties data={data.company.data} />
       <EnterpriseSourceTrace provenance={data.provenance} />
       <Card title="模型预测" subtitle="以下为各模型已有预测，主分类概率未校准。" icon="ri-cpu-line" bodyClassName="space-y-3 p-5">

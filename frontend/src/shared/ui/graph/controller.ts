@@ -1,4 +1,4 @@
-import { CanvasEvent, Graph, NodeEvent, type IElementEvent } from "@antv/g6";
+import { CanvasEvent, EdgeEvent, Graph, NodeEvent, type IElementEvent } from "@antv/g6";
 import { toGraphData, topologyKey } from "./data";
 import type { GraphViewData } from "./types";
 
@@ -8,6 +8,7 @@ export function createGraphController(
   container: HTMLDivElement,
   onSelect: (id: string | null) => void,
   onStatus: (status: GraphStatus) => void,
+  onSelectEdge?: (id: string) => void,
 ) {
   // Each effect owns its mount, so a pending render cannot attach to a newer StrictMode mount.
   const mount = document.createElement("div");
@@ -74,6 +75,7 @@ export function createGraphController(
               behaviors: ["drag-canvas", "zoom-canvas", "drag-element-force"],
             });
             graph.on(NodeEvent.CLICK, (event: IElementEvent) => onSelect(event.target.id));
+            graph.on(EdgeEvent.CLICK, (event: IElementEvent) => onSelectEdge?.(event.target.id));
             graph.on(CanvasEvent.CLICK, () => onSelect(null));
           }
           const topology = topologyKey(data);
