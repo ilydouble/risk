@@ -1547,6 +1547,40 @@
         "title": "ApiEnvelope[ResponsePreparationBundle]",
         "type": "object"
       },
+      "ApiEnvelope_ResponsePreparationDeletion_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponsePreparationDeletion"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponsePreparationDeletion]",
+        "type": "object"
+      },
       "ApiEnvelope_ResponsePreparation_": {
         "properties": {
           "code": {
@@ -4052,7 +4086,7 @@
         "title": "ErrorEnvelope[Literal[409], Literal['AUTH_USERNAME_TAKEN']]",
         "type": "object"
       },
-      "ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___": {
+      "ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___": {
         "properties": {
           "code": {
             "const": 409,
@@ -4063,7 +4097,11 @@
             "$ref": "#/components/schemas/ErrorDetail"
           },
           "internal_code": {
-            "const": "DATA_PREP_PLAN_STALE",
+            "enum": [
+              "DATA_PREP_PLAN_STALE",
+              "DATA_PREP_DELETE_BLOCKED",
+              "DATA_PREP_DELETE_STALE"
+            ],
             "title": "Internal Code",
             "type": "string"
           },
@@ -4078,7 +4116,7 @@
           "message",
           "data"
         ],
-        "title": "ErrorEnvelope[Literal[409], Literal['DATA_PREP_PLAN_STALE']]",
+        "title": "ErrorEnvelope[Literal[409], Literal['DATA_PREP_PLAN_STALE', 'DATA_PREP_DELETE_BLOCKED', 'DATA_PREP_DELETE_STALE']]",
         "type": "object"
       },
       "ErrorEnvelope_Literal_409__Literal__DOCUMENT_SIZE_MISMATCH___": {
@@ -6577,6 +6615,47 @@
         "title": "PredictionDTO",
         "type": "object"
       },
+      "PreparationDeletionCounts": {
+        "properties": {
+          "datasets": {
+            "title": "Datasets",
+            "type": "integer"
+          },
+          "files": {
+            "title": "Files",
+            "type": "integer"
+          },
+          "predictions": {
+            "title": "Predictions",
+            "type": "integer"
+          },
+          "records": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Records",
+            "type": "object"
+          },
+          "reports": {
+            "title": "Reports",
+            "type": "integer"
+          },
+          "tasks": {
+            "title": "Tasks",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "files",
+          "reports",
+          "tasks",
+          "datasets",
+          "predictions",
+          "records"
+        ],
+        "title": "PreparationDeletionCounts",
+        "type": "object"
+      },
       "QualityIssue": {
         "properties": {
           "code": {
@@ -7078,6 +7157,33 @@
         "additionalProperties": false,
         "properties": {},
         "title": "RequestDataQACatalog",
+        "type": "object"
+      },
+      "RequestDeletePreparation": {
+        "properties": {
+          "confirm": {
+            "const": true,
+            "title": "Confirm",
+            "type": "boolean"
+          },
+          "preparationId": {
+            "format": "uuid",
+            "title": "Preparationid",
+            "type": "string"
+          },
+          "revision": {
+            "maxLength": 64,
+            "minLength": 64,
+            "title": "Revision",
+            "type": "string"
+          }
+        },
+        "required": [
+          "preparationId",
+          "confirm",
+          "revision"
+        ],
+        "title": "RequestDeletePreparation",
         "type": "object"
       },
       "RequestDownloadModel": {
@@ -9504,6 +9610,58 @@
         "title": "ResponsePreparationBundle",
         "type": "object"
       },
+      "ResponsePreparationDeletion": {
+        "properties": {
+          "blockedReason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Blockedreason"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/PreparationDeletionCounts"
+          },
+          "datasetIds": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Datasetids",
+            "type": "array"
+          },
+          "deleted": {
+            "title": "Deleted",
+            "type": "boolean"
+          },
+          "filename": {
+            "title": "Filename",
+            "type": "string"
+          },
+          "preparationId": {
+            "title": "Preparationid",
+            "type": "string"
+          },
+          "revision": {
+            "title": "Revision",
+            "type": "string"
+          }
+        },
+        "required": [
+          "preparationId",
+          "filename",
+          "revision",
+          "counts",
+          "datasetIds",
+          "blockedReason",
+          "deleted"
+        ],
+        "title": "ResponsePreparationDeletion",
+        "type": "object"
+      },
       "ResponsePublishModel": {
         "properties": {
           "model": {
@@ -11759,7 +11917,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"
                 }
               }
             },
@@ -11880,7 +12038,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"
                 }
               }
             },
@@ -12001,7 +12159,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"
                 }
               }
             },
@@ -12122,7 +12280,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"
                 }
               }
             },
@@ -12180,6 +12338,248 @@
           }
         },
         "summary": "Trial Conversion",
+        "tags": [
+          "data-prep"
+        ]
+      }
+    },
+    "/api/v1/data-prep/delete": {
+      "post": {
+        "operationId": "remove_preparation_api_v1_data_prep_delete_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestDeletePreparation"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponsePreparationDeletion_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"
+                }
+              }
+            },
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"
+                }
+              }
+            },
+            "description": "Gateway Timeout"
+          }
+        },
+        "summary": "Remove Preparation",
+        "tags": [
+          "data-prep"
+        ]
+      }
+    },
+    "/api/v1/data-prep/delete-preview": {
+      "post": {
+        "operationId": "preview_deletion_api_v1_data_prep_delete_preview_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestGetPreparation"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponsePreparationDeletion_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"
+                }
+              }
+            },
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"
+                }
+              }
+            },
+            "description": "Gateway Timeout"
+          }
+        },
+        "summary": "Preview Deletion",
         "tags": [
           "data-prep"
         ]
@@ -12243,7 +12643,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"
                 }
               }
             },
@@ -12364,7 +12764,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"
                 }
               }
             },
@@ -12485,7 +12885,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"
                 }
               }
             },
@@ -12606,7 +13006,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"
                 }
               }
             },
@@ -12727,7 +13127,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"
                 }
               }
             },
@@ -12937,7 +13337,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"
                 }
               }
             },
@@ -13058,7 +13458,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"
                 }
               }
             },
@@ -13179,7 +13579,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"
                 }
               }
             },
@@ -13300,7 +13700,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"
                 }
               }
             },

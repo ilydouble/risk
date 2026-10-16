@@ -7,12 +7,18 @@ from unittest.mock import Mock
 from uuid import uuid4
 
 import pytest
-from sqlalchemy import func, select, text
+from pydantic import ValidationError
+from sqlalchemy import delete, func, select, text
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from risk_api.errors import AppError
 from risk_api.modules.auth.model import User
-from risk_api.modules.data_prep.api.schemas import ResponseConversionState, ResponsePreparation
+from risk_api.modules.data_prep.api.schemas import (
+    RequestDeletePreparation,
+    ResponseConversionState,
+    ResponsePreparation,
+    ResponsePreparationDeletion,
+)
 from risk_api.modules.data_prep.case_files import (
     CASE_ENGINE,
     build_case,
@@ -23,6 +29,7 @@ from risk_api.modules.data_prep.case_files import (
 )
 from risk_api.modules.data_prep.conversion import ConversionPlan
 from risk_api.modules.data_prep.conversion_service import ConversionService
+from risk_api.modules.data_prep.deletion import delete_preparation, deletion_scope
 from risk_api.modules.data_prep.model import Preparation, PreparationConversion
 from risk_api.modules.data_prep.repository import PreparationRepository
 from risk_api.modules.data_prep.service import PreparationService
@@ -241,6 +248,51 @@ def test_append_revision_import_graph_and_provenance_are_owner_scoped_and_atomic
                     await service.import_task("a", bad_id, blocked["task"]["id"])
                 await session.rollback()
                 assert await session.scalar(select(func.count()).select_from(Dataset)) == 1
+
+                await prep.report("a", identity, {
+                    "summary": "stored report", "suggestions": [], "questions": [],
+                })
+                scope = await deletion_scope(session, "a", identity)
+                ResponsePreparationDeletion.model_validate(scope)
+                assert scope["counts"] == {
+                    "files": 2, "reports": 1, "tasks": 1, "datasets": 1, "predictions": 0,
+                    "records": {"company": 2, "edge": 1, "hyperedge": 1},
+                }
+                with pytest.raises(AppError) as denied:
+                    await delete_preparation(session, "b", identity, scope["revision"])
+                assert denied.value.status == 404
+                await session.rollback()
+                await service.save_plan("a", identity, PLAN)
+                with pytest.raises(AppError) as stale:
+                    await delete_preparation(session, "a", identity, scope["revision"])
+                assert stale.value.code == "DATA_PREP_DELETE_STALE"
+                await session.rollback()
+                run_id = str(uuid4())
+                session.add(Run(id=run_id, owner_id="a", dataset_id=dataset_id, name="dependency",
+                                request_key=str(uuid4()), configuration={}, execution={}))
+                await session.commit()
+                blocked_scope = await deletion_scope(session, "a", identity)
+                assert blocked_scope["blockedReason"]
+                with pytest.raises(AppError) as blocked_delete:
+                    await delete_preparation(session, "a", identity, blocked_scope["revision"])
+                assert blocked_delete.value.code == "DATA_PREP_DELETE_BLOCKED"
+                await session.rollback()
+                assert await session.scalar(select(func.count()).select_from(Dataset)) == 1
+                await session.execute(delete(Run).where(Run.id == run_id))
+                await session.commit()
+                child = await prep.create_case("a", [("extra.json", b'{"edges":[]}')], identity)
+                child_id = child.id
+                assert (await deletion_scope(session, "a", identity))["blockedReason"]
+                child_scope = await deletion_scope(session, "a", child_id)
+                await delete_preparation(session, "a", child_id, child_scope["revision"])
+                final_scope = await deletion_scope(session, "a", identity)
+                deleted = await delete_preparation(session, "a", identity, final_scope["revision"])
+                assert deleted["deleted"] and deleted["counts"]["reports"] == 1
+                assert await session.get(Preparation, identity) is None
+                assert await session.get(Dataset, dataset_id) is None
+                assert await session.scalar(select(func.count()).select_from(EnterpriseRecord)) == 0
+                assert (await prep.repository.get("a", original_id)).source == CSV
+                assert (await service.state("a", bad_id))["task"]["status"] == "blocked"
         finally:
             await engine.dispose()
             async with admin.begin() as connection:
@@ -248,3 +300,12 @@ def test_append_revision_import_graph_and_provenance_are_owner_scoped_and_atomic
             await admin.dispose()
 
     asyncio.run(run())
+
+
+@pytest.mark.parametrize("values", [
+    {"confirm": False, "revision": "0" * 64},
+    {"confirm": True},
+])
+def test_case_deletion_requires_explicit_confirmation_and_preview_revision(values):
+    with pytest.raises(ValidationError):
+        RequestDeletePreparation.model_validate({"preparationId": str(uuid4()), **values})

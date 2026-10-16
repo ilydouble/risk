@@ -12,6 +12,7 @@ from risk_api.modules.auth.service import AuthService
 from risk_api.modules.chat.service import ChatService
 from risk_api.modules.data_prep.agent import analyze_profile
 from risk_api.modules.data_prep.api.schemas import (
+    RequestDeletePreparation,
     RequestGetConversion,
     RequestGetPreparation,
     RequestImportConversion,
@@ -30,11 +31,13 @@ from risk_api.modules.data_prep.api.schemas import (
     ResponseModelDefaults,
     ResponsePreparation,
     ResponsePreparationBundle,
+    ResponsePreparationDeletion,
     ResponseSuggestMapping,
     ResponseTestModel,
 )
 from risk_api.modules.data_prep.case_files import unpack_source
 from risk_api.modules.data_prep.conversion_service import ConversionService
+from risk_api.modules.data_prep.deletion import delete_preparation, deletion_scope
 from risk_api.modules.data_prep.model import Preparation
 from risk_api.modules.data_prep.service import PreparationService
 from risk_api.shared.api.envelope import ApiEnvelope
@@ -245,3 +248,23 @@ async def test_model(
         max_tokens=128,
     )
     return success_response(ResponseTestModel(model=reply.model, elapsedMs=reply.elapsed_ms))
+
+
+async def preview_deletion(
+    body: RequestGetPreparation, request: Request, auth: FromDishka[AuthService],
+    preparations: FromDishka[PreparationService],
+) -> ApiEnvelope[ResponsePreparationDeletion]:
+    user = await authorize_request(request, auth)
+    scope = await deletion_scope(preparations.repository.session, user["user_id"],
+                                 str(body.preparationId))
+    return success_response(ResponsePreparationDeletion.model_validate(scope))
+
+
+async def remove_preparation(
+    body: RequestDeletePreparation, request: Request, auth: FromDishka[AuthService],
+    preparations: FromDishka[PreparationService],
+) -> ApiEnvelope[ResponsePreparationDeletion]:
+    user = await authorize_request(request, auth)
+    result = await delete_preparation(preparations.repository.session, user["user_id"],
+                                     str(body.preparationId), body.revision)
+    return success_response(ResponsePreparationDeletion.model_validate(result))

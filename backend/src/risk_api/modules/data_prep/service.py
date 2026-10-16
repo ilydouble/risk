@@ -80,7 +80,7 @@ class PreparationService:
                           previous_id: str | None = None) -> Preparation:
         previous = None
         if previous_id:
-            previous = await self.repository.get(owner, previous_id)
+            previous = await self.repository.get(owner, previous_id, lock=True)
             if hashlib.sha256(previous.source).hexdigest() != previous.source_sha:
                 raise AppError(409, "DATA_PREP_PLAN_STALE", "原案例摘要异常，不能补充文件")
             existing_files = unpack_source(previous.source, previous.profile)

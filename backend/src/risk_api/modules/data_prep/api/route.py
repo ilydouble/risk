@@ -10,6 +10,7 @@ from risk_api.modules.data_prep.api.schemas import (
     ResponseModelDefaults,
     ResponsePreparation,
     ResponsePreparationBundle,
+    ResponsePreparationDeletion,
     ResponseSuggestMapping,
     ResponseTestModel,
 )
@@ -85,3 +86,9 @@ router.add_api_route(
     response_model=ApiEnvelope[ResponseSuggestMapping],
     responses=COMMON_ERROR_RESPONSES | SESSION_ERRORS | DATA_PREP_ERRORS,
 )
+
+for delete_path, delete_endpoint in (("/delete-preview", handler.preview_deletion),
+                       ("/delete", handler.remove_preparation)):
+    router.add_api_route(delete_path, delete_endpoint, methods=["POST"],
+                         response_model=ApiEnvelope[ResponsePreparationDeletion],
+                         responses=COMMON_ERROR_RESPONSES | SESSION_ERRORS | DATA_PREP_ERRORS)

@@ -8,6 +8,7 @@ import { useDataPrepSession } from "@/features/data-prep/model/context";
 import { handleApiError } from "@/shared/api/http";
 import { ReportGenerationStatus } from "./ReportGenerationStatus";
 
+import { PreparationDeleteButton } from "@/features/data-prep/ui/PreparationDeleteButton";
 import { PreparationMappingEditor } from "@/features/data-prep/ui/PreparationMappingEditor";
 import { PreparationConversionPanel } from "@/features/data-prep/ui/PreparationConversionPanel";
 import type { ResponsePreparation } from "@/shared/api/generated/schema";
@@ -118,6 +119,7 @@ export default function DataPrepPage() {
         {saved.length > 0 && <label className="block text-sm">继续已保存的案例<select aria-label="已保存的数据准备" className="ml-3 rounded-md border border-background-300 bg-background-50 p-2" disabled={busy} value={preparation?.id ?? ""} onChange={event => { if (event.target.value) { setFiles([]); setParams({ preparation: event.target.value }); } }}><option value="">选择案例</option>{saved.map(item => <option key={item.id} value={item.id}>{item.filename} · {item.profile.rowCount} 行{item.inWorkbench ? " · 已转入工作台" : ""}</option>)}</select>{savedTruncated && <span className="ml-2 text-xs text-foreground-500">显示最近100份</span>}</label>}
         <div className="flex items-center justify-between gap-3"><h2 className="font-semibold">{preparation ? "向当前案例补充文件" : "建立多文件数据准备案例"}</h2>{preparation && <button className="text-sm text-primary-500 underline" disabled={busy} onClick={newCase}>新建案例</button>}</div>
         <p className="text-sm text-foreground-500">一个案例包含一张企业属性 CSV 和多个图 JSON，可一次选择或分批添加。CSV 最多 2 MiB、50000 行；每个 JSON 最多 64 MiB，案例最多 8 个文件、共 96 MiB。文件先按案例保存，关系按确认后的企业 ID 规则核验，确认导入后才进入概览与检索。</p>
+        {preparation && <PreparationDeleteButton key={preparation.id} preparationId={preparation.id} disabled={busy || pendingFiles} onDeleted={() => { setSaved(current => current.filter(item => item.id !== preparation.id)); newCase(); }} />}
         {preparation && <p className="text-xs text-foreground-500">补充文件将保存为新的案例版本，需重新生成联合报告、确认规则和试运行；原案例、对话及已导入结果保持可追溯。</p>}
         <input aria-label="添加案例文件" type="file" multiple accept=".csv,.json,text/csv,application/json" disabled={busy} onChange={event => { const selected = Array.from(event.target.files ?? []); setFiles(current => [...current, ...selected]); event.target.value = ""; }} />
         {files.length > 0 && <ul className="space-y-2 text-sm">{files.map((file, index) => <li key={`${file.name}-${index}`} className="flex items-center gap-3"><span>{file.name} · {(file.size / 1024).toFixed(1)} KiB · {file.name.toLowerCase().endsWith(".csv") ? "企业属性主表" : "待校验图文件"} · 待保存</span><button disabled={busy} className="text-primary-500 underline" onClick={() => setFiles(current => current.filter((_, i) => i !== index))}>移除</button></li>)}</ul>}

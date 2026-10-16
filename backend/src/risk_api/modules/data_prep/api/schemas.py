@@ -271,3 +271,27 @@ class ResponseConversionState(BaseModel):
     plan: ConversionPlan | None
     planCurrent: bool
     task: ResponseConversionTask | None
+
+
+class RequestDeletePreparation(RequestGetPreparation):
+    confirm: Literal[True]
+    revision: str = Field(min_length=64, max_length=64)
+
+
+class PreparationDeletionCounts(BaseModel):
+    files: int
+    reports: int
+    tasks: int
+    datasets: int
+    predictions: int
+    records: dict[str, int]
+
+
+class ResponsePreparationDeletion(BaseModel):
+    preparationId: str
+    filename: str
+    revision: str
+    counts: PreparationDeletionCounts
+    datasetIds: list[str]
+    blockedReason: str | None
+    deleted: bool

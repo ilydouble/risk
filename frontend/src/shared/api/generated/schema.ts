@@ -293,6 +293,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/data-prep/delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Remove Preparation */
+        post: operations["remove_preparation_api_v1_data_prep_delete_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/data-prep/delete-preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Preview Deletion */
+        post: operations["preview_deletion_api_v1_data_prep_delete_preview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/data-prep/export": {
         parameters: {
             query?: never;
@@ -1490,6 +1524,16 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ApiEnvelope[ResponsePreparationDeletion] */
+        ApiEnvelope_ResponsePreparationDeletion_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponsePreparationDeletion"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
         /** ApiEnvelope[ResponsePreparation] */
         ApiEnvelope_ResponsePreparation_: {
             /** Code */
@@ -2405,8 +2449,8 @@ export interface components {
             /** Message */
             message: string;
         };
-        /** ErrorEnvelope[Literal[409], Literal['DATA_PREP_PLAN_STALE']] */
-        ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___: {
+        /** ErrorEnvelope[Literal[409], Literal['DATA_PREP_PLAN_STALE', 'DATA_PREP_DELETE_BLOCKED', 'DATA_PREP_DELETE_STALE']] */
+        ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___: {
             /**
              * Code
              * @constant
@@ -2415,9 +2459,9 @@ export interface components {
             data: components["schemas"]["ErrorDetail"];
             /**
              * Internal Code
-             * @constant
+             * @enum {string}
              */
-            internal_code: "DATA_PREP_PLAN_STALE";
+            internal_code: "DATA_PREP_PLAN_STALE" | "DATA_PREP_DELETE_BLOCKED" | "DATA_PREP_DELETE_STALE";
             /** Message */
             message: string;
         };
@@ -3479,6 +3523,23 @@ export interface components {
             /** Uncertainty */
             uncertainty?: number | null;
         };
+        /** PreparationDeletionCounts */
+        PreparationDeletionCounts: {
+            /** Datasets */
+            datasets: number;
+            /** Files */
+            files: number;
+            /** Predictions */
+            predictions: number;
+            /** Records */
+            records: {
+                [key: string]: number;
+            };
+            /** Reports */
+            reports: number;
+            /** Tasks */
+            tasks: number;
+        };
         /** QualityIssue */
         QualityIssue: {
             /** Code */
@@ -3657,6 +3718,21 @@ export interface components {
         };
         /** RequestDataQACatalog */
         RequestDataQACatalog: Record<string, never>;
+        /** RequestDeletePreparation */
+        RequestDeletePreparation: {
+            /**
+             * Confirm
+             * @constant
+             */
+            confirm: true;
+            /**
+             * Preparationid
+             * Format: uuid
+             */
+            preparationId: string;
+            /** Revision */
+            revision: string;
+        };
         /** RequestDownloadModel */
         RequestDownloadModel: {
             /**
@@ -4587,6 +4663,22 @@ export interface components {
             contentBase64: string;
             /** Filename */
             filename: string;
+        };
+        /** ResponsePreparationDeletion */
+        ResponsePreparationDeletion: {
+            /** Blockedreason */
+            blockedReason: string | null;
+            counts: components["schemas"]["PreparationDeletionCounts"];
+            /** Datasetids */
+            datasetIds: string[];
+            /** Deleted */
+            deleted: boolean;
+            /** Filename */
+            filename: string;
+            /** Preparationid */
+            preparationId: string;
+            /** Revision */
+            revision: string;
         };
         /** ResponsePublishModel */
         ResponsePublishModel: {
@@ -6006,7 +6098,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -6111,7 +6203,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -6216,7 +6308,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -6321,7 +6413,217 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Bad Gateway */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE___"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
+                };
+            };
+        };
+    };
+    remove_preparation_api_v1_data_prep_delete_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestDeletePreparation"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponsePreparationDeletion_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Bad Gateway */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE___"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
+                };
+            };
+        };
+    };
+    preview_deletion_api_v1_data_prep_delete_preview_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestGetPreparation"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponsePreparationDeletion_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -6426,7 +6728,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -6531,7 +6833,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -6636,7 +6938,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -6741,7 +7043,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -6846,7 +7148,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -7020,7 +7322,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -7125,7 +7427,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -7230,7 +7532,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -7335,7 +7637,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE___"];
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE___"];
                 };
             };
             /** @description Unprocessable Entity */
@@ -10210,6 +10512,7 @@ export type RequestCreateTurn = components["schemas"]["RequestCreateTurn"];
 export type RequestCreateUpload = components["schemas"]["RequestCreateUpload"];
 export type RequestDataPrepContext = components["schemas"]["RequestDataPrepContext"];
 export type RequestDataQACatalog = components["schemas"]["RequestDataQACatalog"];
+export type RequestDeletePreparation = components["schemas"]["RequestDeletePreparation"];
 export type RequestDownloadModel = components["schemas"]["RequestDownloadModel"];
 export type RequestEnterpriseCompany = components["schemas"]["RequestEnterpriseCompany"];
 export type RequestEnterpriseSources = components["schemas"]["RequestEnterpriseSources"];
@@ -10300,6 +10603,7 @@ export type ResponseModelingCapabilities = components["schemas"]["ResponseModeli
 export type ResponsePredictModel = components["schemas"]["ResponsePredictModel"];
 export type ResponsePreparation = components["schemas"]["ResponsePreparation"];
 export type ResponsePreparationBundle = components["schemas"]["ResponsePreparationBundle"];
+export type ResponsePreparationDeletion = components["schemas"]["ResponsePreparationDeletion"];
 export type ResponsePublishModel = components["schemas"]["ResponsePublishModel"];
 export type ResponseRegister = components["schemas"]["ResponseRegister"];
 export type ResponseRerun = components["schemas"]["ResponseRerun"];

@@ -5,7 +5,9 @@ from risk_api.shared.api.envelope import ErrorEnvelope
 DATA_PREP_ERRORS: dict[int | str, dict[str, Any]] = {
     404: {"model": ErrorEnvelope[Literal[404], Literal["DATA_PREP_NOT_FOUND",
                                                        "DATA_PREP_TASK_NOT_FOUND"]]},
-    409: {"model": ErrorEnvelope[Literal[409], Literal["DATA_PREP_PLAN_STALE"]]},
+    409: {"model": ErrorEnvelope[Literal[409], Literal["DATA_PREP_PLAN_STALE",
+                                                     "DATA_PREP_DELETE_BLOCKED",
+                                                     "DATA_PREP_DELETE_STALE"]]},
     422: {
         "model": ErrorEnvelope[
             Literal[422],

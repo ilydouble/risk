@@ -1,6 +1,6 @@
 import { http } from "@/shared/api/http";
 import type {
-  RequestInspectData, RequestInspectCase,
+  RequestInspectData, RequestInspectCase, RequestDeletePreparation, ResponsePreparationDeletion,
   RequestModelDefaults,
   RequestSuggestMapping,
   RequestTestModel,
@@ -29,3 +29,6 @@ export const requestTrialConversion = http.withTimeout(60000).post<RequestGetPre
 export const requestImportConversion = http.withTimeout(60000).post<RequestImportConversion, ResponseConversionState>("/data-prep/conversion/import");
 
 export const requestInspectCase = http.withTimeout(120000).post<RequestInspectCase, ResponsePreparation>("/data-prep/inspect-case");
+
+export const requestPreviewPreparationDeletion = http.post<RequestGetPreparation, ResponsePreparationDeletion>("/data-prep/delete-preview");
+export const requestDeletePreparation = http.post<RequestDeletePreparation, ResponsePreparationDeletion>("/data-prep/delete");
