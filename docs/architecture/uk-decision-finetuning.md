@@ -1,5 +1,7 @@
 # UK 小型决策模型微调数据
 
+后续全量财务版的配置、目录及结果见[全量训练记录](uk-financial-full-training.md)。
+
 目标：将最新 `datasets/uk_research` 转成结构化决策监督数据，供服务器已有训练代码适配。
 0.6B候选底座为 `Qwen/Qwen3-0.6B`；它是因果语言模型，不能直接当作Laya检查点加载。
 已确认服务器JevForge采用候选标签token评分，使用其原生LoRA及LLM-as-Jev损失。
