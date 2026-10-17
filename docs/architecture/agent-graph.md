@@ -1,62 +1,65 @@
-# Agent 企业图谱工具
+# 数据集图谱与助手工具
 
-## 工具与数据边界
+## 身份与统一入口
 
-- `search_companies(keyword)`：按企业名称或注册号查询，关键词 1～100 字符，最多返回 10 条及总数。
-- `show_company_graph(company_id, depth=2)`：ID 必须来自查询结果或用户明确选择，深度限定 1～3。
-- 多条企业匹配时要求用户选择；系统提示不允许模型猜 ID 或虚构工具执行结果。
-- 语言通过创建 Turn 的 `lang`（zh/en）传递，不作为模型工具参数。
-- 当前查询的是八家演示企业及 Neo4j 演示子图，不是新加坡真实样本或训练数据。
-- 不开放 Cypher、任意 URL、布局或模型生成的节点与边。
-- Agent 仅向已认证用户开放；当前演示企业为共享只读数据，真实私有数据接入需另加所有权校验。
+- `show_company_graph(dataset_id, company_id, depth=1)`：数据集 ID 必填，深度 1～3。
+- 上传数据集使用目录返回的 UUID；共享演示使用固定逻辑数据集 ID `demo-companies`。
+- 不再额外传 source；服务端根据明确的数据集 ID 路由，不按企业 ID 猜来源，不自动回退演示。
+- `search_companies(keyword)` 仍检索演示企业，结果同时返回 `datasetId`。
+- 上传数据集从模型目录、资产目录、企业查询或预测结果取得 `datasetId`，不能填 modelId/runId。
+- 语言由 Turn 传入，不要求模型指定；不开放任意 URL、Cypher、坐标或自造节点。
 
-## 后端调用与持久化
+## 数据来源与协议
 
-`CompanyGraphTools` 位于 `assistant/tools/`，由 Dishka 注入会话工厂与 Neo4j 驱动。
-每次工具调用独立打开和关闭数据库会话，避免并行工具共用会话或捕获过期 HTTP 请求资源。
-工具直接复用 CompanyService、GraphService，不通过 HTTP 调用自身接口。
-Strands 1.60 不支持 Annotated 内的 Pydantic Field；工具显式使用参数模型生成 inputSchema，并在执行入口验证。
+Adapter → `risk-enterprise-data-v1` → PostgreSQL 标准企业记录 → 局部图接口 → G6。
+现有 company/person/edge/hyperedge/event/snapshot 即为复用边界，不增加每数据集专属图谱工具。
+共享演示继续读现有 Neo4j 种子，适配为同一展示响应，无须迁移演示数据库。
+新增数据集应先通过 Adapter 输出标准记录及来源，验证引用；无关系的数据返回企业节点。
+图谱展示不依赖模型服务，也不要求先发布模型。
 
-图谱成功返回 `CompanyGraphReference`：
+## 查询边界
 
-```json
-{
-  "kind": "company_graph",
-  "companyId": "C-1001",
-  "depth": 2,
-  "lang": "zh",
-  "title": "北辰精密制造有限公司",
-  "summary": {"nodeCount": 15, "edgeCount": 14},
-  "demo": true
-}
-```
+`POST /api/v1/graph/dataset` 使用 RequestGetDatasetGraph / ResponseGetDatasetGraph。
+请求包含 datasetId、companyId、depth 和 lang，沿用 Session、Origin 和四字段信封。
+上传数据集校验账号所有权、协议代际及企业导入状态；从中心企业确定 snapshot。
+后续查节点和关系均限定 dataset + snapshot，不跨训练/验证/测试快照拼边。
 
-工具返回小型 JSON 引用，不将全部图数据送入模型上下文。
-Projector 只接受 `show_company_graph` 的成功结构化结果，并经 Pydantic 校验后写入 `ToolItem.graph`。
-普通回答中的 JSON、其他工具结果、失败或非法引用不会生成图谱卡片。
-原始工具结果仍保留用于检查。`graph` 随 Item 快照和事件保存，刷新历史后可再次展示。
-该字段可空，旧 Item 无需数据库迁移；OpenAPI 与前端生成类型同步维护。
-企业不存在、图谱缺失、参数非法、基础设施不可用均作为失败工具结果，不生成可用图谱卡片。
+- 普通关系的相邻实体算一跳，查询包含入边及出边，画布保留原始方向和平行边。
+- 同一群组的成员作为一次逻辑扩展，画布以群组节点连接成员，不生成两两普通关系。
+- 事件是所属企业的附属证据，不推进下一跳。
+- 每次最多 100 个节点、240 条画布连线、100 条源关系记录，每组最多展开 12 个成员。
+- 关系按源记录 sequence 排序，节点按记录顺序补齐；群组优先保留当前查询成员。
+- PostgreSQL 单语句限时 2 秒，数据集图整个查询限时 6 秒；超时返回 GRAPH_QUERY_TIMEOUT。
+- 返回 truncated、truncationReasons、omittedMembers 和 limits；不得将截断图称为完整图。
+- 群组未展示数量是成员位置数，不是去重企业数。
+- 展示元数据只返回有界摘要：原始属性前 20 个键、值最多 256 字符，以及关系记录序号和文件来源。
+- 引用无法解析返回 GRAPH_DATA_INVALID，不凭空补节点。
 
-## 前端
+## 图谱引用与历史
 
-`ToolItemView` 只显示通用工具状态、参数和原始结果，提供可空的 `children` 交互插槽。
-插槽位于原始参数/结果的 details 外；无需展开原始 JSON 即可操作附加内容。
-聊天页 `TurnProcess` 选择业务渲染器，仅为成功且带 graph 引用的工具传入 `GraphResultCard`。
-卡片来自 `features/company-graph/`，直接内嵌 300px 高的 G6 预览，展示名称、深度和演示标识。
-前端固定调用 `GraphApi.requestGetGraph({companyId, depth, lang})`，使用当前界面语言。
-请求继续经过网关、Session 与 Origin 校验；不请求工具指定的任意 URL。
-面板保留加载、错误重试、缩放、拖动、重置及节点选择详情。
-图谱 feature 通过 IntersectionObserver 按可视性加载面板，折叠或滚出视口时卸载并销毁实例。
-保留预览占位高度，避免卸载改变列表高度；再次显示重新请求，视口和节点选择重置。
-Turn 和过程区仍保持各自原有折叠规则，不因预览加载而改变。
+工具直接调用业务服务，不请求自己的 HTTP API；每次调用独立数据库会话。
+成功返回 CompanyGraphReference，包含 datasetId/name、companyId、snapshot、depth、
+统计、demo 标识及截断原因，不将全部图送进模型上下文。
+Projector 仅接受该工具成功且经过类型校验的引用，保存到 ToolItem.graph。
+普通文本中的 JSON 不触发图谱渲染；历史 demo 引用缺少新字段时按明确的旧协议解码。
 
-企业图谱页面和内嵌预览共用 `features/company-graph/ui/CompanyGraph` 的业务展示适配。
-`shared/ui/graph/GraphView` 仍仅接收通用节点、边及样式，不依赖企业 DTO 或 Agent 协议。
-聊天页面不引用图谱页面组件。G6 通过懒加载面板按需加载。
+前端根据引用请求固定图接口；旧 `/graph/get` 保留给现有演示页面使用。
+引用中的数量是工具执行时统计；预览重新读取当前数据，引用不是冻结的可视化快照。
+数据集 snapshot 字段表示输入划分/来源快照，不意味着历史渲染结果永远不变。
 
-## 当前数据而非快照
+## 前端职责
 
-卡片中的数量是工具执行时对应语言的统计；预览显示时重新查询当前数据，并显示实际数量。
-不同语言或后续数据变更可能导致两者不同。图谱引用不是不可变快照。
-后续如需要固定历史视图，再加入数据版本或快照机制，不用客户端缓存假装历史一致。
+`features/company-graph/ui/DatasetGraphPanel` 供企业详情和助手缩略图共用。
+区分企业、人物、群组和事件；仅企业节点提供企业详情跳转。
+支持关系过滤、节点/连线选择、来源摘要、加载/重试及截断说明。
+人物 ID 不会被当作企业 ID；事件保留来源属性，不把编码擅自解释成法律结论。
+`shared/ui/graph/GraphView` 仍只管理通用绘制、布局和交互。
+
+ToolItemView 保持可空 children 插槽；GraphResultCard 内嵌 300px 预览。
+IntersectionObserver 控制可见时加载，折叠/离开视区销毁实例，保留占位高度。
+再次显示重新请求并重置选择；不改变 Turn/过程区原有折叠行为。
+
+## 展示含义
+
+这是数据集中的来源关系，可能不同于某次训练实际使用的子图。
+连线不是预测贡献、风险传导或因果解释；需要训练子图解释时另行定义模型产物查询契约。

@@ -8,5 +8,6 @@ class SearchCompaniesInput(BaseModel):
 
 class ShowCompanyGraphInput(BaseModel):
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
-    company_id: str = Field(min_length=1, max_length=64)
-    depth: int = Field(default=2, ge=1, le=3)
+    dataset_id: str = Field(min_length=1, max_length=64)
+    company_id: str = Field(min_length=1, max_length=512)
+    depth: int = Field(default=1, ge=1, le=3)

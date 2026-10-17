@@ -599,6 +599,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/graph/dataset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Get Dataset Graph */
+        post: operations["get_dataset_graph_api_v1_graph_dataset_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/graph/get": {
         parameters: {
             query?: never;
@@ -1355,6 +1372,16 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ApiEnvelope[ResponseGetDatasetGraph] */
+        ApiEnvelope_ResponseGetDatasetGraph_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseGetDatasetGraph"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
         /** ApiEnvelope[ResponseGetDataset] */
         ApiEnvelope_ResponseGetDataset_: {
             /** Code */
@@ -1883,11 +1910,20 @@ export interface components {
             /** Companyid */
             companyId: string;
             /**
+             * Datasetid
+             * @default demo-companies
+             */
+            datasetId: string;
+            /**
+             * Datasetname
+             * @default Shared demo companies
+             */
+            datasetName: string;
+            /**
              * Demo
              * @default true
-             * @constant
              */
-            demo: true;
+            demo: boolean;
             /** Depth */
             depth: number;
             /**
@@ -1901,9 +1937,21 @@ export interface components {
              * @enum {string}
              */
             lang: "zh" | "en";
+            /**
+             * Snapshot
+             * @default seed
+             */
+            snapshot: string;
             summary: components["schemas"]["GraphSummary"];
             /** Title */
             title: string;
+            /**
+             * Truncated
+             * @default false
+             */
+            truncated: boolean;
+            /** Truncationreasons */
+            truncationReasons?: string[];
         };
         /** CompanyProfile */
         CompanyProfile: {
@@ -2164,6 +2212,50 @@ export interface components {
             status: "pending_upload" | "queued" | "running" | "ready" | "failed" | "cancelled";
             /** Supportedrunnerids */
             supportedRunnerIds?: string[];
+        };
+        /** DatasetGraphEdge */
+        DatasetGraphEdge: {
+            /** Data */
+            data: {
+                [key: string]: unknown;
+            };
+            /** Directed */
+            directed: boolean;
+            /** Id */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "edge" | "hyperedge" | "event";
+            /** Label */
+            label: string;
+            /** Recordsequence */
+            recordSequence: number | null;
+            /** Source */
+            source: string;
+            /** Target */
+            target: string;
+        };
+        /** DatasetGraphNode */
+        DatasetGraphNode: {
+            /** Data */
+            data: {
+                [key: string]: unknown;
+            };
+            /** Entityid */
+            entityId: string | null;
+            /** Id */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "company" | "person" | "hyperedge" | "event";
+            /** Label */
+            label: string;
+            /** Recordsequence */
+            recordSequence: number | null;
         };
         /** DistributionItemDTO */
         DistributionItemDTO: {
@@ -2473,6 +2565,22 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ErrorEnvelope[Literal[404], Literal['MODELING_RESOURCE_NOT_FOUND', 'GRAPH_COMPANY_NOT_FOUND', 'COMPANY_NOT_FOUND', 'GRAPH_NOT_FOUND']] */
+        ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____GRAPH_COMPANY_NOT_FOUND____COMPANY_NOT_FOUND____GRAPH_NOT_FOUND___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 404;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @enum {string}
+             */
+            internal_code: "MODELING_RESOURCE_NOT_FOUND" | "GRAPH_COMPANY_NOT_FOUND" | "COMPANY_NOT_FOUND" | "GRAPH_NOT_FOUND";
+            /** Message */
+            message: string;
+        };
         /** ErrorEnvelope[Literal[404], Literal['MODELING_RESOURCE_NOT_FOUND', 'MODEL_RESOURCE_NOT_FOUND', 'MODELING_COMPANY_NOT_FOUND']] */
         ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___: {
             /**
@@ -2585,6 +2693,22 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ErrorEnvelope[Literal[409], Literal['GRAPH_DATA_UNAVAILABLE', 'GRAPH_DATA_INVALID']] */
+        ErrorEnvelope_Literal_409__Literal__GRAPH_DATA_UNAVAILABLE____GRAPH_DATA_INVALID___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 409;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @enum {string}
+             */
+            internal_code: "GRAPH_DATA_UNAVAILABLE" | "GRAPH_DATA_INVALID";
+            /** Message */
+            message: string;
+        };
         /** ErrorEnvelope[Literal[409], Literal['MODELING_STATE_INVALID', 'MODELING_DATASET_NOT_READY', 'MODELING_UPLOAD_INCOMPLETE', 'MODEL_STATE_INVALID', 'MODELING_CONFIG_STALE', 'MODELING_ENTERPRISE_UNAVAILABLE', 'MODEL_EXPLANATION_UNAVAILABLE']] */
         ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE____MODELING_ENTERPRISE_UNAVAILABLE____MODEL_EXPLANATION_UNAVAILABLE___: {
             /**
@@ -2614,6 +2738,22 @@ export interface components {
              * @enum {string}
              */
             internal_code: "DATA_PREP_SIZE_INVALID" | "DATA_PREP_ENCODING_INVALID" | "DATA_PREP_HEADER_INVALID" | "DATA_PREP_HEADER_DUPLICATE" | "DATA_PREP_ROW_INVALID" | "DATA_PREP_ROWS_EXCEEDED" | "DATA_PREP_EMPTY" | "DATA_PREP_FORMAT_UNSUPPORTED" | "DATA_PREP_CONTENT_INVALID" | "DATA_PREP_MAPPING_INVALID" | "DATA_PREP_RULE_INVALID" | "DATA_PREP_GRAPH_INVALID";
+            /** Message */
+            message: string;
+        };
+        /** ErrorEnvelope[Literal[422], Literal['GRAPH_INPUT_INVALID']] */
+        ErrorEnvelope_Literal_422__Literal__GRAPH_INPUT_INVALID___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 422;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @constant
+             */
+            internal_code: "GRAPH_INPUT_INVALID";
             /** Message */
             message: string;
         };
@@ -2822,6 +2962,22 @@ export interface components {
              * @constant
              */
             internal_code: "DOCUMENT_STORAGE_UNAVAILABLE";
+            /** Message */
+            message: string;
+        };
+        /** ErrorEnvelope[Literal[503], Literal['GRAPH_QUERY_TIMEOUT']] */
+        ErrorEnvelope_Literal_503__Literal__GRAPH_QUERY_TIMEOUT___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 503;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @constant
+             */
+            internal_code: "GRAPH_QUERY_TIMEOUT";
             /** Message */
             message: string;
         };
@@ -3953,6 +4109,24 @@ export interface components {
              */
             datasetId: string;
         };
+        /** RequestGetDatasetGraph */
+        RequestGetDatasetGraph: {
+            /** Companyid */
+            companyId: string;
+            /** Datasetid */
+            datasetId: string;
+            /**
+             * Depth
+             * @default 1
+             */
+            depth: number;
+            /**
+             * Lang
+             * @default zh
+             * @enum {string}
+             */
+            lang: "zh" | "en";
+        };
         /** RequestGetGraph */
         RequestGetGraph: {
             /** Companyid */
@@ -4579,6 +4753,37 @@ export interface components {
         /** ResponseGetDataset */
         ResponseGetDataset: {
             dataset: components["schemas"]["DatasetDTO"];
+        };
+        /** ResponseGetDatasetGraph */
+        ResponseGetDatasetGraph: {
+            /** Companyid */
+            companyId: string;
+            /** Datasetid */
+            datasetId: string;
+            /** Datasetname */
+            datasetName: string;
+            /** Demo */
+            demo: boolean;
+            /** Depth */
+            depth: number;
+            /** Edges */
+            edges: components["schemas"]["DatasetGraphEdge"][];
+            /** Limits */
+            limits: {
+                [key: string]: number;
+            };
+            /** Nodes */
+            nodes: components["schemas"]["DatasetGraphNode"][];
+            /** Omittedmembers */
+            omittedMembers: number;
+            /** Rootid */
+            rootId: string;
+            /** Snapshot */
+            snapshot: string;
+            /** Truncated */
+            truncated: boolean;
+            /** Truncationreasons */
+            truncationReasons: string[];
         };
         /** ResponseGetGraph */
         ResponseGetGraph: {
@@ -8397,6 +8602,93 @@ export interface operations {
             };
         };
     };
+    get_dataset_graph_api_v1_graph_dataset_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestGetDatasetGraph"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseGetDatasetGraph_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____GRAPH_COMPANY_NOT_FOUND____COMPANY_NOT_FOUND____GRAPH_NOT_FOUND___"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__GRAPH_DATA_UNAVAILABLE____GRAPH_DATA_INVALID___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__GRAPH_INPUT_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__GRAPH_QUERY_TIMEOUT___"];
+                };
+            };
+        };
+    };
     get_api_v1_graph_get_post: {
         parameters: {
             query?: never;
@@ -10796,6 +11088,7 @@ export type RequestGetCompany = components["schemas"]["RequestGetCompany"];
 export type RequestGetConversation = components["schemas"]["RequestGetConversation"];
 export type RequestGetConversion = components["schemas"]["RequestGetConversion"];
 export type RequestGetDataset = components["schemas"]["RequestGetDataset"];
+export type RequestGetDatasetGraph = components["schemas"]["RequestGetDatasetGraph"];
 export type RequestGetGraph = components["schemas"]["RequestGetGraph"];
 export type RequestGetModel = components["schemas"]["RequestGetModel"];
 export type RequestGetOverview = components["schemas"]["RequestGetOverview"];
@@ -10857,6 +11150,7 @@ export type ResponseEnterpriseSources = components["schemas"]["ResponseEnterpris
 export type ResponseGetCompany = components["schemas"]["ResponseGetCompany"];
 export type ResponseGetConversation = components["schemas"]["ResponseGetConversation"];
 export type ResponseGetDataset = components["schemas"]["ResponseGetDataset"];
+export type ResponseGetDatasetGraph = components["schemas"]["ResponseGetDatasetGraph"];
 export type ResponseGetGraph = components["schemas"]["ResponseGetGraph"];
 export type ResponseGetModel = components["schemas"]["ResponseGetModel"];
 export type ResponseGetOverview = components["schemas"]["ResponseGetOverview"];

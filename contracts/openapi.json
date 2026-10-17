@@ -851,6 +851,40 @@
         "title": "ApiEnvelope[ResponseGetConversation]",
         "type": "object"
       },
+      "ApiEnvelope_ResponseGetDatasetGraph_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseGetDatasetGraph"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseGetDatasetGraph]",
+        "type": "object"
+      },
       "ApiEnvelope_ResponseGetDataset_": {
         "properties": {
           "code": {
@@ -2557,13 +2591,22 @@
         "additionalProperties": false,
         "properties": {
           "companyId": {
-            "maxLength": 64,
+            "maxLength": 512,
             "minLength": 1,
             "title": "Companyid",
             "type": "string"
           },
+          "datasetId": {
+            "default": "demo-companies",
+            "title": "Datasetid",
+            "type": "string"
+          },
+          "datasetName": {
+            "default": "Shared demo companies",
+            "title": "Datasetname",
+            "type": "string"
+          },
           "demo": {
-            "const": true,
             "default": true,
             "title": "Demo",
             "type": "boolean"
@@ -2588,12 +2631,29 @@
             "title": "Lang",
             "type": "string"
           },
+          "snapshot": {
+            "default": "seed",
+            "title": "Snapshot",
+            "type": "string"
+          },
           "summary": {
             "$ref": "#/components/schemas/GraphSummary"
           },
           "title": {
             "title": "Title",
             "type": "string"
+          },
+          "truncated": {
+            "default": false,
+            "title": "Truncated",
+            "type": "boolean"
+          },
+          "truncationReasons": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Truncationreasons",
+            "type": "array"
           }
         },
         "required": [
@@ -3372,6 +3432,126 @@
         "title": "DatasetDTO",
         "type": "object"
       },
+      "DatasetGraphEdge": {
+        "properties": {
+          "data": {
+            "additionalProperties": true,
+            "title": "Data",
+            "type": "object"
+          },
+          "directed": {
+            "title": "Directed",
+            "type": "boolean"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "edge",
+              "hyperedge",
+              "event"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "recordSequence": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recordsequence"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "target": {
+            "title": "Target",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "source",
+          "target",
+          "kind",
+          "label",
+          "directed",
+          "recordSequence",
+          "data"
+        ],
+        "title": "DatasetGraphEdge",
+        "type": "object"
+      },
+      "DatasetGraphNode": {
+        "properties": {
+          "data": {
+            "additionalProperties": true,
+            "title": "Data",
+            "type": "object"
+          },
+          "entityId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Entityid"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "company",
+              "person",
+              "hyperedge",
+              "event"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "recordSequence": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recordsequence"
+          }
+        },
+        "required": [
+          "id",
+          "entityId",
+          "kind",
+          "label",
+          "recordSequence",
+          "data"
+        ],
+        "title": "DatasetGraphNode",
+        "type": "object"
+      },
       "DistributionItemDTO": {
         "properties": {
           "key": {
@@ -4102,6 +4282,40 @@
         "title": "ErrorEnvelope[Literal[404], Literal['GRAPH_NOT_FOUND']]",
         "type": "object"
       },
+      "ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____GRAPH_COMPANY_NOT_FOUND____COMPANY_NOT_FOUND____GRAPH_NOT_FOUND___": {
+        "properties": {
+          "code": {
+            "const": 404,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "enum": [
+              "MODELING_RESOURCE_NOT_FOUND",
+              "GRAPH_COMPANY_NOT_FOUND",
+              "COMPANY_NOT_FOUND",
+              "GRAPH_NOT_FOUND"
+            ],
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[404], Literal['MODELING_RESOURCE_NOT_FOUND', 'GRAPH_COMPANY_NOT_FOUND', 'COMPANY_NOT_FOUND', 'GRAPH_NOT_FOUND']]",
+        "type": "object"
+      },
       "ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___": {
         "properties": {
           "code": {
@@ -4316,6 +4530,38 @@
         "title": "ErrorEnvelope[Literal[409], Literal['DOCUMENT_UPLOAD_INCOMPLETE']]",
         "type": "object"
       },
+      "ErrorEnvelope_Literal_409__Literal__GRAPH_DATA_UNAVAILABLE____GRAPH_DATA_INVALID___": {
+        "properties": {
+          "code": {
+            "const": 409,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "enum": [
+              "GRAPH_DATA_UNAVAILABLE",
+              "GRAPH_DATA_INVALID"
+            ],
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[409], Literal['GRAPH_DATA_UNAVAILABLE', 'GRAPH_DATA_INVALID']]",
+        "type": "object"
+      },
       "ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE____MODELING_ENTERPRISE_UNAVAILABLE____MODEL_EXPLANATION_UNAVAILABLE___": {
         "properties": {
           "code": {
@@ -4393,6 +4639,35 @@
           "data"
         ],
         "title": "ErrorEnvelope[Literal[422], Literal['DATA_PREP_SIZE_INVALID', 'DATA_PREP_ENCODING_INVALID', 'DATA_PREP_HEADER_INVALID', 'DATA_PREP_HEADER_DUPLICATE', 'DATA_PREP_ROW_INVALID', 'DATA_PREP_ROWS_EXCEEDED', 'DATA_PREP_EMPTY', 'DATA_PREP_FORMAT_UNSUPPORTED', 'DATA_PREP_CONTENT_INVALID', 'DATA_PREP_MAPPING_INVALID', 'DATA_PREP_RULE_INVALID', 'DATA_PREP_GRAPH_INVALID']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_422__Literal__GRAPH_INPUT_INVALID___": {
+        "properties": {
+          "code": {
+            "const": 422,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "GRAPH_INPUT_INVALID",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[422], Literal['GRAPH_INPUT_INVALID']]",
         "type": "object"
       },
       "ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___": {
@@ -4802,6 +5077,35 @@
           "data"
         ],
         "title": "ErrorEnvelope[Literal[503], Literal['DOCUMENT_STORAGE_UNAVAILABLE']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_503__Literal__GRAPH_QUERY_TIMEOUT___": {
+        "properties": {
+          "code": {
+            "const": 503,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "const": "GRAPH_QUERY_TIMEOUT",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[503], Literal['GRAPH_QUERY_TIMEOUT']]",
         "type": "object"
       },
       "ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___": {
@@ -7631,6 +7935,44 @@
         "title": "RequestGetDataset",
         "type": "object"
       },
+      "RequestGetDatasetGraph": {
+        "properties": {
+          "companyId": {
+            "maxLength": 512,
+            "minLength": 1,
+            "title": "Companyid",
+            "type": "string"
+          },
+          "datasetId": {
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Datasetid",
+            "type": "string"
+          },
+          "depth": {
+            "default": 1,
+            "maximum": 3.0,
+            "minimum": 1.0,
+            "title": "Depth",
+            "type": "integer"
+          },
+          "lang": {
+            "default": "zh",
+            "enum": [
+              "zh",
+              "en"
+            ],
+            "title": "Lang",
+            "type": "string"
+          }
+        },
+        "required": [
+          "datasetId",
+          "companyId"
+        ],
+        "title": "RequestGetDatasetGraph",
+        "type": "object"
+      },
       "RequestGetGraph": {
         "properties": {
           "companyId": {
@@ -9192,6 +9534,91 @@
           "dataset"
         ],
         "title": "ResponseGetDataset",
+        "type": "object"
+      },
+      "ResponseGetDatasetGraph": {
+        "properties": {
+          "companyId": {
+            "title": "Companyid",
+            "type": "string"
+          },
+          "datasetId": {
+            "title": "Datasetid",
+            "type": "string"
+          },
+          "datasetName": {
+            "title": "Datasetname",
+            "type": "string"
+          },
+          "demo": {
+            "title": "Demo",
+            "type": "boolean"
+          },
+          "depth": {
+            "title": "Depth",
+            "type": "integer"
+          },
+          "edges": {
+            "items": {
+              "$ref": "#/components/schemas/DatasetGraphEdge"
+            },
+            "title": "Edges",
+            "type": "array"
+          },
+          "limits": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Limits",
+            "type": "object"
+          },
+          "nodes": {
+            "items": {
+              "$ref": "#/components/schemas/DatasetGraphNode"
+            },
+            "title": "Nodes",
+            "type": "array"
+          },
+          "omittedMembers": {
+            "title": "Omittedmembers",
+            "type": "integer"
+          },
+          "rootId": {
+            "title": "Rootid",
+            "type": "string"
+          },
+          "snapshot": {
+            "title": "Snapshot",
+            "type": "string"
+          },
+          "truncated": {
+            "title": "Truncated",
+            "type": "boolean"
+          },
+          "truncationReasons": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Truncationreasons",
+            "type": "array"
+          }
+        },
+        "required": [
+          "datasetId",
+          "datasetName",
+          "snapshot",
+          "companyId",
+          "depth",
+          "demo",
+          "rootId",
+          "nodes",
+          "edges",
+          "truncated",
+          "truncationReasons",
+          "omittedMembers",
+          "limits"
+        ],
+        "title": "ResponseGetDatasetGraph",
         "type": "object"
       },
       "ResponseGetGraph": {
@@ -14836,6 +15263,107 @@
         "summary": "List Documents",
         "tags": [
           "document"
+        ]
+      }
+    },
+    "/api/v1/graph/dataset": {
+      "post": {
+        "operationId": "get_dataset_graph_api_v1_graph_dataset_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestGetDatasetGraph"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseGetDatasetGraph_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____GRAPH_COMPANY_NOT_FOUND____COMPANY_NOT_FOUND____GRAPH_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__GRAPH_DATA_UNAVAILABLE____GRAPH_DATA_INVALID___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__GRAPH_INPUT_INVALID___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__GRAPH_QUERY_TIMEOUT___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Get Dataset Graph",
+        "tags": [
+          "graph"
         ]
       }
     },

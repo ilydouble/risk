@@ -1,7 +1,7 @@
 import json
 from typing import Any
 
-from neo4j import AsyncDriver
+from neo4j import AsyncDriver, Query
 
 
 class GraphRepository:
@@ -12,8 +12,11 @@ class GraphRepository:
         # Seeded hop is the shortest distance from the root; read both facts from Neo4j.
         async with self.driver.session() as session:
             nodes_result = await session.run(
-                "MATCH (n:DemoNode {company_id: $company_id, lang: $lang}) "
-                "WHERE n.hop <= $depth RETURN n.payload AS payload ORDER BY n.hop, n.id",
+                Query(
+                    "MATCH (n:DemoNode {company_id: $company_id, lang: $lang}) "
+                    "WHERE n.hop <= $depth RETURN n.payload AS payload ORDER BY n.hop, n.id",
+                    timeout=2,
+                ),
                 company_id=company_id,
                 lang=lang,
                 depth=depth,
@@ -23,10 +26,13 @@ class GraphRepository:
                 return None
             ids = [node["id"] for node in nodes]
             edges_result = await session.run(
-                "MATCH (a:DemoNode {company_id: $company_id, lang: $lang})"
-                "-[r:RELATED {company_id: $company_id, lang: $lang}]->"
-                "(b:DemoNode {company_id: $company_id, lang: $lang}) "
-                "WHERE a.id IN $ids AND b.id IN $ids RETURN r.payload AS payload ORDER BY r.id",
+                Query(
+                    "MATCH (a:DemoNode {company_id: $company_id, lang: $lang})"
+                    "-[r:RELATED {company_id: $company_id, lang: $lang}]->"
+                    "(b:DemoNode {company_id: $company_id, lang: $lang}) "
+                    "WHERE a.id IN $ids AND b.id IN $ids RETURN r.payload AS payload ORDER BY r.id",
+                    timeout=2,
+                ),
                 company_id=company_id,
                 lang=lang,
                 ids=ids,
