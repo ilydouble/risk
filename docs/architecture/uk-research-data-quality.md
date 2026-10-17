@@ -59,8 +59,8 @@
 复现示例（仓库根目录，安装 `scripts/requirements-uk-financials.txt`）：
 
 ```sh
-python scripts/repair_uk_research_data.py --base outputs/uk-research-graph-20261017-v2 --output outputs/uk-research-graph-20261017-v3 --workers 4
-python scripts/finalize_uk_research_repairs.py --base outputs/uk-research-graph-20261017-v2 --output outputs/uk-research-graph-20261017-v3
+python scripts/repair_uk_research_data.py --base datasets/archive/uk-research-20261017/uk-research-graph-20261017-v2 --output datasets/archive/uk-research-20261017/uk-research-graph-20261017-v3 --workers 4
+python scripts/finalize_uk_research_repairs.py --base datasets/archive/uk-research-20261017/uk-research-graph-20261017-v2 --output datasets/archive/uk-research-20261017/uk-research-graph-20261017-v3
 ```
 
 只接受新版本目录；损坏原件或身份/时间冲突会终止生成。财务缓存签名包含质量策略文件，基本信息缓存签名包含国家映射文件，避免修改规则后误用旧缓存。交付包复用已有财务源数据包，不重复加入解压后的约 20 GB 原件。

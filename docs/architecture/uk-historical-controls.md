@@ -76,12 +76,12 @@
 ```sh
 uv run --no-project --with-requirements scripts/requirements-uk-financials.txt \
   python scripts/prepare_uk_controls.py \
-  --events outputs/uk-adverse-events-2020-2025-v1/events.csv \
+  --events datasets/archive/uk-research-20261017/uk-adverse-events-2020-2025-v1/events.csv \
   --event-archive datasets/sources/insolvency-service-2025-12/record-level.zip \
-  --case-financials outputs/uk-financials-2020-2025-h12-v1 \
+  --case-financials datasets/archive/uk-research-20261017/uk-financials-2020-2025-h12-v1 \
   --financial-cache datasets/sources/uk-financials \
   --cache datasets/sources/uk-controls-h12-v1 \
-  --output outputs/uk-controls-2020-2025-h12-1to1-v1
+  --output datasets/archive/uk-research-20261017/uk-controls-2020-2025-h12-1to1-v1
 ```
 
 固定输入、协议及已保存的配对可以续跑；新规则或来源应使用新版本目录。

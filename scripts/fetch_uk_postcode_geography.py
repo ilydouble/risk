@@ -16,7 +16,7 @@ from prepare_uk_graph import ROOT
 from uk_graph.geography import FIELDS, NAME_SERVICE, POSTCODE_SERVICE, VINTAGE, canonical_postcode
 from uk_graph.gleif import stable_id
 
-BASE = ROOT / "outputs/uk-research-graph-20261017-v3"
+BASE = ROOT / "datasets/archive/uk-research-20261017/uk-research-graph-20261017-v3"
 OUTPUT = ROOT / "datasets/sources/ons-geography-202608-20261017"
 
 

@@ -20,7 +20,10 @@ from uk_financials.facts import ALIASES, parse_document
 from uk_financials.trends import FLOWS, choose_history, trend_features
 
 ROOT = Path(__file__).resolve().parents[1]
-EXTRA_REPORTS = ROOT / "outputs/uk-financials-2020-2025-h12-v1/financial-reports.csv"
+EXTRA_REPORTS = (
+    ROOT
+    / "datasets/archive/uk-research-20261017/uk-financials-2020-2025-h12-v1/financial-reports.csv"
+)
 SOURCE_FIELDS = [
     "report_id",
     "company_id",

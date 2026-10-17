@@ -7,7 +7,7 @@ from pathlib import Path
 from prepare_uk_basic_information import COHORT, OUTPUT, ROOT, read_csv
 from prepare_uk_financials import sha, write_csv, write_json
 
-EVENTS = ROOT / "outputs/uk-adverse-events-2020-2025-v1/events.csv"
+EVENTS = ROOT / "datasets/archive/uk-research-20261017/uk-adverse-events-2020-2025-v1/events.csv"
 FIELDS = (
     "company_id",
     "event_id",

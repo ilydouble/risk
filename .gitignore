@@ -96,3 +96,6 @@ Thumbs.db
 # Independent model service local workspace
 /models/runs/
 /models/weights/
+
+# Archived local deployment bundles
+/backup/distributions/

@@ -92,7 +92,7 @@ python ../scripts/validate_uk_geography.py
 python ../scripts/finalize_uk_geography.py
 ```
 
-默认目标为 `outputs/uk-research-graph-20261017-v4`，已存在时构建拒绝覆盖。
+默认目标为 `datasets/archive/uk-research-20261017/uk-research-graph-20261017-v4`，已存在时构建拒绝覆盖。
 未来复现优先使用交付包冻结的源码和目录缓存，默认网络服务可能更新；版本不一致不能混用。
 验证涵盖旧文件逐字节保留、全部端点、旧组保留、交叉集合、逐成员来源、缺失和伪代码、
 观察全量保留、完整 GraphML 节点及边数；交付清单覆盖所有文件并核验 ZIP CRC 和 SHA256。

@@ -21,8 +21,8 @@ from uk_financials.basic import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-COHORT = ROOT / "outputs/uk-controls-2020-2025-h12-1to1-v1"
-OUTPUT = ROOT / "outputs/uk-basic-information-20261017-v1"
+COHORT = ROOT / "datasets/archive/uk-research-20261017/uk-controls-2020-2025-h12-1to1-v1"
+OUTPUT = ROOT / "datasets/archive/uk-research-20261017/uk-basic-information-20261017-v1"
 SNAPSHOT = (
     ROOT / "datasets/sources/companies-house-2026-10-01/BasicCompanyDataAsOneFile-2026-10-01.zip"
 )
@@ -198,7 +198,10 @@ def historical(profile, observation):
 def extra_reports(excluded, reports):
     wanted = {(r["company_id"], r["observation_month"]) for r in excluded}
     mapping = {}
-    selection = ROOT / "outputs/uk-financials-2020-2025-h12-v1/selection.jsonl.gz"
+    selection = (
+        ROOT
+        / "datasets/archive/uk-research-20261017/uk-financials-2020-2025-h12-v1/selection.jsonl.gz"
+    )
     with gzip.open(selection, "rt") as stream:
         for line in stream:
             row = json.loads(line)

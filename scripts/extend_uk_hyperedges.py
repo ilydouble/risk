@@ -15,8 +15,8 @@ from prepare_uk_financials import sha, write_csv, write_json
 from prepare_uk_graph import ROOT, graphml
 from uk_graph.hyperedges import KINDS, SOURCE_DATE, common_parent_facts, group_id, snapshot_facts
 
-BASE = ROOT / "outputs/uk-research-graph-20261017-v1"
-OUTPUT = ROOT / "outputs/uk-research-graph-20261017-v2"
+BASE = ROOT / "datasets/archive/uk-research-20261017/uk-research-graph-20261017-v1"
+OUTPUT = ROOT / "datasets/archive/uk-research-20261017/uk-research-graph-20261017-v2"
 CLASSIFICATION = ROOT / "datasets/sources/uk-hyperedges-20261017/sic-codes.csv"
 EVIDENCE_FIELDS = [
     "group_id",

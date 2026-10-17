@@ -75,7 +75,7 @@
 ```bash
 python3 scripts/prepare_uk_adverse_events.py \
   --source-zip datasets/sources/insolvency-service-2025-12/record-level.zip \
-  --output outputs/uk-adverse-events-2020-2025-v1 \
+  --output datasets/archive/uk-research-20261017/uk-adverse-events-2020-2025-v1 \
   --start 2020-01 --end 2025-12
 ```
 

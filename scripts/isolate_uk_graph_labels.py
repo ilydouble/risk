@@ -11,6 +11,8 @@ from zipfile import ZIP_DEFLATED, ZipFile
 
 ROOT = Path(__file__).resolve().parents[1]
 
+ARCHIVE = ROOT / "datasets/archive/uk-research-20261017"
+
 REMOVED = {"events.csv", "event-node-links.csv", "out-of-scope-events.csv"}
 NS = "{http://graphml.graphdrawing.org/xmlns}"
 
@@ -227,9 +229,9 @@ def run(base, output):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--base", type=Path, default=ROOT / "outputs/uk-research-graph-20261017-v3")
+    parser.add_argument("--base", type=Path, default=ARCHIVE / "uk-research-graph-20261017-v3")
     parser.add_argument(
-        "--output", type=Path, default=ROOT / "outputs/uk-research-graph-20261017-labels-only-v1"
+        "--output", type=Path, default=ARCHIVE / "uk-research-graph-20261017-labels-only-v1"
     )
     args = parser.parse_args()
     run(args.base, args.output)

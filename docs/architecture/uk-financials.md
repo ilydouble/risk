@@ -54,8 +54,8 @@
 ```sh
 uv run --no-project --with-requirements scripts/requirements-uk-financials.txt \
   python scripts/prepare_uk_financials.py \
-  --events outputs/uk-adverse-events-2020-2025-v1/events.csv \
-  --output outputs/uk-financials-2020-2025-h12-v1 \
+  --events datasets/archive/uk-research-20261017/uk-adverse-events-2020-2025-v1/events.csv \
+  --output datasets/archive/uk-research-20261017/uk-financials-2020-2025-h12-v1 \
   --cache datasets/sources/uk-financials --horizon 12 --lookback 36
 ```
 

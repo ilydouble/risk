@@ -4,7 +4,7 @@
 
 当前数据已具备电子财报企业的正式不良事件预测基线，以及当前企业属性超图；尚不具备经过历史时点验证的图预测训练集。最紧要的是修复提取与业务校验、补历史基本信息和历史关系，而不是继续堆叠当前超边。
 
-审计对象为 `outputs/uk-research-graph-20261017-v2/`；不混入旧版 `datasets/uk_dataset_v1/`。本次只读原交付文件，另行输出 `outputs/uk-research-audit-20261017-v2/`。742 个清单文件逐一核对大小和 SHA256，全部一致。完整 CSV 为全量统计；原财报扩展标签只探索 600 份，不据此外推全量覆盖。
+审计对象为 `datasets/archive/uk-research-20261017/uk-research-graph-20261017-v2/`；不混入旧版 `datasets/uk_dataset_v1/`。本次只读原交付文件，另行输出 `datasets/archive/uk-research-20261017/uk-research-audit-20261017-v2/`。742 个清单文件逐一核对大小和 SHA256，全部一致。完整 CSV 为全量统计；原财报扩展标签只探索 600 份，不据此外推全量覆盖。
 
 ## 企业、观察与标签
 
@@ -140,6 +140,6 @@
 
 ## 复现与交付
 
-运行 `python3 scripts/audit_uk_research_dataset.py --dataset outputs/uk-research-graph-20261017-v2 --output outputs/uk-research-audit-20261017-v2 --financial-facts outputs/uk-controls-2020-2025-h12-1to1-v1/baseline-facts.jsonl.gz`。
+运行 `python3 scripts/audit_uk_research_dataset.py --dataset datasets/archive/uk-research-20261017/uk-research-graph-20261017-v2 --output datasets/archive/uk-research-20261017/uk-research-audit-20261017-v2 --financial-facts datasets/archive/uk-research-20261017/uk-controls-2020-2025-h12-1to1-v1/baseline-facts.jsonl.gz`。
 
 输出含 `audit.json`、财务覆盖/数值分布、分年与分组覆盖、超边分布/最大群组、候选行业×地区统计、员工异常、缺失财报逐份复核、最大地址群组和抽样标签清单。完整性检查、端点/成员去重、配对月份、财务缺失标志和假定可用日检查通过，不等于每个源事实都真实、每个对照均正常或当前图可用于历史预测。未训练模型，未进行因果或预测增益检验；原数据未改写。

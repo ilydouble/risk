@@ -4,6 +4,9 @@ React 工作台、Go Session 网关、FastAPI 业务 API 与独立 RiskGNN+ 模�
 保留注册登录、企业检索、画像、图谱及文件直传。八家企业的评分、解释、报告和授信决策仍是演示内容。
 `/overview` 是新加坡数据的静态统计；`/modeling` 执行真实数据校验、子集训练、独立测试与模型发布。
 
+本地英国研究数据统一使用 [datasets/uk_research](datasets/uk_research/README.md)，
+已合并财务趋势、观察标签和最新地区图谱；目录约定见 [数据集说明](datasets/README.md)。
+
 ## 启动
 
 ```bash

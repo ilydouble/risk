@@ -6,8 +6,8 @@
 ## 当前交付
 
 入口：`scripts/isolate_uk_graph_labels.py`。默认读取已验证的
-`outputs/uk-research-graph-20261017-v3`，生成新目录
-`outputs/uk-research-graph-20261017-labels-only-v1` 及 ZIP/SHA256。
+`datasets/archive/uk-research-20261017/uk-research-graph-20261017-v3`，生成新目录
+`datasets/archive/uk-research-20261017/uk-research-graph-20261017-labels-only-v1` 及 ZIP/SHA256。
 拒绝覆盖已有目录；先核对基线交付清单的所有文件摘要。
 
 - 移除根目录 `events.csv`、`event-node-links.csv`、`out-of-scope-events.csv`。

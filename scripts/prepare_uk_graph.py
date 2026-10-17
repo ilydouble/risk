@@ -23,10 +23,10 @@ from uk_graph.gleif import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-BASIC = ROOT / "outputs/uk-basic-information-20261017-v1"
-EVENTS = ROOT / "outputs/uk-adverse-events-2020-2025-v1/events.csv"
+BASIC = ROOT / "datasets/archive/uk-research-20261017/uk-basic-information-20261017-v1"
+EVENTS = ROOT / "datasets/archive/uk-research-20261017/uk-adverse-events-2020-2025-v1/events.csv"
 SOURCE = ROOT / "datasets/sources/gleif-20261017"
-OUTPUT = ROOT / "outputs/uk-research-graph-20261017-v1"
+OUTPUT = ROOT / "datasets/archive/uk-research-20261017/uk-research-graph-20261017-v1"
 
 
 def relationship_records(path):

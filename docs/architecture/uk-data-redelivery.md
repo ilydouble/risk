@@ -60,7 +60,7 @@ GLEIF 历史边缺少原始关系记录，本次不声称已重新核验其类�
 python3 scripts/redeliver_uk_dataset.py \
   --source-dir datasets/uk_dataset_v1 \
   --names-zip datasets/sources/companies-house-2026-10-01/BasicCompanyDataAsOneFile-2026-10-01.zip \
-  --output outputs/uk-redelivery-20261017-v2 \
+  --output datasets/archive/uk-research-20261017/uk-redelivery-20261017-v2 \
   --version 20261017-named-v2 --names-date 2026-09-30 \
   --names-url https://download.companieshouse.gov.uk/BasicCompanyDataAsOneFile-2026-10-01.zip
 ```

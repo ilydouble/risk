@@ -4,7 +4,7 @@
 
 ## 范围与结果
 
-基线为 `outputs/uk-research-graph-20261017-v3/`，扩展在 `outputs/uk-financial-history-20261017-v1/`。原 209,192 条观察和所有原特征列逐条保留，标签字节不变。
+基线为 `datasets/archive/uk-research-20261017/uk-research-graph-20261017-v3/`，扩展在 `datasets/archive/uk-research-20261017/uk-financial-history-20261017-v1/`。原 209,192 条观察和所有原特征列逐条保留，标签字节不变。
 
 处理 v3 的 208,853 份本地原财报，另纳入旧财务交付中属于研究企业的 2,364 份缓存财报。约 3,100 份非 v3 原件候选中，其余不在既定研究企业范围内，不据此扩大研究全集。所有 211,217 份原件核对 SHA256/CRC；已有预期大小的核对大小，额外源元数据无大小的保存实际大小并标明。
 
@@ -62,9 +62,9 @@
 仓库根目录、安装原财务脚本依赖后：
 
 ```sh
-python scripts/extend_uk_financial_history.py --base outputs/uk-research-graph-20261017-v3 --output outputs/uk-financial-history-20261017-v1 --workers 4
-python scripts/validate_uk_financial_history.py --base outputs/uk-research-graph-20261017-v3 --output outputs/uk-financial-history-20261017-v1
-python scripts/finalize_uk_financial_history.py --base outputs/uk-research-graph-20261017-v3 --output outputs/uk-financial-history-20261017-v1
+python scripts/extend_uk_financial_history.py --base datasets/archive/uk-research-20261017/uk-research-graph-20261017-v3 --output datasets/archive/uk-research-20261017/uk-financial-history-20261017-v1 --workers 4
+python scripts/validate_uk_financial_history.py --base datasets/archive/uk-research-20261017/uk-research-graph-20261017-v3 --output datasets/archive/uk-research-20261017/uk-financial-history-20261017-v1
+python scripts/finalize_uk_financial_history.py --base datasets/archive/uk-research-20261017/uk-research-graph-20261017-v3 --output datasets/archive/uk-research-20261017/uk-financial-history-20261017-v1
 ```
 
 当前缺少的精确申报日和外部企业关系属于后续采集，不能从财报签署日、下载日、报告期末或董事签名直接替代。

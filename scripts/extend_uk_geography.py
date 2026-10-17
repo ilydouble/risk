@@ -24,7 +24,7 @@ from uk_graph.geography import (
 from uk_graph.gleif import stable_id
 from uk_graph.hyperedges import group_id, snapshot_facts
 
-OUTPUT = ROOT / "outputs/uk-research-graph-20261017-v4"
+OUTPUT = ROOT / "datasets/archive/uk-research-20261017/uk-research-graph-20261017-v4"
 ASSUMPTION = {
     "currentRegistryApproximatesHistoricalObservation": True,
     "acceptedByUser": True,
