@@ -6,12 +6,16 @@ from torch import nn
 from torch.func import functional_call
 
 from riskgnn_plus.model import RiskGNNPlus, RiskGNNPlusOutput
+from riskgnn_plus.workbench.adaptive import ADAPTIVE_ARCHITECTURE, AdaptivePlus
 
 
 def create_core(meta: dict, companies: np.ndarray, persons: np.ndarray, *, has_edges=True):
-    network = RiskGNNPlus(
-        input_dim=16,
-        output_dim=12,
+    adaptive = meta["architecture"] == ADAPTIVE_ARCHITECTURE
+    network_type = AdaptivePlus if adaptive else RiskGNNPlus
+    network = network_type(
+        **({"meta": meta} if adaptive else {}),
+        input_dim=64 if adaptive else 16,
+        output_dim=32 if adaptive else 12,
         company_num=len(companies),
         person_num=len(persons),
         rel_num=len(meta["relations"]),
@@ -30,7 +34,7 @@ def create_core(meta: dict, companies: np.ndarray, persons: np.ndarray, *, has_e
     )
 
     count = len(meta.get("hyperedgeTypes", [0, 1, 2]))
-    if count != 3:
+    if count != 3 and not adaptive:
         weights = nn.Parameter(torch.empty(count, 1))
         nn.init.xavier_uniform_(weights)
         network.hypergnn.alpha = weights
@@ -60,7 +64,8 @@ class PortablePlus(nn.Module):
         nodes = np.concatenate((companies, persons))
         local = {int(node): i for i, node in enumerate(nodes)}
         edge_mask = np.array(
-            [int(row[0]) in local and int(row[1]) in local for row in context["edges"]], dtype=bool
+            [int(row[0]) in local and int(row[1]) in local for row in context["edges"]],
+            dtype=bool,
         )
         source = context["edges"][edge_mask]
         edges = [[local[int(row[0])], local[int(row[1])]] for row in source]
@@ -71,7 +76,10 @@ class PortablePlus(nn.Module):
         )
         hypers = []
         for i in range(len(self.meta.get("hyperedgeTypes", [0, 1, 2]))):
-            raw_nodes, raw_groups = context[f"hyper_nodes_{i}"], context[f"hyper_groups_{i}"]
+            raw_nodes, raw_groups = (
+                context[f"hyper_nodes_{i}"],
+                context[f"hyper_groups_{i}"],
+            )
             incidences = [
                 (local[int(n)], int(g))
                 for n, g in zip(raw_nodes, raw_groups, strict=True)
@@ -105,7 +113,10 @@ class PortablePlus(nn.Module):
             raise ValueError("Forward targets must belong to one isolated snapshot")
         network, companies, local, graph, hypers, risk = self.graph(snapshots.pop())
         network.train(self.training)
-        state = {**dict(self.core.named_parameters()), **dict(self.core.named_buffers())}
+        state = {
+            **dict(self.core.named_parameters()),
+            **dict(self.core.named_buffers()),
+        }
         # functional_call routes gradients and running statistics to the one portable state.
         result = functional_call(
             network,

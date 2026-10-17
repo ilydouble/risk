@@ -459,6 +459,13 @@
             "type": "string",
             "const": "riskgnn-plus",
             "default": "riskgnn-plus"
+          },
+          "fusion": {
+            "type": "string",
+            "enum": [
+              "legacy",
+              "adaptive"
+            ]
           }
         },
         "title": "TrainParameters",

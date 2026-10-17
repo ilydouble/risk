@@ -21,6 +21,7 @@ export function CreateExperimentForm({ work }: { work: ReturnType<typeof useMode
   const [configuration, setConfiguration] = useState<ResponseRunConfiguration["configuration"]>();
   const [values, setValues] = useState<Record<string, string>>({});
   const [name, setName] = useState("");
+  const [fusion, setFusion] = useState("");
   const [error, setError] = useState("");
   const [reload, setReload] = useState(0);
   const datasetId = work.dataset!.id;
@@ -41,6 +42,9 @@ export function CreateExperimentForm({ work }: { work: ReturnType<typeof useMode
         path, String(valueAt(copiedParameters ?? definition.defaultParameters, path) ?? ""),
       ])));
       setName(copiedName ?? datasetName);
+      setFusion(String(copiedParameters
+        ? (valueAt(copiedParameters, "fusion") ?? "legacy")
+        : (valueAt(definition.defaultParameters, "fusion") ?? "")));
     }).catch((reason) => {
       if (active) setError(handleApiError(reason));
     });
@@ -49,6 +53,9 @@ export function CreateExperimentForm({ work }: { work: ReturnType<typeof useMode
 
   const language = i18n.language.startsWith("zh") ? "zh" : "en";
   const ui = configuration?.uiSchema.fields;
+  const fusionRule = object(object(configuration?.parameterSchema.properties).fusion);
+  const fusionOptions = Array.isArray(fusionRule.enum)
+    ? fusionRule.enum.filter((value): value is string => typeof value === "string") : [];
   const fields = paths.map((path) => {
     const schema = path.split(".").reduce<unknown>((current, key) =>
       object(object(current).properties)[key], configuration?.parameterSchema);
@@ -101,11 +108,25 @@ export function CreateExperimentForm({ work }: { work: ReturnType<typeof useMode
               {t("modeling.config.range", { min: field.minimum, max: field.maximum })}
             </span>}
           </label>)}
+          {fusionOptions.length > 0 && <label className="block text-sm">
+            {t("modeling.config.fusionLabel")}
+            <select className={`${input} mt-1`} value={fusion}
+              onChange={(event) => setFusion(event.target.value)}>
+              {fusionOptions.map((option) => <option key={option} value={option}>
+                {t(`modeling.config.fusionOptions.${option}`, { defaultValue: option })}
+              </option>)}
+            </select>
+            <span className="mt-1 block text-xs text-foreground-500">
+              {t("modeling.config.fusionNote")}
+            </span>
+          </label>}
         </div>
         <button className={button}
-          disabled={work.busy || !name.trim() || fields.some((field) => !field.valid)}
+          disabled={work.busy || !name.trim() || fields.some((field) => !field.valid) ||
+            (fusionOptions.length > 0 && !fusionOptions.includes(fusion))}
           onClick={() => void work.create(datasetId, name.trim(), {
             epochs: Number(values.epochs), dataset: { target_count: Number(values["dataset.target_count"]) },
+            ...(fusionOptions.length > 0 ? { fusion } : {}),
           }, configuration.schemaDigest)}>
           {t(work.submitting ? "modeling.activity.submitting" : "modeling.train")}
         </button>

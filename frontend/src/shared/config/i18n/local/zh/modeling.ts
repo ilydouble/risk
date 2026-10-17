@@ -93,6 +93,9 @@ export default {
       }
 },
     "config": {
+  "fusionLabel": "分支融合",
+  "fusionNote": "关系缺失较多时，建议使用财务优先融合；原版可用于实验对照。",
+  "fusionOptions": { "adaptive": "财务优先，自适应关系", "legacy": "原版融合" },
   "title": "实验配置快照",
   "name": "实验名称",
   "reload": "重新加载配置",

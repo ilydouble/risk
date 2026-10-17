@@ -8,10 +8,12 @@ from pathlib import Path
 
 import numpy as np
 import torch
+from sklearn.metrics import roc_auc_score
 
 from riskgnn.workbench.artifacts import read_json, seal, verify, write_json
 from riskgnn.workbench.training import code_version
 from riskgnn_plus.loss import EvidentialRiskLoss
+from riskgnn_plus.workbench.adaptive import ADAPTIVE_ARCHITECTURE, FUSION_PROFILE
 from riskgnn_plus.workbench.network import PortablePlus
 from riskgnn_plus.workbench.preparation import FORMAT
 
@@ -26,7 +28,14 @@ def source_version() -> str:
     return fingerprint.hexdigest()
 
 
-def train(prepared: Path, output: Path, epochs: int, *, configuration=None, metric_callback=None):
+def train(
+    prepared: Path,
+    output: Path,
+    epochs: int,
+    *,
+    configuration=None,
+    metric_callback=None,
+):
     verify(prepared, "riskgnn-prepared-v1")
     if not 1 <= epochs <= 250:
         raise ValueError("epochs must be between 1 and 250")
@@ -39,6 +48,21 @@ def train(prepared: Path, output: Path, epochs: int, *, configuration=None, metr
         if file.is_file() and file.name != "manifest.json":
             shutil.copy2(file, output / file.name)
     meta = read_json(output / "metadata.json")
+    requested_fusion = (
+        configuration["resolvedParameters"].get("fusion", "legacy")
+        if configuration is not None
+        else ("adaptive" if meta["datasetFormat"] == "uk-research-v2" else "legacy")
+    )
+    if requested_fusion not in {"legacy", "adaptive"}:
+        raise ValueError("Unsupported fusion mode")
+    adaptive = requested_fusion == "adaptive"
+    if adaptive:
+        if meta["datasetFormat"] != "uk-research-v2":
+            raise ValueError("Adaptive fusion currently requires UK research v2")
+        meta["architecture"] = ADAPTIVE_ARCHITECTURE
+        meta["fusionProfile"] = dict(FUSION_PROFILE)
+        meta["embeddingSource"] = "disabled-random-identity-inputs"
+        meta["profile"] = "riskgnn-plus-adaptive-v1"
     context = dict(np.load(output / "context.npz", allow_pickle=False))
     model = PortablePlus(meta, context, read_json(output / "risk_events.json"))
     train_nodes = np.where(context["splits"] == "train")[0].tolist()
@@ -51,7 +75,15 @@ def train(prepared: Path, output: Path, epochs: int, *, configuration=None, metr
         raise ValueError("Training requires both labels")
     weights = (1.0, negatives / positives)
     loss_fn = EvidentialRiskLoss(class_weights=weights)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+    optimizer = (
+        torch.optim.AdamW(
+            model.parameters(),
+            lr=FUSION_PROFILE["learningRate"],
+            weight_decay=FUSION_PROFILE["weightDecay"],
+        )
+        if adaptive
+        else torch.optim.Adam(model.parameters(), lr=0.01)
+    )
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, epochs, eta_min=1e-6)
     # Warm graph caches before training so constructor RNG does not alter epoch execution.
     for snapshot in sorted(set(map(str, context["snapshots"]))):
@@ -69,6 +101,13 @@ def train(prepared: Path, output: Path, epochs: int, *, configuration=None, metr
             primary_logits=result.primary_logits,
             kl_annealing=min(1.0, (epoch + 1) / 10),
         )["loss"]
+        if adaptive:
+            node_logits = model.core.primary_classifier(result.node_embedding)
+            loss = loss + FUSION_PROFILE["nodeAuxWeight"] * torch.nn.functional.cross_entropy(
+                node_logits,
+                torch.tensor(context["labels"][train_nodes]),
+                weight=torch.tensor(weights, dtype=torch.float32),
+            )
         if not torch.isfinite(loss):
             raise ValueError("Non-finite RiskGNN+ training loss")
         loss.backward()
@@ -84,6 +123,13 @@ def train(prepared: Path, output: Path, epochs: int, *, configuration=None, metr
                     torch.tensor(context["labels"][validation]),
                 )
             )
+            if adaptive:
+                validation_node_loss = float(
+                    torch.nn.functional.cross_entropy(
+                        model.core.primary_classifier(prediction.node_embedding),
+                        torch.tensor(context["labels"][validation]),
+                    )
+                )
         if not np.isfinite(validation_loss):
             raise ValueError("Non-finite RiskGNN+ validation loss")
         row = {
@@ -91,6 +137,14 @@ def train(prepared: Path, output: Path, epochs: int, *, configuration=None, metr
             "trainLoss": float(loss.detach()),
             "validationLoss": validation_loss,
         }
+        if adaptive:
+            row["validationRocAuc"] = float(
+                roc_auc_score(
+                    context["labels"][validation],
+                    prediction.probabilities[:, 1].numpy(),
+                )
+            )
+            row["validationNodeLoss"] = validation_node_loss
         history.append(row)
         if metric_callback:
             metric_callback(row)

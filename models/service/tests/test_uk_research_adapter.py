@@ -193,3 +193,14 @@ def test_new_uk_preset_prepares_fifteen_channels_and_trains_empty_edge_graph(
     assert torch.isfinite(prediction).all()
     trained = train(prepared, tmp_path / "model", 1)
     assert trained["selectedEpoch"] == 1
+    assert trained["architecture"] == "riskgnn-plus-adaptive-v1"
+    from riskgnn.workbench.predictor import Predictor
+    from riskgnn.workbench.training import evaluate
+
+    predictor = Predictor(tmp_path / "model")
+    ids = list(predictor.index)[:2]
+    expected = predictor.predict(ids)
+    reloaded = Predictor(tmp_path / "model")
+    assert reloaded.predict(ids[::-1]) == expected[::-1]
+    report = evaluate(tmp_path / "model", output=tmp_path / "report")
+    assert report["independentReload"] and report["metrics"]["count"] == 2

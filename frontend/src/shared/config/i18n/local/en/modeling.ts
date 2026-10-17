@@ -93,6 +93,9 @@ export default {
       }
 },
     "config": {
+  "fusionLabel": "Branch fusion",
+  "fusionNote": "Use financial-first fusion when relationships are incomplete; keep the original for comparison.",
+  "fusionOptions": { "adaptive": "Financial-first, adaptive relationships", "legacy": "Original fusion" },
   "title": "Experiment configuration snapshot",
   "name": "Experiment name",
   "reload": "Reload configuration",

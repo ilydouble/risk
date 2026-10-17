@@ -6,6 +6,7 @@ import numpy as np
 import torch
 
 from riskgnn.workbench.artifacts import read_json, verify
+from riskgnn_plus.workbench.adaptive import ADAPTIVE_ARCHITECTURE
 from riskgnn_plus.workbench.network import PortablePlus
 from riskgnn_plus.workbench.preparation import ARCHITECTURE, FORMAT
 
@@ -14,7 +15,7 @@ class PlusPredictor:
     def __init__(self, directory: Path):
         verify(directory, FORMAT)
         self.meta = read_json(directory / "metadata.json")
-        if self.meta["architecture"] != ARCHITECTURE:
+        if self.meta["architecture"] not in {ARCHITECTURE, ADAPTIVE_ARCHITECTURE}:
             raise ValueError("Unsupported RiskGNN+ architecture")
         self.ids = read_json(directory / "ids.json")
         self.index = {name: i for i, name in enumerate(self.ids[: self.meta["companyCount"]])}

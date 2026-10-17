@@ -64,6 +64,16 @@ def describe(contract: dict) -> dict:
             "dataset": delivery.config(identity["config"]),
         },
     )
+    adaptive_uk = identity["id"] == "uk-dataset-v1" and identity["version"] == "2"
+    if adaptive_uk:
+        schema["properties"]["fusion"] = {
+            "type": "string",
+            "enum": ["legacy", "adaptive"],
+            "default": "adaptive",
+        }
+        defaults["fusion"] = "adaptive"
+    else:
+        schema["properties"].pop("fusion", None)
     dataset_schema["required"] = sorted(defaults["dataset"])
     schema["properties"]["dataset"] = dataset_schema
     schema["required"] = sorted(defaults)
@@ -75,6 +85,17 @@ def describe(contract: dict) -> dict:
         "defaultParameters": defaults,
         "uiSchema": deepcopy(operation["ui_schema"]),
     }
+    if adaptive_uk:
+        descriptor["uiSchema"]["fields"].append(
+            {
+                "path": "fusion",
+                "label": {"zh": "分支融合", "en": "Branch fusion"},
+                "description": {
+                    "zh": "adaptive按观察门控并处理缺失；legacy保留历史全局融合。",
+                    "en": "Adaptive missing-aware gating or legacy global fusion.",
+                },
+            }
+        )
     descriptor["schemaDigest"] = descriptor_digest(descriptor)
     return descriptor
 
@@ -112,6 +133,10 @@ def validate_frozen(contract: dict, parameters: dict, snapshot: dict) -> dict:
             "This experiment uses the previous RiskGNN runtime; create a new RiskGNN+ experiment",
             stale=True,
         )
-    validate_parameters(current["parameterSchema"], resolved)
+    current_schema = deepcopy(current["parameterSchema"])
+    if "fusion" not in snapshot["defaultParameters"]:
+        # Old frozen UK runs retain legacy fusion instead of adopting a new default.
+        current_schema["required"] = [k for k in current_schema["required"] if k != "fusion"]
+    validate_parameters(current_schema, resolved)
     validate_parameters(snapshot["parameterSchema"], resolved)
     return deepcopy(snapshot)

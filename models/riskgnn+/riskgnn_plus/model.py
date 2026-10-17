@@ -257,7 +257,12 @@ class RiskGNNPlus(nn.Module):
         # Graph latent uses F.gelu as in standard RiskGNN
         graph_latent = F.gelu(graph_aggregated[idx])
 
-        # 3. Dual-Branch Evidence Generation
+        return self.classify(node_latent, graph_latent)
+
+    def classify(
+        self, node_latent: torch.Tensor, graph_latent: torch.Tensor
+    ) -> RiskGNNPlusOutput:
+        """Classify representations; workbench variants can override fusion."""
         e_node = self.node_evidence_head(node_latent)
         e_graph = self.graph_evidence_head(graph_latent)
 
@@ -342,32 +347,4 @@ class RiskGNNPlus(nn.Module):
 
         graph_latent = self.info_proj(company_emb_hete[:batch_size])
 
-        # Evidence generation
-        e_node = self.node_evidence_head(node_latent)
-        e_graph = self.graph_evidence_head(graph_latent)
-
-        # DST Fusion
-        dst_out = dempster_shafer_combine_binary(e_node, e_graph)
-
-        # Primary Backbone Stream
-        alpha = torch.sigmoid(self.alpha)
-        backbone_emb = alpha * graph_latent + (1.0 - alpha) * node_latent
-        primary_logits = self.primary_classifier(backbone_emb)
-        primary_probs = F.softmax(primary_logits, dim=-1)
-
-        return RiskGNNPlusOutput(
-            probabilities=primary_probs,
-            fused_probabilities=dst_out.fused_state.probabilities,
-            fused_alpha=dst_out.fused_state.alpha,
-            fused_uncertainty=dst_out.fused_state.uncertainty,
-            conflict=dst_out.conflict,
-            node_alpha=dst_out.node_state.alpha,
-            node_uncertainty=dst_out.node_state.uncertainty,
-            node_probabilities=dst_out.node_state.probabilities,
-            graph_alpha=dst_out.graph_state.alpha,
-            graph_uncertainty=dst_out.graph_state.uncertainty,
-            graph_probabilities=dst_out.graph_state.probabilities,
-            primary_logits=primary_logits,
-            node_embedding=node_latent,
-            graph_embedding=graph_latent,
-        )
+        return self.classify(node_latent, graph_latent)
