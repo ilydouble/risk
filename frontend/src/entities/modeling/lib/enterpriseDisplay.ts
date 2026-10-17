@@ -11,7 +11,7 @@ export function displayEnterpriseProperty(value: unknown): string {
   return displayEnterpriseValue(value);
 }
 export function enterpriseName(row: EnterpriseRecordDTO): string {
-  return typeof row.data.name === "string" && row.data.name.trim() ? row.data.name : row.nodeId ?? "未命名企业";
+  return typeof row.data.name === "string" && row.data.name.trim() ? row.data.name.trim() : row.nodeId ?? "未命名企业";
 }
 export function enterpriseLink(dataset: string, node: string): string {
   return `/company/${encodeURIComponent(dataset)}/${encodeURIComponent(node)}?source=uploaded`;

@@ -12,7 +12,7 @@ import type {
 } from "@/shared/api/generated/schema";
 import type { useModelingWorkbench } from "@/features/modeling/model/useModelingWorkbench";
 import { handleApiError } from "@/shared/api/http";
-import { enterpriseLink } from "@/entities/modeling/lib/enterpriseDisplay";
+import { enterpriseLink, enterpriseName } from "@/entities/modeling/lib/enterpriseDisplay";
 import { button, input } from "./presentation";
 
 type Workbench = ReturnType<typeof useModelingWorkbench>;
@@ -135,13 +135,13 @@ export function EnterpriseDataPanel({ work }: { work: Workbench }) {
               <article key={row.sequence} className="rounded-md border border-background-200 p-3">
                 <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
                   <strong className="break-all">
-                    {row.nodeId ? `${display(row.data.name ?? row.nodeId)}`
+                    {row.nodeId ? enterpriseName(row)
                       : row.source ? `${row.source}${row.target ? ` → ${row.target}` : ""}`
                       : row.members.join(", ")}
                   </strong>
                   <span className="text-xs text-foreground-500">{row.snapshot}</span>
                 </div>
-                {row.nodeId && <p className="break-all font-mono text-xs">{row.nodeId}</p>}
+                {row.nodeId && enterpriseName(row) !== row.nodeId && <p className="break-all font-mono text-xs">{row.nodeId}</p>}
                 <details className="mt-2 text-xs">
                   <summary className="cursor-pointer">{t("modeling.enterprise.attributes")}</summary>
                   <dl className="mt-2 grid grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-2">

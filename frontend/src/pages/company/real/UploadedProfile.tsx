@@ -32,7 +32,7 @@ export default function UploadedProfile() {
     {error && <p role="alert" className="rounded-lg border border-danger-500/30 p-4 text-sm text-danger-500">{error}</p>}
     {!data && !error && <p role="status" className="text-sm text-foreground-500">正在加载企业详情…</p>}
     {data && <>
-      <section className="rounded-lg border border-background-200 bg-background-100 p-5"><h2 className="text-xl font-semibold">{enterpriseName(data.company)}</h2><p className="mt-2 break-all font-mono text-xs text-foreground-500">{companyId}</p><p className="mt-3 text-sm text-foreground-500">数据集：{data.dataset.name} · 快照：{data.company.snapshot} · 已有标签：{displayEnterpriseValue(data.company.data.label)}</p><Link className="mt-3 inline-block text-xs text-primary-400" to={`/?source=uploaded&dataset=${encodeURIComponent(datasetId)}`}>查看本数据集总览 →</Link></section>
+      <section className="rounded-lg border border-background-200 bg-background-100 p-5"><h2 className="text-xl font-semibold">{enterpriseName(data.company)}</h2>{enterpriseName(data.company) !== companyId && <p className="mt-2 break-all font-mono text-xs text-foreground-500">{companyId}</p>}<p className="mt-3 text-sm text-foreground-500">数据集：{data.dataset.name} · 快照：{data.company.snapshot} · 已有标签：{displayEnterpriseValue(data.company.data.label)}</p><Link className="mt-3 inline-block text-xs text-primary-400" to={`/?source=uploaded&dataset=${encodeURIComponent(datasetId)}`}>查看本数据集总览 →</Link></section>
       <EnterpriseRelationGraph key={`${datasetId}:${companyId}`} data={data} />
       <EnterpriseProperties data={data.company.data} />
       <EnterpriseSourceTrace provenance={data.provenance} />
