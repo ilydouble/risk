@@ -31,14 +31,16 @@
       },
       "result_schema": {
         "$defs": {
-          "InspectionIssue": {
+          "CompatibilityIssue": {
             "additionalProperties": false,
             "properties": {
               "code": {
+                "minLength": 1,
                 "title": "Code",
                 "type": "string"
               },
               "message": {
+                "minLength": 1,
                 "title": "Message",
                 "type": "string"
               }
@@ -47,37 +49,377 @@
               "code",
               "message"
             ],
-            "title": "InspectionIssue",
+            "title": "CompatibilityIssue",
             "type": "object"
           },
-          "InspectionStatus": {
-            "enum": [
-              "compatible",
-              "configuration_required",
-              "incompatible"
+          "DatasetProfile": {
+            "additionalProperties": false,
+            "properties": {
+              "datasetFormat": {
+                "minLength": 1,
+                "title": "Datasetformat",
+                "type": "string"
+              },
+              "taskType": {
+                "minLength": 1,
+                "title": "Tasktype",
+                "type": "string"
+              },
+              "target": {
+                "minLength": 1,
+                "title": "Target",
+                "type": "string"
+              },
+              "evaluation": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Evaluation"
+              },
+              "features": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Features"
+              },
+              "splits": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "$ref": "#/$defs/SplitSummary"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Splits"
+              },
+              "relations": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "$ref": "#/$defs/RelationSummary"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Relations"
+              },
+              "metadata": {
+                "additionalProperties": {
+                  "$ref": "#/$defs/JsonValue"
+                },
+                "title": "Metadata",
+                "type": "object"
+              }
+            },
+            "required": [
+              "datasetFormat",
+              "taskType",
+              "target"
             ],
-            "title": "InspectionStatus",
-            "type": "string"
+            "title": "DatasetProfile",
+            "type": "object"
+          },
+          "EnterpriseExportSummary": {
+            "additionalProperties": false,
+            "properties": {
+              "format": {
+                "const": "risk-enterprise-data-v1",
+                "default": "risk-enterprise-data-v1",
+                "title": "Format",
+                "type": "string"
+              },
+              "counts": {
+                "additionalProperties": {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "propertyNames": {
+                  "enum": [
+                    "company",
+                    "person",
+                    "edge",
+                    "hyperedge",
+                    "event"
+                  ]
+                },
+                "title": "Counts",
+                "type": "object"
+              }
+            },
+            "required": [
+              "counts"
+            ],
+            "title": "EnterpriseExportSummary",
+            "type": "object"
+          },
+          "InspectedFile": {
+            "additionalProperties": false,
+            "properties": {
+              "path": {
+                "minLength": 1,
+                "title": "Path",
+                "type": "string"
+              },
+              "size": {
+                "minimum": 0,
+                "title": "Size",
+                "type": "integer"
+              },
+              "sha256": {
+                "pattern": "^[0-9a-f]{64}$",
+                "title": "Sha256",
+                "type": "string"
+              }
+            },
+            "required": [
+              "path",
+              "size",
+              "sha256"
+            ],
+            "title": "InspectedFile",
+            "type": "object"
+          },
+          "JsonValue": {},
+          "RelationSummary": {
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "minLength": 1,
+                "title": "Type",
+                "type": "string"
+              },
+              "count": {
+                "minimum": 0,
+                "title": "Count",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "type",
+              "count"
+            ],
+            "title": "RelationSummary",
+            "type": "object"
+          },
+          "SplitSummary": {
+            "additionalProperties": false,
+            "properties": {
+              "split": {
+                "minLength": 1,
+                "title": "Split",
+                "type": "string"
+              },
+              "count": {
+                "minimum": 0,
+                "title": "Count",
+                "type": "integer"
+              },
+              "positives": {
+                "minimum": 0,
+                "title": "Positives",
+                "type": "integer"
+              },
+              "seed": {
+                "anyOf": [
+                  {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Seed"
+              }
+            },
+            "required": [
+              "split",
+              "count",
+              "positives"
+            ],
+            "title": "SplitSummary",
+            "type": "object"
           }
         },
-        "additionalProperties": true,
+        "additionalProperties": false,
+        "description": "Public inspect result after successful validation AND enterprise export.",
         "properties": {
+          "protocol": {
+            "minLength": 1,
+            "title": "Protocol",
+            "type": "string"
+          },
+          "sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Sha256",
+            "type": "string"
+          },
+          "files": {
+            "items": {
+              "$ref": "#/$defs/InspectedFile"
+            },
+            "minItems": 1,
+            "title": "Files",
+            "type": "array"
+          },
+          "counts": {
+            "additionalProperties": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "propertyNames": {
+              "minLength": 1
+            },
+            "title": "Counts",
+            "type": "object"
+          },
+          "features": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Features",
+            "type": "array"
+          },
+          "labeledCount": {
+            "minimum": 0,
+            "title": "Labeledcount",
+            "type": "integer"
+          },
+          "positiveCount": {
+            "minimum": 0,
+            "title": "Positivecount",
+            "type": "integer"
+          },
+          "datasetProfile": {
+            "$ref": "#/$defs/DatasetProfile"
+          },
+          "splits": {
+            "items": {
+              "$ref": "#/$defs/SplitSummary"
+            },
+            "title": "Splits",
+            "type": "array"
+          },
+          "root": {
+            "default": ".",
+            "title": "Root",
+            "type": "string"
+          },
+          "relations": {
+            "items": {
+              "$ref": "#/$defs/RelationSummary"
+            },
+            "title": "Relations",
+            "type": "array"
+          },
+          "analysis": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/JsonValue"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Analysis"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "metadata": {
+            "additionalProperties": {
+              "$ref": "#/$defs/JsonValue"
+            },
+            "title": "Metadata",
+            "type": "object"
+          },
+          "datasetContract": {
+            "additionalProperties": {
+              "$ref": "#/$defs/JsonValue"
+            },
+            "title": "Datasetcontract",
+            "type": "object"
+          },
+          "supportedRunnerIds": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "title": "Supportedrunnerids",
+            "type": "array"
+          },
           "compatibility": {
-            "$ref": "#/$defs/InspectionStatus"
+            "enum": [
+              "compatible",
+              "incompatible"
+            ],
+            "title": "Compatibility",
+            "type": "string"
           },
           "issues": {
             "items": {
-              "$ref": "#/$defs/InspectionIssue"
+              "$ref": "#/$defs/CompatibilityIssue"
             },
             "title": "Issues",
             "type": "array"
+          },
+          "enterpriseData": {
+            "$ref": "#/$defs/EnterpriseExportSummary"
           }
         },
         "required": [
+          "protocol",
+          "sha256",
+          "files",
+          "counts",
+          "features",
+          "labeledCount",
+          "positiveCount",
+          "datasetProfile",
+          "splits",
+          "datasetContract",
+          "supportedRunnerIds",
           "compatibility",
-          "issues"
+          "issues",
+          "enterpriseData"
         ],
-        "title": "InspectionSummary",
+        "title": "InspectionOutput",
         "type": "object"
       },
       "artifacts": {

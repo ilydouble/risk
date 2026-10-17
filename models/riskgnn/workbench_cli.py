@@ -13,7 +13,9 @@ from riskgnn_plus.workbench.preparation import FORMAT as PLUS_FORMAT
 from riskgnn_plus.workbench.preparation import prepare as prepare_plus
 from riskgnn_plus.workbench.training import train
 
-from riskgnn.dataset_adapters.enterprise import FORMAT, export
+from riskgnn.dataset_adapters.contracts.enterprise import FORMAT
+from riskgnn.dataset_adapters.contracts.operation import InspectionOutput
+from riskgnn.dataset_adapters.enterprise import export
 from riskgnn.dataset_adapters.registry import inspect, resolve
 from riskgnn.workbench.artifacts import asset_digest, read_json, write_json
 from riskgnn.workbench.configuration import ConfigurationError, merge, validate_frozen
@@ -47,9 +49,10 @@ def execute(request: dict, directory: Path, emit) -> dict:
         adapter, _ = resolve(Path(inputs["dataset"]["path"]))
         data["enterpriseData"] = export(
             adapter, work / "validated", output / "enterprises.jsonl", data
-        )
+        ).model_dump(mode="json")
+        result = InspectionOutput.model_validate(data)
         return {
-            "data": data,
+            "data": result.model_dump(mode="json", exclude_unset=True),
             "effective_config": parameters,
             "artifacts": {
                 "enterprises": {"path": "enterprises.jsonl", "format": FORMAT}

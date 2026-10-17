@@ -22,7 +22,7 @@
 先参照最接近的实现：[ACRA](acra/README.md)、[SMEsD](smesd/README.md)、[UK](uk_dataset_v1/README.md)。
 SMEsD 原始 Pickle 不直接上传；工作台使用处理后的 JSON。旧 Bundle 协议已删除。
 
-## 2. 新建目录并实现两个方法
+## 2. 新建目录并实现三个必需方法
 
 ```text
 dataset_adapters/new_dataset/
@@ -39,9 +39,12 @@ dataset_adapters/new_dataset/
 继承 [DatasetAdapter](base.py)，可参考 [UKAdapter](uk_dataset_v1/adapter.py) 的薄装配方式：
 
 ```python
+from collections.abc import Iterable
 from pathlib import Path
 
 from riskgnn.dataset_adapters.base import DatasetAdapter
+from riskgnn.dataset_adapters.contracts.enterprise import EnterpriseRecord
+from riskgnn.dataset_adapters.contracts.inspection import InspectionResult
 
 
 class NewDatasetAdapter(DatasetAdapter):
@@ -49,11 +52,14 @@ class NewDatasetAdapter(DatasetAdapter):
     version = "1"
     trainable = False  # 只完成校验时保持 False
 
-    def inspect(self, archive: Path, workspace: Path, config: dict) -> dict:
+    def inspect(self, archive: Path, workspace: Path, config: dict) -> InspectionResult:
         raise NotImplementedError("实现全量校验和分析")
 
     def prepare(self, validated: Path, output: Path, config: dict) -> dict:
         raise NotImplementedError("实现模型输入准备")
+
+    def enterprise_records(self, validated: Path) -> Iterable[EnterpriseRecord]:
+        raise NotImplementedError("实现完整企业浏览记录导出")
 ```
 
 这是待实现骨架。import 放模块顶部；原研究入口无需改用工作台或依赖服务包。
@@ -65,20 +71,11 @@ class NewDatasetAdapter(DatasetAdapter):
 2. 使用 [read_contract](contract.py) 获取清单位置，使用 [unpack](archive.py) 安全解压。
 3. 全量检查所需文件、字段类型、ID 唯一性、图引用、标签掩码与划分；不能只抽样验文件。
 4. 明确边方向、weight/strength/confidence、人物及超边语义，不执行附件 Python/Pickle。
-5. 返回可 JSON 序列化的摘要，必要数据落在 workspace，供 prepare 使用。
+5. 返回通过校验的 `InspectionResult`，必要数据落在 workspace，供 prepare 和企业导出使用。
 
-当前 HTTP 展示与执行链路使用这些字段：
-
-| 字段 | 内容 |
-| --- | --- |
-| `protocol` | 非空数据格式标识，例如 `new-dataset-v1`；缺少它不会被认定为校验成功 |
-| `sha256` | 实际源 ZIP 的 SHA-256；后续执行会校验 |
-| `files` | 文件索引，每项 `{path, size, sha256}`，path 相对解压 workspace |
-| `counts` | 字符串到整数的统计，例如公司、人物、边和事件数量 |
-| `labeledCount` / `positiveCount` | 有标签数和正样本数，不能把未标注样本算负例 |
-| `datasetProfile` | 任务、目标定义、格式及专用语义 |
-| `analysis` | 可选；提供时须符合 [DatasetAnalysisDTO](../../../backend/src/risk_api/modules/modeling/api/schemas.py) |
-| `limitations` | 数据与训练使用范围的说明 |
+公共输出字段、扩展信息及错误约束见 [输出契约](OUTPUT_CONTRACT.md)。
+不要返回裸 dict、吞掉校验错误或用空值掩盖缺少的字段。`datasetContract` 由 registry 补入，
+原校验辅助函数带该字段时，应先移除再构造 `InspectionResult`。
 
 [registry.inspect](registry.py) 统一补充 datasetContract、supportedRunnerIds、compatibility、issues，
 并写入 `validation.json`。适配器不自行认定平台任务 completed，也不访问数据库或对象存储。
@@ -107,6 +104,14 @@ NPZ 的监督划分名是 train / val / test；上下文为 context、label=-1�
 元数据细节参照 [ACRA preparation](acra/preparation.py) 和 [快照 preparation](snapshot_preparation.py)。
 如新数据需要当前训练器不支持的输入，必须同步完善模型 CLI、训练和重载逻辑，
 不能丢掉人物、方向、权重或超边后仍声称已经使用。当前 node_edge 未启用超图/事件分支。
+
+### enterprise_records：导出企业浏览产物
+
+这是必需抽象方法，未实现的适配器不能实例化；即使只支持分析，也必须支持企业导出。
+流式返回 `EnterpriseRecord`；企业特征、属性、关系和快照映射由具体适配器负责。
+公共导出器负责头部、逐条验证、数量核对、大小限制及原子发布，不负责推断字段和关系。
+UK/SMEsD 可以复用 `snapshot_records()`；ACRA 自己按批读取 Parquet。
+详细字段和新增适配器验收要求见 [输出契约](OUTPUT_CONTRACT.md)。
 
 ## 3. 注册、声明、打包支持
 
@@ -173,7 +178,7 @@ PY
 ```
 
 随后按[模型 CLI 示例](../../../docs/architecture/dataset-adapters.md#模型-cli-本地调用)
-执行 inspect → 短训练 → 新进程 evaluate → predict → 导出/重载；原始数据保持只读。
+先验证 inspect → 企业导出 → 后端记录解析；再执行 inspect → 短训练 → 新进程 evaluate → predict → 导出/重载；原始数据保持只读。
 用真实数据固定子集补必要测试：非法引用/划分、缺文件、非法配置、方向/权重、
 未知预测 ID、预测顺序及重载一致性。完整文件校验与子集训练分开验收。
 测试入口参考 [test_snapshot_datasets.py](../../service/tests/test_snapshot_datasets.py) 和

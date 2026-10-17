@@ -195,13 +195,15 @@ def validate(source: Path, destination: Path) -> dict[str, Any]:
         "splits": splits,
         "relations": relations,
         "features": FEATURES,
-        "edgeFile": "edges.parquet",
-        "edgeEvidence": {
-            "separateStrengthAndConfidence": evidence_columns <= available,
-            "trainingPolicy": "bidirectional-unit-weights",
-            "retainedOnly": sorted(available & evidence_columns),
+        "metadata": {
+            "edgeFile": "edges.parquet",
+            "edgeEvidence": {
+                "separateStrengthAndConfidence": evidence_columns <= available,
+                "trainingPolicy": "bidirectional-unit-weights",
+                "retainedOnly": sorted(available & evidence_columns),
+            },
+            "source": export,
         },
-        "source": export,
         "limitations": [
             "Singapore corporate distress proxy",
             "Static graph",

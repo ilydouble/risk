@@ -57,3 +57,5 @@ flowchart LR
 - [Agent 模型连接配置](agent-model-config.md)：Qwen 自部署、MiniMax 本地调试与显式关闭思考。
 
 - [Agent 企业图谱工具](agent-graph.md)：企业检索、图谱引用及按需 G6 展示。
+
+- [数据集适配器输出契约](adapter-outputs.md)：必需接口、类型校验与企业产物边界。
