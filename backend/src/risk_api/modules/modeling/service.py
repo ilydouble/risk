@@ -61,7 +61,7 @@ class ModelingService:
 
     async def create_upload(
         self, owner: str, name: str, filename: str, content_type: str, size: int,
-        source_preparation_id: str | None = None,
+        source_preparation_id: str | None = None, *, commit: bool = True,
     ) -> dict[str, Any]:
         filename = PurePath(filename.replace("\\", "/")).name
         if not filename.lower().endswith(".zip") or not name.strip():
@@ -100,7 +100,10 @@ class ModelingService:
                 source_preparation_id=source_preparation_id, mapping_snapshot=mapping_snapshot,
             )
         )
-        await self.session.commit()
+        if commit:
+            await self.session.commit()
+        else:
+            await self.session.flush()
         return {
             "datasetId": identity,
             "url": ticket.url,

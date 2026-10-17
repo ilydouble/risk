@@ -33,21 +33,26 @@ func TestReportTransportAllowsLongAnalysisWithoutChangingOtherRoutes(t *testing.
 	defer normal.CloseIdleConnections()
 	defer report.CloseIdleConnections()
 
-	request, err := http.NewRequest(http.MethodPost, server.URL+"/api/v1/data-prep/suggest-mapping", nil)
+	for _, path := range []string{
+		"/api/v1/data-prep/suggest-mapping", "/api/v1/data-prep/script/generate",
+		"/api/v1/data-prep/script/deliver",
+	} {
+		request, err := http.NewRequest(http.MethodPost, server.URL+path, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		response, err := transport.RoundTrip(request)
+		if err != nil {
+			t.Fatalf("long preparation route %s timed out: %v", path, err)
+		}
+		_ = response.Body.Close()
+	}
+
+	request, err := http.NewRequest(http.MethodPost, server.URL+"/api/v1/chat/complete", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 	response, err := transport.RoundTrip(request)
-	if err != nil {
-		t.Fatalf("report route timed out: %v", err)
-	}
-	_ = response.Body.Close()
-
-	request, err = http.NewRequest(http.MethodPost, server.URL+"/api/v1/chat/complete", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	response, err = transport.RoundTrip(request)
 	if err == nil {
 		_ = response.Body.Close()
 		t.Fatal("regular route should keep its short response timeout")

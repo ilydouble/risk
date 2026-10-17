@@ -151,6 +151,51 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+  preparation-runtime:
+    image: risk-data-prep-runtime:local
+    platform: linux/amd64
+    build:
+      <<: *build-proxy
+      context: ./models
+      dockerfile: service/Dockerfile.preparation
+    entrypoint: ["true"]
+    depends_on:
+      riskgnn:
+        condition: service_healthy
+    restart: "no"
+
+  preparation-runner:
+    build:
+      <<: *build-proxy
+      context: ./backend
+      dockerfile: script_runner/Dockerfile
+    environment:
+      PREPARATION_RUNNER_TOKEN: ${PREPARATION_RUNNER_TOKEN:-local-preparation-change-me}
+      PREPARATION_RUNTIME_IMAGE: risk-data-prep-runtime:local
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      preparation-runtime:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  preparation-worker:
+    build:
+      <<: *build-proxy
+      context: .
+      dockerfile: backend/Dockerfile
+    command: ["python", "-m", "risk_api.modules.data_prep.script_worker"]
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-risk}:${POSTGRES_PASSWORD:-local-risk-db-password}@postgres:5432/${POSTGRES_DB:-risk}
+      PREPARATION_RUNNER_URL: http://preparation-runner:8090
+      PREPARATION_RUNNER_TOKEN: ${PREPARATION_RUNNER_TOKEN:-local-preparation-change-me}
+    depends_on:
+      backend:
+        condition: service_healthy
+      preparation-runner:
+        condition: service_started
+    restart: unless-stopped
+
   backend:
     build:
       <<: *build-proxy
@@ -176,6 +221,8 @@ services:
       RISK_LLM_MODEL: ${RISK_LLM_MODEL:-Qwen3.6-35B-A3B}
       RISK_LLM_CONNECTION_TYPE: ${RISK_LLM_CONNECTION_TYPE:-qwen_self_hosted}
       RISK_LLM_THINKING_ENABLED: ${RISK_LLM_THINKING_ENABLED:-false}
+      PREPARATION_RUNNER_URL: http://preparation-runner:8090
+      PREPARATION_RUNNER_TOKEN: ${PREPARATION_RUNNER_TOKEN:-local-preparation-change-me}
       RISK_GNN_URL: http://riskgnn:8000
       RISK_GNN_API_TOKEN: ${RISK_GNN_API_TOKEN:-local-riskgnn-change-me}
       MODELING_STORAGE_BUCKET: ${MODELING_STORAGE_BUCKET:-risk-modeling}

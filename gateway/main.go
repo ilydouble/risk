@@ -24,7 +24,9 @@ type reportTimeoutTransport struct {
 }
 
 func (transport reportTimeoutTransport) RoundTrip(request *http.Request) (*http.Response, error) {
-	if request.URL.Path == "/api/v1/data-prep/suggest-mapping" {
+	switch request.URL.Path {
+	case "/api/v1/data-prep/suggest-mapping", "/api/v1/data-prep/script/generate",
+		"/api/v1/data-prep/script/deliver":
 		return transport.report.RoundTrip(request)
 	}
 	return transport.normal.RoundTrip(request)

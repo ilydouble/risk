@@ -2,7 +2,7 @@ from dishka.integrations.fastapi import DishkaRoute
 from fastapi import APIRouter
 
 from risk_api.modules.auth.errors import SESSION_ERRORS
-from risk_api.modules.data_prep.api import handler
+from risk_api.modules.data_prep.api import handler, script_handler
 from risk_api.modules.data_prep.api.schemas import (
     ResponseConversionState,
     ResponseInspectData,
@@ -13,6 +13,12 @@ from risk_api.modules.data_prep.api.schemas import (
     ResponsePreparationDeletion,
     ResponseSuggestMapping,
     ResponseTestModel,
+)
+from risk_api.modules.data_prep.api.script_schemas import (
+    ResponseScriptCatalog,
+    ResponseScriptDelivery,
+    ResponseScriptTask,
+    ResponseScriptTaskList,
 )
 from risk_api.modules.data_prep.errors import DATA_PREP_ERRORS
 from risk_api.shared.api.envelope import ApiEnvelope
@@ -91,4 +97,20 @@ for delete_path, delete_endpoint in (("/delete-preview", handler.preview_deletio
                        ("/delete", handler.remove_preparation)):
     router.add_api_route(delete_path, delete_endpoint, methods=["POST"],
                          response_model=ApiEnvelope[ResponsePreparationDeletion],
+                         responses=COMMON_ERROR_RESPONSES | SESSION_ERRORS | DATA_PREP_ERRORS)
+
+
+for script_path, script_endpoint, script_response in (
+    ("/script/catalog", script_handler.catalog, ApiEnvelope[ResponseScriptCatalog]),
+    ("/script/list", script_handler.list_tasks, ApiEnvelope[ResponseScriptTaskList]),
+    ("/script/create", script_handler.create, ApiEnvelope[ResponseScriptTask]),
+    ("/script/get", script_handler.get, ApiEnvelope[ResponseScriptTask]),
+    ("/script/save", script_handler.save, ApiEnvelope[ResponseScriptTask]),
+    ("/script/generate", script_handler.generate, ApiEnvelope[ResponseScriptTask]),
+    ("/script/run", script_handler.run, ApiEnvelope[ResponseScriptTask]),
+    ("/script/artifact", script_handler.artifact, ApiEnvelope[ResponsePreparationBundle]),
+    ("/script/deliver", script_handler.deliver_artifact, ApiEnvelope[ResponseScriptDelivery]),
+):
+    router.add_api_route(script_path, script_endpoint, methods=["POST"],
+                         response_model=script_response,
                          responses=COMMON_ERROR_RESPONSES | SESSION_ERRORS | DATA_PREP_ERRORS)

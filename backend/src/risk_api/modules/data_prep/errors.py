@@ -7,7 +7,9 @@ DATA_PREP_ERRORS: dict[int | str, dict[str, Any]] = {
                                                        "DATA_PREP_TASK_NOT_FOUND"]]},
     409: {"model": ErrorEnvelope[Literal[409], Literal["DATA_PREP_PLAN_STALE",
                                                      "DATA_PREP_DELETE_BLOCKED",
-                                                     "DATA_PREP_DELETE_STALE"]]},
+                                                     "DATA_PREP_DELETE_STALE",
+                                                     "DATA_PREP_SCRIPT_STALE",
+                                                     "DATA_PREP_SCRIPT_BUSY"]]},
     422: {
         "model": ErrorEnvelope[
             Literal[422],
@@ -24,6 +26,7 @@ DATA_PREP_ERRORS: dict[int | str, dict[str, Any]] = {
                 "DATA_PREP_MAPPING_INVALID",
                 "DATA_PREP_RULE_INVALID",
                 "DATA_PREP_GRAPH_INVALID",
+                "DATA_PREP_SCRIPT_INVALID",
             ],
         ]
     },
@@ -32,12 +35,15 @@ DATA_PREP_ERRORS: dict[int | str, dict[str, Any]] = {
             Literal[502],
             Literal[
                 "DATA_PREP_SUGGESTION_INVALID",
+                "DATA_PREP_SCRIPT_AGENT_INVALID",
+                "CHAT_OUTPUT_LIMIT",
                 "CHAT_AUTH_FAILED",
                 "CHAT_UPSTREAM_ERROR",
                 "CHAT_INVALID_RESPONSE",
             ],
         ]
     },
-    503: {"model": ErrorEnvelope[Literal[503], Literal["CHAT_NOT_CONFIGURED", "CHAT_UNREACHABLE"]]},
+    503: {"model": ErrorEnvelope[Literal[503], Literal["CHAT_NOT_CONFIGURED", "CHAT_UNREACHABLE",
+                                                     "DATA_PREP_RUNNER_UNAVAILABLE"]]},
     504: {"model": ErrorEnvelope[Literal[504], Literal["CHAT_TIMEOUT"]]},
 }

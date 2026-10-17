@@ -57,3 +57,5 @@ flowchart LR
 - [Agent 模型连接配置](agent-model-config.md)：Qwen 自部署、MiniMax 本地调试与显式关闭思考。
 
 - [Agent 企业图谱工具](agent-graph.md)：企业检索、图谱引用及按需 G6 展示。
+
+- [脚本驱动的数据准备](script-data-preparation.md)：任务工作区、智能体编写、隔离执行与数据包交付。

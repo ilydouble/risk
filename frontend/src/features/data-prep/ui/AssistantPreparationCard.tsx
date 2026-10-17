@@ -21,8 +21,8 @@ export function AssistantPreparationCard({ preparation, conversationId, disabled
       </div>
       <div className="flex flex-wrap items-center gap-3 text-xs">
         <button disabled={disabled} onClick={onStart} className="rounded-lg bg-primary-500 px-3 py-2 text-white disabled:opacity-40">让助手梳理待确认问题</button>
-        <Link className="text-primary-500 underline" to={`/data-prep?preparation=${encodeURIComponent(preparation.id)}${conversationId ? `&conversation=${encodeURIComponent(conversationId)}` : ""}`}>返回数据准备</Link>
-        <Link className="text-primary-500 underline" to={`/data-prep?step=delivery&preparation=${encodeURIComponent(preparation.id)}${conversationId ? `&conversation=${encodeURIComponent(conversationId)}` : ""}`}>准备训练包与交付</Link>
+        <Link className="text-primary-500 underline" to={`/data-prep/legacy?preparation=${encodeURIComponent(preparation.id)}${conversationId ? `&conversation=${encodeURIComponent(conversationId)}` : ""}`}>返回数据准备</Link>
+        <Link className="text-primary-500 underline" to={`/data-prep/legacy?step=delivery&preparation=${encodeURIComponent(preparation.id)}${conversationId ? `&conversation=${encodeURIComponent(conversationId)}` : ""}`}>准备训练包与交付</Link>
       </div>
     </div>
     {Boolean(preparation.profile.caseFiles?.length) && <p className="mt-3 text-xs leading-6 text-foreground-500">联合分析文件：{preparation.profile.caseFiles?.map(file => `${file.filename}（${file.role === "enterprises" ? "企业主表" : "图关系"}）`).join("、")}。关联覆盖与属性冲突以试运行结果为准。</p>}

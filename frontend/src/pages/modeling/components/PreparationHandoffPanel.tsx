@@ -25,7 +25,7 @@ export function PreparationHandoffPanel() {
       <p><strong>本次上传关联案例：{source.filename}</strong></p>
       <p className="break-all text-xs text-foreground-500">来源 SHA-256：{source.profile.sha256}</p>
       <p>{source.confirmed ? "映射已确认，上传时封存来源快照。" : "映射待确认，请先返回数据准备完成确认，再上传关联包。"}</p>
-      <Link className="text-primary-400 underline" to={`/data-prep?preparation=${encodeURIComponent(source.id)}`}>查看来源与修改方案</Link>
+      <Link className="text-primary-400 underline" to={`/data-prep/legacy?preparation=${encodeURIComponent(source.id)}`}>查看来源与修改方案</Link>
     </div>}
     {id && <button className="block text-xs text-primary-400 underline" onClick={() => setParams(previous => { const next = new URLSearchParams(previous); next.delete("preparation"); return next; })}>取消本次上传的案例关联</button>}
     {error && <p role="alert" className="text-sm text-red-500">{error}</p>}
