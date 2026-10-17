@@ -8,8 +8,8 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 FORMAT = "risk-enterprise-data-v1"
-MAX_BYTES = 512 * 1024 * 1024
-MAX_LINE = 1024 * 1024
+MAX_BYTES = 4 * 1024 * 1024 * 1024
+MAX_LINE = 16 * 1024 * 1024
 
 
 class NormalizedRecord(BaseModel):

@@ -93,8 +93,10 @@ def export(
                 nonlocal size
                 line = (json.dumps(value, ensure_ascii=False, allow_nan=False) + "\n").encode()
                 size += len(line)
-                if len(line) > MAX_LINE or size > MAX_BYTES:
-                    raise ValueError("Enterprise export exceeds the import size limit")
+                if len(line) > MAX_LINE:
+                    raise ValueError(f"Enterprise record exceeds {MAX_LINE} bytes")
+                if size > MAX_BYTES:
+                    raise ValueError(f"Enterprise export exceeds {MAX_BYTES} bytes")
                 stream.write(line)
 
             write(header.model_dump(mode="json"))

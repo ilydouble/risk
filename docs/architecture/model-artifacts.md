@@ -4,6 +4,10 @@
 以下 riskgnn-model-v2 描述作为历史 RiskGNN 包兼容说明；两种格式均可独立重载预测。
 产物格式由模型代码负责，服务只校验声明、文件安全和内容摘要。
 
+企业浏览产物 `risk-enterprise-data-v1` 以 JSONL 流式导出和导入：总大小上限为
+4 GiB，单条记录上限为 16 MiB，允许大型超边保留完整成员列表。
+模型导出端与后端导入端使用相同上限；来源绑定、摘要和记录结构校验保持生效。
+
 ```text
 model/
   manifest.json     formatVersion=1, kind=riskgnn-model-v2, files

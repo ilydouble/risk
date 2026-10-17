@@ -8,7 +8,7 @@ import pytest
 from pydantic import ValidationError
 
 from riskgnn.dataset_adapters.base import DatasetAdapter
-from riskgnn.dataset_adapters.contracts.enterprise import EnterpriseRecord
+from riskgnn.dataset_adapters.contracts.enterprise import MAX_BYTES, MAX_LINE, EnterpriseRecord
 from riskgnn.dataset_adapters.contracts.inspection import InspectionResult, ValidatedDataset
 from riskgnn.dataset_adapters.contracts.operation import InspectionOutput
 from riskgnn.dataset_adapters.enterprise import export
@@ -120,7 +120,8 @@ def test_export_failure_does_not_publish_partial_artifact(tmp_path, validated, f
     assert list(tmp_path.iterdir()) == [output]
 
 
-def test_exported_records_are_accepted_by_business_importer(tmp_path, validated):
+@pytest.mark.parametrize("large_record", [False, True])
+def test_exported_records_are_accepted_by_business_importer(tmp_path, validated, large_record):
     # Read the independent backend decoder to detect producer/consumer contract drift.
     source = Path(__file__).resolve().parents[3] / (
         "backend/src/risk_api/modules/modeling/enterprise_data.py"
@@ -128,15 +129,21 @@ def test_exported_records_are_accepted_by_business_importer(tmp_path, validated)
     spec = importlib.util.spec_from_file_location("enterprise_import_contract", source)
     consumer = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(consumer)
+    assert (consumer.MAX_BYTES, consumer.MAX_LINE) == (MAX_BYTES, MAX_LINE)
     rows = [company(), EnterpriseRecord(kind="person", snapshot="test", nodeId="p1",
                                       data={"attributes": {}}),
             EnterpriseRecord(kind="edge", snapshot="test", source="p1", target="0001", data={}),
             EnterpriseRecord(kind="hyperedge", snapshot="test", members=["0001"], data={}),
             EnterpriseRecord(kind="event", snapshot="test", source="0001", data={})]
+    if large_record:
+        rows[3].members = [f"company-{index}" for index in range(100_000)]
     output = tmp_path / "enterprises.jsonl"
     result = export(ExportAdapter(rows), tmp_path, output, validated)
     assert result.counts == {"company": 1, "person": 1, "edge": 1, "hyperedge": 1, "event": 1}
     parsed = list(consumer.records(output))
+    if large_record:
+        assert max(len(line) for line in output.open("rb")) > 1024 * 1024
+        assert parsed[4][1].members == rows[3].members
     assert parsed[0][1]["sourceSha256"] == validated["sha256"]
     assert [row.kind for _, row in parsed[1:]] == [row.kind for row in rows]
     assert parsed[1][1].nodeId == "0001"

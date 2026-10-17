@@ -6,8 +6,8 @@ from riskgnn.dataset_adapters.contract import validate_contract
 from riskgnn.dataset_adapters.contracts.common import Count, Name, OutputModel, Sha256
 
 FORMAT: Final = "risk-enterprise-data-v1"
-MAX_BYTES = 512 * 1024 * 1024
-MAX_LINE = 1024 * 1024
+MAX_BYTES = 4 * 1024 * 1024 * 1024
+MAX_LINE = 16 * 1024 * 1024
 RecordKind = Literal["company", "person", "edge", "hyperedge", "event"]
 
 
