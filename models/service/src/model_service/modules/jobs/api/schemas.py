@@ -57,6 +57,8 @@ class ResponseJob(BaseModel):
     kind: Literal["validate", "train", "execute"]
     status: Literal["queued", "running", "completed", "failed", "cancelled"]
     stage: str
+    workerAlive: bool | None = None
+    heartbeatExpiresAt: str | None = None
     attempt: int
     cancelRequested: bool
     result: dict[str, Any]

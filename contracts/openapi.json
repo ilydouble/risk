@@ -9202,6 +9202,17 @@
             ],
             "title": "Error"
           },
+          "heartbeatExpiresAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Heartbeatexpiresat"
+          },
           "id": {
             "title": "Id",
             "type": "string"
@@ -9255,6 +9266,17 @@
             ],
             "title": "Status",
             "type": "string"
+          },
+          "workerAlive": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workeralive"
           }
         },
         "required": [

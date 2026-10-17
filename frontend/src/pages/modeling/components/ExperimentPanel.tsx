@@ -1,5 +1,6 @@
 import { ExperimentProfilePanel } from "./ExperimentProfilePanel";
 import { ExperimentConfigurationPanel } from "./ExperimentConfigurationPanel";
+import { ExperimentActivity } from "./ExperimentActivity";
 import {
   CartesianGrid,
   Line,
@@ -57,6 +58,8 @@ export function ExperimentPanel({ work }: { work: Workbench }) {
   return work.run ? (
     <>
       <section className={`${box} space-y-4`}>
+        <ExperimentActivity run={work.run} checkedAt={work.runCheckedAt}
+          error={work.runStatusError} epoch={points.at(-1)?.epoch} />
         <div className="flex flex-wrap justify-between gap-3">
           <div>
             <h2 className="font-semibold">{work.run.name}</h2>
@@ -215,6 +218,6 @@ export function ExperimentPanel({ work }: { work: Workbench }) {
       </section>
     </>
   ) : (
-    <p className={box}>{t("modeling.emptyRun")}</p>
+    <p role="status" className={box}>{t(work.runId ? "modeling.activity.loading" : "modeling.emptyRun")}</p>
   );
 }

@@ -79,6 +79,9 @@ export function CreateExperimentForm({ work }: { work: ReturnType<typeof useMode
       </div>
       {copied && <p className="text-xs text-primary-500">{t("modeling.config.copied")}</p>}
       {error && <p role="alert" className="text-sm text-danger-500">{error}</p>}
+      {work.submitting && <p role="status" className="text-sm text-primary-500">
+        {t("modeling.activity.submitting")} {t("modeling.activity.submissionNote")}
+      </p>}
       {!configuration && !error && <p role="status">{t("modeling.loading")}</p>}
       {configuration && <>
         <label className="block text-sm">
@@ -104,7 +107,7 @@ export function CreateExperimentForm({ work }: { work: ReturnType<typeof useMode
           onClick={() => void work.create(datasetId, name.trim(), {
             epochs: Number(values.epochs), dataset: { target_count: Number(values["dataset.target_count"]) },
           }, configuration.schemaDigest)}>
-          {t("modeling.train")}
+          {t(work.submitting ? "modeling.activity.submitting" : "modeling.train")}
         </button>
       </>}
     </section>

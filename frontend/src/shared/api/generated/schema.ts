@@ -4329,6 +4329,8 @@ export interface components {
             epochs: number;
             /** Error */
             error: string | null;
+            /** Heartbeatexpiresat */
+            heartbeatExpiresAt?: string | null;
             /** Id */
             id: string;
             /** Name */
@@ -4352,6 +4354,8 @@ export interface components {
              * @enum {string}
              */
             status: "queued" | "running" | "completed" | "failed" | "cancelled";
+            /** Workeralive */
+            workerAlive?: boolean | null;
         };
         /** ScoreDetail */
         ScoreDetail: {

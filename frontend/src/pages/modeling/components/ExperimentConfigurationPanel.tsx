@@ -27,7 +27,7 @@ export function ExperimentConfigurationPanel({ run }: { run: ModelingRun }) {
         {(["targets", "train", "validation", "test"] as const).map((key) =>
           <div key={key} className="rounded-md bg-background-50 p-3 text-sm">
             <span className="block text-xs text-foreground-500">{t(`modeling.config.counts.${key}`)}</span>
-            <strong>{run.actualCounts![key].toLocaleString()}</strong>
+            <strong>{run.actualCounts?.[key]?.toLocaleString() ?? "—"}</strong>
           </div>)}
       </div>
     </div>}

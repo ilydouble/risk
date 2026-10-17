@@ -46,6 +46,14 @@ class Store:
                 "id": job.id,
                 "kind": job.kind,
                 "status": job.status,
+                "workerAlive": (
+                    job.lease_until is not None and job.lease_until > datetime.now(UTC)
+                    if job.status == "running" else None
+                ),
+                "heartbeatExpiresAt": (
+                    job.lease_until.isoformat()
+                    if job.status == "running" and job.lease_until else None
+                ),
                 "stage": job.stage,
                 "attempt": job.attempt,
                 "result": job.result,

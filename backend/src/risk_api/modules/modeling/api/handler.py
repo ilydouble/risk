@@ -66,6 +66,8 @@ def run_dto(item: Run) -> dto.RunDTO:
         retryOf=item.retry_of,
         status=execution.get("status", "queued"),
         stage=execution.get("stage", "queued"),
+        workerAlive=execution.get("workerAlive"),
+        heartbeatExpiresAt=execution.get("heartbeatExpiresAt"),
         epochs=(
             configuration["resolvedParameters"]["epochs"]
             if configuration

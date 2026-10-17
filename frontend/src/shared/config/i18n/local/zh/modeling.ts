@@ -1,5 +1,27 @@
 export default {
   "modeling": {
+    "activity": {
+      "submitting": "正在提交实验…",
+      "submissionNote": "正在获取任务编号，请勿重复点击。任务受理后会立即打开实验详情。",
+      "queued": "任务已受理，等待训练资源",
+      "alive": "任务运行中 · 工作进程心跳正常",
+      "checking": "任务已受理，正在确认工作进程心跳",
+      "stale": "工作进程心跳已过期，正在等待恢复",
+      "queryFailed": "暂时无法确认任务状态，正在自动重连",
+      "elapsed": "已等待 / 运行 {{minutes}} 分钟",
+      "checked": "{{seconds}} 秒前查询状态",
+      "epoch": "已完成 {{current}} / {{total}} 轮",
+      "background": "任务在后台执行。可离开页面后返回查看，无需重复提交。",
+      "loading": "正在读取实验状态…",
+      "stages": {
+        "starting": "正在启动任务。",
+        "validating": "正在检查训练数据。全量数据可能需要数分钟，完成后自动继续。",
+        "preparing": "正在构建特征与图关系。此阶段尚未开始计算训练轮次。",
+        "training": "正在训练模型，下方会持续更新训练轮次和损失曲线。",
+        "evaluating": "正在独立测试模型并生成评估结果。",
+        "uploading": "正在保存并上传模型产物。"
+      }
+    },
     "clear": {
       "action": "清空数据集",
       "title": "确认清空此数据集？",

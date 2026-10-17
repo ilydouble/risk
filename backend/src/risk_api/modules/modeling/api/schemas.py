@@ -155,6 +155,8 @@ class RunDTO(BaseModel):
     retryOf: str | None
     status: Literal["queued", "running", "completed", "failed", "cancelled"]
     stage: str
+    workerAlive: bool | None = None
+    heartbeatExpiresAt: str | None = None
     epochs: int
     cancelRequested: bool
     attempts: list[AttemptDTO]

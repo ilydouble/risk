@@ -1,5 +1,27 @@
 export default {
   "modeling": {
+    "activity": {
+      "submitting": "Submitting experiment…",
+      "submissionNote": "Obtaining the task ID. Please do not submit again. Experiment details open as soon as the task is accepted.",
+      "queued": "Task accepted, waiting for training resources",
+      "alive": "Task running · Worker heartbeat healthy",
+      "checking": "Task accepted, checking worker heartbeat",
+      "stale": "Worker heartbeat expired, waiting for recovery",
+      "queryFailed": "Unable to confirm task status, reconnecting automatically",
+      "elapsed": "Waiting / running for {{minutes}} minutes",
+      "checked": "Status checked {{seconds}} seconds ago",
+      "epoch": "Completed {{current}} / {{total}} epochs",
+      "background": "The task runs in the background. You can leave and return to this page without submitting again.",
+      "loading": "Loading experiment status…",
+      "stages": {
+        "starting": "Starting the task.",
+        "validating": "Checking training data. Full datasets can take several minutes before continuing automatically.",
+        "preparing": "Building features and graph relationships. Training epochs have not started yet.",
+        "training": "Training the model. Epochs and loss curves update below.",
+        "evaluating": "Testing the model independently and generating evaluation results.",
+        "uploading": "Saving and uploading model artifacts."
+      }
+    },
     "clear": {
       "action": "Clear dataset",
       "title": "Clear this dataset?",

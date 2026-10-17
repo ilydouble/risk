@@ -34,6 +34,12 @@ export function useModelingWorkbench() {
   const [listError, setListError] = useState("");
   const [eventError, setEventError] = useState("");
   const [busy, setBusy] = useState(false);
+  const operationPending = useRef(false);
+  const submissionKey = useRef({ signature: "", key: "" });
+  const [submitting, setSubmitting] = useState(false);
+  const [selectedRun, setSelectedRun] = useState<ModelingRun>();
+  const [runCheckedAt, setRunCheckedAt] = useState<number>();
+  const [runStatusError, setRunStatusError] = useState("");
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [uploadPercent, setUploadPercent] = useState(0);
@@ -141,7 +147,30 @@ export function useModelingWorkbench() {
     };
   }, [runId, formatError]);
 
+  useEffect(() => {
+    if (!runId) return;
+    let active = true;
+    let timer: ReturnType<typeof setTimeout>;
+    const poll = async () => {
+      try {
+        const response = await ModelingApi.requestGetRun({ runId });
+        if (!active) return;
+        setSelectedRun(response.run);
+        setRunCheckedAt(Date.now());
+        setRunStatusError("");
+      } catch (reason) {
+        if (active) setRunStatusError(formatError(reason));
+      } finally {
+        if (active) timer = setTimeout(() => void poll(), 2000);
+      }
+    };
+    void poll();
+    return () => { active = false; clearTimeout(timer); };
+  }, [runId, formatError]);
+
   const act = async (operation: () => Promise<void>) => {
+    if (operationPending.current) return;
+    operationPending.current = true;
     setBusy(true);
     setError("");
     try {
@@ -150,6 +179,7 @@ export function useModelingWorkbench() {
     } catch (reason) {
       setError(formatError(reason));
     } finally {
+      operationPending.current = false;
       if (alive.current) setBusy(false);
     }
   };
@@ -173,16 +203,31 @@ export function useModelingWorkbench() {
     configurationDigest: string,
   ) =>
     act(async () => {
-      const response = await ModelingApi.requestCreateRun({
-        datasetId: id,
-        runnerId: "riskgnn",
-        name: name.slice(0, 128),
-        parameters,
-        configurationDigest,
-        requestKey: crypto.randomUUID(),
-      });
-      select("run", response.run.id);
-      setCopiedRun(null);
+      setSubmitting(true);
+      try {
+        const signature = JSON.stringify([id, name, parameters, configurationDigest]);
+        // A lost response must retry the accepted operation instead of creating another run.
+        if (submissionKey.current.signature !== signature) {
+          submissionKey.current = { signature, key: crypto.randomUUID() };
+        }
+        const response = await ModelingApi.requestCreateRun({
+          datasetId: id,
+          runnerId: "riskgnn",
+          name: name.slice(0, 128),
+          parameters,
+          configurationDigest,
+          requestKey: submissionKey.current.key,
+        });
+        submissionKey.current = { signature: "", key: "" };
+        setSelectedRun(response.run);
+        setRunCheckedAt(undefined);
+        setRuns(previous => [response.run, ...previous.filter(item => item.id !== response.run.id)]);
+        setRunStatusError("");
+        select("run", response.run.id);
+        setCopiedRun(null);
+      } finally {
+        setSubmitting(false);
+      }
     });
   const cancel = () =>
     act(async () => {
@@ -200,6 +245,9 @@ export function useModelingWorkbench() {
         runId,
         requestKey: crypto.randomUUID(),
       });
+      setSelectedRun(response.run);
+      setRunCheckedAt(undefined);
+      setRuns(previous => [response.run, ...previous.filter(item => item.id !== response.run.id)]);
       select("run", response.run.id);
     });
   const publish = (name: string) =>
@@ -224,11 +272,14 @@ export function useModelingWorkbench() {
     // Poll recovery must not erase a failed user operation such as an unknown ID.
     error: error || listError || eventError,
     busy,
+    submitting,
+    runCheckedAt: selectedRun?.id === runId ? runCheckedAt : undefined,
+    runStatusError,
     loading,
     uploading,
     uploadPercent,
     dataset: datasets.find((item) => item.id === datasetId),
-    run: runs.find((item) => item.id === runId),
+    run: selectedRun?.id === runId ? selectedRun : runs.find((item) => item.id === runId),
     model: models.find((item) => item.id === modelId),
     datasetId,
     runId,
