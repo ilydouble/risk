@@ -9,7 +9,7 @@ from riskgnn_plus.model import RiskGNNPlus, RiskGNNPlusOutput
 
 
 def create_core(meta: dict, companies: np.ndarray, persons: np.ndarray, *, has_edges=True):
-    return RiskGNNPlus(
+    network = RiskGNNPlus(
         input_dim=16,
         output_dim=12,
         company_num=len(companies),
@@ -28,6 +28,13 @@ def create_core(meta: dict, companies: np.ndarray, persons: np.ndarray, *, has_e
         hete_scalar_weights=True,
         use_community_prior=False,
     )
+
+    count = len(meta.get("hyperedgeTypes", [0, 1, 2]))
+    if count != 3:
+        weights = nn.Parameter(torch.empty(count, 1))
+        nn.init.xavier_uniform_(weights)
+        network.hypergnn.alpha = weights
+    return network
 
 
 class PortablePlus(nn.Module):
@@ -63,7 +70,7 @@ class PortablePlus(nn.Module):
             context.get("weights", np.ones(len(context["edges"])))[edge_mask],
         )
         hypers = []
-        for i in range(3):
+        for i in range(len(self.meta.get("hyperedgeTypes", [0, 1, 2]))):
             raw_nodes, raw_groups = context[f"hyper_nodes_{i}"], context[f"hyper_groups_{i}"]
             incidences = [
                 (local[int(n)], int(g))

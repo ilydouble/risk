@@ -21,6 +21,8 @@ datasets/
 `uk_research/dataset.json` 是机器入口；`features.csv` 已包含多期财务与趋势，
 `labels.csv` 按观察关联；全部最新行政地区与行业交叉超边已纳入图谱。
 不良事件只作标签依据，不属于图结构。研究原始数据包仍须经适配器转换后才能上传工作台。
+新模型输入位于 `uk_research/model-input/`，可上传包为 `uk_research/model-input.zip`；
+UK默认预设已升级为观察级版本2，旧数据使用 `uk-companies-legacy`。
 完整规则见 [统一交付](../docs/architecture/uk-unified-dataset.md)。
 
 根目录旧 `outputs/` 已整体归档；旧 `exports/` 的离线部署包移至

@@ -22,7 +22,7 @@ def prepare(adapter, validated: Path, output: Path, config: dict) -> dict:
     company_count = meta.get("companyCount", len(ids))
     # UK full snapshots contain 233,251 companies and 789,487 memberships.
     node_limit = 300_000 if adapter.id == "uk-dataset-v1" else 100_000
-    incidence_limit = 1_000_000 if adapter.id == "uk-dataset-v1" else 500_000
+    incidence_limit = 2_000_000 if adapter.id == "uk-dataset-v1" else 500_000
     if len(ids) > node_limit:
         raise ValueError(
             f"RiskGNN+ prepared graph exceeds {node_limit:,} nodes; reduce target_count"
@@ -30,17 +30,18 @@ def prepare(adapter, validated: Path, output: Path, config: dict) -> dict:
     index = {name: i for i, name in enumerate(ids[:company_count])}
     if "snapshots" not in context:
         context["snapshots"] = np.full(len(ids), "static")
-    groups: list[list[list[int]]] = [[], [], []]
+    groups: list[list[list[int]]] = []
     events: dict[str, list] = {}
     if (output / "evidence.json").is_file():
         evidence = read_json(output / "evidence.json")
         _, root = verified(validated, meta["datasetFormat"])
         # Type ordering belongs to the validated snapshot schema, not alphabetical guesses.
         names = read_json(root / "train.json")["hyperedge_types"]
+        groups = [[] for _ in names]
         for snapshot in evidence.values():
             for group in snapshot["hyperedges"]:
                 members = [index[name] for name in group["members"]]
-                if members:
+                if len(members) >= 2:
                     groups[names.index(group["kind"])].append(members)
             for event in snapshot["events"]:
                 events.setdefault(str(index[event["company"]]), []).append(
@@ -53,6 +54,7 @@ def prepare(adapter, validated: Path, output: Path, config: dict) -> dict:
                 )
     else:
         names = ["industry", "area", "qualify"]
+        groups = [[] for _ in names]
         # Optional ACRA membership files have a declared, historical source schema.
         with connect(data_root(validated)) as db:
             for i, name in enumerate(names):
@@ -69,8 +71,6 @@ def prepare(adapter, validated: Path, output: Path, config: dict) -> dict:
                         if company in index and group is not None:
                             selected.setdefault(str(group), []).append(index[company])
                 groups[i] = [sorted(set(members)) for members in selected.values()]
-    if len(names) != 3:
-        raise ValueError("RiskGNN+ requires three declared hyperedge types")
     incidence_count = 0
     for i, typed in enumerate(groups):
         node, group = [], []

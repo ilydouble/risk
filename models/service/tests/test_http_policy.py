@@ -40,6 +40,7 @@ def test_service_auth_validation_envelope_and_schema(monkeypatch):
             "sg-comrisk-v1",
             "smesd-json-v5",
             "uk-dataset-v1",
+            "uk-research-v2",
         ]
         assert list(models) == ["riskgnn"]
         adapters = client.post(
@@ -57,7 +58,7 @@ def test_service_auth_validation_envelope_and_schema(monkeypatch):
         }
         assert (
             adapters["operations"]["train"]["parameters_schema"]["properties"]["epochs"]["maximum"]
-            == 20
+            == 250
         )
         assert client.get("/health/live").status_code == 200
         assert client.get("/unknown").json()["code"] == 404

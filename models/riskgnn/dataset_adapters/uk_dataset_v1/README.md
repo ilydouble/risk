@@ -1,71 +1,69 @@
-# UK Dataset V1 数据适配器
+# UK 研究数据适配器 v2
 
-工作台当前默认使用 [RiskGNN+](../../../../docs/architecture/riskgnn-plus-workbench.md)，
-在本适配器基础准备后加入超图和已有事件。下文 node_edge 描述保留为基础准备与历史配置说明。
+默认 `uk-companies` 已升级为 `uk-dataset-v1 / 2`，使用
+`datasets/uk_research/` 的新财务、观察标签及十五类超边。
+目录名和适配器 ID 沿用旧名称；版本号隔离语义，旧 ZIP 不会静默按新规则运行。
+历史七维 UK JSON 通过 `uk-companies-legacy` 和版本 1 保持可读。
 
-## 输入与契约
+## 转换和打包
 
-ID / 版本：`uk-dataset-v1 / 1`。来源为 `datasets/uk_dataset_v1/`。
-
-```text
-risk_dataset_contract.json
-train.json
-valid.json
-test.json
-audit.json
-export_meta.json
-```
-
-三个 JSON 的 SHA-256 必须与 audit 和 export_meta 中的记录一致。
-现有包部分说明仍写四维特征或两类超边；代码以本适配器和实际数据为准。
-包内 build/verify Python 不执行，不依赖已删除的 com_risk_runtime。
-
-快照节点可携带 `name` 与 `properties`，企业导出原样保留名称及其来源证据；
-缺省名称为 null。补名称不改变节点 ID 和训练输入。
-历史包重新交付流程见 [UK 数据重新交付](../../../../docs/architecture/uk-data-redelivery.md)。
-
-## 专用语义
-
-- 233,251 家企业，412,348 条有向关系；无人物节点、无事件。
-- 七维特征：age_months、n_charges、n_charges_outstanding、addr_company_count、
-  n_net_dir、max_span、sum_span。后六列按本准备协议执行 log1p。
-- 四类关系：SAME_ADDRESS、EQUITY、PREVNAME、SAME_NAME。
-- 三类超边：sic_section、postcode_area、director_group。
-- 保留源包 train / valid / test，不重新随机划分企业；源构建流程按地址组划分。
-- 三个快照独立，边不能引用其他快照节点。
-- 标签是企业登记困境状态，不是未来固定期限的违约概率。
-- weight 在 [0.3, 1] 内，表示源包定义的证据权重；没有独立 confidence 字段。
-  模型的 confidence 通道使用中性值 1，不把 weight 复制成所谓校准概率。
-
-## 初版训练
-
-`config.target_count` 默认为 2,000，可设整数 6–300,000，以 delivery.json 为准。
-按原始划分和标签比例稳定抽取目标，保留少数类；不足时使用全部目标。
-邻域按入边扩展两跳，每节点最多四个来源，保留选中节点间的有向关系。
-
-本准备协议为 `uk-dataset-v1-train-fit-v1`：
-
-1. 后六个计数字段 log1p，年龄不做 log。
-2. 缺失值处理、均值和标准差只在训练目标拟合并保存。
-3. 验证/测试使用同一参数，保持各自原始快照边界。
-
-它不同于交付说明中“在全部节点计算 z-score”的实验，不声称复现那些历史分数。
-当前 CPU node_edge 使用公司特征和有向加权关系，超边仅作为保留证据。
-不把缺少自然人节点理解成没有董事信息：director_group 与三个人统计量来自上游处理。
-
-## 打包
-
-预设与规则见 [delivery.json](delivery.json)，轻量环境及校验选项见 [打包指南](../PACKAGING.md)。
-
-安装 uv 后，从仓库根目录执行：
+在模型 Python 环境中从仓库根目录执行：
 
 ```bash
+PYTHONPATH=models python -m riskgnn.dataset_adapters.uk_dataset_v1.convert
 ./scripts/package-dataset \
-  --data-dir datasets/uk_dataset_v1 \
-  --preset uk-companies --dataset-version v1-20261010
+  --data-dir datasets/uk_research/model-input --preset uk-companies \
+  --dataset-version research-20261017 --output datasets/uk_research/model-input.zip
 ```
 
-默认输出 `models/runs/datasets/uk-companies-v1-20261010.zip`，--output 可自定，均不覆盖已有文件。
-可加 `--set target_count=60` 准备小样本实验；默认打包只做基本检查，
-显式 `--validate` 或上传后的 Worker 才执行全量结构/哈希校验。
-模型结果记录数据摘要、预处理、划分和实际使用的数据能力，下载后可独立加载预测。
+转换不覆盖已有目录，可用 `--source`、`--output` 指定来源与暂存位置。
+原始统一研究 ZIP 包含审计与原件，不直接上传工作台；模型输入 ZIP 仅包含：
+`train.json`、`valid.json`、`test.json`、`audit.json`、`export_meta.json`、
+`feature-policy.json`、`split-audit.csv`，打包时添加工作台契约。
+`target_count` 默认为 2000，允许 6–300000；是准备阶段三个集合合计的监督目标数。
+全量使用 127646，准备时按病例/对照配对抽样，各集合不拆配对，实际数量可能略低于请求。
+同一模型输入目录中不得再放回原始研究证据、ZIP或其他版本，以免超过上传边界。
+
+## 观察与划分
+
+节点 ID 使用 `sample_id`，`properties.company_id` 保留原企业编号。
+同企业多期观察不强制合为一个标签；推理时模型身份是观察 ID。
+企业必须跨集合隔离：测试优先、验证其次，较早集合冲突时整对移除。
+
+| 集合 | 观察年份 | 全量观察 |
+| --- | --- | ---: |
+| train | 2019–2020 | 39988 |
+| valid | 2022 | 45148 |
+| test | 2024 | 42510 |
+
+2021/2023 留作12个月窗口隔离，重复企业冲突另排除，原因完整保存。
+验证器检查真实企业编号、配对、年份、预测窗口和跨集合重叠；标签始终为观察级。
+
+## 特征与图
+
+可信 `feature-policy.json` 定义数值和类别字段白名单，排除企业/样本 ID、
+事件证据、目标日期、标签角色、来源缺失状态及审计列。
+类别只从完整训练集建立词表，独热编码并保留未知类别位，不用验证/测试扩词。
+数值保持缺失与负值；非缺失标志列做有符号 log1p；中位数填补及标准化仅在训练目标拟合。
+新真实数据转换得到298维输入；代码不固定该维度，类别数随训练数据变化。
+
+普通边保留直接/最终并表语义，统一单位权重，不伪造关系置信度。
+行业、地区、交叉、同址、法律形式和共同母公司保持十五种独立超边类型；
+不展开企业两两连接。所有图关联只连接同一观察月份内已入组的企业。
+跨月或跨集合关系不进入模型，单成员超边去掉，孤立观察保留。
+
+严格的企业隔离和同月观察约束后，本次普通边为0；
+训练/验证/测试仍有117987 / 229117 / 356217条超边成员。
+因此当前适配输入主要检验财务与超图，不声称验证了普通关系传播收益。
+完整原始图仍在研究数据根目录，没有删除其155条关系。
+
+## 模型与限制
+
+现有 RiskGNN node_edge 准备可读取新特征和空普通图，其超图分支仍不参与该历史工作台路径。
+RiskGNN+ 的工作台准备/前向已支持动态超边类型数、空普通图及观察级身份，事件输入为空。
+完整 RiskGNN 超图与 Plus 的公平研究对照还需使用各自完整前向；
+历史 `run_uk_experiments.py` 仍针对旧静态七维数据，不用于此新数据集。
+
+当前登记近似历史观察的假设保持，不声称历史图已核实。
+目标是匹配研究队列中未来12个月观测到正式破产程序，不是总体贷款违约概率。
+分类分数和证据不确定性均不能自动宣称经过概率或覆盖率校准。

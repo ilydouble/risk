@@ -24,7 +24,7 @@ def snapshot_zip(request, datasets, tmp_path):
     package(
         source,
         archive,
-        "smesd" if adapter == "smesd" else "uk-companies",
+        "smesd" if adapter == "smesd" else "uk-companies-legacy",
         "real-local",
         overrides={"target_count": 60},
     )
@@ -100,7 +100,7 @@ def test_uk_file_hash_must_match_delivered_audit(datasets, tmp_path):
         else:
             (raw / name).write_bytes((source / name).read_bytes())
     wrapped = tmp_path / "wrapped.zip"
-    package(raw, wrapped, "uk-companies", "v1")
+    package(raw, wrapped, "uk-companies-legacy", "v1")
     with pytest.raises(ValueError, match="SHA-256"):
         inspect(wrapped, tmp_path / "validated")
 

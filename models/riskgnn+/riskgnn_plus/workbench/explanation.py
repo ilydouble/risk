@@ -19,6 +19,8 @@ def explain(predictor, company_id: str) -> dict:
 
     def original(value, column, name):
         raw = float(value) * scales[column] + means[column]
+        if name in preprocessing.get("signedLog1p", []):
+            return float(np.sign(raw) * np.expm1(abs(raw)))
         return float(np.expm1(raw)) if name in logs else raw
 
     original_row = features[node].copy()

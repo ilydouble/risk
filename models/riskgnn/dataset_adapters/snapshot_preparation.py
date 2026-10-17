@@ -19,6 +19,7 @@ def prepare(
     *,
     log_features: tuple[str, ...] = (),
     standardize: bool = True,
+    signed_log_features: tuple[str, ...] = (),
 ) -> dict:
     manifest, root = verified(validated, protocol)
     snapshots = load(root)
@@ -45,6 +46,16 @@ def prepare(
             key=lambda n: hashlib.sha256(f"snapshot-subset-v1:{split}:{n.id}".encode()).hexdigest(),
         )
         targets.update((split, n.id) for n in ordered[:quota])
+    if protocol == "uk-research-v2":
+        targets = set()
+        for split, snapshot in snapshots.items():
+            pairs = {}
+            for node in snapshot.nodes:
+                pairs.setdefault(node.properties["pair_id"], []).append(node.id)
+            quota = sum(q for (sp, _, _), q in zip(groups, quotas, strict=True) if sp == split)
+            ordered = sorted(pairs, key=lambda p: hashlib.sha256(p.encode()).hexdigest())
+            for pair in ordered[: max(1, quota // 2)]:
+                targets.update((split, node) for node in pairs[pair])
     chosen = set(targets)
     # Preserve direction: only incoming sources can send messages to a target.
     for split, snapshot in snapshots.items():
@@ -89,6 +100,8 @@ def prepare(
     features = snapshots["train"].feature_names
     fill_values, means, scales = [], [], []
     for j, name in enumerate(features):
+        if name in signed_log_features:
+            x[:, j] = np.sign(x[:, j]) * np.log1p(np.abs(x[:, j]))
         if name in log_features:
             if np.any(x[:company_count, j] < 0):
                 raise ValueError(f"Negative count feature: {name}")
@@ -163,7 +176,7 @@ def prepare(
         "protocol": protocol + "-train-fit-v1",
         "datasetContract": manifest["datasetContract"],
         "datasetFormat": protocol,
-        "taskType": "entity_snapshot",
+        "taskType": "entity_observation" if protocol == "uk-research-v2" else "entity_snapshot",
         "target": snapshots["train"].target_description,
         "sourceSha256": manifest["sha256"],
         "seed": 0,
@@ -180,6 +193,7 @@ def prepare(
         "preprocessing": {
             "fitSplit": "train",
             "log1p": list(log_features),
+            "signedLog1p": list(signed_log_features),
             "fillValues": fill_values,
             "mean": means,
             "scale": scales,

@@ -21,7 +21,7 @@ def real_training_zip(request, export_zip, datasets, tmp_path):
     package(
         datasets / folder,
         path,
-        ("smesd" if request.param == "smesd" else "uk-companies"),
+        ("smesd" if request.param == "smesd" else "uk-companies-legacy"),
         "real-local",
         overrides={"target_count": 60},
     )

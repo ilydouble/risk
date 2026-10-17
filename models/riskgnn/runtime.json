@@ -748,6 +748,7 @@
   "dataset_formats": [
     "sg-comrisk-v1",
     "smesd-json-v5",
-    "uk-dataset-v1"
+    "uk-dataset-v1",
+    "uk-research-v2"
   ]
 }

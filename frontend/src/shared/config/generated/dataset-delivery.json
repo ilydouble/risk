@@ -44,7 +44,7 @@
     ]
   },
   {
-    "id": "uk-companies",
+    "id": "uk-companies-legacy",
     "description": "UK Companies House / GLEIF snapshots; node_edge subset, preserving existing splits.",
     "dataset": {
       "id": "uk-companies",
@@ -63,6 +63,30 @@
       "test.json",
       "audit.json",
       "export_meta.json"
+    ]
+  },
+  {
+    "id": "uk-companies",
+    "description": "12-month insolvency targets; company-disjoint temporal splits, financial trends, no event inputs.",
+    "dataset": {
+      "id": "uk-companies",
+      "name": "UK research observations and typed hypergraphs"
+    },
+    "adapter": {
+      "id": "uk-dataset-v1",
+      "version": "2"
+    },
+    "config": {
+      "target_count": 2000
+    },
+    "requiredFiles": [
+      "train.json",
+      "valid.json",
+      "test.json",
+      "audit.json",
+      "export_meta.json",
+      "feature-policy.json",
+      "split-audit.csv"
     ]
   }
 ]

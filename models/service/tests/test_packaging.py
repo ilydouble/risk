@@ -19,7 +19,7 @@ def test_delivery_declarations_match_registered_adapters():
     assert {(d.adapter_id, d.adapter_version) for d in delivery.catalog()} == set(_ADAPTERS)
     uk = preset_details("uk-companies")
     assert uk["dataset"]["id"] == "uk-companies"
-    assert uk["adapter"] == {"id": "uk-dataset-v1", "version": "1"}
+    assert uk["adapter"] == {"id": "uk-dataset-v1", "version": "2"}
     assert uk["defaultConfig"] == {"target_count": 2000}
     assert uk["config"] == uk["defaultConfig"]
     assert {"valid.json", "test.json"} <= set(uk["requiredFiles"])

@@ -23,7 +23,7 @@ def enterprise_source(request, export_zip, datasets, tmp_path):
     package(
         source,
         archive,
-        "smesd" if request.param == "smesd" else "uk-companies",
+        "smesd" if request.param == "smesd" else "uk-companies-legacy",
         "enterprise-test",
         overrides={"target_count": 60},
     )
