@@ -13,6 +13,7 @@ def group_view(nodes, groups, memberships):
     by_id = {row["id"]: row for row in nodes}
     group_nodes, edges = [], []
     group_members = defaultdict(list)
+    by_group = {group["id"]: group for group in groups}
     for row in memberships:
         group_members[row["group_id"]].append(row["node_id"])
         edges.append(
@@ -20,21 +21,29 @@ def group_view(nodes, groups, memberships):
                 "id": "MEMBER:" + stable_id([row["group_id"], row["node_id"]]),
                 "source": row["node_id"],
                 "target": row["group_id"],
-                "relation": "MEMBER_OF_REGISTERED_ADDRESS_GROUP",
+                "relation": by_group[row["group_id"]].get("membership_relation")
+                or "MEMBER_OF_REGISTERED_ADDRESS_GROUP",
                 "valid_from": "",
                 "valid_to": "",
-                "source_system": "Companies House",
+                "source_system": by_group[row["group_id"]].get("source_system", "Companies House"),
                 "source_row_sha256": "",
             }
         )
     for group in groups:
         node = dict.fromkeys(nodes[0], "")
-        address = by_id[group_members[group["id"]][0]]["snapshot_registered_address"]
+        label = (
+            group.get("label")
+            or by_id[group_members[group["id"]][0]]["snapshot_registered_address"]
+        )
         node.update(
             id=group["id"],
-            kind="registered_address_group",
-            name=address,
-            name_source="companies_house_shared_address",
+            kind="registered_address_group"
+            if group.get("kind", "shared_registered_address") == "shared_registered_address"
+            else group["kind"] + "_group",
+            name=label,
+            name_source="companies_house_shared_address"
+            if group.get("kind", "shared_registered_address") == "shared_registered_address"
+            else group.get("source_system", "Companies House"),
             name_source_date=group["source_date"],
             name_missing=False,
             is_research_company=False,
