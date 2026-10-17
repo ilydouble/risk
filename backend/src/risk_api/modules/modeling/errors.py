@@ -20,6 +20,8 @@ WORKBENCH_ERRORS = {
             Literal[409],
             Literal[
                 "MODELING_STATE_INVALID",
+                "MODELING_DATASET_BUSY",
+                "MODELING_CONFIRMATION_MISMATCH",
                 "MODELING_DATASET_NOT_READY",
                 "MODELING_UPLOAD_INCOMPLETE",
                 "MODEL_STATE_INVALID",

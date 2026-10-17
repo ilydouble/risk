@@ -1,5 +1,15 @@
 export default {
   "modeling": {
+    "clear": {
+      "action": "Clear dataset",
+      "title": "Clear this dataset?",
+      "note": "Permanently removes this dataset and its enterprise, relation, prediction, experiment and published model records. This cannot be undone. You can upload and import again afterward. Other datasets and local source files are unaffected. Uploads and model artifacts in object storage are retained.",
+      "typeName": "Enter the full dataset name above to confirm",
+      "busy": "Validation or experiments are still active. Wait for validation and cancel active experiments first.",
+      "mismatch": "The dataset name does not match. Enter its full name.",
+      "confirm": "Confirm clear",
+      "clearing": "Clearing…"
+    },
     "versions": {
       "note": "Published versions, newest first. Inspect test reports or predict enterprises in the assistant.",
       "assistant": "Browse models in assistant",

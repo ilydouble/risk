@@ -215,6 +215,16 @@ class RequestGetDataset(BaseModel):
     datasetId: UUID
 
 
+class RequestClearDataset(RequestGetDataset):
+    confirm: Literal[True]
+    name: str = Field(min_length=1, max_length=128)
+
+
+class ResponseClearDataset(BaseModel):
+    datasetId: str
+    cleared: bool
+
+
 class ResponseGetDataset(BaseModel):
     dataset: DatasetDTO
 

@@ -128,3 +128,8 @@ export const requestEnterpriseCompany = http.post<
 export const requestDeleteModel = http.post<RequestDeleteModel, ResponseDeleteModel>(
   "/modeling/delete-model",
 );
+
+export const requestClearDataset = http.post<
+  import("@/shared/api/generated/schema").RequestClearDataset,
+  import("@/shared/api/generated/schema").ResponseClearDataset
+>("/modeling/clear-dataset");

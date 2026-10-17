@@ -175,3 +175,11 @@ router.add_api_route(
     response_model=ApiEnvelope[schemas.ResponseDeleteModel],
     responses=COMMON_ERROR_RESPONSES | WORKBENCH_ERRORS,
 )
+
+router.add_api_route(
+    "/clear-dataset",
+    handler.clear_dataset,
+    methods=["POST"],
+    response_model=ApiEnvelope[schemas.ResponseClearDataset],
+    responses=COMMON_ERROR_RESPONSES | WORKBENCH_ERRORS,
+)

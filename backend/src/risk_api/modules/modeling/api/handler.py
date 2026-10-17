@@ -430,3 +430,13 @@ async def delete_model(
 ) -> ApiEnvelope[dto.ResponseDeleteModel]:
     await service.delete_version(await owner(request, auth), str(body.modelId))
     return success_response(dto.ResponseDeleteModel(modelId=str(body.modelId), deleted=True))
+
+
+async def clear_dataset(
+    body: dto.RequestClearDataset,
+    request: Request,
+    auth: FromDishka[AuthService],
+    service: FromDishka[ModelingService],
+) -> ApiEnvelope[dto.ResponseClearDataset]:
+    await service.clear_dataset(await owner(request, auth), str(body.datasetId), body.name)
+    return success_response(dto.ResponseClearDataset(datasetId=str(body.datasetId), cleared=True))

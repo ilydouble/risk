@@ -17,7 +17,9 @@ from risk_api.modules.modeling.repository import ModelingRepository
 from risk_api.modules.modeling.workbench_model import (
     Dataset,
     Dispatch,
+    EnterpriseImport,
     EnterprisePrediction,
+    EnterpriseRecord,
     ModelVersion,
     Run,
 )
@@ -227,6 +229,7 @@ class ModelingService:
                 )
             )
         )
+        await self.repository.dataset(owner, dataset_id, lock=True)
         config = {"runnerId": runner_id, **configuration}
         item = Run(
             id=str(uuid4()),
@@ -349,6 +352,43 @@ class ModelingService:
         self.session.add(version)
         await self.session.commit()
         return version
+
+    async def clear_dataset(self, owner: str, identity: str, name: str) -> None:
+        dataset = await self.repository.dataset(owner, identity, lock=True)
+        if dataset.name != name:
+            raise AppError(409, "MODELING_CONFIRMATION_MISMATCH", "Dataset name does not match")
+        terminal = {"completed", "failed", "cancelled"}
+        if dataset.confirmed and dataset.execution.get("status") not in terminal:
+            raise AppError(409, "MODELING_DATASET_BUSY", "Wait for dataset validation to finish")
+        # Use the same lock order as publication/deletion: dataset, runs, then versions.
+        runs = list(await self.session.scalars(
+            select(Run).where(Run.dataset_id == identity).order_by(Run.id).with_for_update()
+        ))
+        if any(run.execution.get("status") not in terminal for run in runs):
+            raise AppError(409, "MODELING_DATASET_BUSY", "Cancel active experiments first")
+        run_ids = [run.id for run in runs]
+        versions = list(await self.session.scalars(
+            select(ModelVersion).where(ModelVersion.run_id.in_(run_ids))
+            .order_by(ModelVersion.id).with_for_update()
+        ))
+        await self.session.execute(delete(EnterprisePrediction).where(
+            (EnterprisePrediction.dataset_id == identity)
+            | EnterprisePrediction.model_id.in_([version.id for version in versions])
+        ))
+        await self.session.execute(
+            delete(EnterpriseRecord).where(EnterpriseRecord.dataset_id == identity)
+        )
+        await self.session.execute(
+            delete(EnterpriseImport).where(EnterpriseImport.dataset_id == identity)
+        )
+        await self.session.execute(delete(ModelVersion).where(ModelVersion.run_id.in_(run_ids)))
+        # One statement removes retry chains without violating the self-referencing FK.
+        await self.session.execute(delete(Run).where(Run.dataset_id == identity))
+        await self.session.execute(delete(Dispatch).where(
+            Dispatch.payload["jobId"].astext.in_([identity, *run_ids])
+        ))
+        await self.session.delete(dataset)
+        await self.session.commit()
 
     async def delete_version(self, owner: str, identity: str) -> None:
         version = await self.repository.version(owner, identity)

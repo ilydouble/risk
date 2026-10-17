@@ -1,3 +1,4 @@
+import { DatasetClearButton } from "@/features/modeling/ui/DatasetClearButton";
 import { EnterpriseDataPanel } from "./EnterpriseDataPanel";
 import { DatasetAnalysisPanel } from "./DatasetAnalysisPanel";
 import { CreateExperimentForm } from "./CreateExperimentForm";
@@ -122,6 +123,7 @@ export function DatasetPanel({ work }: { work: Workbench }) {
               {stage(work.dataset.status)} · {stage(work.dataset.stage)}
             </span>
           </div>
+          <DatasetClearButton key={work.dataset.id} dataset={work.dataset} disabled={work.busy} onCleared={work.datasetCleared} />
           {work.dataset.error && (
             <pre className="overflow-auto whitespace-pre-wrap text-xs text-danger-500">
               {work.dataset.error}

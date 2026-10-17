@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useAuthUser } from "@/features/auth/model/AuthContext";
 import * as ModelingApi from "@/entities/modeling/api/modelingApi";
 import type {
   ModelingDataset,
@@ -16,6 +17,7 @@ import { uploadDatasetPackage } from "@/features/dataset-delivery/lib/upload";
 
 export function useModelingWorkbench() {
   const { t } = useTranslation();
+  const user = useAuthUser();
   const [params, setParams] = useSearchParams();
   const datasetId = params.get("dataset") ?? "";
   const runId = params.get("run") ?? "";
@@ -234,6 +236,22 @@ export function useModelingWorkbench() {
     modelId,
     select,
     refresh: () => act(async () => {}),
+    datasetCleared: () => {
+      try {
+        const key = `risk:enterprise-source:${user?.userId ?? ""}`;
+        const saved = JSON.parse(localStorage.getItem(key) ?? "null");
+        if (saved?.dataset === datasetId) localStorage.removeItem(key);
+      } catch { /* Selection cleanup must work when browser storage is unavailable. */ }
+      setDatasets(previous => previous.filter(item => item.id !== datasetId));
+      setCopiedRun(null);
+      setParams(previous => {
+        const next = new URLSearchParams(previous);
+        for (const key of ["dataset", "run", "model"]) next.delete(key);
+        next.set("tab", "dataset");
+        return next;
+      });
+      void act(async () => {});
+    },
     upload,
     create,
     cancel,
