@@ -1,11 +1,36 @@
 """Extract selected XBRL facts without guessing missing amounts or mixing contexts."""
 
+import hashlib
 import io
 import re
 from decimal import Decimal, InvalidOperation
+from pathlib import Path
 from zipfile import ZipFile
 
 from lxml import etree
+
+from uk_financials.quality import validate_facts
+
+NAMESPACES = (
+    "http://xbrl.frc.org.uk/",
+    "https://xbrl.frc.org.uk/",
+    "http://www.xbrl.org/uk/",
+    "http://www.companieshouse.gov.uk/ef/",
+    "http://xbrl.ifrs.org/",
+    "https://xbrl.ifrs.org/",
+)
+
+
+def parser_signature():
+    paths = [Path(__file__), Path(__file__).with_name("quality.py")]
+    return hashlib.sha256(b"\n".join(path.read_bytes() for path in paths)).hexdigest()
+
+
+def qualified_namespace(node, value):
+    if value.startswith("{"):
+        return value[1:].split("}", 1)[0]
+    return node.nsmap.get(value.split(":", 1)[0], "") if ":" in value else ""
+
 
 ALIASES = {
     "assets": ("Assets", "TotalAssets"),
@@ -110,7 +135,13 @@ def parse_document(raw, company_id, period_end):
             end = next((text(x) for x in children if local(x.tag) == "endDate"), instant)
             start = next((text(x) for x in children if local(x.tag) == "startDate"), None)
             dimensions = [
-                (local(x.get("dimension", "")), local(text(x)))
+                {
+                    "axis": local(x.get("dimension", "")),
+                    "member": local(text(x)),
+                    "axis_namespace": qualified_namespace(x, x.get("dimension", "")),
+                    "member_namespace": qualified_namespace(x, text(x)),
+                    "typed": local(x.tag) == "typedMember",
+                }
                 for x in children
                 if local(x.tag) in ("explicitMember", "typedMember")
             ]
@@ -119,6 +150,11 @@ def parse_document(raw, company_id, period_end):
                 "start": start,
                 "dimensions": dimensions,
                 "instant": instant,
+                "entity_identifiers": [
+                    re.sub(r"\s", "", text(x)).upper()
+                    for x in children
+                    if local(x.tag) == "identifier"
+                ],
             }
         if name == "unit":
             measures = [text(x) for x in node.iter() if local(x.tag) == "measure"]
@@ -160,9 +196,33 @@ def parse_document(raw, company_id, period_end):
         context = contexts.get(reference)
         if not context or context["end"] != period_end:
             continue
+        if any(
+            re.fullmatch(r"(?:[0-9]{1,8}|[A-Z]{2}[0-9]{6})", value)
+            and (value.zfill(8) if value.isdigit() else value) != company_id
+            for value in context["entity_identifiers"]
+        ):
+            continue
+        dimensions = []
+        invalid_dimension = False
+        for dimension in context["dimensions"]:
+            if (
+                dimension["typed"]
+                or not dimension["axis_namespace"].startswith(NAMESPACES)
+                or not dimension["member_namespace"].startswith(NAMESPACES)
+            ):
+                invalid_dimension = True
+                break
+            if (dimension["axis"], dimension["member"]) == (
+                "OriginalRevisedDataDimension",
+                "Original",
+            ):
+                continue
+            dimensions.append((dimension["axis"], dimension["member"]))
+        if invalid_dimension:
+            continue
         if concept == "Creditors":
             kinds = set()
-            for axis, member in context["dimensions"]:
+            for axis, member in dimensions:
                 if (axis, member) in {
                     ("MaturitiesOrExpirationPeriodsDimension", "WithinOneYear"),
                     (
@@ -184,7 +244,7 @@ def parse_document(raw, company_id, period_end):
             if len(kinds) != 1 or "unsupported_dimension" in kinds:
                 continue
             metric = kinds.pop()
-        elif context["dimensions"]:
+        elif dimensions:
             continue  # Segment/group/member totals cannot be silently substituted for entity facts.
         flow = metric in {
             "revenue",
@@ -223,6 +283,7 @@ def parse_document(raw, company_id, period_end):
                     "scale": node.get("scale", "0"),
                     "sign": node.get("sign", ""),
                     "namespace": namespace,
+                    "dimensions": context["dimensions"],
                 }
             )
     selected, conflicts = {}, []
@@ -239,8 +300,11 @@ def parse_document(raw, company_id, period_end):
     if len(currencies) > 1:
         conflicts.extend(metric for metric in selected if metric != "average_employees")
         selected = {key: value for key, value in selected.items() if key == "average_employees"}
+    accepted, issues = validate_facts(selected, company_id)
     return {
-        "facts": selected,
+        "facts": accepted,
+        "source_facts": selected,
+        "quality_issues": issues,
         "conflicting_metrics": sorted(set(conflicts)),
         "identity_verified_in_document": company_id in identifiers,
         "document_identity_fields": sorted(identifiers),

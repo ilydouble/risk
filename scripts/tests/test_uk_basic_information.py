@@ -1,6 +1,7 @@
 """Historical entity facts must retain context, identity and time boundaries."""
 
 import sys
+from html import escape
 from pathlib import Path
 
 import pytest
@@ -42,7 +43,7 @@ def test_empty_text_dimensions_are_facts_and_false_is_observed():
     profile = parse_basic_document(raw, "00012345", "2020-12-31")
     assert profile["values"] == {
         "legal_form": "PrivateLimitedCompanyLtd",
-        "country_of_incorporation": "Scotland",
+        "country_of_incorporation": "GB",
         "dormant": False,
     }
     result = historical(
@@ -56,6 +57,33 @@ def test_empty_text_dimensions_are_facts_and_false_is_observed():
     )
     assert result["historical_dormant_missing"] is False
     assert result["historical_registry_status_missing"] is True
+    assert profile["facts"]["country_of_incorporation"]["jurisdiction"] == "scotland"
+
+
+@pytest.mark.parametrize(
+    "value,code,status",
+    [
+        ("AllCountries", "", "aggregate_or_unknown"),
+        ("{PLACE OF INCORPORATION}", "", "template_placeholder"),
+        ("England & Wales", "GB", "normalized"),
+        (
+            "Acme Ltd is a private limited company incorporated in Scotland.",
+            "GB",
+            "normalized_explicit_description",
+        ),
+        ("Unrecognized country", "", "unknown"),
+    ],
+)
+def test_country_normalization_preserves_raw_without_inference(value, code, status):
+    from uk_financials.countries import normalize_country
+
+    normalized = normalize_country(value)
+    assert normalized["code"] == code and normalized["status"] == status
+    profile = parse_basic_document(
+        document(fact("CountryFormationOrIncorporation", escape(value))), "00012345", "2020-12-31"
+    )
+    assert profile["values"].get("country_of_incorporation", "") == code
+    assert profile["country_normalizations"][0]["raw_value"] == value
 
 
 def test_registered_office_requires_contact_dimension():

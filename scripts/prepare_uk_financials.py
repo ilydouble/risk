@@ -15,7 +15,7 @@ from datetime import date
 from pathlib import Path
 
 from uk_financials.archives import TRANSFER, index_archive, member_bytes
-from uk_financials.facts import ALIASES, parse_document
+from uk_financials.facts import ALIASES, parse_document, parser_signature
 
 FILENAME = re.compile(r"_([A-Z0-9]{8})_([0-9]{8})\.(?:html|xhtml|xml|zip)$", re.I)
 MONTH_NAMES = [
@@ -274,7 +274,7 @@ def prepare(events_path, output, cache, horizon=12, lookback=36, index_workers=3
                     "manifestsSha256": sha(output / "archive-manifests.json"),
                 },
             )
-    parser_sha = sha(Path(__file__).parent / "uk_financials/facts.py")
+    parser_sha = parser_signature()
     results, selected_reports = {}, {}
     for attempt in range(3):
         wanted = {}

@@ -1,12 +1,16 @@
 """Extract dated corporate attributes without substituting third-party contact details."""
 
+import hashlib
 import io
 import re
 from collections import defaultdict
 from datetime import date, datetime
+from pathlib import Path
 from zipfile import ZipFile
 
 from lxml import etree
+
+from uk_financials.countries import normalize_country
 
 NAMESPACES = (
     "http://xbrl.frc.org.uk/",
@@ -42,6 +46,11 @@ ALIASES = {
     "Country": "registered_office_country",
 }
 FIELDS = tuple(dict.fromkeys(ALIASES.values()))
+
+
+def parser_signature():
+    paths = [Path(__file__), Path(__file__).with_name("countries.py")]
+    return hashlib.sha256(b"\n".join(path.read_bytes() for path in paths)).hexdigest()
 
 
 def local(value):
@@ -167,6 +176,7 @@ def parse_basic_document(raw, company_id, period_end):
     if identifiers and identifiers != {company_id}:
         raise ValueError("Corporate profile identity disagrees with company number")
     candidates = defaultdict(list)
+    country_normalizations = []
     for node in root.iter():
         if not isinstance(node.tag, str):
             continue
@@ -229,6 +239,17 @@ def parse_basic_document(raw, company_id, period_end):
             "format": node.get("format", ""),
             "dimensions": context["dimensions"],
         }
+        if field in {"country_of_incorporation", "registered_office_country"}:
+            normalized = normalize_country(value)
+            fact.update(
+                raw_value=value,
+                value=normalized["code"],
+                jurisdiction=normalized["jurisdiction"],
+                normalization_status=normalized["status"],
+            )
+            country_normalizations.append({"field": field, **normalized, "source_fact": fact})
+            if not normalized["code"]:
+                continue
         candidates[field].append(fact)
     selected, conflicts = {}, []
     for field, facts in candidates.items():
@@ -244,6 +265,7 @@ def parse_basic_document(raw, company_id, period_end):
         "facts": selected,
         "conflicts": sorted(conflicts),
         "identity_verified": company_id in identifiers,
+        "country_normalizations": country_normalizations,
     }
 
 

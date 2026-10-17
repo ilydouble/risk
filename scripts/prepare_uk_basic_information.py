@@ -12,7 +12,13 @@ from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 from prepare_uk_financials import document_id, month_end, sha, write_csv, write_json
-from uk_financials.basic import FIELDS, age_days, parse_basic_document, snapshot_date
+from uk_financials.basic import (
+    FIELDS,
+    age_days,
+    parse_basic_document,
+    parser_signature,
+    snapshot_date,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 COHORT = ROOT / "outputs/uk-controls-2020-2025-h12-1to1-v1"
@@ -237,7 +243,7 @@ def run(output, workers):
     reports = {r["report_id"]: r for r in read_csv(COHORT / "baseline-reports.csv")}
     excluded_reports = extra_reports(excluded, reports)
     profiles = {}
-    parser_sha = sha(Path(__file__).parent / "uk_financials/basic.py")
+    parser_sha = parser_signature()
     cache_dir = output / ".profile-batches"
     cache_dir.mkdir(exist_ok=True)
     ordered = sorted(reports)

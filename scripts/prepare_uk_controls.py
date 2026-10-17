@@ -32,7 +32,7 @@ from uk_financials.controls import (
     registry_group,
     sample_pairs,
 )
-from uk_financials.facts import ALIASES
+from uk_financials.facts import ALIASES, parser_signature
 
 REPORT_FIELDS = [
     "report_id",
@@ -116,7 +116,7 @@ def retrieve(entry, financial_cache, parser_sha):
 def collect(entries, financial_cache, output, workers):
     import csv
 
-    parser_sha = sha(Path(__file__).parent / "uk_financials/facts.py")
+    parser_sha = parser_signature()
     compact, statuses = {}, Counter()
     report_path = output / "baseline-reports.csv"
     with (

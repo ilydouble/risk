@@ -106,6 +106,99 @@ def test_flow_facts_require_duration_contexts():
     assert "profit_loss" not in parse_document(raw, "00012345", "2023-12-31")["facts"]
 
 
+@pytest.mark.parametrize(
+    "member,namespace,accepted",
+    [
+        ("Original", "http://xbrl.frc.org.uk/business", True),
+        ("Revised", "http://xbrl.frc.org.uk/business", False),
+        ("Original", "https://example.test/untrusted", False),
+    ],
+)
+def test_original_dimension_is_metadata_only_in_trusted_taxonomy(member, namespace, accepted):
+    context = f'''<x:context id="original"><x:entity><x:segment>
+      <d:explicitMember xmlns:b="{namespace}" dimension="b:OriginalRevisedDataDimension">
+      b:{member}</d:explicitMember></x:segment></x:entity>
+      <x:period><x:instant>2023-12-31</x:instant></x:period></x:context>'''
+    result = parse_document(
+        document(
+            """<ix:nonFraction name="core:CurrentAssets"
+       contextRef="original" unitRef="GBP">123</ix:nonFraction>""",
+            context,
+        ),
+        "00012345",
+        "2023-12-31",
+    )
+    assert ("current_assets" in result["facts"]) is accepted
+
+
+def test_original_dimension_does_not_hide_conflicts_or_entity_mismatch():
+    context = """<x:context id="original"><x:entity><x:identifier>00012345</x:identifier>
+      <x:segment><d:explicitMember dimension="core:OriginalRevisedDataDimension">
+      core:Original</d:explicitMember></x:segment></x:entity>
+      <x:period><x:instant>2023-12-31</x:instant></x:period></x:context>"""
+    facts = """<ix:nonFraction name="core:CurrentAssets" contextRef="current"
+      unitRef="GBP">100</ix:nonFraction>
+      <ix:nonFraction name="core:CurrentAssets" contextRef="original"
+      unitRef="GBP">200</ix:nonFraction>"""
+    result = parse_document(document(facts, context), "00012345", "2023-12-31")
+    assert result["conflicting_metrics"] == ["current_assets"]
+    result = parse_document(
+        document(facts, context.replace(">00012345<", ">00054321<")), "00012345", "2023-12-31"
+    )
+    assert result["facts"]["current_assets"]["value"] == "1E+2"
+
+
+@pytest.mark.parametrize(
+    "value,scale,quarantined",
+    [
+        ("-2", "0", True),
+        ("00012345", "0", True),
+        ("2", "3", True),
+        ("2.5", "0", False),
+        ("0", "0", False),
+    ],
+)
+def test_employee_quality_quarantines_field_and_preserves_raw(value, scale, quarantined):
+    context = """<x:context id="duration"><x:entity/>
+      <x:period><x:startDate>2023-01-01</x:startDate><x:endDate>2023-12-31</x:endDate></x:period></x:context>
+      <x:unit id="pure"><x:measure>x:pure</x:measure></x:unit>"""
+    facts = f'''<ix:nonFraction name="core:AverageNumberEmployeesDuringPeriod"
+      contextRef="duration" unitRef="pure" scale="{scale}">{value}</ix:nonFraction>
+      <ix:nonFraction name="core:NetAssetsLiabilities" contextRef="current"
+      unitRef="GBP">-50</ix:nonFraction>'''
+    result = parse_document(document(facts, context), "00012345", "2023-12-31")
+    assert ("average_employees" not in result["facts"]) is quarantined
+    assert result["source_facts"]["average_employees"]["source_text"] == value
+    assert result["facts"]["net_assets"]["value"] == "-5E+1"
+
+
+def test_extreme_amount_is_quarantined_without_losing_other_metrics():
+    raw = document("""<ix:nonFraction name="core:Equity" contextRef="current"
+      unitRef="GBP">999000000000</ix:nonFraction>
+      <ix:nonFraction name="core:CurrentAssets" contextRef="current"
+      unitRef="GBP">0</ix:nonFraction>""")
+    result = parse_document(raw, "00012345", "2023-12-31")
+    assert "equity" not in result["facts"]
+    assert result["facts"]["current_assets"]["value"] == "0"
+    assert result["source_facts"]["equity"]["value"] == "9.99E+11"
+
+
+def test_current_balance_identity_only_warns_and_keeps_source_values():
+    from uk_financials.quality import validate_facts
+
+    facts = {
+        key: {"value": value, "unit": "GBP"}
+        for key, value in {
+            "current_assets": "100",
+            "current_liabilities": "50",
+            "net_current_assets": "99",
+        }.items()
+    }
+    accepted, issues = validate_facts(facts, "00012345")
+    assert accepted == facts
+    assert issues[0]["action"] == "retain_with_warning"
+
+
 def test_current_frc_inventory_and_cash_aliases_preserve_zero():
     raw = document("""
       <ix:nonFraction name="core:TotalInventories" contextRef="current"
