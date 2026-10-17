@@ -28,8 +28,8 @@ class ModelingRepository:
     async def run(self, owner: str, identity: str, *, lock: bool = False) -> Run:
         return await self.owned(Run, owner, identity, lock=lock)
 
-    async def version(self, owner: str, identity: str) -> ModelVersion:
-        return await self.owned(ModelVersion, owner, identity)
+    async def version(self, owner: str, identity: str, *, lock: bool = False) -> ModelVersion:
+        return await self.owned(ModelVersion, owner, identity, lock=lock)
 
     async def page(self, model: Any, owner: str, page: int, size: int) -> tuple[list, int]:
         condition = (model.owner_id == owner) & (model.protocol_generation == 2)

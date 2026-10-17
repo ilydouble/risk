@@ -5,7 +5,7 @@ from pathlib import PurePath
 from typing import Any
 from uuid import uuid4
 
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import IntegrityError
 from stellarmesh_objectstorage import AsyncClient, StorageError
@@ -347,6 +347,17 @@ class ModelingService:
         await self.session.commit()
         return version
 
+    async def delete_version(self, owner: str, identity: str) -> None:
+        version = await self.repository.version(owner, identity)
+        # Publication owns the run lock; retain its artifact so the experiment remains replayable.
+        await self.repository.run(owner, version.run_id, lock=True)
+        version = await self.repository.version(owner, identity, lock=True)
+        await self.session.execute(
+            delete(EnterprisePrediction).where(EnterprisePrediction.model_id == identity)
+        )
+        await self.session.delete(version)
+        await self.session.commit()
+
     async def download(self, owner: str, identity: str) -> dict:
         version = await self.repository.version(owner, identity)
         ticket = await self.storage.presign_get(version.artifact["objectKey"], expires_in=60)
@@ -357,7 +368,8 @@ class ModelingService:
     ) -> dict:
         if explain and len(ids) != 1:
             raise AppError(422, "MODEL_INPUT_INVALID", "Explanation requires exactly one company")
-        version = await self.repository.version(owner, identity)
+        # Serialize prediction persistence with version deletion.
+        version = await self.repository.version(owner, identity, lock=True)
         result = await self.client.call(
             "models/predict",
             {"jobId": version.run_id, "companyIds": ids, **({"explain": True} if explain else {})},

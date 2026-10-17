@@ -18,7 +18,8 @@ from risk_api.modules.modeling.service import ModelingStorage
 
 
 @pytest.mark.parametrize("failure", [False, True])
-def test_real_agent_uses_bound_risk_tool_and_surfaces_failure(monkeypatch, failure):
+@pytest.mark.parametrize("algorithm", ["RiskGNN", "RiskGNN+"])
+def test_real_agent_uses_bound_risk_tool_and_surfaces_failure(monkeypatch, failure, algorithm):
     model_id, dataset_id = str(uuid4()), str(uuid4())
     calls, requests = [], []
 
@@ -34,7 +35,9 @@ def test_real_agent_uses_bound_risk_tool_and_surfaces_failure(monkeypatch, failu
             calls.append((owner, identity))
             if failure:
                 raise AppError(404, "MODELING_RESOURCE_NOT_FOUND", "模型不存在或无权访问")
-            return SimpleNamespace(run_id="run")
+            return SimpleNamespace(
+                run_id="run", name="version", artifact={"profile": {"algorithm": algorithm}}
+            )
 
         async def run(self, owner, identity):
             return SimpleNamespace(dataset_id=dataset_id)
@@ -67,6 +70,8 @@ def test_real_agent_uses_bound_risk_tool_and_surfaces_failure(monkeypatch, failu
         if len(requests) == 1:
             tools = {item["function"]["name"]: item["function"] for item in payload["tools"]}
             assert "enterprise_risk_catalog" in tools
+            assert "enterprise_risk_companies" in tools
+            assert not any("delete" in name for name in tools)
             assert "owner" not in json.dumps(tools["enterprise_risk_predict"]["parameters"])
             delta = {"tool_calls": [{"index": 0, "id": "risk", "type": "function",
                                     "function": {"name": "enterprise_risk_predict", "arguments":
@@ -105,4 +110,4 @@ def test_real_agent_uses_bound_risk_tool_and_surfaces_failure(monkeypatch, failu
     asyncio.run(exercise())
     assert calls[0] == ("bound-owner", model_id)
     if not failure:
-        assert calls[1] == ("bound-owner", model_id, ["00805326"], True)
+        assert calls[1] == ("bound-owner", model_id, ["00805326"], algorithm == "RiskGNN+")

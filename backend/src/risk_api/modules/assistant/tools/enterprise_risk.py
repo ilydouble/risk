@@ -3,7 +3,6 @@
 from urllib.parse import quote
 from uuid import UUID
 
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from strands import tool
 from strands.types.tools import AgentTool
@@ -11,9 +10,9 @@ from strands.types.tools import AgentTool
 from risk_api.errors import AppError
 from risk_api.modules.modeling.client import ModelClient
 from risk_api.modules.modeling.enterprise_browse import EnterpriseBrowseService
+from risk_api.modules.modeling.model_catalog import ModelCatalogService
 from risk_api.modules.modeling.repository import ModelingRepository
 from risk_api.modules.modeling.service import ModelingService, ModelingStorage
-from risk_api.modules.modeling.workbench_model import ModelVersion, Run
 
 
 def enterprise_risk_tools(
@@ -24,37 +23,29 @@ def enterprise_risk_tools(
         return {"status": "error", "content": [{"json": {"code": code, "message": message}}]}
 
     @tool
-    async def enterprise_risk_catalog(dataset_id: str | None = None) -> dict:
-        """List up to 50 published models owned by this account, with dataset IDs and test metrics.
+    async def enterprise_risk_catalog(
+        dataset_id: str | None = None, limit: int = 10, model_id: str | None = None
+    ) -> dict:
+        """List recent published models newest first, with dataset, time, metrics and example IDs.
 
+        limit defaults to 10 and must be 1–50. The first entry is the latest in this scope.
+
+        Use model_id to inspect a specific version even outside the recent list.
         Resolve the exact model ID before predicting. Completed experiments must be published
         in the UI first. If several models match, ask the user to select; never guess a version.
         """
         try:
             identity = str(UUID(dataset_id)) if dataset_id else None
             async with sessions() as session:
-                if identity:
-                    await ModelingRepository(session).dataset(owner, identity)
-                query = select(ModelVersion, Run.dataset_id).join(
-                    Run, Run.id == ModelVersion.run_id
+                if not 1 <= limit <= 50:
+                    raise ValueError("Invalid limit")
+                modeling = ModelingService(ModelingRepository(session), storage, client)
+                result = await ModelCatalogService(modeling).list(
+                    owner, identity, limit, str(UUID(model_id)) if model_id else None
                 )
-                query = query.where(
-                    ModelVersion.owner_id == owner, Run.owner_id == owner,
-                    ModelVersion.protocol_generation == 2, Run.protocol_generation == 2,
-                )
-                if identity:
-                    query = query.where(Run.dataset_id == identity)
-                rows = list((await session.execute(
-                    query.order_by(ModelVersion.created_at.desc(), ModelVersion.id).limit(51)
-                )).all())
-                result = {"models": [{
-                    "modelId": model.id, "name": model.name, "datasetId": dataset,
-                    "target": model.artifact.get("profile", {}).get("target"),
-                    "metrics": model.artifact.get("report", {}).get("metrics", {}),
-                } for model, dataset in rows[:50]], "truncated": len(rows) > 50}
             return {"status": "success", "content": [{"json": result}]}
         except ValueError:
-            return failure("MODEL_INPUT_INVALID", "dataset_id须为有效UUID。")
+            return failure("MODEL_INPUT_INVALID", "dataset_id须为有效UUID，limit须在1至50之间。")
         except AppError as error:
             return failure(error.code, error.message)
         except Exception:
@@ -78,9 +69,15 @@ def enterprise_risk_tools(
                 modeling = ModelingService(ModelingRepository(session), storage, client)
                 version = await modeling.repository.version(owner, identity)
                 run = await modeling.repository.run(owner, version.run_id)
-                result = await modeling.predict(owner, identity, [company_id], "", explain=True)
+                explain = version.artifact.get("profile", {}).get("algorithm") == "RiskGNN+"
+                result = await modeling.predict(owner, identity, [company_id], "", explain=explain)
                 result.update({
                     "datasetId": run.dataset_id,
+                    "modelId": identity, "modelName": version.name,
+                    "target": version.artifact.get("profile", {}).get("target"),
+                    "testMetrics": version.artifact.get("report", {}).get("metrics", {}),
+                    "explanationAvailable": explain,
+                    "warning": "分类分数未经校准，不是未来违约概率；无解释时不得编造特征贡献。",
                     "companyUrl": (f"/company/{run.dataset_id}/{quote(company_id, safe='')}"
                                    f"?model={identity}"),
                     "evidence": None,
@@ -117,4 +114,32 @@ def enterprise_risk_tools(
         except Exception:
             return failure("MODELING_TOOL_FAILED", "预测解释暂不可用，未获得结果；请稍后重试。")
 
-    return [enterprise_risk_catalog, enterprise_risk_predict]
+    @tool
+    async def enterprise_risk_companies(model_id: str, keyword: str = "", page: int = 1) -> dict:
+        """Find enterprises by name or original ID in the published model's dataset.
+
+        Use catalog to resolve model_id first. Return exact company IDs, 20 per page.
+        An empty keyword lists candidates; multiple matches require user clarification.
+        Dataset membership does not guarantee inclusion in a subset-trained model's graph.
+        Never substitute shared demo company IDs or invent IDs.
+        """
+        try:
+            identity = str(UUID(model_id))
+            if len(keyword) > 256 or not 1 <= page <= 10000:
+                raise ValueError("Invalid search")
+            async with sessions() as session:
+                modeling = ModelingService(ModelingRepository(session), storage, client)
+                result = await ModelCatalogService(modeling).companies(
+                    owner, identity, keyword.strip(), page
+                )
+            return {"status": "success", "content": [{"json": result}]}
+        except ValueError:
+            return failure(
+                "MODEL_INPUT_INVALID", "模型ID须为UUID，关键词不超过256字符，页码为1至10000。"
+            )
+        except AppError as error:
+            return failure(error.code, error.message)
+        except Exception:
+            return failure("MODELING_TOOL_FAILED", "模型企业目录暂不可用，请稍后重试。")
+
+    return [enterprise_risk_catalog, enterprise_risk_predict, enterprise_risk_companies]

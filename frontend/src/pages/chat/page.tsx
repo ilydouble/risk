@@ -26,9 +26,18 @@ export default function ChatPage() {
   const chat = useConversation(id, select);
   const [input, setInput] = useState(() => {
     const dataset = params.get("riskDataset"), model = params.get("riskModel"), company = params.get("riskCompany");
-    return dataset && model && company
-      ? `请使用已发布模型 ${model}，预测数据集 ${dataset} 中企业 ${company} 的登记状态，并解释主要特征敏感性。请核对模型测试质量，保留警告，区分关系证据与风险贡献，并给出企业详情链接。`
-      : "";
+    if (dataset && model && company) return pick(
+      `请使用已发布模型 ${model}，预测数据集 ${dataset} 中企业 ${company} 的目标标签。请核对模型测试质量，保留警告，有解释时说明特征敏感性，并给出企业详情链接。`,
+      `Use published model ${model} to predict company ${company} in dataset ${dataset}. Check test quality, preserve warnings and available sensitivity explanations, and link to the company.`,
+    );
+    if (model) return pick(
+      `请查询已发布模型 ${model} 的信息，再列出其数据集中的企业供我选择，确认企业后再执行预测。`,
+      `Find published model ${model} and list enterprises in its dataset. Let me choose an enterprise before predicting.`,
+    );
+    return params.get("riskModels") === "recent" ? pick(
+      "请列出我最近发布的模型版本，说明数据集、发布时间和测试指标，帮助我选择一个模型和一家企业进行预测。",
+      "List my recently published model versions with dataset, publication time and test metrics. Help me choose a model and an enterprise to predict.",
+    ) : "";
   });
   const openHistory = (value: string) => { setParams({ conversation: value }); setInput(""); };
   const mappingPrompt = "请读取当前案例的体检结果、已有报告和映射草稿，先总结主要问题，再从最影响导入的一个问题开始与我确认字段含义和处理规则。不要一次询问所有问题。";
@@ -97,6 +106,7 @@ export default function ChatPage() {
             <h2 className="text-2xl font-semibold tracking-tight">{pick("从一个问题开始", "Start with a question")}</h2>
             <p className="mt-3 text-sm leading-7 text-foreground-500">{pick("先发现企业演示数据、当前账号训练数据集，以及本页面会话的案例与报告，再按来源查询。", "Discover enterprise demo data, your training datasets, and cases and reports from this browser session before querying each source.")}</p>
             <button onClick={() => setInput(pick("请列出我能查看的数据资产，包括演示数据、上传案例和分析报告，说明来源与记录数。", "List available data assets, including demo data, uploaded cases and analysis reports, with their sources and record counts."))} className="mt-7 rounded-xl border border-background-200 px-4 py-3 text-sm text-foreground-600 hover:border-primary-400">{pick("查看统一数据资产目录", "Explore data assets")}</button>
+            <button onClick={() => setInput(pick("请列出我最近发布的模型版本，帮助我选择一个模型和一家企业进行预测。", "List my recently published models and help me select a model and enterprise to predict."))} className="mt-3 rounded-xl border border-background-200 px-4 py-3 text-sm text-foreground-600 hover:border-primary-400">{pick("使用工作台模型预测", "Predict with a workbench model")}</button>
           </motion.div>}
           {chat.loading && <p role="status" className="py-10 text-center text-sm text-foreground-400">{pick("正在恢复会话…", "Restoring conversation…")}</p>}
           {chat.turns.map(turn => <TurnTimeline key={turn.id} turn={turn} />)}

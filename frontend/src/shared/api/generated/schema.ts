@@ -701,6 +701,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/modeling/delete-model": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Delete Model */
+        post: operations["delete_model_api_v1_modeling_delete_model_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/modeling/download-model": {
         parameters: {
             query?: never;
@@ -1263,6 +1280,16 @@ export interface components {
             /** Code */
             code: number;
             data: components["schemas"]["ResponseDataQACatalog"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseDeleteModel] */
+        ApiEnvelope_ResponseDeleteModel_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseDeleteModel"] | null;
             /** Internal Code */
             internal_code: string;
             /** Message */
@@ -3843,6 +3870,19 @@ export interface components {
         };
         /** RequestDataQACatalog */
         RequestDataQACatalog: Record<string, never>;
+        /** RequestDeleteModel */
+        RequestDeleteModel: {
+            /**
+             * Confirm
+             * @constant
+             */
+            confirm: true;
+            /**
+             * Modelid
+             * Format: uuid
+             */
+            modelId: string;
+        };
         /** RequestDeletePreparation */
         RequestDeletePreparation: {
             /**
@@ -4419,6 +4459,13 @@ export interface components {
             tables: components["schemas"]["DataQATable"][];
             /** Truncated */
             truncated: boolean;
+        };
+        /** ResponseDeleteModel */
+        ResponseDeleteModel: {
+            /** Deleted */
+            deleted: boolean;
+            /** Modelid */
+            modelId: string;
         };
         /** ResponseDownloadModel */
         ResponseDownloadModel: {
@@ -8863,6 +8910,93 @@ export interface operations {
             };
         };
     };
+    delete_model_api_v1_modeling_delete_model_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestDeleteModel"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseDeleteModel_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__MODELING_RESOURCE_NOT_FOUND____MODEL_RESOURCE_NOT_FOUND____MODELING_COMPANY_NOT_FOUND___"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__MODELING_STATE_INVALID____MODELING_DATASET_NOT_READY____MODELING_UPLOAD_INCOMPLETE____MODEL_STATE_INVALID____MODELING_CONFIG_STALE____MODELING_ENTERPRISE_UNAVAILABLE____MODEL_EXPLANATION_UNAVAILABLE___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_ENTERPRISE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___"];
+                };
+            };
+        };
+    };
     download_model_api_v1_modeling_download_model_post: {
         parameters: {
             query?: never;
@@ -10653,6 +10787,7 @@ export type RequestCreateTurn = components["schemas"]["RequestCreateTurn"];
 export type RequestCreateUpload = components["schemas"]["RequestCreateUpload"];
 export type RequestDataPrepContext = components["schemas"]["RequestDataPrepContext"];
 export type RequestDataQACatalog = components["schemas"]["RequestDataQACatalog"];
+export type RequestDeleteModel = components["schemas"]["RequestDeleteModel"];
 export type RequestDeletePreparation = components["schemas"]["RequestDeletePreparation"];
 export type RequestDownloadModel = components["schemas"]["RequestDownloadModel"];
 export type RequestEnterpriseCompany = components["schemas"]["RequestEnterpriseCompany"];
@@ -10713,6 +10848,7 @@ export type ResponseCreateRun = components["schemas"]["ResponseCreateRun"];
 export type ResponseCreateTurn = components["schemas"]["ResponseCreateTurn"];
 export type ResponseCreateUpload = components["schemas"]["ResponseCreateUpload"];
 export type ResponseDataQACatalog = components["schemas"]["ResponseDataQACatalog"];
+export type ResponseDeleteModel = components["schemas"]["ResponseDeleteModel"];
 export type ResponseDownloadModel = components["schemas"]["ResponseDownloadModel"];
 export type ResponseEnterpriseCompany = components["schemas"]["ResponseEnterpriseCompany"];
 export type ResponseEnterpriseOverview = components["schemas"]["ResponseEnterpriseOverview"];

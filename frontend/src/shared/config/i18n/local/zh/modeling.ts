@@ -1,5 +1,24 @@
 export default {
   "modeling": {
+    "versions": {
+      "note": "已发布版本按时间倒序展示。查看测试报告，或在智能助手中选择企业进行预测。",
+      "assistant": "在助手中浏览模型",
+      "name": "版本名称",
+      "algorithm": "模型算法",
+      "created": "发布时间",
+      "actions": "操作",
+      "view": "查看",
+      "run": "来源实验",
+      "size": "模型包大小",
+      "report": "独立测试报告",
+      "useAssistant": "使用此版本前往助手",
+      "delete": "删除",
+      "deleteTitle": "删除已发布模型版本",
+      "deleteNote": "删除此发布记录及其关联预测。来源实验、数据集、模型文件和助手历史记录保留，可从原实验重新发布。删除后助手不能再使用此版本发起预测。",
+      "cancel": "取消",
+      "confirm": "确认删除",
+      "deleting": "正在删除…"
+},
     "plus": {
       "scopeNote": "使用固定随机初始嵌入，图网络与分类头参与训练；未进行概率或保形校准。",
       "counts": {"nodes": "节点", "edges": "普通边", "hyperedges": "超边", "incidences": "成员关联", "events": "事件"},

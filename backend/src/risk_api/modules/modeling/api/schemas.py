@@ -301,6 +301,15 @@ class RequestGetModel(BaseModel):
     modelId: UUID
 
 
+class RequestDeleteModel(RequestGetModel):
+    confirm: Literal[True]
+
+
+class ResponseDeleteModel(BaseModel):
+    modelId: str
+    deleted: bool
+
+
 class ResponseGetModel(BaseModel):
     model: ModelVersionDTO
 
