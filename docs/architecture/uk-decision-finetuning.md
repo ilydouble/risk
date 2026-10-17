@@ -2,7 +2,7 @@
 
 目标：将最新 `datasets/uk_research` 转成结构化决策监督数据，供服务器已有训练代码适配。
 0.6B候选底座为 `Qwen/Qwen3-0.6B`；它是因果语言模型，不能直接当作Laya检查点加载。
-必须先检查服务器现有代码采用分类头还是标签token评分，再确定训练入口。
+已确认服务器JevForge采用候选标签token评分，使用其原生LoRA及LLM-as-Jev损失。
 
 ## 构建
 
@@ -62,8 +62,100 @@ python3 scripts/prepare_uk_decisions.py \
 服务器实际源为 `/root/turgutino/jev`，已复制274个源码及启动文件到
 `/root/autodl-tmp/lrr/uk-decision-20261018`，保存源提交号及逐文件摘要。
 RTX4090D 24GB上已有4B训练占约15.3GB；本轮保留它，拟用小批量LoRA限制显存。
-独立SSH入口为用户提供的临时服务器，用户正在配置认证。
-尚未进行服务器模型微调或模型性能测试，不能把数据构建检查写成模型训练结果。
+独立SSH认证已由用户配置。固定缓存底座revision为
+`c1899de289a04d12100db370d81485cdf75e47ca`。
+真实分词预检最长1561tokens，2048预算内无截断。
+训练按公司及匹配对连通分组留出200校准样本，其余1800用于优化，正负例各半。
+3步LoRA实测成功保存，10.1M可训练参数，峰值allocated1.459GiB、reserved1.539GiB。
+其他4B任务保持运行；autodl-tmp可用约0.9GB，只解压小样本且不重复下载权重。
+
+## 服务器试跑
+
+将 `scripts/run_uk_jevforge.py` 放入上述服务器目录，数据包解压smoke子目录。
+目录中 `jevforge/` 为复制出的完整工程，训练环境复用原venv，无需修改原代码或安装依赖。
+
+```bash
+/root/turgutino/jev/venv/bin/python -u \
+  /root/autodl-tmp/lrr/uk-decision-20261018/run_uk_jevforge.py \
+  --workspace /root/autodl-tmp/lrr/uk-decision-20261018 \
+  --max-steps 225 --batch-size 8 --gpu-gib 6
+```
+
+每种输入依次执行基线推理、1轮训练和微调后评估；batch_size为逐样本前向的梯度累积批量。
+原生LoRA r16/alpha32、all-linear、学习率1e-4、seed42、bf16、梯度检查点。
+不保存中间检查点，仅保留最终adapter；每阶段独立进程释放显存。
+`--gpu-gib`限制PyTorch分配器预算，不是对整个GPU或其他进程的配额设置。
+校准只用训练期独立200例拟合温度，不使用验证或测试标签拟合温度。
+验证/测试报告原始及校准指标、固定0.5阈值混淆矩阵、吞吐和峰值显存。
+重新加载adapter后复算5例，与第一次加载的最大概率误差须不超过1e-5。
+
+`results/status.json`是进度；每版本的 `baseline.log/train.log/evaluate.log` 保留日志。
+`baseline.json/evaluate.json/training-resource.json` 为真实结果。
+已有adapter目录时拒绝覆盖，复跑应选新的独立workspace。
+
+## 财务版已完成结果
+
+1800训练/200校准/500验证/500测试，固定方案一轮225步，未按测试结果调参。
+原始概率测试ROC-AUC从0.412480提升到0.745368，PR-AP0.705336、Brier0.216383。
+验证AUC0.704512；固定0.5阈值测试Precision0.602667、Recall0.904、F1 0.7232。
+混淆矩阵为 `[[101,149],[24,226]]`，行是真值0/1，列是预测0/1。
+校准温度2.1147，校准后测试Brier0.223722，并未全面改善，报告保留两套概率指标。
+训练用时635.6秒，峰值allocated1.517GiB/reserved1.607GiB，5例独立重载概率误差0。
+这些是小样本匹配队列的单次试跑结果，不是英国企业总体风险或全量训练性能。
+
+## 两版最终对比
+
+| 输入 | 基线测试AUC | 微调验证AUC | 微调测试AUC | 测试PR-AP | 测试原始Brier |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 财务/历史基本信息 | 0.4125 | 0.7045 | 0.7454 | 0.7053 | 0.2164 |
+| 加入关系结构摘要 | 0.3256 | 0.7884 | 0.6318 | 0.6213 | 0.3499 |
+
+关系版一轮614.3秒、峰值reserved1.650GiB，重载概率误差0。
+固定0.5阈值关系版测试Recall0.132、F1 0.2143，混淆矩阵 `[[225,25],[217,33]]`。
+温度1.2519将关系版测试Brier降到0.3204，仍差于平衡样本恒报0.5的0.25。
+两版均完成225步/1800有效训练例，所有损失有限，274份复制源码摘要仍一致。
+
+按2022验证AUC会选关系版，但其2024测试显著下降，单一年份选模不足以保证跨年泛化。
+本轮财务版测试更稳；关系摘要在该实验中没有带来跨年收益。
+这与既有图覆盖漂移诊断相符，但尚不能单独归因于某类关系或断言真实关系没有价值。
+不围绕本次已查看的测试集继续调参；后续应使用训练期滚动验证及新的独立留出验收。
+
+本地完整证据：`datasets/uk_decision_pilot_20261018/results/summary.json`；
+服务器完整报告：`/root/autodl-tmp/lrr/uk-decision-20261018/results/summary.json`。
+证据压缩包另含训练/评估日志、逐样本概率、运行版本、模型/源码摘要及配置，不含权重。
+两套权重分别保存在服务器 `results/{financial,graph}/adapter/`。
+
+## 加载已训练的财务版
+
+在服务器用原venv运行下面的Python代码。输入取一行同结构的JSONL；推理不读取expected。
+输出是两类候选的原始归一化概率，温度校准参数另在evaluate.json中。
+
+```python
+import json
+import sys
+from pathlib import Path
+
+root = Path("/root/autodl-tmp/lrr/uk-decision-20261018")
+sys.path.insert(0, str(root / "jevforge"))
+from jevforge.jev import Jev
+
+base = (
+    "/root/autodl-tmp/turgutino/jev/hf/hub/models--Qwen--Qwen3-0.6B/"
+    "snapshots/c1899de289a04d12100db370d81485cdf75e47ca"
+)
+model = Jev.from_pretrained(
+    base, adapter=str(root / "results/financial/adapter"),
+    device="cuda", dtype="bfloat16",
+)
+with (root / "smoke/test.financial.jsonl").open() as stream:
+    example = json.loads(next(stream))
+q = example["questions"]["formal_insolvency_12m"]
+probabilities = model.decide(
+    json.dumps(example["state"], separators=(",", ":")),
+    list(q["criteria"].values()), q["instructions"],
+)
+print(dict(zip(q["criteria"], probabilities, strict=True)))
+```
 
 参考：[Laya微调格式](https://github.com/NandhaKishorM/laya/blob/main/docs/finetune.md)、
 [Qwen3-0.6B](https://huggingface.co/Qwen/Qwen3-0.6B)。
