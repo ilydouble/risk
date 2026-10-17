@@ -6,7 +6,7 @@ export default {
         "模型离线验证与稳定性监控 · AUC / KS / Lift / Brier、校准、消融与外推衰减均可一键复现",
       backToOverview: "返回总览看板",
       historyBanner:
-        "正在查看演示历史版本 {{version}}（{{date}} 归档） · 指标为只读演示快照，仅供页面对比",
+        "正在查看样例历史版本 {{version}}（{{date}} 归档） · 指标为只读样例快照，仅供页面对比",
       archived: "{{date}} 归档",
       backToCurrent: "切回当前版本",
     },
@@ -18,7 +18,7 @@ export default {
     },
     header: {
       title: "信用评分模型 · 评估看板",
-      current: "演示档案 · 未部署",
+      current: "样例档案 · 未部署",
       history: "历史版本 · 只读快照",
       desc: "梯度提升树（XGBoost）信用风险模型。本页汇总离线验证的关键指标、概率校准、特征组消融与跨国外推衰减，每一项均支持一键复现，确保评估结果可追溯、可复核。",
       trainedAt: "训练时间",
@@ -164,11 +164,11 @@ export default {
     version: {
       title: "版本演进史",
       subtitle: "自上而下由新到旧 · 点击任一版本跳转评估看板查看其指标",
-      current: "当前演示版本",
+      current: "当前样例版本",
       viewInDashboard: "在评估看板查看该版本指标",
     },
     drift: {
-      title: "演示漂移监控",
+      title: "样例漂移监控",
       subtitle: "月度 PSI 巡检 · 超过 0.1 关注、0.25 触发重训评审",
       chartLabel: "评分分布 PSI 近 6 个月",
       threshold: "阈值 0.10 / 0.25",
@@ -190,7 +190,7 @@ export default {
       sampleSize: "样本量",
       engine: "推理引擎",
       startedAt: "启动时间",
-      complete: "演示回放完成 · 已展示样例结果",
+      complete: "样例回放完成 · 已展示样例结果",
       running: "正在复现…",
       matchBaseline: "与基线一致",
       logs: "运行日志",

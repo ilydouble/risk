@@ -9,7 +9,6 @@ import type {
   ModelingEvent,
 } from "@/entities/modeling/model/types";
 import type {
-  ResponsePredictModel,
   ResponseModelingCapabilities,
 } from "@/shared/api/generated/schema";
 import { handleApiError } from "@/shared/api/http";
@@ -29,12 +28,6 @@ export function useModelingWorkbench() {
   const [models, setModels] = useState<ModelingVersion[]>([]);
   const [events, setEvents] = useState<ModelingEvent[]>([]);
   const [copiedRun, setCopiedRun] = useState<ModelingRun | null>(null);
-  const [predictionResult, setPredictionResult] = useState<{
-    modelId: string;
-    items: ResponsePredictModel["items"];
-  }>({ modelId: "", items: [] });
-  const predictions =
-    predictionResult.modelId === modelId ? predictionResult.items : [];
   const [error, setError] = useState("");
   const [listError, setListError] = useState("");
   const [eventError, setEventError] = useState("");
@@ -221,22 +214,12 @@ export function useModelingWorkbench() {
       link.download = "model.zip";
       link.click();
     });
-  const predict = (companyIds: string[]) =>
-    act(async () => {
-      const response = await ModelingApi.requestPredictModel({
-        modelId,
-        companyIds,
-        explain: false,
-      });
-      setPredictionResult({ modelId, items: response.items });
-    });
   return {
     capabilities,
     datasets,
     runs,
     models,
     events,
-    predictions,
     // Poll recovery must not erase a failed user operation such as an unknown ID.
     error: error || listError || eventError,
     busy,
@@ -259,6 +242,5 @@ export function useModelingWorkbench() {
     copiedRun,
     publish,
     download,
-    predict,
   };
 }

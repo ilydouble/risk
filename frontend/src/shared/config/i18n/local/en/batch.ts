@@ -20,7 +20,7 @@ export default {
     },
     ready: {
       title: "List ready · {{count}} records",
-      desc: "Each row will be matched against the demo company list and scored with sample data, then ranked by credit score.",
+      desc: "Each row will be matched against the sample company list and scored with sample data, then ranked by credit score.",
       start: "Start batch scoring",
     },
     run: {

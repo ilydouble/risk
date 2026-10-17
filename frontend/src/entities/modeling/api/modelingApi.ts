@@ -26,6 +26,8 @@ import type {
   ResponseRunEvents,
   RequestPublishModel,
   ResponsePublishModel,
+  RequestDeleteModel,
+  ResponseDeleteModel,
   RequestGetModel,
   ResponseGetModel,
   RequestListModels,
@@ -122,3 +124,7 @@ export const requestEnterpriseCompany = http.post<
   import("@/shared/api/generated/schema").RequestEnterpriseCompany,
   import("@/shared/api/generated/schema").ResponseEnterpriseCompany
 >("/modeling/enterprise-company");
+
+export const requestDeleteModel = http.post<RequestDeleteModel, ResponseDeleteModel>(
+  "/modeling/delete-model",
+);

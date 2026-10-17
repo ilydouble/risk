@@ -3,8 +3,8 @@ from fastapi import APIRouter
 
 from risk_api.modules.auth.errors import SESSION_ERRORS
 from risk_api.modules.graph.api import handler
-from risk_api.modules.graph.api.schemas import ResponseGetGraph
-from risk_api.modules.graph.errors import NOT_FOUND_RESPONSE
+from risk_api.modules.graph.api.schemas import ResponseGetDatasetGraph, ResponseGetGraph
+from risk_api.modules.graph.errors import DATASET_GRAPH_ERRORS, NOT_FOUND_RESPONSE
 from risk_api.shared.api.envelope import ApiEnvelope
 from risk_api.shared.api.response import COMMON_ERROR_RESPONSES
 
@@ -15,4 +15,12 @@ router.add_api_route(
     methods=["POST"],
     response_model=ApiEnvelope[ResponseGetGraph],
     responses=COMMON_ERROR_RESPONSES | SESSION_ERRORS | NOT_FOUND_RESPONSE,
+)
+
+router.add_api_route(
+    "/dataset",
+    handler.get_dataset_graph,
+    methods=["POST"],
+    response_model=ApiEnvelope[ResponseGetDatasetGraph],
+    responses=COMMON_ERROR_RESPONSES | SESSION_ERRORS | DATASET_GRAPH_ERRORS,
 )

@@ -53,7 +53,11 @@ def tools_backend(monkeypatch):
             if state.unavailable:
                 raise RuntimeError("private connection detail")
             state.graph_calls.append((company_id, lang, depth))
-            return {"nodes": [{"id": company_id}], "edges": []}
+            return {
+                "rootId": company_id,
+                "nodes": [{"id": company_id, "label": "Beichen", "type": "company"}],
+                "edges": [],
+            }
 
     monkeypatch.setattr(company_tools, "CompanyService", Companies)
     monkeypatch.setattr(company_tools, "GraphService", Graphs)
@@ -66,7 +70,7 @@ def test_tool_contract_and_errors(tools_backend):
     async def exercise():
         search, show = backend.build("en")
         spec = show.tool_spec["inputSchema"]["json"]
-        assert set(spec["properties"]) == {"company_id", "depth"}
+        assert set(spec["properties"]) == {"dataset_id", "company_id", "depth"}
         assert spec["properties"]["depth"]["minimum"] == 1
         assert spec["properties"]["depth"]["maximum"] == 3
         found = await search(keyword="北辰")
@@ -74,17 +78,21 @@ def test_tool_contract_and_errors(tools_backend):
         empty = await search(keyword="missing")
         assert empty["content"][0]["json"]["total"] == 0
         assert (await search(keyword=" "))["status"] == "error"
-        assert (await show(company_id="C-1001", depth=0))["status"] == "error"
-        assert (await show(company_id="C-1001", depth=4))["status"] == "error"
-        missing = await show(company_id="missing")
+        assert (await show(dataset_id="demo-companies", company_id="C-1001", depth=0))[
+            "status"
+        ] == "error"
+        assert (await show(dataset_id="demo-companies", company_id="C-1001", depth=4))[
+            "status"
+        ] == "error"
+        missing = await show(dataset_id="demo-companies", company_id="missing")
         assert missing["content"][0]["json"]["code"] == "COMPANY_NOT_FOUND"
-        result = await show(company_id="C-1001")
+        result = await show(dataset_id="demo-companies", company_id="C-1001")
         reference = CompanyGraphReference.model_validate(result["content"][0]["json"])
-        assert reference.depth == 2 and reference.title == "Beichen" and reference.demo
-        assert state.graph_calls[-1] == ("C-1001", "en", 2)
+        assert reference.depth == 1 and reference.title == "Beichen" and reference.demo
+        assert state.graph_calls[-1] == ("C-1001", "en", 1)
         assert "nodes" not in result["content"][0]["json"]
         state.unavailable = True
-        unavailable = await show(company_id="C-1001")
+        unavailable = await show(dataset_id="demo-companies", company_id="C-1001")
         assert unavailable["status"] == "error"
         assert "private" not in json.dumps(unavailable)
         assert state.opened == state.closed
@@ -102,7 +110,11 @@ def test_real_sdk_search_then_graph_projection(monkeypatch, tools_backend):
         count = len(requests)
         if count <= 2:
             name = "search_companies" if count == 1 else "show_company_graph"
-            args = {"keyword": "北辰"} if count == 1 else {"company_id": "C-1001", "depth": 2}
+            args = (
+                {"keyword": "北辰"}
+                if count == 1
+                else {"dataset_id": "demo-companies", "company_id": "C-1001", "depth": 2}
+            )
             delta = {
                 "tool_calls": [
                     {

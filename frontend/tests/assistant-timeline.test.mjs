@@ -28,7 +28,7 @@ test("Turn rendering groups consecutive process items without changing order", a
     assert(slotted.indexOf("INTERACTION") > slotted.indexOf("</details>"));
     const { TurnProcess } = await server.ssrLoadModule("/src/pages/chat/ui/TurnProcess.tsx");
     const graphProcess = renderToStaticMarkup(createElement(TurnProcess, { items: [graphTool], status: "running" }));
-    assert(graphProcess.includes("Demo company") && graphProcess.includes("演示数据"));
+    assert(graphProcess.includes("Demo company") && graphProcess.includes("样例数据"));
     assert(!graphProcess.includes("查看图谱") && !graphProcess.includes('role="dialog"'));
     assert(!renderToStaticMarkup(createElement(TurnProcess, { items: [{ ...graphTool, status: "failed" }], status: "failed" })).includes("Demo company"));
     const preparationTool = { id: "prep", kind: "tool_call", status: "completed", toolCallId: "prep",

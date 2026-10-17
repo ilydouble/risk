@@ -7,7 +7,8 @@ import sys
 import numpy as np
 import pytest
 
-from riskgnn.dataset_adapters.enterprise import FORMAT, export
+from riskgnn.dataset_adapters.contracts.enterprise import FORMAT
+from riskgnn.dataset_adapters.enterprise import export
 from riskgnn.dataset_adapters.packaging import package
 from riskgnn.dataset_adapters.registry import inspect, resolve
 from riskgnn.workbench.artifacts import asset_digest, read_json
@@ -34,7 +35,7 @@ def test_real_enterprise_export_matches_prepared_features(enterprise_source, tmp
     inspection = inspect(enterprise_source, validated)
     adapter, contract = resolve(enterprise_source)
     output = tmp_path / "enterprises.jsonl"
-    summary = export(adapter, validated, output, inspection)
+    summary = export(adapter, validated, output, inspection).model_dump(mode="json")
     assert summary["format"] == FORMAT
     assert summary["counts"]["company"] == inspection["counts"]["company_attr"]
     metadata = adapter.prepare(validated, tmp_path / "prepared", {"target_count": 60})

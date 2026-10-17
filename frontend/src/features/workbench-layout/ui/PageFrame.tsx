@@ -23,8 +23,8 @@ export default function PageFrame({ title, subtitle, actions, headerExtra, compa
   const badge = benchmark
     ? isEn ? "Public benchmark validation · saved model" : "公开基准验证 · 已保存模型"
     : dataset
-      ? isEn ? "Demo snapshot · real source · no live prediction" : "演示快照 · 真实来源 · 非实时模型预测"
-      : isEn ? "Demo data · no live model" : "演示数据 · 未运行真实模型";
+      ? isEn ? "Sample snapshot · real source · no live prediction" : "样例快照 · 真实来源 · 非实时模型预测"
+      : isEn ? "Sample data · no live model" : "样例数据 · 未运行真实模型";
   return (
     <motion.div key={location.pathname} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.18 }}>
       <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">

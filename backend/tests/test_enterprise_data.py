@@ -269,6 +269,14 @@ def test_transactional_enterprise_import_and_prediction_binding():
                 assert (await foreign_catalog[0]())["content"][0]["json"]["models"] == []
                 denied_tool = await foreign_catalog[1](model_id, "c-1")
                 assert denied_tool["status"] == "error"
+                matches = (await catalog[2](model_id, "c-1"))["content"][0]["json"]
+                assert matches["datasetId"] == identity
+                assert [row["companyId"] for row in matches["items"]] == ["c-1"]
+                assert (await foreign_catalog[2](model_id))["status"] == "error"
+                assert (await catalog[0](limit=0))["status"] == "error"
+                exact = (await catalog[0](model_id=model_id))["content"][0]["json"]
+                assert exact["models"][0]["createdAt"]
+                assert exact["models"][0]["datasetName"] == "test"
                 version = await session.get(ModelVersion, model_id)
                 version.artifact = {**version.artifact, "profile": {
                     "target": "snapshot status", "sourceSha256": "c" * 64,
@@ -295,6 +303,19 @@ def test_transactional_enterprise_import_and_prediction_binding():
                 with pytest.raises(AppError) as mismatch:
                     await service.page(owner, second.id, "company", "", None, None, model_id, 1, 20)
                 assert mismatch.value.status == 409
+                with pytest.raises(AppError) as denied_delete:
+                    await modeling.delete_version(other, model_id)
+                assert denied_delete.value.status == 404
+                await modeling.delete_version(owner, model_id)
+                assert await session.get(ModelVersion, model_id) is None
+                count = await session.scalar(select(func.count()).select_from(EnterprisePrediction))
+                assert count == 0
+                assert await session.scalar(select(func.count()).select_from(Run)) == 1
+                assert await session.get(Dataset, identity) is not None
+                with pytest.raises(AppError) as deleted_predict:
+                    await modeling.predict(owner, model_id, ["c-1"], "deleted")
+                assert deleted_predict.value.status == 404
+                assert (await catalog[0]())["content"][0]["json"]["models"] == []
                 _, bad_content = artifact_content(source_sha, dangling=True)
                 broken = await dataset(bad_content)
                 storage.content = bad_content

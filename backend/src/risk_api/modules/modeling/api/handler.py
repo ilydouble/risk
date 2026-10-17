@@ -420,3 +420,13 @@ async def enterprise_company(
         str(body.modelId) if body.modelId else None,
     )
     return success_response(dto.ResponseEnterpriseCompany.model_validate(result))
+
+
+async def delete_model(
+    body: dto.RequestDeleteModel,
+    request: Request,
+    auth: FromDishka[AuthService],
+    service: FromDishka[ModelingService],
+) -> ApiEnvelope[dto.ResponseDeleteModel]:
+    await service.delete_version(await owner(request, auth), str(body.modelId))
+    return success_response(dto.ResponseDeleteModel(modelId=str(body.modelId), deleted=True))

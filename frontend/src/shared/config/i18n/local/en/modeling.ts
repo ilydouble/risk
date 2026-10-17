@@ -1,5 +1,24 @@
 export default {
   "modeling": {
+    "versions": {
+      "note": "Published versions, newest first. Inspect test reports or predict enterprises in the assistant.",
+      "assistant": "Browse models in assistant",
+      "name": "Version",
+      "algorithm": "Algorithm",
+      "created": "Published",
+      "actions": "Actions",
+      "view": "View",
+      "run": "Source experiment",
+      "size": "Model package size",
+      "report": "Independent test report",
+      "useAssistant": "Use this version in assistant",
+      "delete": "Delete",
+      "deleteTitle": "Delete published model version",
+      "deleteNote": "Remove this publication and its saved predictions. Keep the experiment, dataset, model files and assistant history. You can publish again from the original experiment. This version will no longer accept predictions.",
+      "cancel": "Cancel",
+      "confirm": "Delete version",
+      "deleting": "Deleting…"
+},
     "plus": {
       "scopeNote": "Fixed random initial embeddings; graph networks and classifier heads are trained. Probability and conformal calibration are not fitted.",
       "counts": {"nodes": "Nodes", "edges": "Edges", "hyperedges": "Hyperedges", "incidences": "Incidences", "events": "Events"},

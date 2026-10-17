@@ -13,6 +13,8 @@ from riskgnn.dataset_adapters.acra.validation import (
 )
 from riskgnn.dataset_adapters.base import DatasetAdapter
 from riskgnn.dataset_adapters.contract import read_contract
+from riskgnn.dataset_adapters.contracts.enterprise import EnterpriseRecord
+from riskgnn.dataset_adapters.contracts.inspection import InspectionResult
 from riskgnn.dataset_adapters.delivery import delivery_for
 from riskgnn.dataset_adapters.enterprise import attributes
 
@@ -22,7 +24,7 @@ class SingaporeAdapter(DatasetAdapter):
     version = "1"
     trainable = True
 
-    def inspect(self, archive: Path, workspace: Path, config: dict) -> dict:
+    def inspect(self, archive: Path, workspace: Path, config: dict) -> InspectionResult:
         delivery_for(self.id, self.version).config(config)
         _, relative = read_contract(archive)
         result = validate(archive, workspace)
@@ -38,13 +40,14 @@ class SingaporeAdapter(DatasetAdapter):
             "splits": result["splits"],
             "relations": result["relations"],
         }
-        return result
+        result.pop("datasetContract", None)
+        return InspectionResult.model_validate(result)
 
     def prepare(self, validated: Path, output: Path, config: dict) -> dict:
         resolved = delivery_for(self.id, self.version).config(config)
         return prepare(validated, output, target_count=int(resolved["target_count"]))
 
-    def enterprise_records(self, validated: Path) -> Iterable[dict]:
+    def enterprise_records(self, validated: Path) -> Iterable[EnterpriseRecord]:
         verify_validated(validated)
         with connect(data_root(validated)) as db:
             available = {row[0] for row in db.execute("DESCRIBE company_attr").fetchall()}
@@ -74,7 +77,7 @@ class SingaporeAdapter(DatasetAdapter):
             )
             while rows := cursor.fetchmany(2000):
                 for row in rows:
-                    yield {
+                    yield EnterpriseRecord.model_validate({
                         "kind": "company",
                         "snapshot": "seed-0",
                         "nodeId": row[0],
@@ -90,16 +93,16 @@ class SingaporeAdapter(DatasetAdapter):
                             "label": int(row[7]) if row[8] else None,
                             "split": row[9],
                         },
-                    }
+                    })
             cursor = db.execute("SELECT * FROM edges ORDER BY src_id,dst_id,rel_type")
             names = [column[0] for column in cursor.description]
             while rows := cursor.fetchmany(2000):
                 for row in rows:
                     data = dict(zip(names, row, strict=True))
-                    yield {
+                    yield EnterpriseRecord.model_validate({
                         "kind": "edge",
                         "snapshot": "seed-0",
                         "source": data["src_id"],
                         "target": data["dst_id"],
                         "data": data,
-                    }
+                    })

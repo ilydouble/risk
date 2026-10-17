@@ -717,11 +717,11 @@ function describeTarget(
       title: L(lang, "复现全部指标", "Reproduce all metrics"),
       subtitle: L(
         lang,
-        "回放四项主指标、校准曲线、消融实验与跨国外推衰减的演示快照",
-        "Replay demo snapshots of the four main metrics, calibration curve, ablation and cross-country extrapolation decay",
+        "回放四项主指标、校准曲线、消融实验与跨国外推衰减的样例快照",
+        "Replay sample snapshots of the four main metrics, calibration curve, ablation and cross-country extrapolation decay",
       ),
       focusLabel: L(lang, "复现结论", "Result"),
-      focusValue: L(lang, "演示指标已展示", "Demo metrics displayed"),
+      focusValue: L(lang, "样例指标已展示", "Sample metrics displayed"),
       focusNote: L(
         lang,
         "展示预设快照，未执行真实模型计算或验证",

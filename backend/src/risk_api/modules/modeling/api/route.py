@@ -167,3 +167,11 @@ router.add_api_route(
     response_model=ApiEnvelope[schemas.ResponseEnterpriseCompany],
     responses=COMMON_ERROR_RESPONSES | WORKBENCH_ERRORS,
 )
+
+router.add_api_route(
+    "/delete-model",
+    handler.delete_model,
+    methods=["POST"],
+    response_model=ApiEnvelope[schemas.ResponseDeleteModel],
+    responses=COMMON_ERROR_RESPONSES | WORKBENCH_ERRORS,
+)

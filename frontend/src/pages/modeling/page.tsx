@@ -64,8 +64,8 @@ export default function ModelingWorkbenchPage() {
         ))}
       </nav>
       {work.loading && <p role="status">{t("modeling.loading")}</p>}
-      <div className="grid gap-5 xl:grid-cols-[280px_minmax(0,1fr)]">
-        <aside className={`${box} space-y-4 self-start`}>
+      <div className={tab === "model" ? "space-y-5" : "grid gap-5 xl:grid-cols-[280px_minmax(0,1fr)]"}>
+        {tab !== "model" && <aside className={`${box} space-y-4 self-start`}>
           <h2 className="font-semibold">{t(`modeling.tabs.${tab}`)}</h2>
           {(tab === "dataset"
             ? work.datasets
@@ -87,7 +87,7 @@ export default function ModelingWorkbenchPage() {
             </button>
           ))}
           <p className="text-xs text-foreground-500">{t("modeling.scope")}</p>
-        </aside>
+        </aside>}
         <main className="min-w-0 space-y-5">
           {tab === "dataset" && <DatasetPanel work={work} />}
           {tab === "run" && <ExperimentPanel work={work} />}

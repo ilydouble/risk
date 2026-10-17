@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import StatusPill from "@/entities/risk/ui/StatusPill";
 import { NAV_GROUPS } from "@/app/config/nav";
-import { useDemoMode } from "@/features/demo-scenarios/model/DemoModeContext";
 
 interface SidebarProps {
   activeKey: string;
@@ -12,7 +10,6 @@ interface SidebarProps {
 
 export default function Sidebar({ activeKey, isOpen, onClose }: SidebarProps) {
   const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
 
   return (
     <>
@@ -92,19 +89,6 @@ export default function Sidebar({ activeKey, isOpen, onClose }: SidebarProps) {
           ))}
         </nav>
 
-        <div className="border-t border-background-200 p-3">
-          <div className="rounded-md border border-background-200 bg-background-50 px-3 py-2.5">
-            <StatusPill
-              level={demoMode ? "medium" : "low"}
-              label={demoMode ? t("sidebar.demoRunning") : t("sidebar.connected")}
-              size="sm"
-              pulse={demoMode}
-            />
-            <p className="mt-1 font-mono text-[10px] text-foreground-500">
-              {t("sidebar.versionLine")}
-            </p>
-          </div>
-        </div>
       </aside>
     </>
   );
