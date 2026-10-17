@@ -3,6 +3,7 @@
 import hashlib
 import io
 import re
+from datetime import date
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from zipfile import ZipFile
@@ -108,7 +109,7 @@ def amount(value, format_name="", scale="0", sign=""):
     return str(number.normalize())
 
 
-def parse_document(raw, company_id, period_end):
+def parse_document(raw, company_id, period_end, *, include_comparatives=False):
     if raw.startswith(b"PK\x03\x04"):
         with ZipFile(io.BytesIO(raw)) as zipped:
             names = [
@@ -194,7 +195,16 @@ def parse_document(raw, company_id, period_end):
             continue
         reference = node.get("contextRef")
         context = contexts.get(reference)
-        if not context or context["end"] != period_end:
+        if not context:
+            continue
+        if include_comparatives:
+            try:
+                date.fromisoformat(context["end"])
+            except (TypeError, ValueError):
+                continue
+            if context["end"] > period_end:
+                continue
+        elif context["end"] != period_end:
             continue
         if any(
             re.fullmatch(r"(?:[0-9]{1,8}|[A-Z]{2}[0-9]{6})", value)
@@ -286,6 +296,20 @@ def parse_document(raw, company_id, period_end):
                     "dimensions": context["dimensions"],
                 }
             )
+    if include_comparatives:
+        ends = sorted({fact["period_end"] for fact in observations} | {period_end})
+        return {
+            end: select_facts(
+                [fact for fact in observations if fact["period_end"] == end],
+                company_id,
+                identifiers,
+            )
+            for end in ends
+        }
+    return select_facts(observations, company_id, identifiers)
+
+
+def select_facts(observations, company_id, identifiers):
     selected, conflicts = {}, []
     for metric in ALIASES:
         candidates = [fact for fact in observations if fact["metric"] == metric]
