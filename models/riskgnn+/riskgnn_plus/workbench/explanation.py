@@ -29,9 +29,12 @@ def explain(predictor, company_id: str) -> dict:
         baseline = float(predictor.model([node]).probabilities[0, 1])
         try:
             for column, name in enumerate(meta["features"]):
-                features[node, column] = references[column]
-                score = float(predictor.model([node]).probabilities[0, 1])
-                features[node, column] = original_row[column]
+                # An unchanged intervention is exactly the baseline, including graph effects.
+                score = baseline
+                if original_row[column] != references[column]:
+                    features[node, column] = references[column]
+                    score = float(predictor.model([node]).probabilities[0, 1])
+                    features[node, column] = original_row[column]
                 impacts.append({
                     "feature": name,
                     "value": original(original_row[column], column, name),

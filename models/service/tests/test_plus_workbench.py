@@ -175,3 +175,32 @@ def test_explanation_reference_uses_training_targets_only():
     assert item["value"] == 100 and item["referenceValue"] == 2
     assert item["probabilityAtReference"] == pytest.approx(float(torch.sigmoid(torch.tensor(2.0))))
     assert item["delta"] > 0
+
+
+def test_explanation_skips_unchanged_interventions_but_preserves_all_features():
+    from types import SimpleNamespace
+
+    context = {
+        "features": np.array([[1.0, 2.0], [3.0, 2.0], [2.0, 5.0]], dtype=np.float32),
+        "splits": np.array(["train", "train", "test"]),
+    }
+    original = context["features"].copy()
+    calls = []
+
+    def model(nodes):
+        calls.append(context["features"][nodes].copy())
+        probability = torch.sigmoid(torch.tensor(context["features"][nodes].sum(axis=1)))
+        return SimpleNamespace(probabilities=torch.stack((1 - probability, probability), dim=1))
+
+    predictor = SimpleNamespace(
+        context=context, index={"c": 2}, model=model,
+        meta={"features": ["unchanged", "changed"], "preprocessing": {},
+              "sourceSha256": "a" * 64},
+    )
+    result = explain(predictor, "c")
+    assert len(calls) == 2, "Only baseline and genuinely changed input need model execution"
+    features = {row["feature"]: row for row in result["features"]}
+    assert set(features) == {"unchanged", "changed"}
+    assert features["unchanged"]["delta"] == 0
+    assert features["changed"]["delta"] > 0
+    assert np.array_equal(context["features"], original)
