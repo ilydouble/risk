@@ -92,13 +92,16 @@ def equivalence_check(model, tok, encodings):
         jev_loss_batch,
         tree_batch_forward,
     )
+    from jevforge_runtime import restore_buffers
 
     probes = [min(encodings, key=lambda e: len(e.prompt_ids)),
               max(encodings, key=lambda e: len(e.prompt_ids))] + encodings[:2]
     original_dtype = next(model.parameters()).dtype
+    original_buffers = {name: value.detach().clone() for name, value in model.named_buffers()}
     errors = {}
     for dtype in (original_dtype, torch.float32):
         model.to(dtype=dtype)
+        restore_buffers(model, original_buffers)
         with torch.no_grad():
             packed = tree_batch_forward(model, probes, tok.pad_token_id)
             scores = candidate_scores_batch(packed, probes[0])
@@ -110,6 +113,7 @@ def equivalence_check(model, tok, encodings):
                 "score": float((scores - reference).abs().max()),
             }
     model.to(dtype=original_dtype)
+    restore_buffers(model, original_buffers)
     del packed, scores, reference
     torch.cuda.empty_cache()
     # FP32 checks the mathematical batching contract; BF16 uses the native scorer's tolerance.
@@ -181,6 +185,7 @@ def train(model, tok, groups, encoded, reverse, args):
     import torch
     from jevforge.train import lr_factor
     from jevforge_batch import jev_loss_batch, tree_batch_forward
+    from jevforge_runtime import save_runtime_buffers
 
     output = args.workspace / "results"
     rng = random.Random(42)
@@ -243,6 +248,7 @@ def train(model, tok, groups, encoded, reverse, args):
     log_file.close()
     model.save_pretrained(output / "adapter")
     tok.save_pretrained(output / "adapter")
+    save_runtime_buffers(model, output / "adapter")
     result = {"steps": total, "examples": processed, "elapsed_s": time.perf_counter() - started,
               "peak_allocated_gib": torch.cuda.max_memory_allocated() / 2**30,
               "peak_reserved_gib": torch.cuda.max_memory_reserved() / 2**30}
@@ -257,7 +263,8 @@ def run(args):
     import torch
     from jevforge.jev import load_model_and_tokenizer
     from jevforge_batch import candidate_scores_batch, tree_batch_forward
-    from peft import LoraConfig, PeftModel, get_peft_model
+    from jevforge_runtime import load_decision_model
+    from peft import LoraConfig, get_peft_model
 
     root = args.workspace
     output = root / "results"
@@ -340,8 +347,7 @@ def run(args):
     del model
     gc.collect()
     torch.cuda.empty_cache()
-    model, tok = load_model_and_tokenizer(args.model, device="cuda", dtype="bfloat16")
-    model = PeftModel.from_pretrained(model, output / "adapter").eval()
+    model, tok = load_decision_model(args.model, output / "adapter")
     with torch.no_grad():
         after = candidate_scores_batch(tree_batch_forward(model, probes, tok.pad_token_id),
                                        probes[0]).softmax(-1).cpu()
