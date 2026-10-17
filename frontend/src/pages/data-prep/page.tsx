@@ -6,6 +6,7 @@ import { requestInspectCase, requestSuggestMapping, requestListPreparations, req
 import { useAiModelConfig } from "@/features/ai-model-config/model/context";
 import { useDataPrepSession } from "@/features/data-prep/model/context";
 import { handleApiError } from "@/shared/api/http";
+import { DatasetDeliveryPanel } from "@/features/dataset-delivery/ui/DatasetDeliveryPanel";
 import { ReportGenerationStatus } from "./ReportGenerationStatus";
 
 import { PreparationDeleteButton } from "@/features/data-prep/ui/PreparationDeleteButton";
@@ -109,14 +110,18 @@ export default function DataPrepPage() {
     <div className="mx-auto max-w-6xl space-y-5">
       <header>
         <h1 className="text-2xl font-semibold text-foreground-950">数据准备</h1>
-        <p className="mt-2 text-sm text-foreground-500">先检查真实数据，再决定如何关联企业和构建 RiskGNN+ 数据集。</p>
+        <p className="mt-2 text-sm text-foreground-500">借助智能体分析原始材料、确认转换规则，再生成并交付工作台需要的数据包。</p>
       </header>
+      <nav aria-label="数据准备流程" className="flex gap-3">
+        {[ ["analysis", "1. 智能体分析与转换"], ["delivery", "2. 训练包生成与交付"] ].map(([key, label]) => <button key={key} className={params.get("step") === key || (!params.get("step") && key === "analysis") ? button : "rounded-md border border-background-300 px-4 py-2 text-sm"} onClick={() => setParams(previous => { const next = new URLSearchParams(previous); next.set("step", key); return next; })}>{label}</button>)}
+      </nav>
+      {params.get("step") === "delivery" ? <DatasetDeliveryPanel key={preparationId ?? "standalone"} sourcePreparationId={preparation?.id === preparationId && preparation.confirmed ? preparation.id : undefined} /> : <>
       <div className={`${panel} flex flex-wrap items-center justify-between gap-3 text-sm`}>
         <span>报告使用模型：{modelConfig.custom ? `${modelConfig.model || "自定义模型（未填写）"} · 自定义` : `${modelConfig.defaults?.model || "后端默认模型"} · 后端默认`}</span>
         <Link className="text-primary-400 underline" to="/settings/ai-model">配置智能体模型</Link>
       </div>
       <section className={`${panel} space-y-3`}>
-        {saved.length > 0 && <label className="block text-sm">继续已保存的案例<select aria-label="已保存的数据准备" className="ml-3 rounded-md border border-background-300 bg-background-50 p-2" disabled={busy} value={preparation?.id ?? ""} onChange={event => { if (event.target.value) { setFiles([]); setParams({ preparation: event.target.value }); } }}><option value="">选择案例</option>{saved.map(item => <option key={item.id} value={item.id}>{item.filename} · {item.profile.rowCount} 行{item.inWorkbench ? " · 已转入工作台" : ""}</option>)}</select>{savedTruncated && <span className="ml-2 text-xs text-foreground-500">显示最近100份</span>}</label>}
+        {saved.length > 0 && <label className="block text-sm">继续已保存的案例<select aria-label="已保存的数据准备" className="ml-3 rounded-md border border-background-300 bg-background-50 p-2" disabled={busy} value={preparation?.id ?? ""} onChange={event => { if (event.target.value) { setFiles([]); setParams({ preparation: event.target.value }); } }}><option value="">选择案例</option>{saved.map(item => <option key={item.id} value={item.id}>{item.filename} · {item.profile.rowCount} 行{item.confirmed ? " · 映射已确认" : ""}</option>)}</select>{savedTruncated && <span className="ml-2 text-xs text-foreground-500">显示最近100份</span>}</label>}
         <div className="flex items-center justify-between gap-3"><h2 className="font-semibold">{preparation ? "向当前案例补充文件" : "建立多文件数据准备案例"}</h2>{preparation && <button className="text-sm text-primary-500 underline" disabled={busy} onClick={newCase}>新建案例</button>}</div>
         <p className="text-sm text-foreground-500">一个案例包含一张企业属性 CSV 和多个图 JSON，可一次选择或分批添加。CSV 最多 2 MiB、50000 行；每个 JSON 最多 64 MiB，案例最多 8 个文件、共 96 MiB。文件先按案例保存，关系按确认后的企业 ID 规则核验，确认导入后才进入概览与检索。</p>
         {preparation && <PreparationDeleteButton key={preparation.id} preparationId={preparation.id} disabled={busy || pendingFiles} onDeleted={() => { setSaved(current => current.filter(item => item.id !== preparation.id)); newCase(); }} />}
@@ -180,7 +185,8 @@ export default function DataPrepPage() {
         {preparation && <PreparationMappingEditor preparation={preparation} onSaved={setPreparation} disabled={busy || pendingFiles} />}
         {preparation && <PreparationConversionPanel preparationId={preparation.id} revision={preparation.updatedAt} disabled={busy || pendingFiles} />}
         {suggestion && <section className={`${panel} space-y-4`}><h2 className="font-semibold">智能体数据分析报告 · 待确认</h2><p className="text-xs text-foreground-500">报告依据本案例的主表统计和图文件清单生成；关系覆盖及属性冲突以试运行核验为准，未训练模型。</p><div className="space-y-3 text-sm leading-7"><ReactMarkdown remarkPlugins={[remarkGfm]} skipHtml components={{ h2: ({ children }) => <h2 className="mt-4 text-base font-semibold">{children}</h2>, h3: ({ children }) => <h3 className="mt-3 font-semibold">{children}</h3>, ul: ({ children }) => <ul className="list-disc pl-5">{children}</ul>, ol: ({ children }) => <ol className="list-decimal pl-5">{children}</ol>, table: ({ children }) => <div className="overflow-x-auto"><table className="min-w-full border-collapse text-left">{children}</table></div>, th: ({ children }) => <th className="border border-background-300 p-2">{children}</th>, td: ({ children }) => <td className="border border-background-300 p-2">{children}</td>, a: ({ children, href }) => <a href={href} target="_blank" rel="noopener noreferrer" className="text-primary-400 underline">{children}</a>, img: ({ alt }) => <span>[图片：{alt || "无描述"}]</span> }}>{suggestion.reportMarkdown || suggestion.summary}</ReactMarkdown></div><details className="text-xs text-foreground-500"><summary className="cursor-pointer">查看工具调用记录（{suggestion.toolTrace?.length ?? 0} 次）</summary><ol className="mt-2 list-decimal pl-5">{suggestion.toolTrace?.map((tool, index) => <li key={index}>{tool}</li>)}</ol></details><details className="text-sm"><summary className="cursor-pointer font-medium">查看字段用途建议和核查清单</summary><div className="mt-3 space-y-2">{suggestion.suggestions.map((item) => <div key={item.field} className="rounded-md bg-background-50 p-3"><strong>{item.field}</strong> · {roleLabels[item.role] ?? item.role}<p className="text-foreground-500">{item.reason}</p></div>)}</div>{suggestion.questions.length > 0 && <ul className="mt-3 list-disc pl-5">{suggestion.questions.map((question, index) => <li key={index}>{question}</li>)}</ul>}{(suggestion.nextChecks?.length ?? 0) > 0 && <ol className="mt-3 list-decimal pl-5">{suggestion.nextChecks?.map((step, index) => <li key={index}>{step}</li>)}</ol>}</details></section>}
-        <p className="text-sm text-foreground-500">先分析并确认映射方案，再转入工作台继续适配。同一原始文件无需重复上传；已有标准数据包可直接前往 <Link className="text-primary-400 underline" to="/modeling">模型训练工作台</Link>。</p>
+        <p className="text-sm text-foreground-500">分析、规则确认和转换都在数据准备中完成。训练文件准备齐全后，使用上方“训练包生成与交付”；已有标准数据包也可前往 <Link className="text-primary-400 underline" to="/modeling">模型训练工作台</Link>。</p>
+      </>}
       </>}
     </div>
   );

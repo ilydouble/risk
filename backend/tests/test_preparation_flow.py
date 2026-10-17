@@ -101,7 +101,8 @@ def test_persist_restore_handoff_preserves_source_and_owner_scope():
                 with pytest.raises(AppError):
                     await service.save_mapping("a", identity, PLAN, False, True)
                 await session.rollback()
-                await service.save_mapping("a", identity, PLAN, True, True)
+                await service.save_mapping("a", identity, PLAN, True, False)
+                assert not case.in_workbench
                 storage = Mock()
                 storage.presign_put = AsyncMock(return_value=SimpleNamespace(url="url", headers={}))
                 modeling = ModelingService(
@@ -112,6 +113,14 @@ def test_persist_restore_handoff_preserves_source_and_owner_scope():
                         "b", "derived", "data.zip", "application/zip", 10, identity,
                     )
                 await session.rollback()
+                await service.save_mapping("a", identity, PLAN, False, False)
+                with pytest.raises(AppError) as error:
+                    await modeling.create_upload(
+                        "a", "derived", "data.zip", "application/zip", 10, identity,
+                    )
+                assert error.value.code == "MODELING_STATE_INVALID"
+                await session.rollback()
+                await service.save_mapping("a", identity, PLAN, True, False)
                 ticket = await modeling.create_upload(
                     "a", "derived", "data.zip", "application/zip", 10, identity,
                 )

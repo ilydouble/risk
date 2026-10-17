@@ -1,0 +1,68 @@
+[
+  {
+    "id": "acra-companies",
+    "description": "Singapore ACRA/GLEIF companies; node_edge subset, preserving existing splits.",
+    "dataset": {
+      "id": "acra",
+      "name": "Singapore ACRA/GLEIF companies"
+    },
+    "adapter": {
+      "id": "sg-comrisk",
+      "version": "1"
+    },
+    "config": {
+      "target_count": 2000
+    },
+    "requiredFiles": [
+      "company_attr.parquet",
+      "label.parquet",
+      "id_map.parquet",
+      "edges.parquet",
+      "splits_5seed.parquet",
+      "feature_config.json",
+      "export_meta.json"
+    ]
+  },
+  {
+    "id": "smesd",
+    "description": "SMEsD V5 JSON snapshots; node_edge subset, preserving existing splits.",
+    "dataset": {
+      "id": "smesd",
+      "name": "SMEsD V5 JSON snapshots"
+    },
+    "adapter": {
+      "id": "smesd",
+      "version": "1"
+    },
+    "config": {
+      "target_count": 4000
+    },
+    "requiredFiles": [
+      "train.json",
+      "valid.json",
+      "test.json"
+    ]
+  },
+  {
+    "id": "uk-companies",
+    "description": "UK Companies House / GLEIF snapshots; node_edge subset, preserving existing splits.",
+    "dataset": {
+      "id": "uk-companies",
+      "name": "UK Companies House / GLEIF snapshots"
+    },
+    "adapter": {
+      "id": "uk-dataset-v1",
+      "version": "1"
+    },
+    "config": {
+      "target_count": 2000
+    },
+    "requiredFiles": [
+      "train.json",
+      "valid.json",
+      "test.json",
+      "audit.json",
+      "export_meta.json"
+    ]
+  }
+]

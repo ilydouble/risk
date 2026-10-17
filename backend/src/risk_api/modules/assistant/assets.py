@@ -85,7 +85,8 @@ class AssetRepository:
                                  "preparation_result"], "mappingConfirmed": item.confirmed,
                 "inWorkbench": item.in_workbench,
                 "files": item.profile.get("caseFiles", []),
-                "warnings": ["字段映射是适配方案；移交不代表已经转换或训练就绪。"],
+                "warnings": ["字段映射是适配方案；须执行受控转换或模型适配，"
+                             "交付标准包并通过工作台校验后才能训练。"],
             }
             assets.append(case)
             if item.report:

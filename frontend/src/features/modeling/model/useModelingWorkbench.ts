@@ -13,7 +13,7 @@ import type {
   ResponseModelingCapabilities,
 } from "@/shared/api/generated/schema";
 import { handleApiError } from "@/shared/api/http";
-import { uploadObject } from "@/shared/api/objectTransfer";
+import { uploadDatasetPackage } from "@/features/dataset-delivery/lib/upload";
 
 export function useModelingWorkbench() {
   const { t } = useTranslation();
@@ -163,17 +163,10 @@ export function useModelingWorkbench() {
       setUploading(true);
       try {
         setUploadPercent(0);
-        const ticket = await ModelingApi.requestCreateDatasetUpload({
+        await uploadDatasetPackage(file, name, {
           sourcePreparationId: params.get("preparation") || undefined,
-          name,
-          filename: file.name,
-          contentType: file.type || "application/zip",
-          size: file.size,
-        });
-        select("dataset", ticket.datasetId);
-        await uploadObject(ticket.url, ticket.headers, file, setUploadPercent);
-        await ModelingApi.requestCompleteDatasetUpload({
-          datasetId: ticket.datasetId,
+          progress: setUploadPercent,
+          created: id => select("dataset", id),
         });
       } finally {
         setUploading(false);

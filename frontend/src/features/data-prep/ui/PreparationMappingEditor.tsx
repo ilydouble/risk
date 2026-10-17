@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import type { ResponsePreparation } from "@/shared/api/generated/schema";
 import { handleApiError } from "@/shared/api/http";
 import { requestExportPreparation, requestSavePreparationMapping } from "../api/dataPrepApi";
@@ -12,7 +11,6 @@ export function PreparationMappingEditor({ preparation, onSaved, disabled = fals
   onSaved: (value: ResponsePreparation) => void;
   disabled?: boolean;
 }) {
-  const navigate = useNavigate();
   const [mapping, setMapping] = useState(preparation.mapping);
   const [confirmed, setConfirmed] = useState(preparation.confirmed);
   const [busy, setBusy] = useState(false);
@@ -24,13 +22,12 @@ export function PreparationMappingEditor({ preparation, onSaved, disabled = fals
     setMapping(current => current.map((item, i) => i === index ? { ...item, ...values } : item));
     setConfirmed(false); setStatus("");
   };
-  async function save(handoff: boolean) {
+  async function save() {
     setBusy(true); setError(""); setStatus("");
     try {
-      const result = await requestSavePreparationMapping({ preparationId: preparation.id, mapping, confirmed, handoff });
+      const result = await requestSavePreparationMapping({ preparationId: preparation.id, mapping, confirmed, handoff: false });
       onSaved(result);
-      if (handoff) navigate(`/modeling?tab=dataset&preparation=${encodeURIComponent(result.id)}`);
-      else setStatus(confirmed ? "映射方案已确认并保存。" : "映射草稿已保存。修改后需重新确认。");
+      setStatus(confirmed ? "映射方案已确认并保存。" : "映射草稿已保存。修改后需重新确认。");
     } catch (cause) {
       setError(handleApiError(cause, {
         DATA_PREP_MAPPING_INVALID: "请为每个字段明确用途，指定一个企业标识和至少一个特征，填写不重复的目标及转换方式，并解决“待确认”项。",
@@ -60,10 +57,10 @@ export function PreparationMappingEditor({ preparation, onSaved, disabled = fals
       </tr>)}
     </tbody></table></div>
     <label className="flex items-start gap-2 text-sm"><input type="checkbox" disabled={blocked} checked={confirmed} onChange={event => { setConfirmed(event.target.checked); setStatus(""); }} />我已核对字段含义、标签语义和转换方式，确认这份映射方案。</label>
-    <p className="text-xs leading-6 text-foreground-500">这是一份适配方案，尚未执行转换。原文件、报告和映射共用同一准备记录；转入工作台无需再次上传原始 CSV。训练仍需满足模型适配器对关系数据、特征及训练/验证/测试划分的要求。</p>
+    <p className="text-xs leading-6 text-foreground-500">这是一份适配方案，尚未执行转换。原文件、报告和映射保存在当前案例。完成转换与打包后，再将标准 ZIP 交付工作台。训练仍需满足模型适配器对关系数据、特征及训练/验证/测试划分的要求。</p>
     <div className="flex flex-wrap items-center gap-3">
-      <button type="button" disabled={blocked} onClick={() => void save(false)} className="rounded-md border border-background-300 px-4 py-2 text-sm disabled:opacity-50">{busy ? "保存中…" : "保存映射方案"}</button>
-      <button type="button" disabled={blocked || !confirmed} onClick={() => void save(true)} className="rounded-md bg-primary-500 px-4 py-2 text-sm text-white disabled:opacity-50">{preparation.inWorkbench ? "更新并在工作台继续" : "确认映射并转入工作台"}</button>
+      <button type="button" disabled={blocked} onClick={() => void save()} className="rounded-md border border-background-300 px-4 py-2 text-sm disabled:opacity-50">{busy ? "保存中…" : "保存映射方案"}</button>
+
       <button type="button" disabled={blocked} onClick={() => void download()} className="rounded-md border border-background-300 px-4 py-2 text-sm disabled:opacity-50">下载已保存的原文件与映射交付包</button>
       {status && <p role="status" className="text-sm text-foreground-500">{status}</p>}
     </div>

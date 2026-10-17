@@ -3,7 +3,7 @@ import { DatasetAnalysisPanel } from "./DatasetAnalysisPanel";
 import { CreateExperimentForm } from "./CreateExperimentForm";
 import { PreparationHandoffPanel } from "./PreparationHandoffPanel";
 import { useRef, useState } from "react";
-import { BlobReader, ZipReader } from "@zip.js/zip.js";
+import { inspectPackage } from "@/features/dataset-delivery/lib/package";
 import { box, button, input } from "./presentation";
 import { useTranslation } from "react-i18next";
 import type { useModelingWorkbench } from "@/features/modeling/model/useModelingWorkbench";
@@ -26,33 +26,17 @@ export function DatasetPanel({ work }: { work: Workbench }) {
     setFile(chosen);
     setEntries([]);
     setPreviewError("");
-    if (!chosen) return;
+    if (!chosen) { setPreviewing(false); return; }
     setName(chosen.name.replace(/\.zip$/i, ""));
     setPreviewing(true);
-    const reader = new ZipReader(new BlobReader(chosen));
     try {
-      const items = await reader.getEntries();
-      if (items.length > 128 || chosen.size > 512 * 1024 * 1024)
-        throw new Error("limit");
-      const contracts = items.filter((item) =>
-        !item.directory && /^(?:[^/]+\/)?risk_dataset_contract\.json$/.test(item.filename),
-      );
-      if (contracts.length !== 1) throw new Error("contract");
+      const items = await inspectPackage(chosen);
       if (sequence !== previewSequence.current) return;
-      setEntries(
-        items
-          .filter((item) => !item.directory)
-          .map((item) => ({
-            filename: item.filename,
-            size: item.uncompressedSize,
-          })),
-      );
+      setEntries(items);
     } catch (error) {
       if (sequence === previewSequence.current)
-        setPreviewError(t(error instanceof Error && error.message === "contract"
-          ? "modeling.errors.contract" : "modeling.errors.file"));
+        setPreviewError(error instanceof Error ? error.message : t("modeling.errors.file"));
     } finally {
-      await reader.close();
       if (sequence === previewSequence.current) setPreviewing(false);
     }
   };
@@ -62,8 +46,8 @@ export function DatasetPanel({ work }: { work: Workbench }) {
       <PreparationHandoffPanel />
       <section className={`${box} space-y-4`}>
         <h2 className="font-semibold">已有标准训练数据包 · 直接导入</h2>
-        <p className="text-sm text-foreground-500">仅用于已完成模型适配的契约 ZIP。原始 CSV 请使用上方数据准备流程。</p>
-        <p className="text-xs text-foreground-500">选中已移交案例后，导入的派生训练包将关联该案例，并封存当时确认的映射和源文件摘要。</p>
+        <p className="text-sm text-foreground-500">仅用于已完成模型适配的契约 ZIP。原始材料请先进入独立的数据准备工具。</p>
+        <p className="text-xs text-foreground-500">从数据准备携带案例进入时，上传的派生训练包会封存该案例已确认的映射和源文件摘要。</p>
         <label className="block cursor-pointer rounded-lg border border-dashed border-background-300 bg-background-50 p-5 text-center text-sm">
           <span>{t("modeling.upload.pick")}</span>
           <input

@@ -71,8 +71,8 @@ class ModelingService:
             source = await self.session.scalar(select(Preparation).where(
                 Preparation.id == source_preparation_id, Preparation.owner_id == owner,
             ).with_for_update())
-            if source is None or not source.confirmed or not source.in_workbench:
-                raise AppError(409, "MODELING_STATE_INVALID", "请先确认并移交当前账号的映射方案")
+            if source is None or not source.confirmed:
+                raise AppError(409, "MODELING_STATE_INVALID", "请先确认当前账号的映射方案")
             mapping_snapshot = {
                 "sourceSha256": source.source_sha, "mapping": deepcopy(source.mapping),
                 "sourceUpdatedAt": source.updated_at.isoformat(),
