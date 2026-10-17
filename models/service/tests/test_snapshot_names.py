@@ -17,6 +17,7 @@ def test_snapshot_names_survive_export(tmp_path, name):
         }
         if name is not None:
             company["name"] = name
+            company["properties"] = {"nameSource": {"snapshotDate": "2026-09-30"}}
         snapshot = {
             "schema_version": 1, "name": split, "synthetic": False,
             "evaluation": "isolated_snapshots", "target_description": "test status",
@@ -29,3 +30,5 @@ def test_snapshot_names_survive_export(tmp_path, name):
     assert len(records) == 3
     assert all(row.nodeId == "00805326" and row.data["name"] == name for row in records)
     assert all(row.data["attributes"] == {"value": 1.0} for row in records)
+    expected = {"nameSource": {"snapshotDate": "2026-09-30"}} if name else {}
+    assert all(row.data["properties"] == expected for row in records)

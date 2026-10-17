@@ -2,7 +2,7 @@
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, JsonValue, model_validator
 
 
 class Record(BaseModel):
@@ -13,6 +13,7 @@ class Node(Record):
     id: str = Field(min_length=1)
     kind: Literal["company", "person"]
     name: str | None = None
+    properties: dict[str, JsonValue] = Field(default_factory=dict)
     community: str
     features: list[float | None]
     label: Literal[0, 1] | None

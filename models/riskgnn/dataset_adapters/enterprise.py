@@ -37,6 +37,7 @@ def snapshot_records(snapshots: dict) -> Iterable[EnterpriseRecord]:
                 "nodeId": node.id,
                 "data": {
                     "name": node.name,
+                    "properties": node.properties,
                     "attributes": attributes(snapshot.feature_names, node.features),
                     "community": node.community,
                     "label": node.label,

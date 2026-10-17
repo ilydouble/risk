@@ -20,6 +20,10 @@ export_meta.json
 现有包部分说明仍写四维特征或两类超边；代码以本适配器和实际数据为准。
 包内 build/verify Python 不执行，不依赖已删除的 com_risk_runtime。
 
+快照节点可携带 `name` 与 `properties`，企业导出原样保留名称及其来源证据；
+缺省名称为 null。补名称不改变节点 ID 和训练输入。
+历史包重新交付流程见 [UK 数据重新交付](../../../../docs/architecture/uk-data-redelivery.md)。
+
 ## 专用语义
 
 - 233,251 家企业，412,348 条有向关系；无人物节点、无事件。
@@ -35,7 +39,7 @@ export_meta.json
 
 ## 初版训练
 
-`config.target_count` 默认为 2,000，可设整数 6–20,000。
+`config.target_count` 默认为 2,000，可设整数 6–300,000，以 delivery.json 为准。
 按原始划分和标签比例稳定抽取目标，保留少数类；不足时使用全部目标。
 邻域按入边扩展两跳，每节点最多四个来源，保留选中节点间的有向关系。
 
