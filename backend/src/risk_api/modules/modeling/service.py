@@ -352,19 +352,55 @@ class ModelingService:
         ticket = await self.storage.presign_get(version.artifact["objectKey"], expires_in=60)
         return {"url": ticket.url, "sha256": version.artifact["sha256"], "expiresIn": 60}
 
-    async def predict(self, owner: str, identity: str, ids: list[str], request_id: str) -> dict:
+    async def predict(
+        self, owner: str, identity: str, ids: list[str], request_id: str, *, explain: bool = False
+    ) -> dict:
+        if explain and len(ids) != 1:
+            raise AppError(422, "MODEL_INPUT_INVALID", "Explanation requires exactly one company")
         version = await self.repository.version(owner, identity)
         result = await self.client.call(
-            "models/predict", {"jobId": version.run_id, "companyIds": ids}, request_id
+            "models/predict",
+            {"jobId": version.run_id, "companyIds": ids, **({"explain": True} if explain else {})},
+            request_id,
         )
         run = await self.repository.run(owner, version.run_id)
+        if explain and [row.get("companyId") for row in result.get("items", [])] != ids:
+            raise AppError(503, "MODEL_SERVICE_UNAVAILABLE", "Prediction identity mismatch")
         for prediction in result["items"]:
+            if explain:
+                explanation = prediction.get("explanation")
+                if not explanation:
+                    raise AppError(409, "MODEL_EXPLANATION_UNAVAILABLE", "Model has no explanation")
+                expected_source = version.artifact.get("profile", {}).get("sourceSha256")
+                if expected_source and explanation.get("sourceSha256") != expected_source:
+                    raise AppError(409, "MODELING_STATE_INVALID", "Explanation source mismatch")
+                metrics = version.artifact.get("report", {}).get("metrics", {})
+                warnings = ["分类分数未经校准，不是未来违约概率；解释不代表因果关系。"]
+                if metrics.get("rocAuc", 1) <= 0.5:
+                    warnings.append("该模型测试ROC-AUC不高于0.5，效果未达到可靠判断要求。")
+                matrix = metrics.get("confusionMatrix", [])
+                if len(matrix) == 2 and matrix[0][0] + matrix[1][0] == 0:
+                    warnings.append("该模型在测试集中将所有企业判为正例，不宜用于业务判断。")
+                explanation.update({
+                    "modelId": version.id, "modelName": version.name,
+                    "modelSha256": version.artifact["sha256"],
+                    "target": version.artifact.get("profile", {}).get("target", "Unknown target"),
+                    "evaluatedAt": datetime.now(UTC).isoformat(),
+                    "testMetrics": metrics, "warnings": warnings,
+                })
             statement = insert(EnterprisePrediction).values(
                 model_id=identity,
                 company_id=prediction["companyId"],
                 dataset_id=run.dataset_id,
                 result=prediction,
             )
-            await self.session.execute(statement.on_conflict_do_nothing())
+            if explain:
+                statement = statement.on_conflict_do_update(
+                    index_elements=[EnterprisePrediction.model_id, EnterprisePrediction.company_id],
+                    set_={"result": prediction},
+                )
+            else:
+                statement = statement.on_conflict_do_nothing()
+            await self.session.execute(statement)
         await self.session.commit()
         return result

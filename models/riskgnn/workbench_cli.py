@@ -121,9 +121,18 @@ def execute(request: dict, directory: Path, emit) -> dict:
     if operation == "predict":
         emit({"kind": "stage", "stage": "predicting", "message": ""})
         try:
-            items = Predictor(Path(inputs["model"]["path"])).predict(
-                parameters["company_ids"]
-            )
+            predictor = Predictor(Path(inputs["model"]["path"]))
+            items = predictor.predict(parameters["company_ids"])
+            if parameters.get("explain", False):
+                from riskgnn_plus.workbench.explanation import explain
+                from riskgnn_plus.workbench.predictor import PlusPredictor
+
+                if len(items) != 1 or not isinstance(predictor, PlusPredictor):
+                    raise OperationFailure(
+                        "MODEL_EXPLANATION_UNAVAILABLE",
+                        "Explanation requires one company and a RiskGNN+ model",
+                    )
+                items[0]["explanation"] = explain(predictor, items[0]["companyId"])
         except KeyError as error:
             raise OperationFailure("RISKGNN_COMPANY_NOT_FOUND", str(error)) from error
         return {"data": {"items": items}, "effective_config": parameters}

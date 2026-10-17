@@ -34,7 +34,7 @@ async def unexpected(request: Request, exc: Exception):
 async def execution_error(request: Request, exc: ExecutionError):
     status = (
         409
-        if exc.detail.code == "MODELING_CONFIG_STALE"
+        if exc.detail.code in {"MODELING_CONFIG_STALE", "MODEL_EXPLANATION_UNAVAILABLE"}
         else (
             422
             if exc.detail.code

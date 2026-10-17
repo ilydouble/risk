@@ -262,6 +262,10 @@
             "minItems": 1,
             "title": "Company Ids",
             "type": "array"
+          },
+          "explain": {
+            "type": "boolean",
+            "default": false
           }
         },
         "required": [
@@ -318,6 +322,9 @@
                 "type": "number",
                 "minimum": 0,
                 "maximum": 1
+              },
+              "explanation": {
+                "type": "object"
               }
             },
             "required": [

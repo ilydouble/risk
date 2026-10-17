@@ -5,6 +5,7 @@ from copy import deepcopy
 import numpy as np
 import pytest
 import torch
+from riskgnn_plus.workbench.explanation import explain
 from riskgnn_plus.workbench.network import PortablePlus
 from riskgnn_plus.workbench.preparation import FORMAT, prepare
 from riskgnn_plus.workbench.training import train
@@ -86,6 +87,16 @@ def test_real_plus_hypergraph_gradients_isolation_and_independent_reload(plus_so
     predictor = Predictor(model_dir)
     ids = list(predictor.index)[:3]
     result = predictor.predict(ids)
+    frozen_features = predictor.context["features"].copy()
+    explanation = explain(predictor, ids[0])
+    assert explanation["referenceSplit"] == "train"
+    assert {item["feature"] for item in explanation["features"]} == set(meta["features"])
+    assert all(np.isfinite(item["delta"]) for item in explanation["features"])
+    assert np.array_equal(predictor.context["features"], frozen_features)
+    assert predictor.predict(ids) == result
+    item = explanation["features"][0]
+    assert item["delta"] == pytest.approx(result[0]["probability"] - item["probabilityAtReference"])
+    assert asset_digest(model_dir) == before, "Explanation must not change model artifacts"
     reordered = predictor.predict(ids[::-1])
     assert result == reordered[::-1]
     for row in result:
@@ -118,3 +129,49 @@ def test_plus_configuration_explicitly_rejects_previous_algorithm():
     with pytest.raises(ConfigurationError, match="previous RiskGNN") as retired:
         validate_frozen(contract, legacy["resolvedParameters"], legacy)
     assert retired.value.stale
+
+
+def test_explanation_restores_feature_inputs_on_failure():
+    from types import SimpleNamespace
+
+    context = {"features": np.array([[1.0], [3.0], [5.0]], dtype=np.float32),
+               "splits": np.array(["train", "train", "test"])}
+    before = context["features"].copy()
+    calls = 0
+
+    def failing_model(nodes):
+        nonlocal calls
+        calls += 1
+        if calls > 1:
+            raise RuntimeError("intervention failed")
+        return SimpleNamespace(probabilities=torch.tensor([[0.5, 0.5]]))
+
+    predictor = SimpleNamespace(
+        context=context, index={"c": 2}, model=failing_model,
+        meta={"features": ["age"], "preprocessing": {}, "sourceSha256": "a" * 64},
+    )
+    with pytest.raises(RuntimeError, match="intervention failed"):
+        explain(predictor, "c")
+    assert np.array_equal(before, context["features"])
+
+
+def test_explanation_reference_uses_training_targets_only():
+    from types import SimpleNamespace
+
+    context = {"features": np.array([[1.0], [3.0], [100.0]], dtype=np.float32),
+               "splits": np.array(["train", "train", "test"])}
+
+    def model(nodes):
+        probability = torch.sigmoid(torch.tensor(context["features"][nodes, 0]))
+        return SimpleNamespace(probabilities=torch.stack((1 - probability, probability), dim=1))
+
+    predictor = SimpleNamespace(
+        context=context, index={"c": 2}, model=model,
+        meta={"features": ["age"], "preprocessing": {}, "sourceSha256": "a" * 64},
+    )
+    result = explain(predictor, "c")
+    item = result["features"][0]
+    assert result["referenceCount"] == 2
+    assert item["value"] == 100 and item["referenceValue"] == 2
+    assert item["probabilityAtReference"] == pytest.approx(float(torch.sigmoid(torch.tensor(2.0))))
+    assert item["delta"] > 0

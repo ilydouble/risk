@@ -24,7 +24,7 @@ async def predict(
         ResponsePredict.model_validate(
             {
                 "items": await runtime.predict(
-                    str(body.jobId), body.companyIds, request.state.request_id
+                    str(body.jobId), body.companyIds, request.state.request_id, explain=body.explain
                 )
             }
         )

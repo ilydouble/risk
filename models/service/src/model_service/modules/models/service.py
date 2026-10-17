@@ -64,7 +64,11 @@ class Runtime:
             finally:
                 shutil.rmtree(directory, ignore_errors=True)
 
-    async def predict(self, job_id: str, ids: list[str], request_id: str = "") -> list[dict]:
+    async def predict(
+        self, job_id: str, ids: list[str], request_id: str = "", *, explain: bool = False
+    ) -> list[dict]:
+        if explain and len(ids) != 1:
+            raise ValueError("Explanation requires exactly one company")
         if self.slot.locked():
             raise RuntimeError("Inference slot is busy")
         async with self.slot:
@@ -101,7 +105,7 @@ class Runtime:
                             format=result.get("format", "riskgnn-model-v2"),
                         )
                     },
-                    parameters={"company_ids": [item for item in ids]},
+                    parameters={"company_ids": [item for item in ids], "explain": explain},
                 ),
                 run_id=job_id,
                 attempt_id=uuid4().hex,

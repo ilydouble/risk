@@ -98,6 +98,12 @@ def test_registered_riskgnn_cli_train_independent_test_predict(real_training_zip
             [r["probability"] for r in predicted.data["items"]],
             atol=1e-7,
         )
+        _, explained = await operation(
+            Operation.PREDICT, "model", model, "riskgnn-plus-model-v1",
+            {"company_ids": [ids[0]], "explain": True},
+        )
+        assert explained.data["items"][0]["explanation"]["features"]
+        assert inventory(model) == before
         with pytest.raises(ComputationFailed) as error:
             await operation(
                 Operation.PREDICT,

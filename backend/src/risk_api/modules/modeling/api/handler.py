@@ -259,7 +259,7 @@ async def predict_model(
 ) -> ApiEnvelope[dto.ResponsePredictModel]:
     user = await owner(request, auth)
     result = await service.predict(
-        user, str(body.modelId), body.companyIds, request.state.request_id
+        user, str(body.modelId), body.companyIds, request.state.request_id, explain=body.explain
     )
     return success_response(dto.ResponsePredictModel(**result))
 

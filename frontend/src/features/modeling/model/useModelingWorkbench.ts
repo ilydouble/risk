@@ -233,6 +233,7 @@ export function useModelingWorkbench() {
       const response = await ModelingApi.requestPredictModel({
         modelId,
         companyIds,
+        explain: false,
       });
       setPredictionResult({ modelId, items: response.items });
     });

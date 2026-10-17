@@ -13,6 +13,7 @@ from sqlalchemy import func, select, text
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from risk_api.errors import AppError
+from risk_api.modules.assistant.tools.enterprise_risk import enterprise_risk_tools
 from risk_api.modules.auth.model import User
 from risk_api.modules.modeling.enterprise_data import FORMAT, records
 from risk_api.modules.modeling.enterprise_service import EnterpriseService
@@ -55,6 +56,13 @@ class Remote:
                     "fusedProbability": 0.3,
                     "uncertainty": 0.4,
                     "conflict": 0.1,
+                    **({"explanation": {
+                        "method": "training-median-intervention-v1",
+                        "referenceSplit": "train", "referenceCount": 10,
+                        "features": [{"feature": "age", "value": 3, "referenceValue": 2,
+                                      "probabilityAtReference": 0.2, "delta": 0.05}],
+                        "sourceSha256": "a" * 64, "limitations": ["not causal"],
+                    }} if body.get("explain") else {}),
                 }
                 for name in body["companyIds"]
             ]
@@ -233,11 +241,45 @@ def test_transactional_enterprise_import_and_prediction_binding():
                 )
                 await session.flush()
                 session.add(
-                    ModelVersion(id=model_id, owner_id=owner, run_id=run_id, name="M", artifact={})
+                    ModelVersion(id=model_id, owner_id=owner, run_id=run_id, name="M", artifact={
+                        "sha256": "b" * 64, "profile": {"target": "snapshot status"},
+                        "report": {"metrics": {"rocAuc": 0.45,
+                                                "confusionMatrix": [[0, 9], [0, 1]]}},
+                    })
                 )
                 await session.commit()
                 await modeling.predict(owner, model_id, ["c-1"], "test")
                 await modeling.predict(owner, model_id, ["c-1"], "again")
+                explained = await modeling.predict(owner, model_id, ["c-1"], "why", explain=True)
+                explanation = explained["items"][0]["explanation"]
+                assert explanation["modelId"] == model_id and explanation["evaluatedAt"]
+                assert len(explanation["warnings"]) == 3
+                await modeling.predict(owner, model_id, ["c-1"], "normal-after-explanation")
+                saved = await session.get(EnterprisePrediction, (model_id, "c-1"))
+                assert saved.result["explanation"] == explanation
+                with pytest.raises(AppError) as denied:
+                    await modeling.predict(other, model_id, ["c-1"], "deny", explain=True)
+                assert denied.value.status == 404
+                catalog = enterprise_risk_tools(sessions, owner, ModelingStorage(storage), Remote())
+                listing = await catalog[0]()
+                assert listing["content"][0]["json"]["models"][0]["modelId"] == model_id
+                foreign_catalog = enterprise_risk_tools(
+                    sessions, other, ModelingStorage(storage), Remote()
+                )
+                assert (await foreign_catalog[0]())["content"][0]["json"]["models"] == []
+                denied_tool = await foreign_catalog[1](model_id, "c-1")
+                assert denied_tool["status"] == "error"
+                version = await session.get(ModelVersion, model_id)
+                version.artifact = {**version.artifact, "profile": {
+                    "target": "snapshot status", "sourceSha256": "c" * 64,
+                }}
+                await session.commit()
+                with pytest.raises(AppError) as mismatch:
+                    await modeling.predict(owner, model_id, ["c-1"], "mismatch", explain=True)
+                assert mismatch.value.code == "MODELING_STATE_INVALID"
+                with pytest.raises(AppError) as too_many:
+                    await modeling.predict(owner, model_id, ["c-1", "c-2"], "batch", explain=True)
+                assert too_many.value.status == 422
                 assert (
                     await session.scalar(select(func.count()).select_from(EnterprisePrediction))
                     == 1

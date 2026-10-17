@@ -178,7 +178,7 @@ export function EnterpriseDataPanel({ work }: { work: Workbench }) {
                     }}>{t("modeling.enterprise.related")}</button>
                     {modelId && (
                       <button className={button} disabled={busy} onClick={() => void act(() =>
-                        requestPredictModel({ modelId, companyIds: [row.nodeId!] }),
+                        requestPredictModel({ modelId, companyIds: [row.nodeId!], explain: false }),
                       )}>{t("modeling.enterprise.predict")}</button>
                     )}
                     <span>{row.prediction

@@ -49,9 +49,11 @@ class InfrastructureProvider(Provider):
         return PreparationService(repository)
 
     @provide(scope=Scope.APP)
-    async def assistant_service(self) -> AsyncIterator[AssistantService]:
+    async def assistant_service(
+        self, storage: ModelingStorage, client: ModelClient
+    ) -> AsyncIterator[AssistantService]:
         service = AssistantService(
-            AssistantRepository(session_factory), StrandsRuntime(session_factory)
+            AssistantRepository(session_factory), StrandsRuntime(session_factory, storage, client)
         )
         try:
             yield service

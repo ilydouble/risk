@@ -25,6 +25,7 @@ WORKBENCH_ERRORS = {
                 "MODEL_STATE_INVALID",
                 "MODELING_CONFIG_STALE",
                 "MODELING_ENTERPRISE_UNAVAILABLE",
+                "MODEL_EXPLANATION_UNAVAILABLE",
             ],
         ]
     },

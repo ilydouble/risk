@@ -24,7 +24,12 @@ export default function ChatPage() {
     const next = new URLSearchParams(current); next.set("conversation", value); return next;
   }), [setParams]);
   const chat = useConversation(id, select);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(() => {
+    const dataset = params.get("riskDataset"), model = params.get("riskModel"), company = params.get("riskCompany");
+    return dataset && model && company
+      ? `请使用已发布模型 ${model}，预测数据集 ${dataset} 中企业 ${company} 的登记状态，并解释主要特征敏感性。请核对模型测试质量，保留警告，区分关系证据与风险贡献，并给出企业详情链接。`
+      : "";
+  });
   const openHistory = (value: string) => { setParams({ conversation: value }); setInput(""); };
   const mappingPrompt = "请读取当前案例的体检结果、已有报告和映射草稿，先总结主要问题，再从最影响导入的一个问题开始与我确认字段含义和处理规则。不要一次询问所有问题。";
   const scroll = useRef<HTMLDivElement>(null);
