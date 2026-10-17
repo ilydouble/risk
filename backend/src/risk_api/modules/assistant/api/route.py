@@ -11,9 +11,12 @@ from risk_api.modules.assistant.api.schemas import (
     ResponseCreateTurn,
     ResponseGetConversation,
     ResponseListConversations,
+    ResponseModelDefaults,
+    ResponseTestModel,
     ResponseTurnEvent,
 )
 from risk_api.modules.auth.errors import SESSION_ERRORS
+from risk_api.modules.chat.errors import CHAT_ERRORS
 from risk_api.shared.api.envelope import ApiEnvelope, ErrorEnvelope
 from risk_api.shared.api.response import COMMON_ERROR_RESPONSES
 
@@ -84,3 +87,10 @@ router.add_api_route(
         }
     },
 )
+
+for path, endpoint, response in (
+    ("/model-defaults", handler.model_defaults, ApiEnvelope[ResponseModelDefaults]),
+    ("/test-model", handler.test_model, ApiEnvelope[ResponseTestModel]),
+):
+    router.add_api_route(path, endpoint, methods=["POST"], response_model=response,
+                         responses=COMMON_ERROR_RESPONSES | SESSION_ERRORS | CHAT_ERRORS)

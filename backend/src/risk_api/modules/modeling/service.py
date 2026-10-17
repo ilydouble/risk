@@ -11,7 +11,6 @@ from sqlalchemy.exc import IntegrityError
 from stellarmesh_objectstorage import AsyncClient, StorageError
 
 from risk_api.errors import AppError
-from risk_api.modules.data_prep.model import Preparation
 from risk_api.modules.modeling.client import ModelClient
 from risk_api.modules.modeling.repository import ModelingRepository
 from risk_api.modules.modeling.workbench_model import (
@@ -63,23 +62,11 @@ class ModelingService:
 
     async def create_upload(
         self, owner: str, name: str, filename: str, content_type: str, size: int,
-        source_preparation_id: str | None = None, *, commit: bool = True,
+        *, commit: bool = True,
     ) -> dict[str, Any]:
         filename = PurePath(filename.replace("\\", "/")).name
         if not filename.lower().endswith(".zip") or not name.strip():
             raise AppError(422, "MODELING_FILE_INVALID", "A named ZIP dataset is required")
-        mapping_snapshot: dict = {}
-        if source_preparation_id:
-            source = await self.session.scalar(select(Preparation).where(
-                Preparation.id == source_preparation_id, Preparation.owner_id == owner,
-            ).with_for_update())
-            if source is None or not source.confirmed:
-                raise AppError(409, "MODELING_STATE_INVALID", "请先确认当前账号的映射方案")
-            mapping_snapshot = {
-                "sourceSha256": source.source_sha, "mapping": deepcopy(source.mapping),
-                "sourceUpdatedAt": source.updated_at.isoformat(),
-                "capturedAt": datetime.now(UTC).isoformat(),
-            }
         identity = str(uuid4())
         key = f"uploads/{owner}/{identity}.zip"
         try:
@@ -99,7 +86,6 @@ class ModelingService:
                 object_key=key,
                 content_type=content_type,
                 size=size,
-                source_preparation_id=source_preparation_id, mapping_snapshot=mapping_snapshot,
             )
         )
         if commit:

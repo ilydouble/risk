@@ -15,14 +15,14 @@ export default function EnterpriseSourcePicker({ source, sampleTerm = "样例" }
         </optgroup>
       </select>
       <button type="button" onClick={source.retry} className="text-xs text-primary-400">刷新数据源</button>
-      <Link className="text-xs text-primary-400" to="/data-prep">上传原始数据</Link>
+      <Link className="text-xs text-primary-400" to="/modeling">上传训练包</Link>
       {source.sources.length < source.total && <button type="button" onClick={source.loadMore} className="text-xs text-primary-400">加载更多数据集</button>}
     </div>
     <div className="mt-3 rounded-md bg-background-50 p-3 text-xs leading-6" role="status">
       {source.mode === "sample" ? <><strong className="text-amber-600">当前：新加坡{sampleTerm}数据</strong><p>共享的真实来源统计快照与固定样本，仅用于{sampleTerm}展示和验证；不是实时数据或在线模型预测。{sampleTerm}记录不计入“我的上传数据”。</p></>
         : <><strong className="text-primary-400">当前：我的上传数据 · {source.selected?.name ?? source.datasetId}</strong><p>仅统计当前账号所选数据集，不包含共享{sampleTerm}数据。已有标签与模型预测分开；没有已保存预测时不展示{sampleTerm}评分补位。</p></>}
     </div>
-    <p className="mt-2 text-xs text-foreground-500">概览和检索共用所选来源，来源切换时不合并统计。原始案例体检后保存；适配训练包校验并导入企业后才接入这两个页面。</p>
+    <p className="mt-2 text-xs text-foreground-500">概览和检索共用所选来源，来源切换时不合并统计。标准训练包校验并导入企业后接入这两个页面。</p>
     {source.loading && <p role="status" className="mt-2 text-xs text-foreground-500">正在加载数据源…</p>}
     {source.error && <p role="alert" className="mt-2 text-xs text-danger-500">数据源加载失败：{source.error}</p>}
   </section>;

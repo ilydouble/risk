@@ -39,9 +39,6 @@ class Settings:
         )
     )
     llm_thinking_enabled: bool = field(default_factory=_llm_thinking_enabled)
-    preparation_runner_url: str = getenv("PREPARATION_RUNNER_URL", "http://localhost:8090")
-    preparation_runner_token: str = getenv(
-        "PREPARATION_RUNNER_TOKEN", "local-preparation-change-me")
     model_service_url: str = getenv("RISK_GNN_URL", "http://localhost:8001")
     model_service_token: str = getenv("RISK_GNN_API_TOKEN", "local-riskgnn-change-me")
     model_storage_bucket: str = getenv("MODELING_STORAGE_BUCKET", "risk-modeling")

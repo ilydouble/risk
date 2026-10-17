@@ -55,6 +55,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/assistant/model-defaults": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Model Defaults */
+        post: operations["model_defaults_api_v1_assistant_model_defaults_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/assistant/test-model": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Test Model */
+        post: operations["test_model_api_v1_assistant_test_model_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/assistant/turns/cancel": {
         parameters: {
             query?: never;
@@ -219,431 +253,6 @@ export interface paths {
         put?: never;
         /** Search */
         post: operations["search_api_v1_company_search_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/conversion/get": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Get Conversion */
-        post: operations["get_conversion_api_v1_data_prep_conversion_get_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/conversion/import": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Import Conversion */
-        post: operations["import_conversion_api_v1_data_prep_conversion_import_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/conversion/save-plan": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Save Conversion Plan */
-        post: operations["save_conversion_plan_api_v1_data_prep_conversion_save_plan_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/conversion/trial": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Trial Conversion */
-        post: operations["trial_conversion_api_v1_data_prep_conversion_trial_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/delete": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Remove Preparation */
-        post: operations["remove_preparation_api_v1_data_prep_delete_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/delete-preview": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Preview Deletion */
-        post: operations["preview_deletion_api_v1_data_prep_delete_preview_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/export": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Export Preparation */
-        post: operations["export_preparation_api_v1_data_prep_export_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/get": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Get Preparation */
-        post: operations["get_preparation_api_v1_data_prep_get_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/inspect": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Inspect Data */
-        post: operations["inspect_data_api_v1_data_prep_inspect_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/inspect-case": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Inspect Case */
-        post: operations["inspect_case_api_v1_data_prep_inspect_case_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/list": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** List Preparations */
-        post: operations["list_preparations_api_v1_data_prep_list_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/model-defaults": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Model Defaults */
-        post: operations["model_defaults_api_v1_data_prep_model_defaults_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/save-mapping": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Save Mapping */
-        post: operations["save_mapping_api_v1_data_prep_save_mapping_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/save-report": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Save Report */
-        post: operations["save_report_api_v1_data_prep_save_report_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/script/artifact": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Artifact */
-        post: operations["artifact_api_v1_data_prep_script_artifact_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/script/catalog": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Catalog */
-        post: operations["catalog_api_v1_data_prep_script_catalog_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/script/create": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Create */
-        post: operations["create_api_v1_data_prep_script_create_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/script/deliver": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Deliver Artifact */
-        post: operations["deliver_artifact_api_v1_data_prep_script_deliver_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/script/generate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Generate */
-        post: operations["generate_api_v1_data_prep_script_generate_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/script/get": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Get */
-        post: operations["get_api_v1_data_prep_script_get_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/script/list": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** List Tasks */
-        post: operations["list_tasks_api_v1_data_prep_script_list_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/script/run": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Run */
-        post: operations["run_api_v1_data_prep_script_run_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/script/save": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Save */
-        post: operations["save_api_v1_data_prep_script_save_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/suggest-mapping": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Suggest Mapping */
-        post: operations["suggest_mapping_api_v1_data_prep_suggest_mapping_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/data-prep/test-model": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Test Model */
-        post: operations["test_model_api_v1_data_prep_test_model_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1402,16 +1011,6 @@ export interface components {
             /** Message */
             message: string;
         };
-        /** ApiEnvelope[ResponseConversionState] */
-        ApiEnvelope_ResponseConversionState_: {
-            /** Code */
-            code: number;
-            data: components["schemas"]["ResponseConversionState"] | null;
-            /** Internal Code */
-            internal_code: string;
-            /** Message */
-            message: string;
-        };
         /** ApiEnvelope[ResponseCreateConversation] */
         ApiEnvelope_ResponseCreateConversation_: {
             /** Code */
@@ -1642,16 +1241,6 @@ export interface components {
             /** Message */
             message: string;
         };
-        /** ApiEnvelope[ResponseInspectData] */
-        ApiEnvelope_ResponseInspectData_: {
-            /** Code */
-            code: number;
-            data: components["schemas"]["ResponseInspectData"] | null;
-            /** Internal Code */
-            internal_code: string;
-            /** Message */
-            message: string;
-        };
         /** ApiEnvelope[ResponseListConversations] */
         ApiEnvelope_ResponseListConversations_: {
             /** Code */
@@ -1697,16 +1286,6 @@ export interface components {
             /** Code */
             code: number;
             data: components["schemas"]["ResponseListModels"] | null;
-            /** Internal Code */
-            internal_code: string;
-            /** Message */
-            message: string;
-        };
-        /** ApiEnvelope[ResponseListPreparations] */
-        ApiEnvelope_ResponseListPreparations_: {
-            /** Code */
-            code: number;
-            data: components["schemas"]["ResponseListPreparations"] | null;
             /** Internal Code */
             internal_code: string;
             /** Message */
@@ -1782,36 +1361,6 @@ export interface components {
             /** Message */
             message: string;
         };
-        /** ApiEnvelope[ResponsePreparationBundle] */
-        ApiEnvelope_ResponsePreparationBundle_: {
-            /** Code */
-            code: number;
-            data: components["schemas"]["ResponsePreparationBundle"] | null;
-            /** Internal Code */
-            internal_code: string;
-            /** Message */
-            message: string;
-        };
-        /** ApiEnvelope[ResponsePreparationDeletion] */
-        ApiEnvelope_ResponsePreparationDeletion_: {
-            /** Code */
-            code: number;
-            data: components["schemas"]["ResponsePreparationDeletion"] | null;
-            /** Internal Code */
-            internal_code: string;
-            /** Message */
-            message: string;
-        };
-        /** ApiEnvelope[ResponsePreparation] */
-        ApiEnvelope_ResponsePreparation_: {
-            /** Code */
-            code: number;
-            data: components["schemas"]["ResponsePreparation"] | null;
-            /** Internal Code */
-            internal_code: string;
-            /** Message */
-            message: string;
-        };
         /** ApiEnvelope[ResponsePublishModel] */
         ApiEnvelope_ResponsePublishModel_: {
             /** Code */
@@ -1862,46 +1411,6 @@ export interface components {
             /** Message */
             message: string;
         };
-        /** ApiEnvelope[ResponseScriptCatalog] */
-        ApiEnvelope_ResponseScriptCatalog_: {
-            /** Code */
-            code: number;
-            data: components["schemas"]["ResponseScriptCatalog"] | null;
-            /** Internal Code */
-            internal_code: string;
-            /** Message */
-            message: string;
-        };
-        /** ApiEnvelope[ResponseScriptDelivery] */
-        ApiEnvelope_ResponseScriptDelivery_: {
-            /** Code */
-            code: number;
-            data: components["schemas"]["ResponseScriptDelivery"] | null;
-            /** Internal Code */
-            internal_code: string;
-            /** Message */
-            message: string;
-        };
-        /** ApiEnvelope[ResponseScriptTaskList] */
-        ApiEnvelope_ResponseScriptTaskList_: {
-            /** Code */
-            code: number;
-            data: components["schemas"]["ResponseScriptTaskList"] | null;
-            /** Internal Code */
-            internal_code: string;
-            /** Message */
-            message: string;
-        };
-        /** ApiEnvelope[ResponseScriptTask] */
-        ApiEnvelope_ResponseScriptTask_: {
-            /** Code */
-            code: number;
-            data: components["schemas"]["ResponseScriptTask"] | null;
-            /** Internal Code */
-            internal_code: string;
-            /** Message */
-            message: string;
-        };
         /** ApiEnvelope[ResponseSearchCompany] */
         ApiEnvelope_ResponseSearchCompany_: {
             /** Code */
@@ -1917,16 +1426,6 @@ export interface components {
             /** Code */
             code: number;
             data: components["schemas"]["ResponseSearchOverviewCompany"] | null;
-            /** Internal Code */
-            internal_code: string;
-            /** Message */
-            message: string;
-        };
-        /** ApiEnvelope[ResponseSuggestMapping] */
-        ApiEnvelope_ResponseSuggestMapping_: {
-            /** Code */
-            code: number;
-            data: components["schemas"]["ResponseSuggestMapping"] | null;
             /** Internal Code */
             internal_code: string;
             /** Message */
@@ -1954,43 +1453,6 @@ export interface components {
             startedAt: string;
             /** Status */
             status: string;
-        };
-        /** CaseFileProfile */
-        CaseFileProfile: {
-            /**
-             * Edgecount
-             * @default 0
-             */
-            edgeCount: number;
-            /** Filename */
-            filename: string;
-            /** Grouptypes */
-            groupTypes?: {
-                [key: string]: number;
-            };
-            /**
-             * Hyperedgecount
-             * @default 0
-             */
-            hyperedgeCount: number;
-            /**
-             * Nodecount
-             * @default 0
-             */
-            nodeCount: number;
-            /** Relationtypes */
-            relationTypes?: {
-                [key: string]: number;
-            };
-            /**
-             * Role
-             * @enum {string}
-             */
-            role: "enterprises" | "graph";
-            /** Sha256 */
-            sha256: string;
-            /** Size */
-            size: number;
         };
         /** ChatMessage */
         ChatMessage: {
@@ -2230,72 +1692,6 @@ export interface components {
             values?: {
                 [key: string]: 0 | 1;
             };
-        };
-        /** ConversionExample */
-        ConversionExample: {
-            /** After */
-            after: {
-                [key: string]: unknown;
-            };
-            /** Before */
-            before: {
-                [key: string]: string;
-            };
-            /** Line */
-            line: number;
-        };
-        /** ConversionIssue */
-        ConversionIssue: {
-            /** Filename */
-            filename?: string | null;
-            /** Line */
-            line: number;
-            /** Message */
-            message: string;
-            /** Path */
-            path?: string | null;
-        };
-        /** ConversionPlan */
-        ConversionPlan: {
-            /** Columns */
-            columns: components["schemas"]["ConversionColumn"][];
-            /**
-             * Deduplicate
-             * @default reject
-             * @enum {string}
-             */
-            deduplicate: "exact" | "reject";
-            /**
-             * Labelmeaning
-             * @default
-             */
-            labelMeaning: string;
-        };
-        /** ConversionReport */
-        ConversionReport: {
-            /** Counts */
-            counts?: {
-                [key: string]: number;
-            };
-            /** Duplicatecount */
-            duplicateCount: number;
-            /** Examples */
-            examples: components["schemas"]["ConversionExample"][];
-            graph?: components["schemas"]["GraphCoverage"] | null;
-            /** Inputcount */
-            inputCount: number;
-            /** Issuecount */
-            issueCount: number;
-            /** Issues */
-            issues: components["schemas"]["ConversionIssue"][];
-            /** Outputcount */
-            outputCount: number;
-            /** Passed */
-            passed: boolean;
-            /** Rejectedcount */
-            rejectedCount: number;
-            /** Warnings */
-            warnings: string[];
         };
         /** CorrelationDTO */
         CorrelationDTO: {
@@ -2721,22 +2117,6 @@ export interface components {
             /** Message */
             message: string;
         };
-        /** ErrorEnvelope[Literal[404], Literal['DATA_PREP_NOT_FOUND', 'DATA_PREP_TASK_NOT_FOUND']] */
-        ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___: {
-            /**
-             * Code
-             * @constant
-             */
-            code: 404;
-            data: components["schemas"]["ErrorDetail"];
-            /**
-             * Internal Code
-             * @enum {string}
-             */
-            internal_code: "DATA_PREP_NOT_FOUND" | "DATA_PREP_TASK_NOT_FOUND";
-            /** Message */
-            message: string;
-        };
         /** ErrorEnvelope[Literal[404], Literal['DATA_QA_SCOPE_NOT_FOUND']] */
         ErrorEnvelope_Literal_404__Literal__DATA_QA_SCOPE_NOT_FOUND___: {
             /**
@@ -2865,22 +2245,6 @@ export interface components {
             /** Message */
             message: string;
         };
-        /** ErrorEnvelope[Literal[409], Literal['DATA_PREP_PLAN_STALE', 'DATA_PREP_DELETE_BLOCKED', 'DATA_PREP_DELETE_STALE', 'DATA_PREP_SCRIPT_STALE', 'DATA_PREP_SCRIPT_BUSY']] */
-        ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___: {
-            /**
-             * Code
-             * @constant
-             */
-            code: 409;
-            data: components["schemas"]["ErrorDetail"];
-            /**
-             * Internal Code
-             * @enum {string}
-             */
-            internal_code: "DATA_PREP_PLAN_STALE" | "DATA_PREP_DELETE_BLOCKED" | "DATA_PREP_DELETE_STALE" | "DATA_PREP_SCRIPT_STALE" | "DATA_PREP_SCRIPT_BUSY";
-            /** Message */
-            message: string;
-        };
         /** ErrorEnvelope[Literal[409], Literal['DOCUMENT_SIZE_MISMATCH']] */
         ErrorEnvelope_Literal_409__Literal__DOCUMENT_SIZE_MISMATCH___: {
             /**
@@ -2942,22 +2306,6 @@ export interface components {
              * @enum {string}
              */
             internal_code: "MODELING_STATE_INVALID" | "MODELING_DATASET_BUSY" | "MODELING_CONFIRMATION_MISMATCH" | "MODELING_DATASET_NOT_READY" | "MODELING_UPLOAD_INCOMPLETE" | "MODEL_STATE_INVALID" | "MODELING_CONFIG_STALE" | "MODELING_ENTERPRISE_UNAVAILABLE" | "MODEL_EXPLANATION_UNAVAILABLE";
-            /** Message */
-            message: string;
-        };
-        /** ErrorEnvelope[Literal[422], Literal['DATA_PREP_SIZE_INVALID', 'DATA_PREP_ENCODING_INVALID', 'DATA_PREP_HEADER_INVALID', 'DATA_PREP_HEADER_DUPLICATE', 'DATA_PREP_ROW_INVALID', 'DATA_PREP_ROWS_EXCEEDED', 'DATA_PREP_EMPTY', 'DATA_PREP_FORMAT_UNSUPPORTED', 'DATA_PREP_CONTENT_INVALID', 'DATA_PREP_MAPPING_INVALID', 'DATA_PREP_RULE_INVALID', 'DATA_PREP_GRAPH_INVALID', 'DATA_PREP_SCRIPT_INVALID']] */
-        ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___: {
-            /**
-             * Code
-             * @constant
-             */
-            code: 422;
-            data: components["schemas"]["ErrorDetail"];
-            /**
-             * Internal Code
-             * @enum {string}
-             */
-            internal_code: "DATA_PREP_SIZE_INVALID" | "DATA_PREP_ENCODING_INVALID" | "DATA_PREP_HEADER_INVALID" | "DATA_PREP_HEADER_DUPLICATE" | "DATA_PREP_ROW_INVALID" | "DATA_PREP_ROWS_EXCEEDED" | "DATA_PREP_EMPTY" | "DATA_PREP_FORMAT_UNSUPPORTED" | "DATA_PREP_CONTENT_INVALID" | "DATA_PREP_MAPPING_INVALID" | "DATA_PREP_RULE_INVALID" | "DATA_PREP_GRAPH_INVALID" | "DATA_PREP_SCRIPT_INVALID";
             /** Message */
             message: string;
         };
@@ -3073,22 +2421,6 @@ export interface components {
             /** Message */
             message: string;
         };
-        /** ErrorEnvelope[Literal[502], Literal['DATA_PREP_SUGGESTION_INVALID', 'DATA_PREP_SCRIPT_AGENT_INVALID', 'CHAT_OUTPUT_LIMIT', 'CHAT_AUTH_FAILED', 'CHAT_UPSTREAM_ERROR', 'CHAT_INVALID_RESPONSE']] */
-        ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___: {
-            /**
-             * Code
-             * @constant
-             */
-            code: 502;
-            data: components["schemas"]["ErrorDetail"];
-            /**
-             * Internal Code
-             * @enum {string}
-             */
-            internal_code: "DATA_PREP_SUGGESTION_INVALID" | "DATA_PREP_SCRIPT_AGENT_INVALID" | "CHAT_OUTPUT_LIMIT" | "CHAT_AUTH_FAILED" | "CHAT_UPSTREAM_ERROR" | "CHAT_INVALID_RESPONSE";
-            /** Message */
-            message: string;
-        };
         /** ErrorEnvelope[Literal[503], Literal['ASSISTANT_CAPACITY']] */
         ErrorEnvelope_Literal_503__Literal__ASSISTANT_CAPACITY___: {
             /**
@@ -3150,22 +2482,6 @@ export interface components {
              * @enum {string}
              */
             internal_code: "CHAT_NOT_CONFIGURED" | "CHAT_UNREACHABLE";
-            /** Message */
-            message: string;
-        };
-        /** ErrorEnvelope[Literal[503], Literal['CHAT_NOT_CONFIGURED', 'CHAT_UNREACHABLE', 'DATA_PREP_RUNNER_UNAVAILABLE']] */
-        ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___: {
-            /**
-             * Code
-             * @constant
-             */
-            code: 503;
-            data: components["schemas"]["ErrorDetail"];
-            /**
-             * Internal Code
-             * @enum {string}
-             */
-            internal_code: "CHAT_NOT_CONFIGURED" | "CHAT_UNREACHABLE" | "DATA_PREP_RUNNER_UNAVAILABLE";
             /** Message */
             message: string;
         };
@@ -3448,68 +2764,6 @@ export interface components {
             /** Value */
             value: number;
         };
-        /** FieldMapping */
-        FieldMapping: {
-            /** Field */
-            field: string;
-            /**
-             * Method
-             * @default
-             */
-            method: string;
-            /**
-             * Reason
-             * @default
-             */
-            reason: string;
-            /**
-             * Role
-             * @enum {string}
-             */
-            role: "identity" | "feature" | "label" | "relation" | "time" | "ignore" | "unknown";
-            /**
-             * Target
-             * @default
-             */
-            target: string;
-        };
-        /** FieldProfile */
-        FieldProfile: {
-            /**
-             * Daterate
-             * @default 0
-             */
-            dateRate: number;
-            /** Distinctcount */
-            distinctCount: number;
-            /** Examples */
-            examples: string[];
-            /**
-             * Leadingzerocount
-             * @default 0
-             */
-            leadingZeroCount: number;
-            /** Missingcount */
-            missingCount: number;
-            /** Name */
-            name: string;
-            /** Numericrate */
-            numericRate: number;
-            numericSummary?: components["schemas"]["NumericSummary"] | null;
-            /** Topvalues */
-            topValues?: components["schemas"]["ValueFrequency"][];
-            /**
-             * Typehint
-             * @default text
-             * @enum {string}
-             */
-            typeHint: "empty" | "identifier" | "number" | "date" | "mixed" | "category" | "text";
-            /**
-             * Whitespacecount
-             * @default 0
-             */
-            whitespaceCount: number;
-        };
         /** FileDTO */
         FileDTO: {
             /** Path */
@@ -3548,23 +2802,6 @@ export interface components {
             /** Rowcount */
             rowCount: number;
         };
-        /** GraphCoverage */
-        GraphCoverage: {
-            /** Conflictcount */
-            conflictCount: number;
-            /** Duplicatecount */
-            duplicateCount: number;
-            /** Files */
-            files: components["schemas"]["GraphFileCoverage"][];
-            /** Matchedcount */
-            matchedCount: number;
-            /** Missingcount */
-            missingCount: number;
-            /** Missingids */
-            missingIds: string[];
-            /** Referencedcount */
-            referencedCount: number;
-        };
         /** GraphData */
         GraphData: {
             /** Edges */
@@ -3593,17 +2830,6 @@ export interface components {
              * @enum {string}
              */
             type: "equity" | "control" | "guarantee" | "supply" | "trade" | "loan";
-        };
-        /** GraphFileCoverage */
-        GraphFileCoverage: {
-            /** Filename */
-            filename: string;
-            /** Matchedcount */
-            matchedCount: number;
-            /** Missingcount */
-            missingCount: number;
-            /** Referencedcount */
-            referencedCount: number;
         };
         /** GraphNode */
         GraphNode: {
@@ -3661,52 +2887,6 @@ export interface components {
          */
         ItemStatus: "running" | "completed" | "failed" | "cancelled";
         JsonValue: unknown;
-        /** KeyCandidate */
-        KeyCandidate: {
-            /** Duplicatevalues */
-            duplicateValues: number;
-            /** Field */
-            field: string;
-            /**
-             * Kind
-             * @enum {string}
-             */
-            kind: "entity_key" | "relation_key";
-            /** Nonmissingcount */
-            nonMissingCount: number;
-        };
-        /** LabelCandidate */
-        LabelCandidate: {
-            /** Distinctcount */
-            distinctCount: number;
-            /** Field */
-            field: string;
-            /** Minorityshare */
-            minorityShare?: number | null;
-            /** Missingcount */
-            missingCount: number;
-            /** Values */
-            values: components["schemas"]["ValueFrequency"][];
-        };
-        /** MappingSuggestion */
-        MappingSuggestion: {
-            /** Field */
-            field: string;
-            /**
-             * Method
-             * @default
-             */
-            method: string;
-            /** Reason */
-            reason: string;
-            /** Role */
-            role: string;
-            /**
-             * Target
-             * @default
-             */
-            target: string;
-        };
         /** ModelCapabilityDTO */
         ModelCapabilityDTO: {
             /** Datasetformats */
@@ -3762,23 +2942,6 @@ export interface components {
             sha256: string;
             /** Size */
             size: number;
-        };
-        /** NumericSummary */
-        NumericSummary: {
-            /** Max */
-            max: string;
-            /** Mean */
-            mean: string;
-            /** Median */
-            median: string;
-            /** Min */
-            min: string;
-            /** Outliercount */
-            outlierCount: number;
-            /** Q1 */
-            q1: string;
-            /** Q3 */
-            q3: string;
         };
         /** OverviewCompanyFactsDTO */
         OverviewCompanyFactsDTO: {
@@ -4061,34 +3224,6 @@ export interface components {
             /** Warnings */
             warnings: string[];
         };
-        /** PreparationDeletionCounts */
-        PreparationDeletionCounts: {
-            /** Datasets */
-            datasets: number;
-            /** Files */
-            files: number;
-            /** Predictions */
-            predictions: number;
-            /** Records */
-            records: {
-                [key: string]: number;
-            };
-            /** Reports */
-            reports: number;
-            /** Tasks */
-            tasks: number;
-        };
-        /** QualityIssue */
-        QualityIssue: {
-            /** Code */
-            code: string;
-            /** Count */
-            count: number;
-            /** Field */
-            field?: string | null;
-            /** Message */
-            message: string;
-        };
         /** RelatedParty */
         RelatedParty: {
             /** Exposure */
@@ -4135,13 +3270,6 @@ export interface components {
              * Format: uuid
              */
             turnId: string;
-        };
-        /** RequestCaseFile */
-        RequestCaseFile: {
-            /** Contentbase64 */
-            contentBase64: string;
-            /** Filename */
-            filename: string;
         };
         /** RequestChat */
         RequestChat: {
@@ -4194,8 +3322,6 @@ export interface components {
             name: string;
             /** Size */
             size: number;
-            /** Sourcepreparationid */
-            sourcePreparationId?: string | null;
         };
         /** RequestCreateDownload */
         RequestCreateDownload: {
@@ -4229,24 +3355,6 @@ export interface components {
              */
             runnerId: "riskgnn";
         };
-        /** RequestCreateScriptTask */
-        RequestCreateScriptTask: {
-            /** Datasetkey */
-            datasetKey: string;
-            /** Datasetversion */
-            datasetVersion: string;
-            /** Files */
-            files: components["schemas"]["RequestScriptFile"][];
-            /** Name */
-            name: string;
-            /** Preset */
-            preset: string;
-            /**
-             * Requirements
-             * @default
-             */
-            requirements: string;
-        };
         /** RequestCreateTurn */
         RequestCreateTurn: {
             connection?: components["schemas"]["ModelConnection"] | null;
@@ -4255,7 +3363,6 @@ export interface components {
              * Format: uuid
              */
             conversationId: string;
-            dataPrep?: components["schemas"]["RequestDataPrepContext"] | null;
             /**
              * Lang
              * @default zh
@@ -4286,13 +3393,6 @@ export interface components {
             /** Size */
             size: number;
         };
-        /** RequestDataPrepContext */
-        RequestDataPrepContext: {
-            /** Filename */
-            filename: string;
-            profile: components["schemas"]["ResponseInspectData"];
-            report?: components["schemas"]["ResponseSuggestMapping"] | null;
-        };
         /** RequestDataQACatalog */
         RequestDataQACatalog: Record<string, never>;
         /** RequestDeleteModel */
@@ -4307,21 +3407,6 @@ export interface components {
              * Format: uuid
              */
             modelId: string;
-        };
-        /** RequestDeletePreparation */
-        RequestDeletePreparation: {
-            /**
-             * Confirm
-             * @constant
-             */
-            confirm: true;
-            /**
-             * Preparationid
-             * Format: uuid
-             */
-            preparationId: string;
-            /** Revision */
-            revision: string;
         };
         /** RequestDownloadModel */
         RequestDownloadModel: {
@@ -4347,29 +3432,6 @@ export interface components {
         RequestEnterpriseSources: {
             pagination?: components["schemas"]["PageRequest"];
         };
-        /** RequestGenerateScript */
-        RequestGenerateScript: {
-            connection?: components["schemas"]["ModelConnection"] | null;
-            /**
-             * Maxtokens
-             * @default 4096
-             */
-            maxTokens: number;
-            /** Message */
-            message: string;
-            /** Revision */
-            revision: number;
-            /**
-             * Runafter
-             * @default false
-             */
-            runAfter: boolean;
-            /**
-             * Taskid
-             * Format: uuid
-             */
-            taskId: string;
-        };
         /** RequestGetCompany */
         RequestGetCompany: {
             /** Id */
@@ -4382,16 +3444,6 @@ export interface components {
              * Format: uuid
              */
             conversationId: string;
-        };
-        /** RequestGetConversion */
-        RequestGetConversion: {
-            /**
-             * Preparationid
-             * Format: uuid
-             */
-            preparationId: string;
-            /** Taskid */
-            taskId?: string | null;
         };
         /** RequestGetDataset */
         RequestGetDataset: {
@@ -4452,14 +3504,6 @@ export interface components {
             /** Datasetid */
             datasetId: string;
         };
-        /** RequestGetPreparation */
-        RequestGetPreparation: {
-            /**
-             * Preparationid
-             * Format: uuid
-             */
-            preparationId: string;
-        };
         /** RequestGetRun */
         RequestGetRun: {
             /**
@@ -4479,32 +3523,6 @@ export interface components {
              */
             lang: "zh" | "en";
         };
-        /** RequestGetScriptTask */
-        RequestGetScriptTask: {
-            /**
-             * Taskid
-             * Format: uuid
-             */
-            taskId: string;
-        };
-        /** RequestImportConversion */
-        RequestImportConversion: {
-            /**
-             * Confirm
-             * @constant
-             */
-            confirm: true;
-            /**
-             * Preparationid
-             * Format: uuid
-             */
-            preparationId: string;
-            /**
-             * Taskid
-             * Format: uuid
-             */
-            taskId: string;
-        };
         /** RequestImportEnterprises */
         RequestImportEnterprises: {
             /**
@@ -4512,20 +3530,6 @@ export interface components {
              * Format: uuid
              */
             datasetId: string;
-        };
-        /** RequestInspectCase */
-        RequestInspectCase: {
-            /** Files */
-            files: components["schemas"]["RequestCaseFile"][];
-            /** Preparationid */
-            preparationId?: string | null;
-        };
-        /** RequestInspectData */
-        RequestInspectData: {
-            /** Contentbase64 */
-            contentBase64: string;
-            /** Filename */
-            filename: string;
         };
         /** RequestListConversations */
         RequestListConversations: Record<string, never>;
@@ -4567,14 +3571,6 @@ export interface components {
         /** RequestListModels */
         RequestListModels: {
             pagination?: components["schemas"]["PageRequest"];
-        };
-        /** RequestListPreparations */
-        RequestListPreparations: {
-            /**
-             * Workbenchonly
-             * @default false
-             */
-            workbenchOnly: boolean;
         };
         /** RequestListRuns */
         RequestListRuns: {
@@ -4663,90 +3659,6 @@ export interface components {
              */
             runId: string;
         };
-        /** RequestRunScriptTask */
-        RequestRunScriptTask: {
-            /** Revision */
-            revision: number;
-            /**
-             * Taskid
-             * Format: uuid
-             */
-            taskId: string;
-        };
-        /** RequestSaveConversionPlan */
-        RequestSaveConversionPlan: {
-            plan: components["schemas"]["ConversionPlan"];
-            /**
-             * Preparationid
-             * Format: uuid
-             */
-            preparationId: string;
-        };
-        /** RequestSavePreparationMapping */
-        RequestSavePreparationMapping: {
-            /**
-             * Confirmed
-             * @default false
-             */
-            confirmed: boolean;
-            /**
-             * Handoff
-             * @default false
-             */
-            handoff: boolean;
-            /** Mapping */
-            mapping: components["schemas"]["FieldMapping"][];
-            /**
-             * Preparationid
-             * Format: uuid
-             */
-            preparationId: string;
-        };
-        /** RequestSavePreparationReport */
-        RequestSavePreparationReport: {
-            /**
-             * Preparationid
-             * Format: uuid
-             */
-            preparationId: string;
-            report: components["schemas"]["ResponseSuggestMapping"];
-        };
-        /** RequestSaveScriptTask */
-        RequestSaveScriptTask: {
-            /** Requirements */
-            requirements: string;
-            /** Revision */
-            revision: number;
-            /** Script */
-            script: string;
-            /**
-             * Taskid
-             * Format: uuid
-             */
-            taskId: string;
-        };
-        /** RequestScriptArtifact */
-        RequestScriptArtifact: {
-            /**
-             * Runid
-             * Format: uuid
-             */
-            runId: string;
-            /**
-             * Taskid
-             * Format: uuid
-             */
-            taskId: string;
-        };
-        /** RequestScriptCatalog */
-        RequestScriptCatalog: Record<string, never>;
-        /** RequestScriptFile */
-        RequestScriptFile: {
-            /** Contentbase64 */
-            contentBase64: string;
-            /** Filename */
-            filename: string;
-        };
         /** RequestSearchCompany */
         RequestSearchCompany: {
             /**
@@ -4799,16 +3711,6 @@ export interface components {
              * @enum {string}
              */
             sort: "name_asc" | "age_desc" | "relations_desc";
-        };
-        /** RequestSuggestMapping */
-        RequestSuggestMapping: {
-            connection?: components["schemas"]["ModelConnection"] | null;
-            /**
-             * Maxtokens
-             * @default 4096
-             */
-            maxTokens: number;
-            profile: components["schemas"]["ResponseInspectData"];
         };
         /** RequestTestModel */
         RequestTestModel: {
@@ -4891,39 +3793,6 @@ export interface components {
         /** ResponseCompleteUpload */
         ResponseCompleteUpload: {
             document: components["schemas"]["DocumentDTO"];
-        };
-        /** ResponseConversionState */
-        ResponseConversionState: {
-            plan: components["schemas"]["ConversionPlan"] | null;
-            /** Plancurrent */
-            planCurrent: boolean;
-            /** Preparationid */
-            preparationId: string;
-            task: components["schemas"]["ResponseConversionTask"] | null;
-        };
-        /** ResponseConversionTask */
-        ResponseConversionTask: {
-            /** Current */
-            current: boolean;
-            /** Datasetid */
-            datasetId: string | null;
-            /** Engineversion */
-            engineVersion: string;
-            /** Id */
-            id: string;
-            /** Outputsha256 */
-            outputSha256: string;
-            plan: components["schemas"]["ConversionPlan"];
-            /** Planversion */
-            planVersion: string;
-            report: components["schemas"]["ConversionReport"];
-            /** Sourcesha256 */
-            sourceSha256: string;
-            /**
-             * Status
-             * @enum {string}
-             */
-            status: "ready" | "blocked" | "imported";
         };
         /** ResponseCreateConversation */
         ResponseCreateConversation: {
@@ -5223,40 +4092,6 @@ export interface components {
             /** Sha256 */
             sha256: string;
         };
-        /** ResponseInspectData */
-        ResponseInspectData: {
-            /** Casefiles */
-            caseFiles?: components["schemas"]["CaseFileProfile"][];
-            /** Duplicaterows */
-            duplicateRows: number;
-            /** Fields */
-            fields: components["schemas"]["FieldProfile"][];
-            /** Issues */
-            issues?: components["schemas"]["QualityIssue"][];
-            /** Keycandidates */
-            keyCandidates?: components["schemas"]["KeyCandidate"][];
-            /** Labelcandidates */
-            labelCandidates?: components["schemas"]["LabelCandidate"][];
-            /** Preparationid */
-            preparationId?: string | null;
-            /** Previouspreparationid */
-            previousPreparationId?: string | null;
-            /** Primaryfilename */
-            primaryFilename?: string | null;
-            /** Rowcount */
-            rowCount: number;
-            /**
-             * Rowswithmissing
-             * @default 0
-             */
-            rowsWithMissing: number;
-            /** Samplerows */
-            sampleRows: {
-                [key: string]: string;
-            }[];
-            /** Sha256 */
-            sha256: string;
-        };
         /** ResponseListConversations */
         ResponseListConversations: {
             /** Conversations */
@@ -5309,13 +4144,6 @@ export interface components {
             pageSize: number;
             /** Total */
             total: number;
-        };
-        /** ResponseListPreparations */
-        ResponseListPreparations: {
-            /** Items */
-            items: components["schemas"]["ResponsePreparation"][];
-            /** Truncated */
-            truncated: boolean;
         };
         /** ResponseListRuns */
         ResponseListRuns: {
@@ -5372,49 +4200,6 @@ export interface components {
             /** Items */
             items: components["schemas"]["PredictionDTO"][];
         };
-        /** ResponsePreparation */
-        ResponsePreparation: {
-            /** Confirmed */
-            confirmed: boolean;
-            /** Filename */
-            filename: string;
-            /** Id */
-            id: string;
-            /** Inworkbench */
-            inWorkbench: boolean;
-            /** Mapping */
-            mapping: components["schemas"]["FieldMapping"][];
-            profile: components["schemas"]["ResponseInspectData"];
-            report?: components["schemas"]["ResponseSuggestMapping"] | null;
-            /**
-             * Updatedat
-             * Format: date-time
-             */
-            updatedAt: string;
-        };
-        /** ResponsePreparationBundle */
-        ResponsePreparationBundle: {
-            /** Contentbase64 */
-            contentBase64: string;
-            /** Filename */
-            filename: string;
-        };
-        /** ResponsePreparationDeletion */
-        ResponsePreparationDeletion: {
-            /** Blockedreason */
-            blockedReason: string | null;
-            counts: components["schemas"]["PreparationDeletionCounts"];
-            /** Datasetids */
-            datasetIds: string[];
-            /** Deleted */
-            deleted: boolean;
-            /** Filename */
-            filename: string;
-            /** Preparationid */
-            preparationId: string;
-            /** Revision */
-            revision: string;
-        };
         /** ResponsePublishModel */
         ResponsePublishModel: {
             model: components["schemas"]["ModelVersionDTO"];
@@ -5441,192 +4226,6 @@ export interface components {
             /** Items */
             items: components["schemas"]["EventDTO"][];
         };
-        /** ResponseScriptCatalog */
-        ResponseScriptCatalog: {
-            /** Items */
-            items: components["schemas"]["ResponseScriptTarget"][];
-            /** Runtimeimage */
-            runtimeImage: string;
-        };
-        /** ResponseScriptDelivery */
-        ResponseScriptDelivery: {
-            /** Datasetid */
-            datasetId: string;
-        };
-        /** ResponseScriptInputFile */
-        ResponseScriptInputFile: {
-            /** Filename */
-            filename: string;
-            /** Sha256 */
-            sha256: string;
-            /** Size */
-            size: number;
-        };
-        /** ResponseScriptMessage */
-        ResponseScriptMessage: {
-            /** Content */
-            content: string;
-            /**
-             * Role
-             * @enum {string}
-             */
-            role: "user" | "assistant";
-            /** Tooltrace */
-            toolTrace?: string[];
-        };
-        /** ResponseScriptOutputFile */
-        ResponseScriptOutputFile: {
-            /** Path */
-            path: string;
-            /** Size */
-            size: number;
-        };
-        /** ResponseScriptRun */
-        ResponseScriptRun: {
-            /** Artifactsha256 */
-            artifactSha256: string | null;
-            /**
-             * Createdat
-             * Format: date-time
-             */
-            createdAt: string;
-            /** Error */
-            error: string;
-            /** Finishedat */
-            finishedAt: string | null;
-            /** Id */
-            id: string;
-            /** Log */
-            log: string;
-            result: components["schemas"]["ResponseScriptRunResult"];
-            /** Revision */
-            revision: number;
-            /** Script */
-            script: string;
-            /** Scriptsha256 */
-            scriptSha256: string;
-            /** Startedat */
-            startedAt: string | null;
-            /**
-             * Status
-             * @enum {string}
-             */
-            status: "queued" | "running" | "ready" | "failed";
-        };
-        /** ResponseScriptRunResult */
-        ResponseScriptRunResult: {
-            /**
-             * Datasetversion
-             * @default
-             */
-            datasetVersion: string;
-            /**
-             * Deliverycompleted
-             * @default false
-             */
-            deliveryCompleted: boolean;
-            /** Deliverydatasetid */
-            deliveryDatasetId?: string | null;
-            /** Exitcode */
-            exitCode?: number | null;
-            /** Files */
-            files?: components["schemas"]["ResponseScriptOutputFile"][];
-            /**
-             * Runtimeimage
-             * @default
-             */
-            runtimeImage: string;
-            /** Validation */
-            validation?: {
-                [key: string]: unknown;
-            };
-        };
-        /** ResponseScriptTarget */
-        ResponseScriptTarget: {
-            adapter: components["schemas"]["ResponseScriptTargetAdapter"];
-            /** Config */
-            config: {
-                [key: string]: unknown;
-            };
-            /** Configschema */
-            configSchema: {
-                [key: string]: unknown;
-            };
-            /** Dataset */
-            dataset: {
-                [key: string]: unknown;
-            };
-            /** Description */
-            description: string;
-            /** Guide */
-            guide: string;
-            /** Inputschemacode */
-            inputSchemaCode: string;
-            /** Preset */
-            preset: string;
-            /** Requiredfiles */
-            requiredFiles: string[];
-        };
-        /** ResponseScriptTargetAdapter */
-        ResponseScriptTargetAdapter: {
-            /** Id */
-            id: string;
-            /** Version */
-            version: string;
-        };
-        /** ResponseScriptTask */
-        ResponseScriptTask: {
-            /** Datasetkey */
-            datasetKey: string;
-            /** Datasetversion */
-            datasetVersion: string;
-            /** Files */
-            files: components["schemas"]["ResponseScriptInputFile"][];
-            /** Id */
-            id: string;
-            /** Messages */
-            messages: components["schemas"]["ResponseScriptMessage"][];
-            /** Name */
-            name: string;
-            /** Preset */
-            preset: string;
-            /** Requirements */
-            requirements: string;
-            /** Revision */
-            revision: number;
-            /** Runs */
-            runs: components["schemas"]["ResponseScriptRun"][];
-            /** Script */
-            script: string;
-            /** Sourcesha256 */
-            sourceSha256: string;
-            /**
-             * Updatedat
-             * Format: date-time
-             */
-            updatedAt: string;
-        };
-        /** ResponseScriptTaskList */
-        ResponseScriptTaskList: {
-            /** Items */
-            items: components["schemas"]["ResponseScriptTaskSummary"][];
-        };
-        /** ResponseScriptTaskSummary */
-        ResponseScriptTaskSummary: {
-            /** Id */
-            id: string;
-            /** Name */
-            name: string;
-            /** Preset */
-            preset: string;
-            /** Revision */
-            revision: number;
-            /**
-             * Updatedat
-             * Format: date-time
-             */
-            updatedAt: string;
-        };
         /** ResponseSearchCompany */
         ResponseSearchCompany: {
             /** Items */
@@ -5652,26 +4251,6 @@ export interface components {
             sampling: components["schemas"]["OverviewSamplingDTO"];
             /** Total */
             total: number;
-        };
-        /** ResponseSuggestMapping */
-        ResponseSuggestMapping: {
-            /** Nextchecks */
-            nextChecks?: string[];
-            /** Qualityfindings */
-            qualityFindings?: string[];
-            /** Questions */
-            questions: string[];
-            /**
-             * Reportmarkdown
-             * @default
-             */
-            reportMarkdown: string;
-            /** Suggestions */
-            suggestions: components["schemas"]["MappingSuggestion"][];
-            /** Summary */
-            summary: string;
-            /** Tooltrace */
-            toolTrace?: string[];
         };
         /** ResponseTestModel */
         ResponseTestModel: {
@@ -5945,13 +4524,6 @@ export interface components {
              */
             text: string;
         };
-        /** ValueFrequency */
-        ValueFrequency: {
-            /** Count */
-            count: number;
-            /** Value */
-            value: string;
-        };
     };
     responses: never;
     parameters: never;
@@ -6218,6 +4790,180 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__ASSISTANT_CAPACITY___"];
+                };
+            };
+        };
+    };
+    model_defaults_api_v1_assistant_model_defaults_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestModelDefaults"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseModelDefaults_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Bad Gateway */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE___"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
+                };
+            };
+        };
+    };
+    test_model_api_v1_assistant_test_model_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestTestModel"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseTestModel_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
+                };
+            };
+            /** @description Bad Gateway */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE___"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
                 };
             };
         };
@@ -6971,2595 +5717,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"] | components["schemas"]["ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"];
-                };
-            };
-        };
-    };
-    get_conversion_api_v1_data_prep_conversion_get_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestGetConversion"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponseConversionState_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
-                };
-            };
-        };
-    };
-    import_conversion_api_v1_data_prep_conversion_import_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestImportConversion"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponseConversionState_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
-                };
-            };
-        };
-    };
-    save_conversion_plan_api_v1_data_prep_conversion_save_plan_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestSaveConversionPlan"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponseConversionState_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
-                };
-            };
-        };
-    };
-    trial_conversion_api_v1_data_prep_conversion_trial_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestGetPreparation"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponseConversionState_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
-                };
-            };
-        };
-    };
-    remove_preparation_api_v1_data_prep_delete_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestDeletePreparation"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponsePreparationDeletion_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
-                };
-            };
-        };
-    };
-    preview_deletion_api_v1_data_prep_delete_preview_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestGetPreparation"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponsePreparationDeletion_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
-                };
-            };
-        };
-    };
-    export_preparation_api_v1_data_prep_export_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestGetPreparation"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponsePreparationBundle_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
-                };
-            };
-        };
-    };
-    get_preparation_api_v1_data_prep_get_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestGetPreparation"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponsePreparation_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
-                };
-            };
-        };
-    };
-    inspect_data_api_v1_data_prep_inspect_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestInspectData"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponseInspectData_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
-                };
-            };
-        };
-    };
-    inspect_case_api_v1_data_prep_inspect_case_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestInspectCase"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponsePreparation_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
-                };
-            };
-        };
-    };
-    list_preparations_api_v1_data_prep_list_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestListPreparations"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponseListPreparations_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
-                };
-            };
-        };
-    };
-    model_defaults_api_v1_data_prep_model_defaults_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestModelDefaults"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponseModelDefaults_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__AUTH_STORE_UNAVAILABLE___"] | components["schemas"]["ErrorEnvelope_Literal_503__Literal__AUTH_STORE_INVALID___"];
-                };
-            };
-        };
-    };
-    save_mapping_api_v1_data_prep_save_mapping_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestSavePreparationMapping"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponsePreparation_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
-                };
-            };
-        };
-    };
-    save_report_api_v1_data_prep_save_report_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestSavePreparationReport"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponsePreparation_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
-                };
-            };
-        };
-    };
-    artifact_api_v1_data_prep_script_artifact_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestScriptArtifact"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponsePreparationBundle_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
-                };
-            };
-        };
-    };
-    catalog_api_v1_data_prep_script_catalog_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestScriptCatalog"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponseScriptCatalog_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
-                };
-            };
-        };
-    };
-    create_api_v1_data_prep_script_create_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestCreateScriptTask"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponseScriptTask_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
-                };
-            };
-        };
-    };
-    deliver_artifact_api_v1_data_prep_script_deliver_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestScriptArtifact"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponseScriptDelivery_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
-                };
-            };
-        };
-    };
-    generate_api_v1_data_prep_script_generate_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestGenerateScript"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponseScriptTask_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
-                };
-            };
-        };
-    };
-    get_api_v1_data_prep_script_get_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestGetScriptTask"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponseScriptTask_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
-                };
-            };
-        };
-    };
-    list_tasks_api_v1_data_prep_script_list_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestScriptCatalog"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponseScriptTaskList_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
-                };
-            };
-        };
-    };
-    run_api_v1_data_prep_script_run_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestRunScriptTask"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponseScriptTask_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
-                };
-            };
-        };
-    };
-    save_api_v1_data_prep_script_save_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestSaveScriptTask"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponseScriptTask_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
-                };
-            };
-        };
-    };
-    suggest_mapping_api_v1_data_prep_suggest_mapping_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestSuggestMapping"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponseSuggestMapping_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
-                };
-            };
-        };
-    };
-    test_model_api_v1_data_prep_test_model_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestTestModel"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiEnvelope_ResponseTestModel_"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_403__Literal__REQUEST_ORIGIN_INVALID___"];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DATA_PREP_NOT_FOUND____DATA_PREP_TASK_NOT_FOUND___"];
-                };
-            };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DATA_PREP_PLAN_STALE____DATA_PREP_DELETE_BLOCKED____DATA_PREP_DELETE_STALE____DATA_PREP_SCRIPT_STALE____DATA_PREP_SCRIPT_BUSY___"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__DATA_PREP_SIZE_INVALID____DATA_PREP_ENCODING_INVALID____DATA_PREP_HEADER_INVALID____DATA_PREP_HEADER_DUPLICATE____DATA_PREP_ROW_INVALID____DATA_PREP_ROWS_EXCEEDED____DATA_PREP_EMPTY____DATA_PREP_FORMAT_UNSUPPORTED____DATA_PREP_CONTENT_INVALID____DATA_PREP_MAPPING_INVALID____DATA_PREP_RULE_INVALID____DATA_PREP_GRAPH_INVALID____DATA_PREP_SCRIPT_INVALID___"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_500__Literal__INTERNAL_ERROR___"];
-                };
-            };
-            /** @description Bad Gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_502__Literal__DATA_PREP_SUGGESTION_INVALID____DATA_PREP_SCRIPT_AGENT_INVALID____CHAT_OUTPUT_LIMIT____CHAT_AUTH_FAILED____CHAT_UPSTREAM_ERROR____CHAT_INVALID_RESPONSE___"];
-                };
-            };
-            /** @description Service Unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__CHAT_NOT_CONFIGURED____CHAT_UNREACHABLE____DATA_PREP_RUNNER_UNAVAILABLE___"];
-                };
-            };
-            /** @description Gateway Timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT___"];
                 };
             };
         };
@@ -12638,7 +8795,6 @@ export interface operations {
 export type RequestAskData = components["schemas"]["RequestAskData"];
 export type RequestCancelRun = components["schemas"]["RequestCancelRun"];
 export type RequestCancelTurn = components["schemas"]["RequestCancelTurn"];
-export type RequestCaseFile = components["schemas"]["RequestCaseFile"];
 export type RequestChat = components["schemas"]["RequestChat"];
 export type RequestClearDataset = components["schemas"]["RequestClearDataset"];
 export type RequestCompleteDatasetUpload = components["schemas"]["RequestCompleteDatasetUpload"];
@@ -12647,40 +8803,29 @@ export type RequestCreateConversation = components["schemas"]["RequestCreateConv
 export type RequestCreateDatasetUpload = components["schemas"]["RequestCreateDatasetUpload"];
 export type RequestCreateDownload = components["schemas"]["RequestCreateDownload"];
 export type RequestCreateRun = components["schemas"]["RequestCreateRun"];
-export type RequestCreateScriptTask = components["schemas"]["RequestCreateScriptTask"];
 export type RequestCreateTurn = components["schemas"]["RequestCreateTurn"];
 export type RequestCreateUpload = components["schemas"]["RequestCreateUpload"];
-export type RequestDataPrepContext = components["schemas"]["RequestDataPrepContext"];
 export type RequestDataQACatalog = components["schemas"]["RequestDataQACatalog"];
 export type RequestDeleteModel = components["schemas"]["RequestDeleteModel"];
-export type RequestDeletePreparation = components["schemas"]["RequestDeletePreparation"];
 export type RequestDownloadModel = components["schemas"]["RequestDownloadModel"];
 export type RequestEnterpriseCompany = components["schemas"]["RequestEnterpriseCompany"];
 export type RequestEnterpriseSources = components["schemas"]["RequestEnterpriseSources"];
-export type RequestGenerateScript = components["schemas"]["RequestGenerateScript"];
 export type RequestGetCompany = components["schemas"]["RequestGetCompany"];
 export type RequestGetConversation = components["schemas"]["RequestGetConversation"];
-export type RequestGetConversion = components["schemas"]["RequestGetConversion"];
 export type RequestGetDataset = components["schemas"]["RequestGetDataset"];
 export type RequestGetDatasetGraph = components["schemas"]["RequestGetDatasetGraph"];
 export type RequestGetGraph = components["schemas"]["RequestGetGraph"];
 export type RequestGetModel = components["schemas"]["RequestGetModel"];
 export type RequestGetOverview = components["schemas"]["RequestGetOverview"];
 export type RequestGetOverviewCompany = components["schemas"]["RequestGetOverviewCompany"];
-export type RequestGetPreparation = components["schemas"]["RequestGetPreparation"];
 export type RequestGetRun = components["schemas"]["RequestGetRun"];
 export type RequestGetScore = components["schemas"]["RequestGetScore"];
-export type RequestGetScriptTask = components["schemas"]["RequestGetScriptTask"];
-export type RequestImportConversion = components["schemas"]["RequestImportConversion"];
 export type RequestImportEnterprises = components["schemas"]["RequestImportEnterprises"];
-export type RequestInspectCase = components["schemas"]["RequestInspectCase"];
-export type RequestInspectData = components["schemas"]["RequestInspectData"];
 export type RequestListConversations = components["schemas"]["RequestListConversations"];
 export type RequestListDatasets = components["schemas"]["RequestListDatasets"];
 export type RequestListDocuments = components["schemas"]["RequestListDocuments"];
 export type RequestListEnterpriseRecords = components["schemas"]["RequestListEnterpriseRecords"];
 export type RequestListModels = components["schemas"]["RequestListModels"];
-export type RequestListPreparations = components["schemas"]["RequestListPreparations"];
 export type RequestListRuns = components["schemas"]["RequestListRuns"];
 export type RequestLogin = components["schemas"]["RequestLogin"];
 export type RequestLogout = components["schemas"]["RequestLogout"];
@@ -12693,17 +8838,8 @@ export type RequestRegister = components["schemas"]["RequestRegister"];
 export type RequestRerun = components["schemas"]["RequestRerun"];
 export type RequestRunConfiguration = components["schemas"]["RequestRunConfiguration"];
 export type RequestRunEvents = components["schemas"]["RequestRunEvents"];
-export type RequestRunScriptTask = components["schemas"]["RequestRunScriptTask"];
-export type RequestSaveConversionPlan = components["schemas"]["RequestSaveConversionPlan"];
-export type RequestSavePreparationMapping = components["schemas"]["RequestSavePreparationMapping"];
-export type RequestSavePreparationReport = components["schemas"]["RequestSavePreparationReport"];
-export type RequestSaveScriptTask = components["schemas"]["RequestSaveScriptTask"];
-export type RequestScriptArtifact = components["schemas"]["RequestScriptArtifact"];
-export type RequestScriptCatalog = components["schemas"]["RequestScriptCatalog"];
-export type RequestScriptFile = components["schemas"]["RequestScriptFile"];
 export type RequestSearchCompany = components["schemas"]["RequestSearchCompany"];
 export type RequestSearchOverviewCompany = components["schemas"]["RequestSearchOverviewCompany"];
-export type RequestSuggestMapping = components["schemas"]["RequestSuggestMapping"];
 export type RequestTestModel = components["schemas"]["RequestTestModel"];
 export type RequestTurnEvents = components["schemas"]["RequestTurnEvents"];
 export type ResponseAskData = components["schemas"]["ResponseAskData"];
@@ -12713,8 +8849,6 @@ export type ResponseChat = components["schemas"]["ResponseChat"];
 export type ResponseClearDataset = components["schemas"]["ResponseClearDataset"];
 export type ResponseCompleteDatasetUpload = components["schemas"]["ResponseCompleteDatasetUpload"];
 export type ResponseCompleteUpload = components["schemas"]["ResponseCompleteUpload"];
-export type ResponseConversionState = components["schemas"]["ResponseConversionState"];
-export type ResponseConversionTask = components["schemas"]["ResponseConversionTask"];
 export type ResponseCreateConversation = components["schemas"]["ResponseCreateConversation"];
 export type ResponseCreateDatasetUpload = components["schemas"]["ResponseCreateDatasetUpload"];
 export type ResponseCreateDownload = components["schemas"]["ResponseCreateDownload"];
@@ -12739,13 +8873,11 @@ export type ResponseGetOverviewCompany = components["schemas"]["ResponseGetOverv
 export type ResponseGetRun = components["schemas"]["ResponseGetRun"];
 export type ResponseGetScore = components["schemas"]["ResponseGetScore"];
 export type ResponseImportEnterprises = components["schemas"]["ResponseImportEnterprises"];
-export type ResponseInspectData = components["schemas"]["ResponseInspectData"];
 export type ResponseListConversations = components["schemas"]["ResponseListConversations"];
 export type ResponseListDatasets = components["schemas"]["ResponseListDatasets"];
 export type ResponseListDocuments = components["schemas"]["ResponseListDocuments"];
 export type ResponseListEnterpriseRecords = components["schemas"]["ResponseListEnterpriseRecords"];
 export type ResponseListModels = components["schemas"]["ResponseListModels"];
-export type ResponseListPreparations = components["schemas"]["ResponseListPreparations"];
 export type ResponseListRuns = components["schemas"]["ResponseListRuns"];
 export type ResponseLogin = components["schemas"]["ResponseLogin"];
 export type ResponseLogout = components["schemas"]["ResponseLogout"];
@@ -12753,28 +8885,12 @@ export type ResponseMe = components["schemas"]["ResponseMe"];
 export type ResponseModelDefaults = components["schemas"]["ResponseModelDefaults"];
 export type ResponseModelingCapabilities = components["schemas"]["ResponseModelingCapabilities"];
 export type ResponsePredictModel = components["schemas"]["ResponsePredictModel"];
-export type ResponsePreparation = components["schemas"]["ResponsePreparation"];
-export type ResponsePreparationBundle = components["schemas"]["ResponsePreparationBundle"];
-export type ResponsePreparationDeletion = components["schemas"]["ResponsePreparationDeletion"];
 export type ResponsePublishModel = components["schemas"]["ResponsePublishModel"];
 export type ResponseRegister = components["schemas"]["ResponseRegister"];
 export type ResponseRerun = components["schemas"]["ResponseRerun"];
 export type ResponseRunConfiguration = components["schemas"]["ResponseRunConfiguration"];
 export type ResponseRunEvents = components["schemas"]["ResponseRunEvents"];
-export type ResponseScriptCatalog = components["schemas"]["ResponseScriptCatalog"];
-export type ResponseScriptDelivery = components["schemas"]["ResponseScriptDelivery"];
-export type ResponseScriptInputFile = components["schemas"]["ResponseScriptInputFile"];
-export type ResponseScriptMessage = components["schemas"]["ResponseScriptMessage"];
-export type ResponseScriptOutputFile = components["schemas"]["ResponseScriptOutputFile"];
-export type ResponseScriptRun = components["schemas"]["ResponseScriptRun"];
-export type ResponseScriptRunResult = components["schemas"]["ResponseScriptRunResult"];
-export type ResponseScriptTarget = components["schemas"]["ResponseScriptTarget"];
-export type ResponseScriptTargetAdapter = components["schemas"]["ResponseScriptTargetAdapter"];
-export type ResponseScriptTask = components["schemas"]["ResponseScriptTask"];
-export type ResponseScriptTaskList = components["schemas"]["ResponseScriptTaskList"];
-export type ResponseScriptTaskSummary = components["schemas"]["ResponseScriptTaskSummary"];
 export type ResponseSearchCompany = components["schemas"]["ResponseSearchCompany"];
 export type ResponseSearchOverviewCompany = components["schemas"]["ResponseSearchOverviewCompany"];
-export type ResponseSuggestMapping = components["schemas"]["ResponseSuggestMapping"];
 export type ResponseTestModel = components["schemas"]["ResponseTestModel"];
 export type ResponseTurnEvent = components["schemas"]["ResponseTurnEvent"];

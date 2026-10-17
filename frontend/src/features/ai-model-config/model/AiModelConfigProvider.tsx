@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { requestModelDefaults } from "@/features/data-prep/api/dataPrepApi";
+import { requestModelDefaults } from "@/features/ai-model-config/api/modelConfigApi";
 import { AiModelContext } from "./context";
 import type { ResponseModelDefaults } from "@/shared/api/generated/schema";
 import { handleApiError } from "@/shared/api/http";

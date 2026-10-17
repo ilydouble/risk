@@ -5,8 +5,6 @@ import AuthGate from "@/app/router/AuthGate";
 import NotFound from "@/pages/NotFound";
 
 const Overview = lazy(() => import("@/pages/overview/page"));
-const DataPrepPage = lazy(() => import("@/pages/data-prep/page"));
-const LegacyPreparationPage = lazy(() => import("@/pages/data-prep/LegacyPreparationPage"));
 const AiSettingsPage = lazy(() => import("@/pages/ai-settings/page"));
 const ChatPage = lazy(() => import("@/pages/chat/page"));
 const SearchPage = lazy(() => import("@/pages/search/page"));
@@ -38,8 +36,6 @@ const routes: RouteObject[] = [
       children: [
         { path: "/", element: load(<Overview />) },
         { path: "/data-qa", element: <Navigate to="/chat" replace /> },
-        { path: "/data-prep", element: load(<DataPrepPage />) },
-        { path: "/data-prep/legacy", element: load(<LegacyPreparationPage />) },
         { path: "/settings/ai-model", element: load(<AiSettingsPage />) },
         { path: "/chat", element: load(<ChatPage />) },
         { path: "/search", element: load(<SearchPage />) },

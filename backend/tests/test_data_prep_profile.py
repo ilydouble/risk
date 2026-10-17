@@ -1,7 +1,6 @@
 import pytest
 
 from risk_api.errors import AppError
-from risk_api.modules.data_prep.api.schemas import ResponseInspectData
 from risk_api.modules.data_prep.profile import inspect_csv
 
 
@@ -46,19 +45,19 @@ def test_inspect_csv_reports_dirty_values_and_candidate_keys() -> None:
         ("008", "bad", "not-a-date", "B"),
     ]
     content = "company_id,amount,as_of,category\n" + "".join(",".join(row) + "\n" for row in rows)
-    profile = ResponseInspectData.model_validate(inspect_csv(content.encode()))
-    fields = {field.name: field for field in profile.fields}
-    codes = {(item.code, item.field) for item in profile.issues}
+    profile = inspect_csv(content.encode())
+    fields = {field["name"]: field for field in profile["fields"]}
+    codes = {(item["code"], item["field"]) for item in profile["issues"]}
 
-    assert profile.rowCount == 9
-    assert fields["company_id"].typeHint == "identifier"
-    assert fields["company_id"].leadingZeroCount == 9
-    assert profile.keyCandidates[0].duplicateValues == 1
-    assert fields["amount"].typeHint == "mixed"
-    assert fields["amount"].numericSummary is not None
-    assert fields["amount"].numericSummary.outlierCount == 1
-    assert fields["amount"].topValues[0].count == 3
-    assert fields["category"].typeHint == "category"
+    assert profile["rowCount"] == 9
+    assert fields["company_id"]["typeHint"] == "identifier"
+    assert fields["company_id"]["leadingZeroCount"] == 9
+    assert profile["keyCandidates"][0]["duplicateValues"] == 1
+    assert fields["amount"]["typeHint"] == "mixed"
+    assert fields["amount"]["numericSummary"] is not None
+    assert fields["amount"]["numericSummary"]["outlierCount"] == 1
+    assert fields["amount"]["topValues"][0]["count"] == 3
+    assert fields["category"]["typeHint"] == "category"
     assert ("MIXED_NUMERIC", "amount") in codes
     assert ("MIXED_DATE", "as_of") in codes
     assert ("DUPLICATE_KEY", "company_id") in codes
@@ -69,10 +68,12 @@ def test_inspect_csv_detects_imbalanced_candidate_without_assigning_label_meanin
     content = "company_id,adverse_status\n" + "".join(
         f"{index:03d},{int(index >= 95)}\n" for index in range(100)
     )
-    profile = ResponseInspectData.model_validate(inspect_csv(content.encode()))
 
-    candidate = profile.labelCandidates[0]
-    assert candidate.field == "adverse_status"
-    assert candidate.minorityShare == 0.05
-    assert {(value.value, value.count) for value in candidate.values} == {("0", 95), ("1", 5)}
-    assert any(issue.code == "POSSIBLE_CLASS_IMBALANCE" for issue in profile.issues)
+    profile = inspect_csv(content.encode())
+    candidate = profile["labelCandidates"][0]
+    assert candidate["field"] == "adverse_status"
+    assert candidate["minorityShare"] == 0.05
+    assert {(value["value"], value["count"]) for value in candidate["values"]} == {
+        ("0", 95), ("1", 5),
+    }
+    assert any(issue["code"] == "POSSIBLE_CLASS_IMBALANCE" for issue in profile["issues"])

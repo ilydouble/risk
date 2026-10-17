@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { requestTestModel } from "@/features/data-prep/api/dataPrepApi";
+import { requestTestModel } from "@/features/ai-model-config/api/modelConfigApi";
 import { useAiModelConfig } from "@/features/ai-model-config/model/context";
 import { handleApiError } from "@/shared/api/http";
 
@@ -34,7 +34,7 @@ export default function AiSettingsPage() {
   }
 
   return <div className="mx-auto max-w-4xl space-y-5">
-    <header><h1 className="text-2xl font-semibold">智能体模型设置</h1><p className="mt-2 text-sm text-foreground-500">配置用于数据准备和模型问答的语言模型。RiskGNN+ 的训练和测试在模型工作台中进行。</p></header>
+    <header><h1 className="text-2xl font-semibold">智能体模型设置</h1><p className="mt-2 text-sm text-foreground-500">配置用于模型问答的语言模型。RiskGNN+ 的训练和测试在模型工作台中进行。</p></header>
     <section className={`${panel} space-y-4`}>
       <label className="flex items-center gap-2 text-sm"><input type="radio" name="model-source" checked={!config.custom} onChange={() => { config.setCustom(false); setStatus(""); }} />使用后端默认模型 {config.defaults ? `· ${config.defaults.model}${config.defaults.keyConfigured ? "" : "（未配置密钥）"}` : config.loading ? "· 正在读取…" : "· 读取失败"}</label>
       <label className="flex items-center gap-2 text-sm"><input type="radio" name="model-source" checked={config.custom} onChange={() => { config.setCustom(true); setStatus(""); }} />自定义兼容 Chat Completions 的模型</label>
@@ -49,15 +49,15 @@ export default function AiSettingsPage() {
           {[1024, 2048, 4096, 8192, 16384].map((value) => <option key={value} value={value}>{value.toLocaleString()} tokens</option>)}
         </select>
       </label>
-      <p className="text-xs text-foreground-500">默认 4,096 tokens，设置后自动保存在此浏览器，同时用于模型问答和字段建议。实际可用长度受模型服务限制；设置更高也可能使回答更慢或超时。</p>
+      <p className="text-xs text-foreground-500">默认 4,096 tokens，设置后自动保存在此浏览器，用于模型问答。实际可用长度受模型服务限制；设置更高也可能使回答更慢或超时。</p>
       <div className="flex flex-wrap items-center gap-3">
         {config.custom && <button type="button" className="rounded-md border border-background-300 px-4 py-2 text-sm" disabled={!config.url.trim() || !config.model.trim()} onClick={() => { config.save(); setStatus("地址和模型名已保存在此浏览器。密钥只在本次登录页面中保留。"); }}>保存地址和模型名</button>}
         <button type="button" className={button} disabled={busy || (!config.custom && !config.defaults) || (config.custom && (!config.url.trim() || !config.model.trim()))} onClick={() => void test()}>{busy ? "测试中…" : "测试连接"}</button>
         {status && <span role="status" className="text-sm text-foreground-500">{status}</span>}
       </div>
       {error && <p role="alert" className="text-sm text-red-500">{error}</p>}
-      <p className="text-xs text-foreground-500">自定义密钥只保留在本次登录的页面内存中，刷新后需重新输入。数据准备的字段统计、常见值以及模型问答的对话内容会发送到所选模型地址。</p>
+      <p className="text-xs text-foreground-500">自定义密钥只保留在本次登录的页面内存中，刷新后需重新输入。模型问答的对话内容会发送到所选模型地址。</p>
     </section>
-    <div className="flex gap-4"><Link className="text-sm text-primary-400 underline" to="/chat">前往模型问答</Link><Link className="text-sm text-primary-400 underline" to="/data-prep">返回数据准备</Link></div>
+    <div className="flex gap-4"><Link className="text-sm text-primary-400 underline" to="/chat">前往模型问答</Link></div>
   </div>;
 }

@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { displayEnterpriseProperty } from "@/entities/modeling/lib/enterpriseDisplay";
 import type { ResponseEnterpriseProvenance } from "@/shared/api/generated/schema";
 import Card from "@/shared/ui/Card";
@@ -13,7 +12,6 @@ export function EnterpriseSourceTrace({ provenance }: { provenance?: ResponseEnt
     {available && <>
       <div className="flex flex-wrap items-start justify-between gap-3 text-sm">
         <div><p className="break-all font-medium">原文件：{provenance.filename}</p><p className="mt-2 text-foreground-500">第 {provenance.sourceRow} 条数据记录 · CSV 第 {provenance.sourceLine}{provenance.sourceEndLine !== provenance.sourceLine ? `–${provenance.sourceEndLine}` : ""} 行 · 表头不计入数据记录数</p></div>
-        {provenance.preparationId && <Link className="text-xs text-primary-400 underline" to={`/data-prep?preparation=${encodeURIComponent(provenance.preparationId)}`}>打开源案例（当前方案）→</Link>}
       </div>
       {Boolean(provenance.duplicateCount) && <p className="rounded-lg bg-background-50 p-3 text-xs leading-6">本企业另有 {provenance.duplicateCount} 条内容完全相同的原始记录已去重，未生成额外企业。重复行起始位置：{provenance.duplicateLines?.join("、")}{provenance.duplicatesTruncated ? "（仅展示前100条）" : ""}。</p>}
       {provenance.labelMeaning && <p className="text-sm leading-6">导入时标签定义：{provenance.labelMeaning}</p>}

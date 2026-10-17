@@ -159,7 +159,6 @@ export function useModelingWorkbench() {
       try {
         setUploadPercent(0);
         await uploadDatasetPackage(file, name, {
-          sourcePreparationId: params.get("preparation") || undefined,
           progress: setUploadPercent,
           created: id => select("dataset", id),
         });

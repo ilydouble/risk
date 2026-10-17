@@ -8,18 +8,22 @@ from risk_api.modules.assistant.api.schemas import (
     RequestCreateTurn,
     RequestGetConversation,
     RequestListConversations,
+    RequestModelDefaults,
+    RequestTestModel,
     RequestTurnEvents,
     ResponseCancelTurn,
     ResponseCreateConversation,
     ResponseCreateTurn,
     ResponseGetConversation,
     ResponseListConversations,
+    ResponseModelDefaults,
+    ResponseTestModel,
 )
-from risk_api.modules.assistant.assets import SessionAsset
 from risk_api.modules.assistant.runtime import ModelSettings
 from risk_api.modules.assistant.service import AssistantService
 from risk_api.modules.auth.api.handler import authorize_request
 from risk_api.modules.auth.service import AuthService
+from risk_api.modules.chat.service import ChatService
 from risk_api.shared.api.envelope import ApiEnvelope
 from risk_api.shared.api.response import success_response
 from risk_api.shared.config import settings
@@ -75,26 +79,11 @@ async def create_turn(
 ) -> ApiEnvelope[ResponseCreateTurn]:
     user = await authorize_request(request, auth)
     connection = body.connection
-    session_assets = []
-    if body.dataPrep is not None and not body.dataPrep.profile.preparationId:
-        context = body.dataPrep
-        case_id = f"case:{context.profile.sha256}"
-        session_assets.append(SessionAsset(
-            case_id, context.filename, "uploaded_case", context.profile.rowCount,
-            {"profile": context.profile.model_dump()},
-        ))
-        if context.report is not None:
-            session_assets.append(SessionAsset(
-                f"report:{context.profile.sha256}", f"{context.filename} · 数据分析报告",
-                "analysis_report", None,
-                {"sourceAssetId": case_id, "report": context.report.model_dump()},
-            ))
     model = ModelSettings(
         url=connection.url if connection else settings.llm_url,
         model=connection.model if connection else settings.llm_model,
         api_key=connection.apiKey if connection else settings.llm_api_key,
         max_tokens=body.maxTokens,
-        session_assets=session_assets,
         connection_type=settings.llm_connection_type,
         thinking_enabled=settings.llm_thinking_enabled,
         lang=body.lang,
@@ -135,3 +124,38 @@ async def turn_events(
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache, no-transform", "X-Accel-Buffering": "no"},
     )
+
+
+async def model_defaults(
+    _: RequestModelDefaults, request: Request, auth: FromDishka[AuthService]
+) -> ApiEnvelope[ResponseModelDefaults]:
+    await authorize_request(request, auth)
+    return success_response(
+        ResponseModelDefaults(
+            url=settings.llm_url,
+            model=settings.llm_model,
+            keyConfigured=bool(settings.llm_api_key.strip()),
+        )
+    )
+
+
+async def test_model(
+    body: RequestTestModel,
+    request: Request,
+    auth: FromDishka[AuthService],
+    chat: FromDishka[ChatService],
+) -> ApiEnvelope[ResponseTestModel]:
+    await authorize_request(request, auth)
+    selected = chat
+    if body.connection is not None:
+        selected = chat.configured(
+            body.connection.url, body.connection.apiKey, body.connection.model
+        )
+    reply = await selected.complete(
+        [
+            {"role": "system", "content": "Reply with OK."},
+            {"role": "user", "content": "OK"},
+        ],
+        max_tokens=128,
+    )
+    return success_response(ResponseTestModel(model=reply.model, elapsedMs=reply.elapsed_ms))

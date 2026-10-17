@@ -152,3 +152,13 @@ def test_graph_depth_contract() -> None:
             assert response.status_code == 422
             assert response.json()["code"] == 422
             assert response.json()["internal_code"] == "REQUEST_INVALID"
+
+
+def test_data_preparation_is_removed_and_model_settings_remain() -> None:
+    schema = create_app().openapi()
+    assert not any(path.startswith("/api/v1/data-prep") for path in schema["paths"])
+    for path in ("/api/v1/assistant/model-defaults", "/api/v1/assistant/test-model"):
+        assert "post" in schema["paths"][path]
+    assert "dataPrep" not in schema["components"]["schemas"]["RequestCreateTurn"]["properties"]
+    upload = schema["components"]["schemas"]["RequestCreateDatasetUpload"]["properties"]
+    assert "sourcePreparationId" not in upload

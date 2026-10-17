@@ -193,7 +193,6 @@ class EventDTO(BaseModel):
 
 
 class RequestCreateDatasetUpload(BaseModel):
-    sourcePreparationId: UUID | None = None
     name: str = Field(min_length=1, max_length=128, pattern=r"\S")
     filename: str = Field(min_length=1, max_length=255)
     contentType: str = Field(min_length=1, max_length=128)

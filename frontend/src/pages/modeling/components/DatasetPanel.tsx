@@ -2,7 +2,6 @@ import { DatasetClearButton } from "@/features/modeling/ui/DatasetClearButton";
 import { EnterpriseDataPanel } from "./EnterpriseDataPanel";
 import { DatasetAnalysisPanel } from "./DatasetAnalysisPanel";
 import { CreateExperimentForm } from "./CreateExperimentForm";
-import { PreparationHandoffPanel } from "./PreparationHandoffPanel";
 import { useRef, useState } from "react";
 import { inspectPackage } from "@/features/dataset-delivery/lib/package";
 import { box, button, input } from "./presentation";
@@ -44,11 +43,9 @@ export function DatasetPanel({ work }: { work: Workbench }) {
 
   return (
     <>
-      <PreparationHandoffPanel />
       <section className={`${box} space-y-4`}>
         <h2 className="font-semibold">已有标准训练数据包 · 直接导入</h2>
-        <p className="text-sm text-foreground-500">仅用于已完成模型适配的契约 ZIP。原始材料请先进入独立的数据准备工具。</p>
-        <p className="text-xs text-foreground-500">从数据准备携带案例进入时，上传的派生训练包会封存该案例已确认的映射和源文件摘要。</p>
+        <p className="text-sm text-foreground-500">仅用于已完成模型适配的契约 ZIP。请按所选适配器的契约在本地准备训练包后上传。</p>
         <label className="block cursor-pointer rounded-lg border border-dashed border-background-300 bg-background-50 p-5 text-center text-sm">
           <span>{t("modeling.upload.pick")}</span>
           <input

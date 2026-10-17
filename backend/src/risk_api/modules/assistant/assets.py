@@ -1,34 +1,9 @@
-from dataclasses import dataclass
-
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from risk_api.modules.company.model import Company
-from risk_api.modules.data_prep.repository import PreparationRepository
 from risk_api.modules.modeling.workbench_model import Dataset, EnterpriseRecord
 from risk_api.modules.overview.repository import OverviewRepository
-
-
-@dataclass(frozen=True)
-class SessionAsset:
-    id: str
-    name: str
-    kind: str
-    row_count: int | None
-    content: dict
-
-    def descriptor(self) -> dict:
-        return {
-            "id": self.id, "name": self.name, "kind": self.kind,
-            "source": "data_preparation", "scope": "current_browser_session",
-            "persistence": "browser_memory", "rowCount": self.row_count,
-            "countMeaning": (
-                "上传文件的体检行数" if self.row_count is not None else "不适用（报告）"
-            ),
-            "capabilities": ["asset_read"],
-            "generation": "backend_language_model" if self.kind == "analysis_report" else None,
-            "warnings": ["来自本轮浏览器快照，刷新后失效；未登记为训练数据集；内容未经独立核实。"],
-        }
 
 
 class AssetRepository:
@@ -71,41 +46,6 @@ class AssetRepository:
             "warnings": ["界面演示种子，评分和预测展示不代表真实在线模型结果。",
                          "与新加坡来源统计快照不同；不计入个人上传统计，不能合并企业数。"],
         }
-
-    async def preparations(self, owner: str) -> tuple[list[dict], bool]:
-        items = await PreparationRepository(self.session).list(owner)
-        assets = []
-        for item in items[:100]:
-            case = {
-                "id": f"preparation:{item.id}", "name": item.filename,
-                "kind": "uploaded_case", "source": "data_preparation",
-                "scope": "current_account", "persistence": "database",
-                "rowCount": item.profile["rowCount"], "countMeaning": "原始CSV体检行数",
-                "capabilities": ["asset_read", "preparation_save_plan", "preparation_trial",
-                                 "preparation_result"], "mappingConfirmed": item.confirmed,
-                "inWorkbench": item.in_workbench,
-                "files": item.profile.get("caseFiles", []),
-                "warnings": ["字段映射是适配方案；须执行受控转换或模型适配，"
-                             "交付标准包并通过工作台校验后才能训练。"],
-            }
-            assets.append(case)
-            if item.report:
-                assets.append({**case, "id": f"preparation-report:{item.id}",
-                               "name": f"{item.filename} · 分析报告", "kind": "analysis_report",
-                               "rowCount": None, "countMeaning": "不适用（报告）",
-                               "warnings": ["模型生成的分析，结论仍需核实。"]})
-        return assets, len(items) > 100
-
-    async def preparation_content(self, owner: str, identity: str, report: bool) -> dict:
-        item = await PreparationRepository(self.session).get(owner, identity)
-        if report and not item.report:
-            raise ValueError("Report unavailable")
-        return {"preparationId": item.id, "filename": item.filename,
-                "content": item.report if report else {
-                    "profile": item.profile, "mapping": item.mapping,
-                    "conversionPlan": item.conversion_plan,
-                    "confirmed": item.confirmed, "inWorkbench": item.in_workbench,
-                }}
 
     async def datasets(self, owner: str, dataset_id: str | None = None) -> list[dict]:
         record_count = (

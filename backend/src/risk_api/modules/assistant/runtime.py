@@ -1,5 +1,3 @@
-import hashlib
-import json
 from collections.abc import AsyncGenerator
 from contextlib import aclosing
 from dataclasses import dataclass, field
@@ -12,7 +10,6 @@ from strands import Agent
 from strands.models.openai import OpenAIModel
 
 from risk_api.errors import AppError
-from risk_api.modules.assistant.assets import SessionAsset
 from risk_api.modules.assistant.history import conversation_messages
 from risk_api.modules.assistant.projector import ItemProjector
 from risk_api.modules.assistant.protocol.items import Item
@@ -21,7 +18,6 @@ from risk_api.modules.assistant.tools.company_tools import CompanyGraphTools
 from risk_api.modules.assistant.tools.data_qa import data_qa_tools
 from risk_api.modules.assistant.tools.enterprise_risk import enterprise_risk_tools
 from risk_api.modules.assistant.tools.example_tools import current_time
-from risk_api.modules.assistant.tools.preparation import preparation_tools
 from risk_api.modules.chat.service import ChatService
 from risk_api.modules.modeling.client import ModelClient
 from risk_api.modules.modeling.service import ModelingStorage
@@ -34,7 +30,6 @@ class ModelSettings:
     model: str
     max_tokens: int
     api_key: str = field(repr=False)
-    session_assets: list[SessionAsset] = field(default_factory=list, repr=False)
     connection_type: LlmConnectionType = LlmConnectionType.QWEN_SELF_HOSTED
     lang: Literal["zh", "en"] = "zh"
     thinking_enabled: bool = False
@@ -45,11 +40,6 @@ class ModelSettings:
             "connectionType": self.connection_type.value,
             "thinking": self.thinking_enabled, "lang": self.lang,
         }
-        if self.session_assets:
-            # Include context in idempotency without putting its contents in model configuration.
-            result["assetSnapshotHash"] = hashlib.sha256(json.dumps(
-                [vars(asset) for asset in self.session_assets], sort_keys=True, ensure_ascii=False,
-            ).encode()).hexdigest()
         return result
 
     def request_params(self) -> dict[str, object]:
@@ -113,31 +103,29 @@ class StrandsRuntime:
                             self.sessions, owner, self.storage, self.model_client
                           )
                           if self.storage is not None and self.model_client is not None else []),
-                        *preparation_tools(self.sessions, owner),
                         *data_qa_tools(
                             self.sessions,
                             owner,
                             ChatService(http, settings.url, settings.api_key, settings.model)
                             .configured(settings.url, settings.api_key, settings.model),
-                            settings.session_assets,
                         ),
                     ],
                     callback_handler=None,
                     messages=conversation_messages(history),
                     system_prompt=(
                         "You are the Risk Workbench assistant. Answer in the user's language. "
-                        "For questions about available data, datasets, uploaded cases or reports, "
+                        "For questions about available data or datasets, "
                         "first call asset_catalog for the unified directory. Use asset_read to "
-                        "inspect enterprise demo data or browser case/report snapshots. Always "
-                        "distinguish shared demo, account workbench and temporary browser assets. "
+                        "inspect enterprise demo data or account datasets. Always "
+                        "distinguish shared demo and account workbench assets. "
                         "'My data' means current-account assets only; exclude shared demo sources. "
                         "List demo and personal counts separately, never sum them. Singapore demo "
                         "full aggregate counts and searchable fixed samples are different scopes; "
                         "never claim samples cover the full dataset "
                         "or that labels are predictions. "
                         "Report counts with their source and meaning. Never infer that the entire "
-                        "system is empty from an empty workbench. Missing browser context means "
-                        "not provided this turn, not never uploaded. Empty query results are "
+                        "system is empty from an empty workbench. "
+                        "Empty query results are "
                         "authoritative within their stated scope; do not repeat or broaden queries "
                         "to manufacture results. Generated reports are unverified analysis. "
                         "Use current_time for actual time. For factual workbench questions, "
@@ -152,37 +140,6 @@ class StrandsRuntime:
                         "preserve warnings, scope, units and truncation, and distinguish saved "
                         "predictions from calibrated default probabilities. On tool failure, "
                         "explain the failure without fabricating results or broadening scope. "
-                        "For preparation mapping, use preparation_save_plan to persist an "
-                        "executable draft after resolving uncertainties with the user. Its "
-                        "default run_trial=true immediately executes verification and returns "
-                        "the real report. Use preparation_trial to repeat saved rules and "
-                        "preparation_result to "
-                        "check persisted results. Existing prose mappings are not executable. "
-                        "Read the current case successfully before constructing rules; for "
-                        "asset_read use the full preparation:<UUID> catalog ID, not bare UUID. "
-                        "If a read fails, fix it before saving; never invent source columns. "
-                        "Previous assistant guesses are not confirmed business definitions. "
-                        "On validation failure use its field paths to fix JSON structure only; "
-                        "do not silently change label meaning or missing-value policies. "
-                        "After two failed saves stop retrying and explain the exact errors. "
-                        "Never claim a plan was saved unless the tool returned success. "
-                        "Never report trial counts without a returned task.report. If task is "
-                        "null no trial ran. Blocked tasks cannot import "
-                        "even their successful rows. "
-                        "Never guess label meanings, duplicate aggregation or fill policies. "
-                        "Trial is not import. Formal import is only available via the UI "
-                        "result card's explicit confirmation button. You have no import tool. "
-                        "CSV conversion produces browse-only enterprise data, not a training "
-                        "package. Training package delivery is a separate UI at "
-                        "/data-prep?step=delivery: choose an adapter preset, provide its "
-                        "already-adapted files and a dataset version, then generate/download "
-                        "the standard ZIP or upload it to the workbench. Do not claim you "
-                        "have generated or uploaded a training package via conversion tools. "
-                        "A case may contain a CSV enterprise table and graph JSON files. "
-                        "Read profile.caseFiles for all files; CSV rules define enterprise IDs. "
-                        "Trial checks graph endpoint coverage and conflicting properties. "
-                        "Never invent relationships or silently drop unmatched nodes. "
-                        "Case imports support browsing, not model training. "
                         "For enterprise risk requests use enterprise_risk_catalog to resolve "
                         "a published "
                         "model (catalog is newest first), use enterprise_risk_companies to find "

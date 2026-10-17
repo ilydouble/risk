@@ -62,7 +62,7 @@ flowchart LR
 
 - [Agent 企业图谱工具](agent-graph.md)：企业检索、图谱引用及按需 G6 展示。
 
-- [脚本驱动的数据准备](script-data-preparation.md)：任务工作区、智能体编写、隔离执行与数据包交付。
+- [数据准备功能移除](data-preparation-removal.md)：移除范围、标准 ZIP 上传与历史来源兼容。
 - [数据集适配器输出契约](adapter-outputs.md)：必需接口、类型校验与企业产物边界。
 
 - [模型版本与助手](assistant-models.md)：模型目录、企业检索、预测联动和版本删除。

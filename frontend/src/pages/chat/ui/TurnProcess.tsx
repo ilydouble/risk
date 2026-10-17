@@ -7,7 +7,6 @@ import { useLang } from "@/shared/lib/useLang";
 import type { ProcessItem } from "../model/timeline";
 import { ReasoningItemView } from "./ReasoningItemView";
 import { ToolItemView } from "./ToolItemView";
-import { PreparationResultLink } from "./PreparationResultLink";
 
 export function TurnProcess({ items, status }: {
   items: ProcessItem[];
@@ -46,7 +45,6 @@ export function TurnProcess({ items, status }: {
           ? <ReasoningItemView key={item.id} item={item} />
           : <ToolItemView key={item.id} item={item}>
             {item.status === "completed" && item.graph && <GraphResultCard reference={item.graph} />}
-            <PreparationResultLink item={item} />
           </ToolItemView>)}
       </div>
     </div>

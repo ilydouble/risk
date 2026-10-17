@@ -108,7 +108,6 @@ async def create_upload(
     user = await owner(request, auth)
     ticket = await service.create_upload(
         user, body.name, body.filename, body.contentType, body.size,
-        str(body.sourcePreparationId) if body.sourcePreparationId else None,
     )
     return success_response(dto.ResponseCreateDatasetUpload(**ticket))
 

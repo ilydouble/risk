@@ -18,26 +18,10 @@ import (
 
 const requestIDHeader = "X-Request-ID"
 
-type reportTimeoutTransport struct {
-	normal http.RoundTripper
-	report http.RoundTripper
-}
-
-func (transport reportTimeoutTransport) RoundTrip(request *http.Request) (*http.Response, error) {
-	switch request.URL.Path {
-	case "/api/v1/data-prep/suggest-mapping", "/api/v1/data-prep/script/generate",
-		"/api/v1/data-prep/script/deliver":
-		return transport.report.RoundTrip(request)
-	}
-	return transport.normal.RoundTrip(request)
-}
-
 func upstreamTransport() http.RoundTripper {
-	normal := http.DefaultTransport.(*http.Transport).Clone()
-	normal.ResponseHeaderTimeout = 30 * time.Second
-	report := normal.Clone()
-	report.ResponseHeaderTimeout = 5 * time.Minute
-	return reportTimeoutTransport{normal: normal, report: report}
+	transport := http.DefaultTransport.(*http.Transport).Clone()
+	transport.ResponseHeaderTimeout = 30 * time.Second
+	return transport
 }
 
 type sessionIdentity struct {

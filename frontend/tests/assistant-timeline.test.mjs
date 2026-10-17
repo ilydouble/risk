@@ -36,7 +36,8 @@ test("Turn rendering groups consecutive process items without changing order", a
     const preparation = renderToStaticMarkup(createElement(MemoryRouter,
       { initialEntries: ["/chat?conversation=conversation-1"] },
       createElement(TurnProcess, { items: [preparationTool], status: "running" })));
-    assert(preparation.includes("preparation=case-1") && preparation.includes("conversation=conversation-1"));
+    assert(preparation.includes("preparation_trial"));
+    assert(!preparation.includes("preparation=case-1") && !preparation.includes("导入入口"));
     const { segmentTurnItems } = await server.ssrLoadModule("/src/pages/chat/model/timeline.ts");
     const items = [
       { id: "u", kind: "user_message", text: "USER_REQUEST", status: "completed" },

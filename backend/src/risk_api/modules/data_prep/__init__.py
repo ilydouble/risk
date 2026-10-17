@@ -1,1 +1,1 @@
-"""Raw data inspection before dataset construction."""
+"""Read-only compatibility for provenance of datasets imported before feature removal."""

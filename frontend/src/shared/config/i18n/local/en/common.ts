@@ -8,7 +8,6 @@ export default {
   nav: {
     settings: "Settings",
     aiSettings: "Agent Model Settings",
-    dataPrep: "Data Preparation",
     chat: "Assistant",
     workspace: "Workspace",
     modeling: "Model Training",
