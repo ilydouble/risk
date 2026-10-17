@@ -27,6 +27,8 @@ export default {
     versionLine: "种子快照 · 非实时数据",
   },
   topbar: {
+    accountMenu: "账户菜单",
+    language: "语言",
     openNav: "打开导航",
     searchPlaceholder: "检索新加坡样例样本 / UEN / 状态",
     presetCases: "预置案例",

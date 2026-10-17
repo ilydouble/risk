@@ -20,7 +20,7 @@ export function TurnTimeline({ turn }: { turn: Turn }) {
   const [expanded, setExpanded] = useState(() => turn.status === "running" || !lastAnswer);
   return <section aria-label={pick("对话轮次", "Conversation turn")} className="space-y-5">
     {userItems.map(item => <div key={item.id}
-      className="ml-auto max-w-[88%] rounded-2xl rounded-tr-md bg-background-200/70 px-5 py-3.5">
+      className="ml-auto max-w-[44%] rounded-2xl rounded-tr-md bg-background-200/70 px-5 py-3.5">
       <p className="mb-1 text-xs text-foreground-400">{pick("你", "You")}</p>
       <p className="whitespace-pre-wrap break-words text-sm leading-7">{item.text.split("\n\n【当前案例上下文】只处理 preparation:")[0]}</p>
       {item.text.includes("\n\n【当前案例上下文】只处理 preparation:") && <p className="mt-2 text-xs text-foreground-400">{pick("已关联数据准备案例", "Data preparation case attached")}</p>}

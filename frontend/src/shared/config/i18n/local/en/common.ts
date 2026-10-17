@@ -27,6 +27,8 @@ export default {
     versionLine: "Seed snapshot · not live data",
   },
   topbar: {
+    accountMenu: "Account menu",
+    language: "Language",
     openNav: "Open navigation",
     searchPlaceholder: "Search Singapore sample samples / UEN / status",
     presetCases: "Preset cases",
