@@ -75,7 +75,7 @@ export default function DocumentPanel({ companyId }: { companyId: string }) {
   };
 
   return (
-    <Card title={isEn ? "Documents" : "企业文件"} subtitle={isEn ? "Presigned upload and download demo" : "预签名上传与下载演示"} icon="ri-file-upload-line" bodyClassName="p-4" action={
+    <Card title={isEn ? "Documents" : "企业文件"} subtitle={isEn ? "Company file upload and download" : "企业文件上传与下载"} icon="ri-file-upload-line" bodyClassName="p-4" action={
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Trigger asChild><button type="button" className="rounded-md bg-primary-500 px-3 py-2 text-xs text-background-50">{isEn ? "Upload file" : "上传文件"}</button></Dialog.Trigger>
         <Dialog.Portal>
@@ -83,7 +83,7 @@ export default function DocumentPanel({ companyId }: { companyId: string }) {
           <Dialog.Content asChild>
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="fixed left-1/2 top-1/2 z-50 w-[min(440px,90vw)] -translate-x-1/2 -translate-y-1/2 rounded-lg border border-background-300 bg-background-100 p-5 text-foreground-900">
               <Dialog.Title className="text-base font-semibold">{isEn ? "Upload document" : "上传企业文件"}</Dialog.Title>
-              <Dialog.Description className="mt-1 text-xs text-foreground-500">{isEn ? "Maximum 10 MB. Demo storage only." : "最大 10 MB，仅用于演示。"}</Dialog.Description>
+              <Dialog.Description className="mt-1 text-xs text-foreground-500">{isEn ? "Maximum 10 MB." : "最大 10 MB。"}</Dialog.Description>
               <input type="file" onChange={(event) => setFile(event.target.files?.[0] ?? null)} className="mt-5 block w-full text-xs" />
               {error && <p role="alert" className="mt-3 text-xs text-accent-400">{error}</p>}
               <div className="mt-5 flex justify-end gap-2"><Dialog.Close asChild><button type="button" className="rounded-md border border-background-300 px-3 py-2 text-xs">{isEn ? "Cancel" : "取消"}</button></Dialog.Close><button type="button" disabled={!file || file.size > 10_000_000 || busy} onClick={upload} className="rounded-md bg-primary-500 px-3 py-2 text-xs text-background-50 disabled:opacity-50">{busy ? "…" : isEn ? "Upload" : "上传"}</button></div>

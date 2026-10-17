@@ -1,3 +1,11 @@
+/* Halve the former 48rem column's extra margins; reserve a separate avatar gutter. */
+.chat-content {
+  box-sizing: border-box;
+  width: min(100%, calc(50% + 24rem));
+  margin-inline: auto;
+  padding-left: 2.5rem;
+}
+
 .chat-markdown > :first-child {
   margin-top: 0;
 }

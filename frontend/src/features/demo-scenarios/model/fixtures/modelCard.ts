@@ -19,16 +19,16 @@ export const modelIdentity: ModelIdentity = {
   task: "二分类 · 未来 12 个月违约概率（PD）",
   taskEn: "Binary classification · 12-month PD",
   status: "low",
-  statusLabel: "演示档案 · 未部署",
-  statusLabelEn: "Demo profile · not deployed",
+  statusLabel: "样例档案 · 未部署",
+  statusLabelEn: "Sample profile · not deployed",
   owner: "模型风险管理组 · 风控建模团队",
   ownerEn: "Model Risk Management · Modeling Team",
   releasedAt: "2026-08-28",
   validatedAt: "2026-09-24 06:30",
   summary:
-    "跨境授信评分模型的演示设计。下方样本量、特征、指标与流程均为模拟展示；当前没有模型训练或在线推理，评分与解释来自后端种子快照。",
+    "跨境授信评分模型的样例设计。下方样本量、特征、指标与流程均为模拟展示；当前没有模型训练或在线推理，评分与解释来自后端种子快照。",
   summaryEn:
-    "A demo design for cross-border credit scoring. The sample counts, features, metrics and pipeline below are illustrative; no model is trained or served. Scores and explanations come from backend seed snapshots.",
+    "A sample design for cross-border credit scoring. The sample counts, features, metrics and pipeline below are illustrative; no model is trained or served. Scores and explanations come from backend seed snapshots.",
 };
 
 export const modelSpecs: ModelSpec[] = [
@@ -193,8 +193,8 @@ export const modelVersionHistory: ModelVersionEntry[] = [
     date: "2025-06-18",
     auc: 0.846,
     ks: 0.376,
-    headline: "首个跨境授信演示版本",
-    headlineEn: "First demo version for cross-border credit",
+    headline: "首个跨境授信样例版本",
+    headlineEn: "First sample version for cross-border credit",
     changes: ["建立 A–E 评级映射", "接入 6 个国别征信数据源"],
     changesEn: ["Established the A–E grade mapping", "Integrated credit-bureau sources from 6 countries"],
     current: false,

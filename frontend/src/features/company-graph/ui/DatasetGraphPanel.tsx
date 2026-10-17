@@ -55,7 +55,7 @@ export default function DatasetGraphPanel({ datasetId, companyId, depth = 1, hei
   };
   function selectNode(id: string | null) { setSelected(id); setEdgeId(null); }
   return <div className="space-y-3">
-    <p className="text-xs text-foreground-500">{data.datasetName} · {pick("快照", "Snapshot")} {data.snapshot} · {pick(`${nodes.length} 个节点、${edges.length} 条连线`, `${nodes.length} nodes, ${edges.length} links`)}</p>
+    <p className="text-xs text-foreground-500">{data.demo ? pick("共享样例企业", "Shared sample companies") : data.datasetName} · {pick("快照", "Snapshot")} {data.snapshot} · {pick(`${nodes.length} 个节点、${edges.length} 条连线`, `${nodes.length} nodes, ${edges.length} links`)}</p>
     <p className="text-xs text-foreground-500">{pick("企业 · 蓝色　人物 · 灰色　群组 · 金色　事件 · 红色；群组连接仅表示成员关系。", "Company · blue; person · gray; group · gold; event · red. Group links represent membership only.")}</p>
     <label className="block text-xs">{pick("关系类型", "Relation type")} <select aria-label={pick("筛选图谱关系类型", "Filter relation type")} className="rounded border border-background-300 bg-background-50 p-1" value={filter} onChange={e => { setFilter(e.target.value); selectNode(null); }}>
       <option value="all">{pick("全部", "All")}</option>{[...new Set(data.edges.map(e => e.label))].map(label => <option key={label} value={label}>{label}</option>)}

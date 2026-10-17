@@ -1,6 +1,6 @@
 export default {
   search: {
-    title: "Singapore demo company search",
+    title: "Singapore sample company search",
     subtitle: "Search real stratified ACRA/GLEIF debugging samples without fabricated credit scores or loan-default probabilities",
     browseAll: "Browse all samples",
     exportPage: "Export current page",
@@ -8,7 +8,7 @@ export default {
     clearKeyword: "Clear keyword",
     searchBtn: "Search",
     quickTrials: "Quick search",
-    realDataset: "Demo use · samples from real sources",
+    realDataset: "Sample use · samples from real sources",
     datasetLoading: "Loading dataset…",
     sampleBoundary: "Search is limited to {{count}} fixed stratified debugging samples and is not representative of all 2.11M companies. Fact and relationship profiles are available without model scores.",
     filterCategory: "Sample category",

@@ -27,7 +27,7 @@ export default {
       paused: "Paused · {{done}} / {{total}} sentences done",
     },
     body: {
-      generating: "Simulating report generation from demo evidence…",
+      generating: "Simulating report generation from sample evidence…",
       generatingBadge: "Generating",
       done: "Report complete · {{sent}} sentences · {{ev}} evidence items",
       modelAt: "Model {{version}} · generated {{time}}",

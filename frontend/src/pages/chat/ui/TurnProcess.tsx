@@ -26,7 +26,7 @@ export function TurnProcess({ items, status }: {
     : status === "interrupted" ? pick("执行已中断", "Execution interrupted")
     : pick("执行过程", "Execution details");
 
-  return <div className="min-w-0 sm:ml-10">
+  return <div className="min-w-0">
     <button type="button" aria-expanded={expanded} aria-controls={contentId}
       onClick={() => setExpandedByUser(!expanded)}
       className="flex max-w-full flex-wrap items-center gap-x-2 gap-y-1 rounded-lg px-2 py-2 text-left text-sm text-foreground-500 transition-colors hover:bg-background-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500">

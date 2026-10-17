@@ -58,7 +58,7 @@ export default function RegisterPage() {
           {isEn ? "Create account" : "注册风控工作台"}
         </h1>
         <p className="mt-2 text-xs text-foreground-500">
-          {isEn ? "Demo workspace · sample data only" : "演示环境 · 数据仅供展示"}
+          {isEn ? "Workspace · enterprise data and model analysis" : "工作台 · 企业数据与模型分析"}
         </p>
 
         <label className="mt-7 block text-xs text-foreground-700">

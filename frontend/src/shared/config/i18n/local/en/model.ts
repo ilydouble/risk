@@ -6,7 +6,7 @@ export default {
         "Offline validation and stability monitoring · AUC / KS / Lift / Brier, calibration, ablation and extrapolation decay are all one-click reproducible",
       backToOverview: "Back to overview",
       historyBanner:
-        "Viewing historical demo version {{version}} (archived {{date}}) · These illustrative metrics are a read-only snapshot for comparison only",
+        "Viewing historical sample version {{version}} (archived {{date}}) · These illustrative metrics are a read-only snapshot for comparison only",
       archived: "archived {{date}}",
       backToCurrent: "Back to current version",
     },
@@ -18,7 +18,7 @@ export default {
     },
     header: {
       title: "Credit Scoring Model · Evaluation",
-      current: "Demo profile · not deployed",
+      current: "Sample profile · not deployed",
       history: "Historical version · read-only snapshot",
       desc: "A gradient-boosted tree (XGBoost) credit risk model. This page summarizes key offline metrics, probability calibration, feature-group ablation and cross-country extrapolation decay; every item is one-click reproducible so results stay traceable and re-checkable.",
       trainedAt: "Trained",
@@ -164,11 +164,11 @@ export default {
     version: {
       title: "Version history",
       subtitle: "Newest to oldest · click any version to view its metrics in the evaluation dashboard",
-      current: "Current demo version",
+      current: "Current sample version",
       viewInDashboard: "View this version's metrics in the dashboard",
     },
     drift: {
-      title: "Demo drift monitoring",
+      title: "Sample drift monitoring",
       subtitle: "Monthly PSI inspection · above 0.1 enters watch, 0.25 triggers a retraining review",
       chartLabel: "Score distribution PSI, last 6 months",
       threshold: "Thresholds 0.10 / 0.25",
@@ -190,7 +190,7 @@ export default {
       sampleSize: "Samples",
       engine: "Inference engine",
       startedAt: "Started at",
-      complete: "Demo replay complete · sample results shown",
+      complete: "Sample replay complete · sample results shown",
       running: "Reproducing…",
       matchBaseline: "Matches baseline",
       logs: "Run logs",

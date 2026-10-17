@@ -42,18 +42,18 @@ export function TurnTimeline({ turn }: { turn: Turn }) {
       <TurnProcess key={block.id} items={block.items}
         status={index === blocks.length - 1 ? turn.status : "completed"} />
       :
-      <div key={block.id} className="flex gap-3">
-        <div className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary-500/10 text-primary-500"><Bot size={17} /></div>
-        <div className="chat-markdown min-w-0 flex-1 break-words pt-1 text-sm leading-7">
+      <div key={block.id} className="relative">
+        <div aria-hidden="true" className="absolute -left-10 top-1 flex h-7 w-7 items-center justify-center rounded-lg bg-primary-500/10 text-primary-500"><Bot size={17} /></div>
+        <div className="chat-markdown min-w-0 break-words pt-1 text-sm leading-7">
           <MessageMarkdown text={block.item.text} />
         </div>
       </div>}
     </div>)}
     </div>
-    {turn.status === "running" && <div role="status" className="flex items-center gap-2 text-xs text-foreground-400 sm:ml-10">
+    {turn.status === "running" && <div role="status" className="flex items-center gap-2 text-xs text-foreground-400">
       <LoaderCircle size={14} className="animate-spin" />{pick("Agent 正在执行", "Agent is working")}
     </div>}
-    {turn.status !== "running" && <div className="flex flex-wrap items-center gap-2 text-xs text-foreground-400 sm:ml-10">
+    {turn.status !== "running" && <div className="flex flex-wrap items-center gap-2 text-xs text-foreground-400">
       <Clock3 size={12} />
       <span>{turn.status === "completed" ? pick("完成", "Completed") : turn.status === "cancelled" ? pick("已停止", "Stopped") : turn.status === "interrupted" ? pick("执行已中断，可重新发送", "Interrupted — send again to retry") : pick("执行失败，请检查模型设置后重试", "Failed — check model settings and retry")}</span>
       <span>· {turn.model}</span>

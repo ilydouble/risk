@@ -35,7 +35,7 @@ export default function LoginPage() {
       <motion.form initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} onSubmit={submit} className="w-full max-w-sm rounded-xl border border-background-300 bg-background-100 p-8">
         <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary-400">Risk Workbench</p>
         <h1 className="mt-3 font-heading text-2xl font-semibold">{isEn ? "Sign in" : "登录风控工作台"}</h1>
-        <p className="mt-2 text-xs text-foreground-500">{isEn ? "Demo data only" : "演示环境 · 数据仅供展示"}</p>
+        <p className="mt-2 text-xs text-foreground-500">{isEn ? "Enterprise data and model analysis" : "工作台 · 企业数据与模型分析"}</p>
         {navigationState?.registeredUsername && <p role="status" className="mt-4 rounded-md border border-primary-500/30 bg-primary-500/10 px-3 py-2 text-xs text-primary-400">{isEn ? "Account created. Sign in to continue." : "账号创建成功，请登录。"}</p>}
         <label className="mt-7 block text-xs text-foreground-700">{isEn ? "Username" : "用户名"}<input autoComplete="username" value={username} onChange={(event) => setUsername(event.target.value)} className="mt-2 w-full rounded-md border border-background-300 bg-background-50 px-3 py-2 text-sm outline-none focus:border-primary-400" /></label>
         <label className="mt-4 block text-xs text-foreground-700">{isEn ? "Password" : "密码"}<input type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} className="mt-2 w-full rounded-md border border-background-300 bg-background-50 px-3 py-2 text-sm outline-none focus:border-primary-400" /></label>

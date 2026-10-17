@@ -34,7 +34,7 @@ export function GraphResultCard({ reference }: { reference: GraphReference }) {
         <p className="break-words font-medium">{reference.title}</p>
         <p className="mt-1 text-xs text-foreground-500">{reference.companyId} · {pick(`${reference.depth} 跳`, `${reference.depth} hops`)}</p>
       </div>
-      <span className="shrink-0 rounded bg-amber-500/10 px-2 py-1 text-xs text-amber-600">{reference.demo ? pick("演示数据", "Demo data") : pick("数据集来源关系", "Dataset source graph")}</span>
+      <span className="shrink-0 rounded bg-amber-500/10 px-2 py-1 text-xs text-amber-600">{reference.demo ? pick("样例数据", "Sample data") : pick("数据集来源关系", "Dataset source graph")}</span>
     </div>
     <div ref={viewport} style={{ minHeight: visible ? 340 : placeholderHeight }}>
       {visible ? <Suspense fallback={<p role="status" className="py-8 text-sm text-foreground-500">{pick("正在加载图谱…", "Loading graph…")}</p>}>
