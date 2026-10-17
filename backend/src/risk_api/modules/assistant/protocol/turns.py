@@ -27,6 +27,9 @@ class Turn(BaseModel):
     requestId: str
     sequence: int
     createdAt: datetime
+    finishedAt: datetime | None = None
+    durationMs: int | None = Field(default=None, ge=0)
+    elapsedMs: int | None = Field(default=None, ge=0)
     items: list[Item] = Field(default_factory=list)
     error: TurnError | None = None
 

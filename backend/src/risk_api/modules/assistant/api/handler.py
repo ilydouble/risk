@@ -95,6 +95,9 @@ async def create_turn(
         api_key=connection.apiKey if connection else settings.llm_api_key,
         max_tokens=body.maxTokens,
         session_assets=session_assets,
+        connection_type=settings.llm_connection_type,
+        thinking_enabled=settings.llm_thinking_enabled,
+        lang=body.lang,
     )
     turn = await service.start(
         user["user_id"],

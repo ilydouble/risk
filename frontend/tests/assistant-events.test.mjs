@@ -27,3 +27,34 @@ test("tool parameter chunks and final result use the same item identity", () => 
   assert.deepEqual(value.items[0].result, { time: "now" });
   assert.equal(applyTurnEvent(value, { ...event(4, { status: "failed" }), turnId: "another" }), value);
 });
+
+test("reasoning deltas and history snapshots preserve order around tools and answers", () => {
+  let value = applyTurnEvent(turn, event(1, { type: "item_updated", item: { id: "reason-1", kind: "reasoning", status: "running", text: "先" } }));
+  value = applyTurnEvent(value, event(2, { type: "item_delta", delta: { itemId: "reason-1", field: "text", text: "分析" } }));
+  value = applyTurnEvent(value, event(3, { type: "item_updated", item: { ...value.items[0], status: "completed" } }));
+  const nextItems = [
+    { id: "tool", kind: "tool_call", name: "current_time", status: "completed", argumentsText: "{}", result: [] },
+    { id: "reason-2", kind: "reasoning", status: "completed", text: "整理结果" },
+    { id: "answer", kind: "agent_message", status: "completed", text: "回答" },
+  ];
+  nextItems.forEach((item, index) => { value = applyTurnEvent(value, event(4 + index, { type: "item_updated", item })); });
+  assert.deepEqual(value.items.map(item => item.kind), ["reasoning", "tool_call", "reasoning", "agent_message"]);
+  assert.equal(value.items[0].text, "先分析");
+  assert.equal(value.items[2].text, "整理结果");
+  assert.deepEqual(applyTurnEvent(value, event(6, { type: "item_updated", item: nextItems[2] })), value);
+});
+
+
+test("terminal timing is authoritative and stable across replay and stale events", () => {
+  const started = { ...turn, elapsedMs: 1200, durationMs: null, finishedAt: null };
+  const finished = event(5, { type: "turn_completed", status: "completed", durationMs: 36250, finishedAt: "2026-10-15T12:00:36.250Z" });
+  const next = applyTurnEvent(started, finished);
+  assert.equal(next.durationMs, 36250);
+  assert.equal(next.elapsedMs, 36250);
+  assert.equal(next.finishedAt, finished.finishedAt);
+  assert.equal(applyTurnEvent(next, finished), next);
+  assert.equal(applyTurnEvent(next, event(4, { type: "turn_completed", durationMs: 1 })), next);
+  const zero = applyTurnEvent(started, { ...finished, durationMs: 0 });
+  assert.equal(zero.durationMs, 0);
+  assert.equal(applyTurnEvent(started, event(3, { type: "turn_completed", status: "completed" })).durationMs, null);
+});

@@ -5,7 +5,7 @@ import PageFrame from "@/features/workbench-layout/ui/PageFrame";
 import Card from "@/shared/ui/Card";
 import RiskBadge from "@/entities/risk/ui/RiskBadge";
 import GraphToolbar from "@/pages/graph/components/GraphToolbar";
-import GraphCanvas from "@/pages/graph/components/GraphCanvas";
+import GraphCanvas from "@/features/company-graph/ui/CompanyGraph";
 import GraphLegend from "@/pages/graph/components/GraphLegend";
 import NodeInspector from "@/pages/graph/components/NodeInspector";
 import RiskPathPanel from "@/pages/graph/components/RiskPathPanel";

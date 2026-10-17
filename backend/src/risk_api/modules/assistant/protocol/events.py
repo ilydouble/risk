@@ -1,7 +1,8 @@
+from datetime import datetime
 from enum import StrEnum
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from risk_api.modules.assistant.protocol.items import Item
 from risk_api.modules.assistant.protocol.turns import TurnError, TurnStatus
@@ -33,3 +34,5 @@ class TurnEvent(BaseModel):
     delta: ItemDelta | None = None
     status: TurnStatus | None = None
     error: TurnError | None = None
+    finishedAt: datetime | None = None
+    durationMs: int | None = Field(default=None, ge=0)

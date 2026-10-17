@@ -67,6 +67,58 @@
         "title": "AgeDistributionItemDTO",
         "type": "object"
       },
+      "AgentMessageItem": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "const": "agent_message",
+            "default": "agent_message",
+            "title": "Kind",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus",
+            "default": "running"
+          },
+          "text": {
+            "default": "",
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "title": "AgentMessageItem",
+        "type": "object"
+      },
+      "AgentReasoningItem": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "const": "reasoning",
+            "default": "reasoning",
+            "title": "Kind",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus",
+            "default": "running"
+          },
+          "text": {
+            "default": "",
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "title": "AgentReasoningItem",
+        "type": "object"
+      },
       "AnalysisWarningDTO": {
         "properties": {
           "code": {
@@ -2465,6 +2517,59 @@
           }
         },
         "title": "CompanyFactsEn",
+        "type": "object"
+      },
+      "CompanyGraphReference": {
+        "additionalProperties": false,
+        "properties": {
+          "companyId": {
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Companyid",
+            "type": "string"
+          },
+          "demo": {
+            "const": true,
+            "default": true,
+            "title": "Demo",
+            "type": "boolean"
+          },
+          "depth": {
+            "maximum": 3.0,
+            "minimum": 1.0,
+            "title": "Depth",
+            "type": "integer"
+          },
+          "kind": {
+            "const": "company_graph",
+            "default": "company_graph",
+            "title": "Kind",
+            "type": "string"
+          },
+          "lang": {
+            "enum": [
+              "zh",
+              "en"
+            ],
+            "title": "Lang",
+            "type": "string"
+          },
+          "summary": {
+            "$ref": "#/components/schemas/GraphSummary"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "companyId",
+          "depth",
+          "lang",
+          "title",
+          "summary"
+        ],
+        "title": "CompanyGraphReference",
         "type": "object"
       },
       "CompanyProfile": {
@@ -5637,6 +5742,27 @@
         "title": "GraphNode",
         "type": "object"
       },
+      "GraphSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "edgeCount": {
+            "minimum": 0.0,
+            "title": "Edgecount",
+            "type": "integer"
+          },
+          "nodeCount": {
+            "minimum": 0.0,
+            "title": "Nodecount",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "nodeCount",
+          "edgeCount"
+        ],
+        "title": "GraphSummary",
+        "type": "object"
+      },
       "ItemDelta": {
         "properties": {
           "field": {
@@ -7194,6 +7320,15 @@
                 "type": "null"
               }
             ]
+          },
+          "lang": {
+            "default": "zh",
+            "enum": [
+              "zh",
+              "en"
+            ],
+            "title": "Lang",
+            "type": "string"
           },
           "maxTokens": {
             "default": 4096,
@@ -10051,6 +10186,18 @@
               }
             ]
           },
+          "durationMs": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Durationms"
+          },
           "error": {
             "anyOf": [
               {
@@ -10061,21 +10208,39 @@
               }
             ]
           },
+          "finishedAt": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finishedat"
+          },
           "item": {
             "anyOf": [
               {
                 "discriminator": {
                   "mapping": {
-                    "agent_message": "#/components/schemas/TextItem",
-                    "reasoning": "#/components/schemas/TextItem",
+                    "agent_message": "#/components/schemas/AgentMessageItem",
+                    "reasoning": "#/components/schemas/AgentReasoningItem",
                     "tool_call": "#/components/schemas/ToolItem",
-                    "user_message": "#/components/schemas/TextItem"
+                    "user_message": "#/components/schemas/UserMessageItem"
                   },
                   "propertyName": "kind"
                 },
                 "oneOf": [
                   {
-                    "$ref": "#/components/schemas/TextItem"
+                    "$ref": "#/components/schemas/UserMessageItem"
+                  },
+                  {
+                    "$ref": "#/components/schemas/AgentReasoningItem"
+                  },
+                  {
+                    "$ref": "#/components/schemas/AgentMessageItem"
                   },
                   {
                     "$ref": "#/components/schemas/ToolItem"
@@ -10512,38 +10677,6 @@
         "title": "StatusDistributionItemDTO",
         "type": "object"
       },
-      "TextItem": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "kind": {
-            "enum": [
-              "user_message",
-              "reasoning",
-              "agent_message"
-            ],
-            "title": "Kind",
-            "type": "string"
-          },
-          "status": {
-            "$ref": "#/components/schemas/ItemStatus",
-            "default": "running"
-          },
-          "text": {
-            "default": "",
-            "title": "Text",
-            "type": "string"
-          }
-        },
-        "required": [
-          "kind"
-        ],
-        "title": "TextItem",
-        "type": "object"
-      },
       "TimelineEvent": {
         "properties": {
           "date": {
@@ -10625,6 +10758,16 @@
             "title": "Argumentstext",
             "type": "string"
           },
+          "graph": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CompanyGraphReference"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "id": {
             "title": "Id",
             "type": "string"
@@ -10669,6 +10812,30 @@
             "title": "Createdat",
             "type": "string"
           },
+          "durationMs": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Durationms"
+          },
+          "elapsedMs": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Elapsedms"
+          },
           "error": {
             "anyOf": [
               {
@@ -10679,6 +10846,18 @@
               }
             ]
           },
+          "finishedAt": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finishedat"
+          },
           "id": {
             "title": "Id",
             "type": "string"
@@ -10687,16 +10866,22 @@
             "items": {
               "discriminator": {
                 "mapping": {
-                  "agent_message": "#/components/schemas/TextItem",
-                  "reasoning": "#/components/schemas/TextItem",
+                  "agent_message": "#/components/schemas/AgentMessageItem",
+                  "reasoning": "#/components/schemas/AgentReasoningItem",
                   "tool_call": "#/components/schemas/ToolItem",
-                  "user_message": "#/components/schemas/TextItem"
+                  "user_message": "#/components/schemas/UserMessageItem"
                 },
                 "propertyName": "kind"
               },
               "oneOf": [
                 {
-                  "$ref": "#/components/schemas/TextItem"
+                  "$ref": "#/components/schemas/UserMessageItem"
+                },
+                {
+                  "$ref": "#/components/schemas/AgentReasoningItem"
+                },
+                {
+                  "$ref": "#/components/schemas/AgentMessageItem"
                 },
                 {
                   "$ref": "#/components/schemas/ToolItem"
@@ -10762,6 +10947,32 @@
         ],
         "title": "TurnStatus",
         "type": "string"
+      },
+      "UserMessageItem": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "const": "user_message",
+            "default": "user_message",
+            "title": "Kind",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus",
+            "default": "running"
+          },
+          "text": {
+            "default": "",
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "title": "UserMessageItem",
+        "type": "object"
       },
       "ValueFrequency": {
         "properties": {

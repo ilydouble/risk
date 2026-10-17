@@ -1,3 +1,4 @@
+from typing import Literal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -39,6 +40,7 @@ class RequestCreateTurn(BaseModel):
     requestKey: UUID
     message: str = Field(min_length=1, max_length=8000)
     connection: ModelConnection | None = None
+    lang: Literal["zh", "en"] = "zh"
     maxTokens: int = Field(default=4096, ge=256, le=16384)
     dataPrep: RequestDataPrepContext | None = None
 

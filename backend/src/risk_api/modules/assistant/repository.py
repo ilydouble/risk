@@ -5,7 +5,7 @@ from typing import Any, Literal
 from uuid import uuid4
 
 from pydantic import TypeAdapter
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from risk_api.errors import AppError
@@ -16,7 +16,7 @@ from risk_api.modules.assistant.model import (
     TurnRecord,
 )
 from risk_api.modules.assistant.protocol.events import EventType, ItemDelta, TurnEvent
-from risk_api.modules.assistant.protocol.items import Item, ItemStatus, TextItem
+from risk_api.modules.assistant.protocol.items import Item, ItemStatus, UserMessageItem
 from risk_api.modules.assistant.protocol.turns import Conversation, Turn, TurnError, TurnStatus
 
 item_parser: TypeAdapter[Item] = TypeAdapter(Item)
@@ -24,6 +24,14 @@ item_parser: TypeAdapter[Item] = TypeAdapter(Item)
 
 def now() -> datetime:
     return datetime.now(UTC)
+
+
+async def database_now(session: AsyncSession) -> datetime:
+    return (await session.execute(select(func.clock_timestamp()))).scalar_one()
+
+
+def elapsed_ms(start: datetime, end: datetime) -> int:
+    return max(0, (end - start) // timedelta(milliseconds=1))
 
 
 class AssistantRepository:
@@ -62,6 +70,10 @@ class AssistantRepository:
         items = await session.scalars(
             select(ItemRecord).where(ItemRecord.turn_id == row.id).order_by(ItemRecord.position)
         )
+        elapsed = row.duration_ms
+        if row.status == "running":
+            sampled_at = await database_now(session)
+            elapsed = elapsed_ms(row.created_at, sampled_at)
         return Turn(
             id=row.id,
             conversationId=row.conversation_id,
@@ -70,6 +82,9 @@ class AssistantRepository:
             requestId=row.request_id,
             sequence=row.sequence,
             createdAt=row.created_at,
+            finishedAt=row.finished_at,
+            durationMs=row.duration_ms,
+            elapsedMs=elapsed,
             items=[item_parser.validate_python(i.payload) for i in items],
             error=TurnError.model_validate(row.error) if row.error else None,
         )
@@ -167,6 +182,7 @@ class AssistantRepository:
             )
             if active:
                 raise AppError(409, "ASSISTANT_BUSY", "Conversation is already running")
+            started_at = await database_now(session)
             row = TurnRecord(
                 id=str(uuid4()),
                 conversation_id=conversation,
@@ -176,8 +192,8 @@ class AssistantRepository:
                 configuration=configuration,
                 request_id=request_id,
                 sequence=0,
-                lease_until=now() + timedelta(seconds=60),
-                created_at=now(),
+                lease_until=started_at + timedelta(seconds=60),
+                created_at=started_at,
             )
             session.add(row)
             await session.flush()
@@ -200,7 +216,7 @@ class AssistantRepository:
                     turnId=row.id,
                     sequence=0,
                     type=EventType.ITEM_UPDATED,
-                    item=TextItem(kind="user_message", text=message, status=ItemStatus.COMPLETED),
+                    item=UserMessageItem(text=message, status=ItemStatus.COMPLETED),
                 ),
             )
             await session.flush()
@@ -284,6 +300,11 @@ class AssistantRepository:
                     )
             row.status = status
             row.error = error.model_dump() if error else None
+            # Use the database clock for both endpoints. Recovery measures lifecycle time,
+            # not an unknowable worker death time. The row lock makes this write-once.
+            finished_at = await database_now(session)
+            row.finished_at = finished_at
+            row.duration_ms = elapsed_ms(row.created_at, finished_at)
             await self.append(
                 session,
                 row,
@@ -293,6 +314,8 @@ class AssistantRepository:
                     type=EventType(f"turn_{status}"),
                     status=status,
                     error=error,
+                    finishedAt=row.finished_at,
+                    durationMs=row.duration_ms,
                 ),
             )
 

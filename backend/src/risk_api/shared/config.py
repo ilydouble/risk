@@ -1,5 +1,18 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from enum import StrEnum
 from os import getenv
+
+
+class LlmConnectionType(StrEnum):
+    QWEN_SELF_HOSTED = "qwen_self_hosted"
+    MINIMAX = "minimax"
+
+
+def _llm_thinking_enabled() -> bool:
+    value = getenv("RISK_LLM_THINKING_ENABLED", "false").strip().lower()
+    if value not in {"true", "false"}:
+        raise ValueError("RISK_LLM_THINKING_ENABLED must be true or false")
+    return value == "true"
 
 
 @dataclass(frozen=True)
@@ -20,6 +33,12 @@ class Settings:
     llm_url: str = getenv("RISK_LLM_URL", "http://172.16.4.3:8080/v1/chat/completions")
     llm_api_key: str = getenv("RISK_LLM_API_KEY", "")
     llm_model: str = getenv("RISK_LLM_MODEL", "Qwen3.6-35B-A3B")
+    llm_connection_type: LlmConnectionType = field(
+        default_factory=lambda: LlmConnectionType(
+            getenv("RISK_LLM_CONNECTION_TYPE", "qwen_self_hosted")
+        )
+    )
+    llm_thinking_enabled: bool = field(default_factory=_llm_thinking_enabled)
     model_service_url: str = getenv("RISK_GNN_URL", "http://localhost:8001")
     model_service_token: str = getenv("RISK_GNN_API_TOKEN", "local-riskgnn-change-me")
     model_storage_bucket: str = getenv("MODELING_STORAGE_BUCKET", "risk-modeling")

@@ -4,6 +4,8 @@ from uuid import uuid4
 
 from pydantic import BaseModel, ConfigDict, Field, JsonValue
 
+from risk_api.modules.assistant.protocol.graph import CompanyGraphReference
+
 
 class ItemStatus(StrEnum):
     RUNNING = "running"
@@ -18,8 +20,18 @@ class ItemBase(BaseModel):
     status: ItemStatus = ItemStatus.RUNNING
 
 
-class TextItem(ItemBase):
-    kind: Literal["user_message", "reasoning", "agent_message"]
+class UserMessageItem(ItemBase):
+    kind: Literal["user_message"] = "user_message"
+    text: str = ""
+
+
+class AgentReasoningItem(ItemBase):
+    kind: Literal["reasoning"] = "reasoning"
+    text: str = ""
+
+
+class AgentMessageItem(ItemBase):
+    kind: Literal["agent_message"] = "agent_message"
     text: str = ""
 
 
@@ -29,6 +41,10 @@ class ToolItem(ItemBase):
     name: str
     argumentsText: str = ""
     result: JsonValue = None
+    graph: CompanyGraphReference | None = None
 
 
-Item = Annotated[TextItem | ToolItem, Field(discriminator="kind")]
+Item = Annotated[
+    UserMessageItem | AgentReasoningItem | AgentMessageItem | ToolItem,
+    Field(discriminator="kind"),
+]

@@ -3,12 +3,21 @@
 import json
 from typing import Any, Literal
 
-from risk_api.modules.assistant.protocol.items import Item, ItemStatus, TextItem, ToolItem
+from pydantic import ValidationError
+
+from risk_api.modules.assistant.protocol.graph import CompanyGraphReference
+from risk_api.modules.assistant.protocol.items import (
+    AgentMessageItem,
+    AgentReasoningItem,
+    Item,
+    ItemStatus,
+    ToolItem,
+)
 
 
 class ItemProjector:
     def __init__(self) -> None:
-        self.text: TextItem | None = None
+        self.text: AgentReasoningItem | AgentMessageItem | None = None
         self.tools: dict[str, ToolItem] = {}
         self.answer = ""
 
@@ -24,7 +33,7 @@ class ItemProjector:
                 updates.append(self.text.model_copy(deep=True))
                 self.text = None
             if self.text is None:
-                self.text = TextItem(kind=kind)
+                self.text = AgentReasoningItem() if kind == "reasoning" else AgentMessageItem()
             self.text.text += token
             if kind == "agent_message":
                 self.answer += token
@@ -64,5 +73,13 @@ class ItemProjector:
                 item.status = (
                     ItemStatus.FAILED if result.get("status") == "error" else ItemStatus.COMPLETED
                 )
+                if item.status == ItemStatus.COMPLETED and item.name == "show_company_graph":
+                    # Only this server-registered tool can produce a validated graph card.
+                    for content in result.get("content", []):
+                        if isinstance(content, dict) and "json" in content:
+                            try:
+                                item.graph = CompanyGraphReference.model_validate(content["json"])
+                            except ValidationError:
+                                pass
                 updates.append(item.model_copy(deep=True))
         return updates

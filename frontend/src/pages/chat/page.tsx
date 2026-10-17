@@ -15,7 +15,7 @@ import "./chat-markdown.css";
 export default function ChatPage() {
   const config = useAiModelConfig();
   const dataPrep = useDataPrepSession();
-  const { pick } = useLang();
+  const { pick, lang } = useLang();
   const [params, setParams] = useSearchParams();
   const id = params.get("conversation");
   const preparationId = params.get("preparation");
@@ -51,7 +51,7 @@ export default function ChatPage() {
       ? `${text.trim()}\n\n【当前案例上下文】只处理 preparation:${preparationId}；先读取该案例的最新统计、映射和报告。不确定的规则先询问；规则明确后可用 preparation_save_plan 保存可执行草稿、preparation_trial 试运行、preparation_result 查询结果。试运行不等于导入，正式导入须由用户在结果卡片确认。`
       : text;
     if (await chat.send(message, {
-      connection: config.connection, maxTokens: config.maxTokens,
+      connection: config.connection, maxTokens: config.maxTokens, lang,
       dataPrep: !preparationId && !dataPrep.preparation && dataPrep.profile && dataPrep.files[0] ? {
         filename: dataPrep.files[0].name, profile: dataPrep.profile, report: dataPrep.suggestion,
       } : undefined,

@@ -53,7 +53,7 @@ export function useConversation(conversationId: string | null, select: (id: stri
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeId, loading, reload]);
 
-  async function send(message: string, configuration: Pick<RequestCreateTurn, "connection" | "maxTokens" | "dataPrep">) {
+  async function send(message: string, configuration: Pick<RequestCreateTurn, "connection" | "maxTokens" | "dataPrep" | "lang">) {
     if (busy.current || active || !message.trim()) return false;
     busy.current = true;
     setSending(true);
@@ -67,7 +67,7 @@ export function useConversation(conversationId: string | null, select: (id: stri
       const previous = pendingRequest.current;
       const matching = previous?.conversationId === id && previous.message === message.trim()
         && JSON.stringify(previous.connection) === JSON.stringify(configuration.connection)
-        && previous.maxTokens === configuration.maxTokens
+        && previous.maxTokens === configuration.maxTokens && previous.lang === configuration.lang
         && JSON.stringify(previous.dataPrep) === JSON.stringify(configuration.dataPrep);
       const request: RequestCreateTurn = matching ? previous : {
         conversationId: id, message: message.trim(), requestKey: crypto.randomUUID(), ...configuration,

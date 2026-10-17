@@ -19,24 +19,38 @@ from risk_api.modules.assistant.model import (
     ItemRecord,
     TurnRecord,
 )
-from risk_api.modules.assistant.protocol.items import TextItem
+from risk_api.modules.assistant.protocol.graph import CompanyGraphReference, GraphSummary
+from risk_api.modules.assistant.protocol.items import AgentMessageItem, AgentReasoningItem, ToolItem
 from risk_api.modules.assistant.protocol.turns import TurnStatus
 from risk_api.modules.assistant.repository import AssistantRepository
 from risk_api.modules.assistant.runtime import ModelSettings, StrandsRuntime
 from risk_api.modules.assistant.service import AssistantService
 from risk_api.modules.auth.model import User
+from risk_api.shared.config import LlmConnectionType, Settings
 from risk_api.shared.db import Base
 
 
-def test_real_strands_stream_and_tool_loop(monkeypatch):
+@pytest.mark.parametrize("connection_type", list(LlmConnectionType))
+@pytest.mark.parametrize("upstream_reasoning", [False, True])
+@pytest.mark.parametrize("thinking_enabled", [False, True])
+def test_real_strands_stream_and_tool_loop(
+    monkeypatch, connection_type, upstream_reasoning, thinking_enabled
+):
     requests = []
 
     def respond(request):
         payload = json.loads(request.content)
         requests.append(payload)
+        assert payload["max_tokens"] == 1024
+        if connection_type == LlmConnectionType.QWEN_SELF_HOSTED:
+            assert payload["chat_template_kwargs"] == {"enable_thinking": thinking_enabled}
+            assert "thinking" not in payload
+        else:
+            assert payload["thinking"] == {"type": "adaptive" if thinking_enabled else "disabled"}
+            assert payload.get("reasoning_split") is (True if thinking_enabled else None)
+            assert "chat_template_kwargs" not in payload
         if len(requests) == 1:
             deltas = [
-                {"reasoning_content": "Check current time."},
                 {"content": "I will check."},
                 {
                     "tool_calls": [
@@ -50,6 +64,9 @@ def test_real_strands_stream_and_tool_loop(monkeypatch):
                 },
                 {"tool_calls": [{"index": 0, "function": {"arguments": 'zone":"UTC"}'}}]},
             ]
+            # Keep the display contract even if an upstream ignores the disable request.
+            if upstream_reasoning:
+                deltas.insert(0, {"reasoning_content": "Check current time."})
             stop = "tool_calls"
         else:
             assert any(m["role"] == "tool" for m in payload["messages"])
@@ -86,7 +103,11 @@ def test_real_strands_stream_and_tool_loop(monkeypatch):
         async for batch in StrandsRuntime(async_sessionmaker()).stream(
             "Check time",
             [],
-            ModelSettings("http://model/v1/chat/completions", "test", 1024, "key"),
+            ModelSettings(
+                "http://model/v1/chat/completions", "test", 1024, "key",
+                connection_type=connection_type,
+                thinking_enabled=thinking_enabled,
+            ),
             "request-1",
             "owner-1",
         ):
@@ -95,9 +116,9 @@ def test_real_strands_stream_and_tool_loop(monkeypatch):
         assert len(requests) == 2
         assert requests[0]["stream"] is True
         assert requests[0]["tools"][0]["function"]["name"] == "current_time"
-        assert any(
-            i.kind == "reasoning" and i.text == "Check current time." for i in items.values()
-        )
+        reasoning = [i for i in items.values() if i.kind == "reasoning"]
+        expected_reasoning = ["Check current time."] if upstream_reasoning else []
+        assert [i.text for i in reasoning] == expected_reasoning
         tool = next(i for i in items.values() if i.kind == "tool_call")
         assert tool.status == "completed"
         assert json.loads(tool.argumentsText) == {"timezone": "UTC"}
@@ -108,6 +129,47 @@ def test_real_strands_stream_and_tool_loop(monkeypatch):
         ]
 
     asyncio.run(exercise())
+
+
+def test_connection_type_environment_and_public_execution_config(monkeypatch):
+    monkeypatch.delenv("RISK_LLM_CONNECTION_TYPE", raising=False)
+    assert Settings().llm_connection_type == LlmConnectionType.QWEN_SELF_HOSTED
+    for connection_type in LlmConnectionType:
+        monkeypatch.setenv("RISK_LLM_CONNECTION_TYPE", connection_type.value)
+        settings = Settings()
+        config = ModelSettings(
+            "http://model/v1/chat/completions", "test", 1024, "secret",
+            connection_type=settings.llm_connection_type
+        ).public()
+        assert config["connectionType"] == connection_type.value
+        assert config["thinking"] is False
+        assert "secret" not in json.dumps(config)
+    monkeypatch.setenv("RISK_LLM_CONNECTION_TYPE", "typo")
+    with pytest.raises(ValueError, match="LlmConnectionType"):
+        Settings()
+
+
+@pytest.mark.parametrize(
+    "value, expected", [(None, False), ("false", False), ("true", True), (" TRUE ", True)]
+)
+def test_thinking_environment_and_execution_config(monkeypatch, value, expected):
+    monkeypatch.delenv("RISK_LLM_THINKING_ENABLED", raising=False)
+    if value is not None:
+        monkeypatch.setenv("RISK_LLM_THINKING_ENABLED", value)
+    settings = Settings()
+    assert settings.llm_thinking_enabled is expected
+    config = ModelSettings(
+        "http://model/v1/chat/completions", "test", 1024, "secret",
+        thinking_enabled=settings.llm_thinking_enabled,
+    )
+    assert config.public()["thinking"] is expected
+    assert "secret" not in json.dumps(config.public())
+
+
+def test_invalid_thinking_environment_fails_explicitly(monkeypatch):
+    monkeypatch.setenv("RISK_LLM_THINKING_ENABLED", "typo")
+    with pytest.raises(ValueError, match="RISK_LLM_THINKING_ENABLED"):
+        Settings()
 
 
 def test_persistence_replay_and_execution():
@@ -151,6 +213,8 @@ def test_persistence_replay_and_execution():
                 owner, conversation.id, "key", "Hello", config.public(), "r"
             )
             assert created
+            assert turn.finishedAt is None and turn.durationMs is None
+            assert turn.elapsedMs is not None and turn.elapsedMs >= 0
             repeated, created = await repo.start(
                 owner, conversation.id, "key", "Hello", config.public(), "r", accept_new=False
             )
@@ -165,13 +229,33 @@ def test_persistence_replay_and_execution():
                 assert error.value.code == code
             with pytest.raises(AppError):
                 await repo.events(other, turn.id, 0)
-            item = TextItem(kind="agent_message", text="Ans")
+            item = AgentMessageItem(text="Ans")
             await repo.update_items(turn.id, [item])
             item.text += "wer"
             await repo.update_items(turn.id, [item])
+            graph_item = ToolItem(
+                toolCallId="graph-call",
+                name="show_company_graph",
+                status="completed",
+                graph=CompanyGraphReference(
+                    companyId="C-1001",
+                    depth=2,
+                    lang="zh",
+                    title="Demo",
+                    summary=GraphSummary(nodeCount=15, edgeCount=14),
+                ),
+            )
+            await repo.update_items(turn.id, [graph_item])
             await repo.finish(turn.id, TurnStatus.COMPLETED)
+            completed = await repo.turn(owner, turn.id)
+            assert completed.finishedAt is not None and completed.durationMs is not None
+            expected_ms = (completed.finishedAt - completed.createdAt) // timedelta(milliseconds=1)
+            assert completed.durationMs == expected_ms
+            assert completed.elapsedMs == completed.durationMs
             events, done = await repo.events(owner, turn.id, 0)
             assert done and events[-1].type == "turn_completed"
+            assert events[-1].finishedAt == completed.finishedAt
+            assert events[-1].durationMs == completed.durationMs
             delta = next(e for e in events if e.type == "item_delta")
             assert delta.delta.text == "wer" and delta.item is None
             assert [e.sequence for e in events] == list(range(1, len(events) + 1))
@@ -183,6 +267,15 @@ def test_persistence_replay_and_execution():
                 assert "secret" not in json.dumps(row.configuration)
             await repo.finish(turn.id, TurnStatus.CANCELLED)
             assert (await repo.turn(owner, turn.id)).status == "completed"
+            refreshed = (await repo.history(owner, conversation.id))[0]
+            assert refreshed.finishedAt == completed.finishedAt
+            assert refreshed.durationMs == completed.durationMs
+            restored_graph = next(i for i in refreshed.items if i.kind == "tool_call")
+            assert restored_graph.graph == graph_item.graph
+            assert any(
+                e.item and e.item.kind == "tool_call" and e.item.graph == graph_item.graph
+                for e in events
+            )
 
             expired, _ = await repo.start(
                 owner, conversation.id, "expired", "Hi", config.public(), "r"
@@ -193,13 +286,11 @@ def test_persistence_replay_and_execution():
             assert not await repo.heartbeat(expired.id)
             await repo.recover_expired()
             assert (await repo.turn(owner, expired.id)).status == "interrupted"
-            assert not await repo.update_items(
-                expired.id, [TextItem(kind="agent_message", text="late")]
-            )
+            assert not await repo.update_items(expired.id, [AgentMessageItem(text="late")])
 
             class SlowRuntime(StrandsRuntime):
                 async def stream(self, *args):
-                    yield [TextItem(kind="reasoning", text="Working")]
+                    yield [AgentReasoningItem(text="Working")]
                     await asyncio.sleep(60)
 
             service = AssistantService(repo, SlowRuntime(sessions))
@@ -214,7 +305,7 @@ def test_persistence_replay_and_execution():
 
             class FailedRuntime(StrandsRuntime):
                 async def stream(self, *args):
-                    yield [TextItem(kind="reasoning", text="Partial")]
+                    yield [AgentReasoningItem(text="Partial")]
                     await asyncio.sleep(0.2)
                     raise RuntimeError("secret upstream body")
 
@@ -235,7 +326,7 @@ def test_persistence_replay_and_execution():
 
                 class LimitedRuntime(StrandsRuntime):
                     async def stream(self, *args, code=code, message=message):
-                        yield [TextItem(kind="reasoning", text="Working")]
+                        yield [AgentReasoningItem(text="Working")]
                         raise AppError(422, code, message)
 
                 limited_service = AssistantService(repo, LimitedRuntime(sessions))
@@ -263,6 +354,21 @@ def test_persistence_replay_and_execution():
             )
             await shutdown_service.close()
             assert (await repo.turn(owner, shutdown.id)).status == "interrupted"
+            # All terminal paths persist once and replay the same measured duration.
+            for finished_id in (expired.id, running.id, failed.id, shutdown.id):
+                snapshot = await repo.turn(owner, finished_id)
+                terminal_events, _ = await repo.events(owner, finished_id, 0)
+                assert snapshot.finishedAt is not None and snapshot.durationMs is not None
+                assert snapshot.durationMs >= 0
+                assert terminal_events[-1].durationMs == snapshot.durationMs
+                assert terminal_events[-1].finishedAt == snapshot.finishedAt
+            # Legacy terminal rows have no evidence of completion time; never infer it.
+            async with sessions.begin() as session:
+                row = await session.get(TurnRecord, turn.id)
+                row.finished_at = None
+                row.duration_ms = None
+            legacy = await repo.turn(owner, turn.id)
+            assert legacy.durationMs is None and legacy.elapsedMs is None
             async with sessions() as session:
                 assert len(list(await session.scalars(select(EventRecord)))) > 0
         finally:

@@ -62,3 +62,12 @@ import { GraphView } from "@/shared/ui/graph";
 `pages/chat` 管布局、Markdown、推理和工具卡片。DTO 全部来自 OpenAPI。
 SSE 使用 `@microsoft/fetch-event-source`；重连在 POST body 传最新序号，组件退出只中止订阅。
 普通 API 继续使用 Stellarmesh HTTP SDK。显式停止调用取消接口，不依赖浏览器断开。
+
+## Agent 图谱结果
+
+`features/company-graph/` 复用企业图谱展示适配，聊天页不引用图谱页面的专属组件。
+`ToolItemView` 提供可空的 children 插槽，不依赖具体业务展示；聊天页按成功 ToolItem 的类型化 graph 引用装配图谱卡片。
+卡片直接内嵌交互预览，通过固定 GraphApi 读取当前语言图谱；参数和原始结果独立折叠。
+图谱 feature 仅在预览可见时懒加载 G6，折叠或滚出视口时销毁实例，重新显示时重新加载。
+加载、重试和节点选择由面板管理；通用 GraphView 仍不认识工具协议。
+详情见[Agent 图谱工具](agent-graph.md)。
