@@ -36,6 +36,7 @@ flowchart LR
 | 模型侧数据扩展与本地 CLI | [数据适配器](dataset-adapters.md) |
 | UK 名称补充、关系语义与独立版本交付 | [UK 数据重新交付](uk-data-redelivery.md) |
 | 英国不良事件、月份口径与来源证据 | [不良事件表](uk-adverse-events.md) |
+| 事件前 12 个月财务、缺失与来源证据 | [历史财务补充](uk-financials.md) |
 | 单模型 CLI 输入输出、事件与产物 | [模型执行协议](model-execution-contract.md) |
 | 建模术语、不变量与适配边界 | [建模领域模型](modeling-domain.md) |
 | 新加坡企业聚合与调试样本 | [新加坡企业概览](singapore-overview.md) |
