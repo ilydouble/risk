@@ -10,10 +10,10 @@ from openai import AsyncOpenAI
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from strands import Agent
 from strands.models.openai import OpenAIModel
-from strands.types.content import Messages
 
 from risk_api.errors import AppError
 from risk_api.modules.assistant.assets import SessionAsset
+from risk_api.modules.assistant.history import conversation_messages
 from risk_api.modules.assistant.projector import ItemProjector
 from risk_api.modules.assistant.protocol.items import Item
 from risk_api.modules.assistant.protocol.turns import Turn
@@ -68,29 +68,6 @@ class ModelSettings:
             "max_tokens": self.max_tokens,
             "extra_body": thinking_params[self.connection_type],
         }
-
-
-def conversation_messages(history: list[Turn]) -> Messages:
-    messages: Messages = []
-    remaining = 32000
-    pairs: list[tuple[str, str]] = []
-    for turn in reversed(history):
-        if turn.status != "completed":
-            continue
-        user = next((i.text for i in turn.items if i.kind == "user_message"), "")
-        answer = "\n\n".join(i.text for i in turn.items if i.kind == "agent_message")
-        if not user or not answer or len(user) + len(answer) > remaining or len(pairs) >= 10:
-            break
-        remaining -= len(user) + len(answer)
-        pairs.append((user, answer))
-    for user, answer in reversed(pairs):
-        messages.extend(
-            [
-                {"role": "user", "content": [{"text": user}]},
-                {"role": "assistant", "content": [{"text": answer}]},
-            ]
-        )
-    return messages
 
 
 class StrandsRuntime:
@@ -164,7 +141,11 @@ class StrandsRuntime:
                         "to manufacture results. Generated reports are unverified analysis. "
                         "Use current_time for actual time. For factual workbench questions, "
                         "use workbench_catalog and workbench_ask; never invent database results. "
-                        "Resolve dataset/model IDs with the catalog when needed. Each query is "
+                        "Use exact dataset/model IDs returned by tools. If IDs are absent from "
+                        "history, call enterprise_risk_catalog() without filters to recover them; "
+                        "never invent UUIDs or put names into ID fields. After resource-not-found "
+                        "error refresh the catalog; do not ask users to copy a UUID you can query. "
+                        "Each query is "
                         "independent: include prior filters in follow-ups; clarify ambiguous "
                         "scope rather than guessing. Ground your answer in returned rows, "
                         "preserve warnings, scope, units and truncation, and distinguish saved "

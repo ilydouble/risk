@@ -19,8 +19,24 @@ def enterprise_risk_tools(
     sessions: async_sessionmaker[AsyncSession], owner: str,
     storage: ModelingStorage, client: ModelClient,
 ) -> list[AgentTool]:
-    def failure(code: str, message: str) -> dict:
-        return {"status": "error", "content": [{"json": {"code": code, "message": message}}]}
+    def failure(code: str, message: str, field: str | None = None) -> dict:
+        detail: dict = {"code": code, "message": message, "field": field}
+        if code in {"MODEL_INPUT_INVALID", "MODELING_RESOURCE_NOT_FOUND"}:
+            detail["recovery"] = (
+                "调用 enterprise_risk_catalog()（不传筛选参数）重新获取当前账号目录；"
+                "复制 models[].modelId 到 model_id、datasetId 到 dataset_id，不能使用名称或 runId。"
+                "目录没有目标时说明不可用，不猜测ID或扩大权限范围。"
+            )
+        return {"status": "error", "content": [{"json": detail}]}
+
+    def uuid_parameter(value: str, field: str) -> str:
+        try:
+            return str(UUID(value))
+        except ValueError as error:
+            raise AppError(
+                422, "MODEL_INPUT_INVALID", f"{field} 必须是目录返回的完整 UUID，不能填名称。",
+                field=field,
+            ) from error
 
     @tool
     async def enterprise_risk_catalog(
@@ -30,24 +46,28 @@ def enterprise_risk_tools(
 
         limit defaults to 10 and must be 1–50. The first entry is the latest in this scope.
 
+        model_id must be the exact UUID in models[].modelId, never name, datasetId or runId.
+        dataset_id must be the exact datasetId UUID, never the dataset name.
+        When the ID is unknown, call this tool with no filters to list available versions.
         Use model_id to inspect a specific version even outside the recent list.
         Resolve the exact model ID before predicting. Completed experiments must be published
         in the UI first. If several models match, ask the user to select; never guess a version.
         """
         try:
-            identity = str(UUID(dataset_id)) if dataset_id else None
+            identity = uuid_parameter(dataset_id, "dataset_id") if dataset_id is not None else None
             async with sessions() as session:
                 if not 1 <= limit <= 50:
-                    raise ValueError("Invalid limit")
+                    raise AppError(
+                        422, "MODEL_INPUT_INVALID", "limit须为1至50的整数。", field="limit"
+                    )
                 modeling = ModelingService(ModelingRepository(session), storage, client)
                 result = await ModelCatalogService(modeling).list(
-                    owner, identity, limit, str(UUID(model_id)) if model_id else None
+                    owner, identity, limit,
+                    uuid_parameter(model_id, "model_id") if model_id is not None else None,
                 )
             return {"status": "success", "content": [{"json": result}]}
-        except ValueError:
-            return failure("MODEL_INPUT_INVALID", "dataset_id须为有效UUID，limit须在1至50之间。")
         except AppError as error:
-            return failure(error.code, error.message)
+            return failure(error.code, error.message, error.field)
         except Exception:
             return failure("MODELING_TOOL_FAILED", "模型目录暂不可用，请稍后重试。")
 
@@ -55,16 +75,18 @@ def enterprise_risk_tools(
     async def enterprise_risk_predict(model_id: str, company_id: str) -> dict:
         """Compute and save one enterprise's prediction with a reproducible sensitivity explanation.
 
-        Use a published model ID from enterprise_risk_catalog and an exact enterprise ID from
+        Copy models[].modelId UUID from enterprise_risk_catalog into model_id (not name/runId).
+        Use an exact enterprise ID from
         its dataset. Only graph-bound enterprises are supported. No training or publication.
         Report model warnings and label meaning, never call the score a future default probability.
         Delta is score minus score with one feature replaced by the training median. It is not
         SHAP, not causal, and deltas cannot be summed. Relations are factual evidence only.
         """
         try:
-            identity = str(UUID(model_id))
+            identity = uuid_parameter(model_id, "model_id")
             if not company_id.strip() or len(company_id) > 256:
-                raise ValueError("Invalid company ID")
+                raise AppError(422, "MODEL_INPUT_INVALID", "company_id须为1至256字符的原始企业ID。",
+                               field="company_id")
             async with sessions() as session:
                 modeling = ModelingService(ModelingRepository(session), storage, client)
                 version = await modeling.repository.version(owner, identity)
@@ -107,10 +129,8 @@ def enterprise_risk_tools(
                         raise
                     result["evidenceWarning"] = "企业原始记录尚未导入，暂无属性及关系来源可追溯。"
             return {"status": "success", "content": [{"json": result}]}
-        except ValueError:
-            return failure("MODEL_INPUT_INVALID", "模型ID须为UUID，企业ID须为原始字符串标识。")
         except AppError as error:
-            return failure(error.code, error.message)
+            return failure(error.code, error.message, error.field)
         except Exception:
             return failure("MODELING_TOOL_FAILED", "预测解释暂不可用，未获得结果；请稍后重试。")
 
@@ -118,27 +138,29 @@ def enterprise_risk_tools(
     async def enterprise_risk_companies(model_id: str, keyword: str = "", page: int = 1) -> dict:
         """Find enterprises by name or original ID in the published model's dataset.
 
-        Use catalog to resolve model_id first. Return exact company IDs, 20 per page.
+        Copy models[].modelId UUID from enterprise_risk_catalog into model_id, not name,
+        datasetId or runId. If missing, call enterprise_risk_catalog() with no filters first.
+        Return exact company IDs, 20 per page.
         An empty keyword lists candidates; multiple matches require user clarification.
         Dataset membership does not guarantee inclusion in a subset-trained model's graph.
         Never substitute shared demo company IDs or invent IDs.
         """
         try:
-            identity = str(UUID(model_id))
-            if len(keyword) > 256 or not 1 <= page <= 10000:
-                raise ValueError("Invalid search")
+            identity = uuid_parameter(model_id, "model_id")
+            if len(keyword) > 256:
+                raise AppError(
+                    422, "MODEL_INPUT_INVALID", "keyword不能超过256字符。", field="keyword"
+                )
+            if not 1 <= page <= 10000:
+                raise AppError(422, "MODEL_INPUT_INVALID", "page须为1至10000的整数。", field="page")
             async with sessions() as session:
                 modeling = ModelingService(ModelingRepository(session), storage, client)
                 result = await ModelCatalogService(modeling).companies(
                     owner, identity, keyword.strip(), page
                 )
             return {"status": "success", "content": [{"json": result}]}
-        except ValueError:
-            return failure(
-                "MODEL_INPUT_INVALID", "模型ID须为UUID，关键词不超过256字符，页码为1至10000。"
-            )
         except AppError as error:
-            return failure(error.code, error.message)
+            return failure(error.code, error.message, error.field)
         except Exception:
             return failure("MODELING_TOOL_FAILED", "模型企业目录暂不可用，请稍后重试。")
 
