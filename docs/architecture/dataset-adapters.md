@@ -95,6 +95,12 @@ operation-result.json、events.jsonl 或 error.json。
 
 ## 协作与验证
 
+UK/SMEsD 快照节点支持可选 `name`，导出企业记录时原样保留；缺省为 null，
+兼容历史训练数据。名称是展示与搜索元数据，不参与数值特征编码。
+UK 构建脚本必须将 Companies House 的 `company_name` 写入节点 `name`。
+历史 UK 包已丢失名称，不能从企业编号推导；需用原始名称表按字符串编号关联，
+保留编号前导零，生成新版本数据包并重新导入，不修改历史包及其审计摘要。
+
 - 原研究脚本不导入 model_service；服务也不导入研究模型。
 - 服务和本轮模型接入模块的 import 均放在模块顶部。
 - 原研究 CLI 按 --data_dir 加载本地 load_comrisk 的历史行为仍保留，

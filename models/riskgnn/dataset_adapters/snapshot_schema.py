@@ -12,6 +12,7 @@ class Record(BaseModel):
 class Node(Record):
     id: str = Field(min_length=1)
     kind: Literal["company", "person"]
+    name: str | None = None
     community: str
     features: list[float | None]
     label: Literal[0, 1] | None

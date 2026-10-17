@@ -36,7 +36,7 @@ def snapshot_records(snapshots: dict) -> Iterable[EnterpriseRecord]:
                 "snapshot": split,
                 "nodeId": node.id,
                 "data": {
-                    "name": None,
+                    "name": node.name,
                     "attributes": attributes(snapshot.feature_names, node.features),
                     "community": node.community,
                     "label": node.label,
