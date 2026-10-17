@@ -25,9 +25,10 @@ export default function UploadedProfile() {
     });
     return () => { active = false; };
   }, [datasetId, companyId, modelId, revision]);
-  const back = `/search?source=uploaded&dataset=${encodeURIComponent(datasetId)}${modelId ? `&model=${encodeURIComponent(modelId)}` : ""}`;
+  const fromWorkbench = params.get("from") === "modeling";
+  const back = fromWorkbench ? `/modeling?tab=dataset&dataset=${encodeURIComponent(datasetId)}` : `/search?source=uploaded&dataset=${encodeURIComponent(datasetId)}${modelId ? `&model=${encodeURIComponent(modelId)}` : ""}`;
   return <div className="space-y-5">
-    <div className="flex items-center justify-between"><h1 className="text-2xl font-semibold">企业详情</h1><Link to={back} className="text-xs text-primary-400">← 返回本数据集检索</Link></div>
+    <div className="flex items-center justify-between"><h1 className="text-2xl font-semibold">企业详情</h1><Link to={back} className="text-xs text-primary-400">{fromWorkbench ? "← 返回模型工作台" : "← 返回本数据集检索"}</Link></div>
     {error && <p role="alert" className="rounded-lg border border-danger-500/30 p-4 text-sm text-danger-500">{error}</p>}
     {!data && !error && <p role="status" className="text-sm text-foreground-500">正在加载企业详情…</p>}
     {data && <>

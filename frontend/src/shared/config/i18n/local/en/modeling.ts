@@ -45,7 +45,7 @@ export default {
       "clear": "Clear company filter",
       "empty": "No matching records",
       "attributes": "View original attributes and evidence",
-      "related": "View related records",
+      "details": "View company details",
       "predict": "Predict",
       "probability": "Status probability",
       "label": "Predicted label",

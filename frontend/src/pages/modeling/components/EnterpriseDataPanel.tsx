@@ -12,6 +12,7 @@ import type {
 } from "@/shared/api/generated/schema";
 import type { useModelingWorkbench } from "@/features/modeling/model/useModelingWorkbench";
 import { handleApiError } from "@/shared/api/http";
+import { enterpriseLink } from "@/entities/modeling/lib/enterpriseDisplay";
 import { button, input } from "./presentation";
 
 type Workbench = ReturnType<typeof useModelingWorkbench>;
@@ -27,7 +28,6 @@ export function EnterpriseDataPanel({ work }: { work: Workbench }) {
   const [result, setResult] = useState<ResponseListEnterpriseRecords>();
   const [kind, setKind] = useState<Kind>("company");
   const [keyword, setKeyword] = useState("");
-  const [node, setNode] = useState<{ id: string; snapshot: string }>();
   const [page, setPage] = useState(1);
   const [modelId, setModelId] = useState("");
   const [revision, setRevision] = useState(0);
@@ -46,8 +46,6 @@ export function EnterpriseDataPanel({ work }: { work: Workbench }) {
         datasetId: work.datasetId,
         kind,
         keyword,
-        nodeId: node?.id,
-        snapshot: node?.snapshot,
         modelId: modelId || undefined,
         pagination: { page, pageSize: 20 },
       }).then((data) => {
@@ -59,7 +57,7 @@ export function EnterpriseDataPanel({ work }: { work: Workbench }) {
       });
     }, 200);
     return () => { active = false; clearTimeout(timer); };
-  }, [work.datasetId, kind, keyword, node, modelId, page, revision]);
+  }, [work.datasetId, kind, keyword, modelId, page, revision]);
 
   const act = async (operation: () => Promise<unknown>) => {
     setBusy(true);
@@ -131,14 +129,6 @@ export function EnterpriseDataPanel({ work }: { work: Workbench }) {
             </select>
           </div>
           {modelId && <p className="text-xs text-foreground-500">{t("modeling.enterprise.graphNote")}</p>}
-          {node && (
-            <div className="flex items-center gap-3 text-xs">
-              <span>{node.id} · {node.snapshot}</span>
-              <button className={button} onClick={() => { setNode(undefined); setPage(1); }}>
-                {t("modeling.enterprise.clear")}
-              </button>
-            </div>
-          )}
           {!loading && result.items.length === 0 && <p className="text-sm">{t("modeling.enterprise.empty")}</p>}
           <div className="space-y-2">
             {(!loading ? result.items : []).map((row) => (
@@ -172,10 +162,9 @@ export function EnterpriseDataPanel({ work }: { work: Workbench }) {
                 </details>
                 {row.kind === "company" && row.nodeId && (
                   <div className="mt-3 flex flex-wrap items-center gap-3 text-xs">
-                    <button className={button} onClick={() => {
-                      setNode({ id: row.nodeId!, snapshot: row.snapshot });
-                      setKind("edge"); setKeyword(""); setPage(1);
-                    }}>{t("modeling.enterprise.related")}</button>
+                    <Link className="text-primary-400 underline" to={`${enterpriseLink(work.datasetId, row.nodeId)}${modelId ? `&model=${encodeURIComponent(modelId)}` : ""}&from=modeling`}>
+                      {t("modeling.enterprise.details")}
+                    </Link>
                     {modelId && (
                       <button className={button} disabled={busy} onClick={() => void act(() =>
                         requestPredictModel({ modelId, companyIds: [row.nodeId!], explain: false }),

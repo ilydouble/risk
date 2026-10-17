@@ -45,7 +45,7 @@ export default {
       "clear": "清除企业筛选",
       "empty": "暂无符合条件的数据",
       "attributes": "查看原始属性与证据",
-      "related": "查看关联关系",
+      "details": "查看企业详情",
       "predict": "运行预测",
       "probability": "状态分类概率",
       "label": "预测标签",
