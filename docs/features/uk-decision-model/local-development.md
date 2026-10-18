@@ -3,13 +3,16 @@
 ## 范围
 
 本入口验证已训练财务版模型的加载与候选评分，不训练、不接数据库、不发布模型。
-正式推理 API 与助手接入尚需单独实现。原始结果口径见[全量训练记录](uk-financial-full-training.md)。
+正式推理 API 与助手接入尚需单独实现。原始结果口径见[全量训练记录](../../architecture/uk-financial-full-training.md)。
 
-JevForge 来自仓库内 [vendor/jevforge](../../models/vendor/jevforge/UPSTREAM.md)，
+JevForge 来自仓库内 [vendor/jevforge](../../../models/vendor/jevforge/UPSTREAM.md)，
 通过模型服务 uv 路径依赖安装；开发者不再复制外部源码或手工配置 PYTHONPATH。
 默认模型服务及 Docker 仍使用 CPU Torch，GPU 调试使用独立环境。
 
 ## 准备模型
+
+协作者日常安装推荐使用[发布包流程](release.md)，可同时校验 LoRA、冻结协议及底座。
+以下手工方式保留作初次收取模型时的调试入口，输出 bundleVerified=false。
 
 所有命令从仓库根目录执行。先安装锁定依赖：
 
@@ -34,7 +37,9 @@ tokenizer 等附属文件一并保留。模型按训练加载方式使用固定�
 
 `--input` 支持一个 JSON 对象，或原训练格式的 financial JSONL；`--line` 从 1 开始选择 JSONL 行。
 仅序列化 `state.features`，不读取 expected、标签或审计 ID。
-若输入提供 questions，则必须与固定训练问题一致。未知字段、非有限值和超出 2048 token
+输入协议固定在 `models/uk_decision/releases/uk-financial-0.6b-v1/input-contract.json`，
+不再读取 UK 适配器的当前特征规则。若输入提供 questions，则必须与固定训练问题一致。
+未知字段、非有限值和超出 2048 token
 的输入直接失败，不静默补值或截断；零值、负值和币种保留。
 
 最小工程探针如下。它不包含真实企业财务资料，只验证加载，不能用于证明预测质量：

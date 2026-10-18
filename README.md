@@ -63,6 +63,7 @@ ACRA / UK 默认最多 2,000 个目标，SMEsD 默认最多 4,000 个，保留�
 | `infra/` | 数据库、Bucket、CORS、图谱约束初始化 |
 | `contracts/` | 业务和模型服务各自导出的 OpenAPI |
 | `docs/architecture/` | 服务边界、数据协议、运行状态与本地开发 |
+| `docs/features/` | 具体功能的协作与使用说明，含 [UK 决策模型交付](docs/features/uk-decision-model/README.md) |
 
 ## 检查
 
