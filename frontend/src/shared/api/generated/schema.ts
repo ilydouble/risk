@@ -293,6 +293,108 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/decision/catalog": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Catalog */
+        post: operations["catalog_api_v1_decision_catalog_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/decision/companies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Companies */
+        post: operations["companies_api_v1_decision_companies_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/decision/get-prediction": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Get */
+        post: operations["get_api_v1_decision_get_prediction_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/decision/list-predictions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** History */
+        post: operations["history_api_v1_decision_list_predictions_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/decision/predict": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Predict */
+        post: operations["predict_api_v1_decision_predict_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/decision/preview-input": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Preview */
+        post: operations["preview_api_v1_decision_preview_input_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/document/complete-upload": {
         parameters: {
             query?: never;
@@ -1131,6 +1233,26 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ApiEnvelope[ResponseFinancialCatalog] */
+        ApiEnvelope_ResponseFinancialCatalog_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseFinancialCatalog"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseFinancialCompanies] */
+        ApiEnvelope_ResponseFinancialCompanies_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseFinancialCompanies"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
         /** ApiEnvelope[ResponseGetCompany] */
         ApiEnvelope_ResponseGetCompany_: {
             /** Code */
@@ -1166,6 +1288,16 @@ export interface components {
             /** Code */
             code: number;
             data: components["schemas"]["ResponseGetDataset"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponseGetFinancialPrediction] */
+        ApiEnvelope_ResponseGetFinancialPrediction_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseGetFinancialPrediction"] | null;
             /** Internal Code */
             internal_code: string;
             /** Message */
@@ -1281,6 +1413,16 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ApiEnvelope[ResponseListFinancialPredictions] */
+        ApiEnvelope_ResponseListFinancialPredictions_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponseListFinancialPredictions"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
         /** ApiEnvelope[ResponseListModels] */
         ApiEnvelope_ResponseListModels_: {
             /** Code */
@@ -1351,11 +1493,31 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ApiEnvelope[ResponsePredictFinancialCompany] */
+        ApiEnvelope_ResponsePredictFinancialCompany_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponsePredictFinancialCompany"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
         /** ApiEnvelope[ResponsePredictModel] */
         ApiEnvelope_ResponsePredictModel_: {
             /** Code */
             code: number;
             data: components["schemas"]["ResponsePredictModel"] | null;
+            /** Internal Code */
+            internal_code: string;
+            /** Message */
+            message: string;
+        };
+        /** ApiEnvelope[ResponsePreviewFinancialInput] */
+        ApiEnvelope_ResponsePreviewFinancialInput_: {
+            /** Code */
+            code: number;
+            data: components["schemas"]["ResponsePreviewFinancialInput"] | null;
             /** Internal Code */
             internal_code: string;
             /** Message */
@@ -2133,6 +2295,22 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ErrorEnvelope[Literal[404], Literal['DECISION_RECORD_NOT_FOUND', 'DECISION_PREDICTION_NOT_FOUND', 'MODELING_RESOURCE_NOT_FOUND']] */
+        ErrorEnvelope_Literal_404__Literal__DECISION_RECORD_NOT_FOUND____DECISION_PREDICTION_NOT_FOUND____MODELING_RESOURCE_NOT_FOUND___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 404;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @enum {string}
+             */
+            internal_code: "DECISION_RECORD_NOT_FOUND" | "DECISION_PREDICTION_NOT_FOUND" | "MODELING_RESOURCE_NOT_FOUND";
+            /** Message */
+            message: string;
+        };
         /** ErrorEnvelope[Literal[404], Literal['DOCUMENT_NOT_FOUND']] */
         ErrorEnvelope_Literal_404__Literal__DOCUMENT_NOT_FOUND___: {
             /**
@@ -2245,6 +2423,22 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** ErrorEnvelope[Literal[409], Literal['DECISION_DATA_NOT_READY', 'DECISION_REQUEST_CONFLICT', 'DECISION_VERSION_CONFLICT', 'DECISION_VERSION_CHANGED']] */
+        ErrorEnvelope_Literal_409__Literal__DECISION_DATA_NOT_READY____DECISION_REQUEST_CONFLICT____DECISION_VERSION_CONFLICT____DECISION_VERSION_CHANGED___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 409;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @enum {string}
+             */
+            internal_code: "DECISION_DATA_NOT_READY" | "DECISION_REQUEST_CONFLICT" | "DECISION_VERSION_CONFLICT" | "DECISION_VERSION_CHANGED";
+            /** Message */
+            message: string;
+        };
         /** ErrorEnvelope[Literal[409], Literal['DOCUMENT_SIZE_MISMATCH']] */
         ErrorEnvelope_Literal_409__Literal__DOCUMENT_SIZE_MISMATCH___: {
             /**
@@ -2354,6 +2548,22 @@ export interface components {
              * @enum {string}
              */
             internal_code: "REQUEST_INVALID" | "DATA_QA_UNSUPPORTED";
+            /** Message */
+            message: string;
+        };
+        /** ErrorEnvelope[Literal[422], Literal['REQUEST_INVALID', 'DECISION_INPUT_INVALID', 'DECISION_DATASET_UNSUPPORTED']] */
+        ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____DECISION_INPUT_INVALID____DECISION_DATASET_UNSUPPORTED___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 422;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @enum {string}
+             */
+            internal_code: "REQUEST_INVALID" | "DECISION_INPUT_INVALID" | "DECISION_DATASET_UNSUPPORTED";
             /** Message */
             message: string;
         };
@@ -2530,6 +2740,22 @@ export interface components {
              * @constant
              */
             internal_code: "GRAPH_QUERY_TIMEOUT";
+            /** Message */
+            message: string;
+        };
+        /** ErrorEnvelope[Literal[503], Literal['MODEL_SERVICE_UNAVAILABLE', 'DECISION_MODEL_DISABLED', 'DECISION_MODEL_UNAVAILABLE', 'DECISION_BUSY', 'DECISION_TIMEOUT', 'DECISION_PROTOCOL_INVALID', 'DECISION_PREDICTION_FAILED', 'AUTH_STORE_UNAVAILABLE', 'AUTH_STORE_INVALID']] */
+        ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____DECISION_MODEL_DISABLED____DECISION_MODEL_UNAVAILABLE____DECISION_BUSY____DECISION_TIMEOUT____DECISION_PROTOCOL_INVALID____DECISION_PREDICTION_FAILED____AUTH_STORE_UNAVAILABLE____AUTH_STORE_INVALID___: {
+            /**
+             * Code
+             * @constant
+             */
+            code: 503;
+            data: components["schemas"]["ErrorDetail"];
+            /**
+             * Internal Code
+             * @enum {string}
+             */
+            internal_code: "MODEL_SERVICE_UNAVAILABLE" | "DECISION_MODEL_DISABLED" | "DECISION_MODEL_UNAVAILABLE" | "DECISION_BUSY" | "DECISION_TIMEOUT" | "DECISION_PROTOCOL_INVALID" | "DECISION_PREDICTION_FAILED" | "AUTH_STORE_UNAVAILABLE" | "AUTH_STORE_INVALID";
             /** Message */
             message: string;
         };
@@ -2772,6 +2998,151 @@ export interface components {
             sha256: string;
             /** Size */
             size: number;
+        };
+        /** FinancialAdapter */
+        FinancialAdapter: {
+            /** Id */
+            id: string;
+            /** Version */
+            version: string;
+        };
+        /** FinancialCompany */
+        FinancialCompany: {
+            /** Companyid */
+            companyId: string;
+            /** Name */
+            name: string;
+            /** Observationmonth */
+            observationMonth: string | null;
+            /** Recordid */
+            recordId: string;
+            /** Snapshot */
+            snapshot: string;
+        };
+        /** FinancialDataset */
+        FinancialDataset: {
+            /** Adapterid */
+            adapterId: string;
+            /** Adapterversion */
+            adapterVersion: string;
+            /** Datasetid */
+            datasetId: string;
+            /** Name */
+            name: string;
+            /** Recordcount */
+            recordCount: number;
+        };
+        /** FinancialPredictionReference */
+        FinancialPredictionReference: {
+            /** Calibratedeventscore */
+            calibratedEventScore?: number | null;
+            /** Companyid */
+            companyId: string;
+            /** Companyname */
+            companyName: string;
+            /** Createdat */
+            createdAt: string;
+            /** Datasetid */
+            datasetId: string;
+            /** Eventscore */
+            eventScore: number;
+            /** Featurecount */
+            featureCount: number;
+            /** Inputsha256 */
+            inputSha256: string;
+            /**
+             * Kind
+             * @default financial_prediction
+             * @constant
+             */
+            kind: "financial_prediction";
+            /** Limitations */
+            limitations: string[];
+            /** Manifestsha256 */
+            manifestSha256: string;
+            /** Modelid */
+            modelId: string;
+            /** Modelversion */
+            modelVersion: string;
+            /** Noeventscore */
+            noEventScore: number;
+            /** Observationmonth */
+            observationMonth: string | null;
+            /** Predictionid */
+            predictionId: string;
+            /** Recordid */
+            recordId: string;
+            /** Target */
+            target: string;
+        };
+        /** FinancialProbabilities */
+        FinancialProbabilities: {
+            /** Event */
+            event: number;
+            /** No Event */
+            no_event: number;
+        };
+        /** FinancialScore */
+        FinancialScore: {
+            /**
+             * Bundleverified
+             * @constant
+             */
+            bundleVerified: true;
+            calibratedProbabilities: components["schemas"]["FinancialProbabilities"] | null;
+            /** Device */
+            device: string;
+            /** Dtype */
+            dtype: string;
+            /** Expectedbaserevision */
+            expectedBaseRevision: string;
+            /** Inferenceseconds */
+            inferenceSeconds: number;
+            /** Inputcontractsha256 */
+            inputContractSha256: string;
+            /** Inputtokensincludingcandidates */
+            inputTokensIncludingCandidates: number;
+            /** Limitations */
+            limitations: string[];
+            /** Manifestsha256 */
+            manifestSha256: string;
+            /** Modelversion */
+            modelVersion: string;
+            /** Providedfeatures */
+            providedFeatures: string[];
+            /** Questionid */
+            questionId: string;
+            rawProbabilities: components["schemas"]["FinancialProbabilities"];
+            /** Statesha256 */
+            stateSha256: string;
+            /** Target */
+            target: string;
+            /** Temperature */
+            temperature: number | null;
+        };
+        /** FinancialSource */
+        FinancialSource: {
+            /** Companyid */
+            companyId?: string | null;
+            /** Companyname */
+            companyName?: string | null;
+            /** Datasetid */
+            datasetId?: string | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "company" | "input";
+            /** Label */
+            label?: string | null;
+            /** Observationmonth */
+            observationMonth?: string | null;
+            /** Recordid */
+            recordId?: string | null;
+            /** Snapshot */
+            snapshot?: string | null;
+            /** Sourcesha256 */
+            sourceSha256?: string | null;
         };
         /** FiveCDimension */
         FiveCDimension: {
@@ -3224,6 +3595,37 @@ export interface components {
             /** Warnings */
             warnings: string[];
         };
+        /** RegisteredFinancialModel */
+        RegisteredFinancialModel: {
+            /** Baserevision */
+            baseRevision: string;
+            /** Calibrationavailable */
+            calibrationAvailable: boolean;
+            /** Device */
+            device: string;
+            /** Dtype */
+            dtype: string;
+            /** Id */
+            id: string;
+            /** Inputcontractsha256 */
+            inputContractSha256: string;
+            /** Inputcontractversion */
+            inputContractVersion: number;
+            /** Labels */
+            labels: ("no_event" | "event")[];
+            /** Manifestsha256 */
+            manifestSha256: string;
+            /** Maxtokens */
+            maxTokens: number;
+            /** Modelversion */
+            modelVersion: string;
+            /** Supportedadapters */
+            supportedAdapters: components["schemas"]["FinancialAdapter"][];
+            /** Supporteddatasetformats */
+            supportedDatasetFormats: string[];
+            /** Target */
+            target: string;
+        };
         /** RelatedParty */
         RelatedParty: {
             /** Exposure */
@@ -3432,6 +3834,22 @@ export interface components {
         RequestEnterpriseSources: {
             pagination?: components["schemas"]["PageRequest"];
         };
+        /** RequestFinancialCatalog */
+        RequestFinancialCatalog: Record<string, never>;
+        /** RequestFinancialCompanies */
+        RequestFinancialCompanies: {
+            /**
+             * Datasetid
+             * Format: uuid
+             */
+            datasetId: string;
+            /**
+             * Keyword
+             * @default
+             */
+            keyword: string;
+            pagination?: components["schemas"]["PageRequest"];
+        };
         /** RequestGetCompany */
         RequestGetCompany: {
             /** Id */
@@ -3470,6 +3888,14 @@ export interface components {
              * @enum {string}
              */
             lang: "zh" | "en";
+        };
+        /** RequestGetFinancialPrediction */
+        RequestGetFinancialPrediction: {
+            /**
+             * Predictionid
+             * Format: uuid
+             */
+            predictionId: string;
         };
         /** RequestGetGraph */
         RequestGetGraph: {
@@ -3568,6 +3994,10 @@ export interface components {
             /** Snapshot */
             snapshot?: string | null;
         };
+        /** RequestListFinancialPredictions */
+        RequestListFinancialPredictions: {
+            pagination?: components["schemas"]["PageRequest"];
+        };
         /** RequestListModels */
         RequestListModels: {
             pagination?: components["schemas"]["PageRequest"];
@@ -3591,6 +4021,21 @@ export interface components {
         RequestModelDefaults: Record<string, never>;
         /** RequestModelingCapabilities */
         RequestModelingCapabilities: Record<string, never>;
+        /** RequestPredictFinancialCompany */
+        RequestPredictFinancialCompany: {
+            /**
+             * Datasetid
+             * Format: uuid
+             */
+            datasetId: string;
+            /** Recordid */
+            recordId: string;
+            /**
+             * Requestkey
+             * Format: uuid
+             */
+            requestKey: string;
+        };
         /** RequestPredictModel */
         RequestPredictModel: {
             /** Companyids */
@@ -3605,6 +4050,23 @@ export interface components {
              * Format: uuid
              */
             modelId: string;
+        };
+        /** RequestPreviewFinancialInput */
+        RequestPreviewFinancialInput: {
+            /** Input */
+            input: {
+                [key: string]: components["schemas"]["JsonValue"];
+            };
+            /**
+             * Requestkey
+             * Format: uuid
+             */
+            requestKey: string;
+            /**
+             * Sourcelabel
+             * @default Explicit financial input
+             */
+            sourceLabel: string;
         };
         /** RequestPublishModel */
         RequestPublishModel: {
@@ -3956,6 +4418,27 @@ export interface components {
             /** Total */
             total: number;
         };
+        /** ResponseFinancialCatalog */
+        ResponseFinancialCatalog: {
+            /** Datasets */
+            datasets: components["schemas"]["FinancialDataset"][];
+            /** Errorcode */
+            errorCode?: string | null;
+            model: components["schemas"]["RegisteredFinancialModel"] | null;
+            /** Ready */
+            ready: boolean;
+        };
+        /** ResponseFinancialCompanies */
+        ResponseFinancialCompanies: {
+            /** Items */
+            items: components["schemas"]["FinancialCompany"][];
+            /** Page */
+            page: number;
+            /** Pagesize */
+            pageSize: number;
+            /** Total */
+            total: number;
+        };
         /** ResponseGetCompany */
         ResponseGetCompany: {
             company: components["schemas"]["CompanyDTO"];
@@ -4006,6 +4489,10 @@ export interface components {
             truncated: boolean;
             /** Truncationreasons */
             truncationReasons: string[];
+        };
+        /** ResponseGetFinancialPrediction */
+        ResponseGetFinancialPrediction: {
+            prediction: components["schemas"]["SavedFinancialPrediction"];
         };
         /** ResponseGetGraph */
         ResponseGetGraph: {
@@ -4134,6 +4621,17 @@ export interface components {
             /** Total */
             total: number;
         };
+        /** ResponseListFinancialPredictions */
+        ResponseListFinancialPredictions: {
+            /** Items */
+            items: components["schemas"]["SavedFinancialPrediction"][];
+            /** Page */
+            page: number;
+            /** Pagesize */
+            pageSize: number;
+            /** Total */
+            total: number;
+        };
         /** ResponseListModels */
         ResponseListModels: {
             /** Items */
@@ -4195,10 +4693,18 @@ export interface components {
             /** Items */
             items: components["schemas"]["ModelCapabilityDTO"][];
         };
+        /** ResponsePredictFinancialCompany */
+        ResponsePredictFinancialCompany: {
+            prediction: components["schemas"]["SavedFinancialPrediction"];
+        };
         /** ResponsePredictModel */
         ResponsePredictModel: {
             /** Items */
             items: components["schemas"]["PredictionDTO"][];
+        };
+        /** ResponsePreviewFinancialInput */
+        ResponsePreviewFinancialInput: {
+            prediction: components["schemas"]["SavedFinancialPrediction"];
         };
         /** ResponsePublishModel */
         ResponsePublishModel: {
@@ -4357,6 +4863,19 @@ export interface components {
             /** Workeralive */
             workerAlive?: boolean | null;
         };
+        /** SavedFinancialPrediction */
+        SavedFinancialPrediction: {
+            /**
+             * Createdat
+             * Format: date-time
+             */
+            createdAt: string;
+            /** Id */
+            id: string;
+            model: components["schemas"]["RegisteredFinancialModel"];
+            result: components["schemas"]["FinancialScore"];
+            source: components["schemas"]["FinancialSource"];
+        };
         /** ScoreDetail */
         ScoreDetail: {
             /** Basevalue */
@@ -4455,6 +4974,7 @@ export interface components {
              * @default
              */
             argumentsText: string;
+            financialPrediction?: components["schemas"]["FinancialPredictionReference"] | null;
             graph?: components["schemas"]["CompanyGraphReference"] | null;
             /** Id */
             id?: string;
@@ -5913,6 +6433,420 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorEnvelope_Literal_504__Literal__CHAT_TIMEOUT____DATA_QA_TIMEOUT___"];
+                };
+            };
+        };
+    };
+    catalog_api_v1_decision_catalog_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestFinancialCatalog"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseFinancialCatalog_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DECISION_RECORD_NOT_FOUND____DECISION_PREDICTION_NOT_FOUND____MODELING_RESOURCE_NOT_FOUND___"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DECISION_DATA_NOT_READY____DECISION_REQUEST_CONFLICT____DECISION_VERSION_CONFLICT____DECISION_VERSION_CHANGED___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____DECISION_INPUT_INVALID____DECISION_DATASET_UNSUPPORTED___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____DECISION_MODEL_DISABLED____DECISION_MODEL_UNAVAILABLE____DECISION_BUSY____DECISION_TIMEOUT____DECISION_PROTOCOL_INVALID____DECISION_PREDICTION_FAILED____AUTH_STORE_UNAVAILABLE____AUTH_STORE_INVALID___"];
+                };
+            };
+        };
+    };
+    companies_api_v1_decision_companies_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestFinancialCompanies"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseFinancialCompanies_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DECISION_RECORD_NOT_FOUND____DECISION_PREDICTION_NOT_FOUND____MODELING_RESOURCE_NOT_FOUND___"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DECISION_DATA_NOT_READY____DECISION_REQUEST_CONFLICT____DECISION_VERSION_CONFLICT____DECISION_VERSION_CHANGED___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____DECISION_INPUT_INVALID____DECISION_DATASET_UNSUPPORTED___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____DECISION_MODEL_DISABLED____DECISION_MODEL_UNAVAILABLE____DECISION_BUSY____DECISION_TIMEOUT____DECISION_PROTOCOL_INVALID____DECISION_PREDICTION_FAILED____AUTH_STORE_UNAVAILABLE____AUTH_STORE_INVALID___"];
+                };
+            };
+        };
+    };
+    get_api_v1_decision_get_prediction_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestGetFinancialPrediction"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseGetFinancialPrediction_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DECISION_RECORD_NOT_FOUND____DECISION_PREDICTION_NOT_FOUND____MODELING_RESOURCE_NOT_FOUND___"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DECISION_DATA_NOT_READY____DECISION_REQUEST_CONFLICT____DECISION_VERSION_CONFLICT____DECISION_VERSION_CHANGED___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____DECISION_INPUT_INVALID____DECISION_DATASET_UNSUPPORTED___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____DECISION_MODEL_DISABLED____DECISION_MODEL_UNAVAILABLE____DECISION_BUSY____DECISION_TIMEOUT____DECISION_PROTOCOL_INVALID____DECISION_PREDICTION_FAILED____AUTH_STORE_UNAVAILABLE____AUTH_STORE_INVALID___"];
+                };
+            };
+        };
+    };
+    history_api_v1_decision_list_predictions_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestListFinancialPredictions"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponseListFinancialPredictions_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DECISION_RECORD_NOT_FOUND____DECISION_PREDICTION_NOT_FOUND____MODELING_RESOURCE_NOT_FOUND___"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DECISION_DATA_NOT_READY____DECISION_REQUEST_CONFLICT____DECISION_VERSION_CONFLICT____DECISION_VERSION_CHANGED___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____DECISION_INPUT_INVALID____DECISION_DATASET_UNSUPPORTED___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____DECISION_MODEL_DISABLED____DECISION_MODEL_UNAVAILABLE____DECISION_BUSY____DECISION_TIMEOUT____DECISION_PROTOCOL_INVALID____DECISION_PREDICTION_FAILED____AUTH_STORE_UNAVAILABLE____AUTH_STORE_INVALID___"];
+                };
+            };
+        };
+    };
+    predict_api_v1_decision_predict_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestPredictFinancialCompany"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponsePredictFinancialCompany_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DECISION_RECORD_NOT_FOUND____DECISION_PREDICTION_NOT_FOUND____MODELING_RESOURCE_NOT_FOUND___"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DECISION_DATA_NOT_READY____DECISION_REQUEST_CONFLICT____DECISION_VERSION_CONFLICT____DECISION_VERSION_CHANGED___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____DECISION_INPUT_INVALID____DECISION_DATASET_UNSUPPORTED___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____DECISION_MODEL_DISABLED____DECISION_MODEL_UNAVAILABLE____DECISION_BUSY____DECISION_TIMEOUT____DECISION_PROTOCOL_INVALID____DECISION_PREDICTION_FAILED____AUTH_STORE_UNAVAILABLE____AUTH_STORE_INVALID___"];
+                };
+            };
+        };
+    };
+    preview_api_v1_decision_preview_input_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestPreviewFinancialInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiEnvelope_ResponsePreviewFinancialInput_"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_404__Literal__DECISION_RECORD_NOT_FOUND____DECISION_PREDICTION_NOT_FOUND____MODELING_RESOURCE_NOT_FOUND___"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_409__Literal__DECISION_DATA_NOT_READY____DECISION_REQUEST_CONFLICT____DECISION_VERSION_CONFLICT____DECISION_VERSION_CHANGED___"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____DECISION_INPUT_INVALID____DECISION_DATASET_UNSUPPORTED___"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____DECISION_MODEL_DISABLED____DECISION_MODEL_UNAVAILABLE____DECISION_BUSY____DECISION_TIMEOUT____DECISION_PROTOCOL_INVALID____DECISION_PREDICTION_FAILED____AUTH_STORE_UNAVAILABLE____AUTH_STORE_INVALID___"];
                 };
             };
         };
@@ -8814,10 +9748,13 @@ export type RequestDeleteModel = components["schemas"]["RequestDeleteModel"];
 export type RequestDownloadModel = components["schemas"]["RequestDownloadModel"];
 export type RequestEnterpriseCompany = components["schemas"]["RequestEnterpriseCompany"];
 export type RequestEnterpriseSources = components["schemas"]["RequestEnterpriseSources"];
+export type RequestFinancialCatalog = components["schemas"]["RequestFinancialCatalog"];
+export type RequestFinancialCompanies = components["schemas"]["RequestFinancialCompanies"];
 export type RequestGetCompany = components["schemas"]["RequestGetCompany"];
 export type RequestGetConversation = components["schemas"]["RequestGetConversation"];
 export type RequestGetDataset = components["schemas"]["RequestGetDataset"];
 export type RequestGetDatasetGraph = components["schemas"]["RequestGetDatasetGraph"];
+export type RequestGetFinancialPrediction = components["schemas"]["RequestGetFinancialPrediction"];
 export type RequestGetGraph = components["schemas"]["RequestGetGraph"];
 export type RequestGetModel = components["schemas"]["RequestGetModel"];
 export type RequestGetOverview = components["schemas"]["RequestGetOverview"];
@@ -8829,6 +9766,7 @@ export type RequestListConversations = components["schemas"]["RequestListConvers
 export type RequestListDatasets = components["schemas"]["RequestListDatasets"];
 export type RequestListDocuments = components["schemas"]["RequestListDocuments"];
 export type RequestListEnterpriseRecords = components["schemas"]["RequestListEnterpriseRecords"];
+export type RequestListFinancialPredictions = components["schemas"]["RequestListFinancialPredictions"];
 export type RequestListModels = components["schemas"]["RequestListModels"];
 export type RequestListRuns = components["schemas"]["RequestListRuns"];
 export type RequestLogin = components["schemas"]["RequestLogin"];
@@ -8836,7 +9774,9 @@ export type RequestLogout = components["schemas"]["RequestLogout"];
 export type RequestMe = components["schemas"]["RequestMe"];
 export type RequestModelDefaults = components["schemas"]["RequestModelDefaults"];
 export type RequestModelingCapabilities = components["schemas"]["RequestModelingCapabilities"];
+export type RequestPredictFinancialCompany = components["schemas"]["RequestPredictFinancialCompany"];
 export type RequestPredictModel = components["schemas"]["RequestPredictModel"];
+export type RequestPreviewFinancialInput = components["schemas"]["RequestPreviewFinancialInput"];
 export type RequestPublishModel = components["schemas"]["RequestPublishModel"];
 export type RequestRegister = components["schemas"]["RequestRegister"];
 export type RequestRerun = components["schemas"]["RequestRerun"];
@@ -8866,10 +9806,13 @@ export type ResponseEnterpriseCompany = components["schemas"]["ResponseEnterpris
 export type ResponseEnterpriseOverview = components["schemas"]["ResponseEnterpriseOverview"];
 export type ResponseEnterpriseProvenance = components["schemas"]["ResponseEnterpriseProvenance"];
 export type ResponseEnterpriseSources = components["schemas"]["ResponseEnterpriseSources"];
+export type ResponseFinancialCatalog = components["schemas"]["ResponseFinancialCatalog"];
+export type ResponseFinancialCompanies = components["schemas"]["ResponseFinancialCompanies"];
 export type ResponseGetCompany = components["schemas"]["ResponseGetCompany"];
 export type ResponseGetConversation = components["schemas"]["ResponseGetConversation"];
 export type ResponseGetDataset = components["schemas"]["ResponseGetDataset"];
 export type ResponseGetDatasetGraph = components["schemas"]["ResponseGetDatasetGraph"];
+export type ResponseGetFinancialPrediction = components["schemas"]["ResponseGetFinancialPrediction"];
 export type ResponseGetGraph = components["schemas"]["ResponseGetGraph"];
 export type ResponseGetModel = components["schemas"]["ResponseGetModel"];
 export type ResponseGetOverview = components["schemas"]["ResponseGetOverview"];
@@ -8881,6 +9824,7 @@ export type ResponseListConversations = components["schemas"]["ResponseListConve
 export type ResponseListDatasets = components["schemas"]["ResponseListDatasets"];
 export type ResponseListDocuments = components["schemas"]["ResponseListDocuments"];
 export type ResponseListEnterpriseRecords = components["schemas"]["ResponseListEnterpriseRecords"];
+export type ResponseListFinancialPredictions = components["schemas"]["ResponseListFinancialPredictions"];
 export type ResponseListModels = components["schemas"]["ResponseListModels"];
 export type ResponseListRuns = components["schemas"]["ResponseListRuns"];
 export type ResponseLogin = components["schemas"]["ResponseLogin"];
@@ -8888,7 +9832,9 @@ export type ResponseLogout = components["schemas"]["ResponseLogout"];
 export type ResponseMe = components["schemas"]["ResponseMe"];
 export type ResponseModelDefaults = components["schemas"]["ResponseModelDefaults"];
 export type ResponseModelingCapabilities = components["schemas"]["ResponseModelingCapabilities"];
+export type ResponsePredictFinancialCompany = components["schemas"]["ResponsePredictFinancialCompany"];
 export type ResponsePredictModel = components["schemas"]["ResponsePredictModel"];
+export type ResponsePreviewFinancialInput = components["schemas"]["ResponsePreviewFinancialInput"];
 export type ResponsePublishModel = components["schemas"]["ResponsePublishModel"];
 export type ResponseRegister = components["schemas"]["ResponseRegister"];
 export type ResponseRerun = components["schemas"]["ResponseRerun"];
