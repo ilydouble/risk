@@ -8,6 +8,7 @@
 | `riskgnn/` | RiskGNN 百万节点研究实现、邻居采样实验与[研究文档](riskgnn/docs/README.md) |
 | `riskgnn+/` | RiskGNN+ 证据学习、SMEsD/UK 对照与[研究文档](riskgnn+/docs/README.md) |
 | `riskgnnpp/` | 最新 RiskGNN++ 与 TACR 实现、[论文和实验材料](riskgnnpp/docs/README.md) |
+| `vendor/jevforge/` | 固定上游版本的第三方决策模型实现，保留 MIT 许可证 |
 
 `service/` 是统一模型服务，提供数据校验与分析、执行管理、模型包及推理入口。
 业务后端通过内部 HTTP 调用服务；研究目录保持自己的 requirements 和 CLI。

@@ -26,6 +26,9 @@ dependencies = [
   "alembic==1.20.0",
   "stellarmesh-logging==0.5.1",
   "stellarmesh-objectstorage==0.1.0",
+  "jevforge==0.1.0",
+  "peft==0.21.2",
+  "transformers>=4.51,<6",
 ]
 
 [dependency-groups]
@@ -49,6 +52,7 @@ explicit = true
 
 [tool.uv.sources]
 torch = { index = "pytorch-cpu" }
+jevforge = { path = "../vendor/jevforge" }
 
 [tool.ruff]
 target-version = "py312"
