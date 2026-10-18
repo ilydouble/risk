@@ -13,15 +13,10 @@ import torch
 from jevforge import Jev
 
 from scripts.jevforge_runtime import load_decision_model
-from scripts.prepare_uk_decisions import QUESTION, QUESTION_ID
+from scripts.uk_decision.input_contract import DEFINITION, input_state, load_contract
+from scripts.uk_decision.manifest import Release, digest, verify_bundle
 
 REVISION = "c1899de289a04d12100db370d81485cdf75e47ca"
-ROOT = Path(__file__).resolve().parents[1]
-
-
-def digest(path: Path) -> str:
-    with path.open("rb") as stream:
-        return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
 def read_input(path: Path, line: int = 1) -> dict:
@@ -44,32 +39,6 @@ def read_input(path: Path, line: int = 1) -> dict:
     return json.loads(content)
 
 
-def input_state(document: dict) -> str:
-    if not isinstance(document, dict) or not isinstance(document.get("state"), dict):
-        raise ValueError("Input requires a state object")
-    state = document["state"]
-    if set(state) != {"features"} or not isinstance(state["features"], dict):
-        raise ValueError("The financial model requires state.features only")
-    policy = json.loads((ROOT / "models/riskgnn/dataset_adapters/uk_dataset_v1/"
-                         "feature-policy.json").read_text())
-    numeric = {name for name in policy["numericFeatureAllowlist"]
-               if not name.endswith("_missing") or name == "financial_missing"}
-    categorical = set(policy["categoricalFeatureAllowlist"])
-    for name, value in state["features"].items():
-        if name in numeric:
-            if not isinstance(value, (int, float, bool)) or not math.isfinite(value):
-                raise ValueError(f"Invalid observed numeric feature: {name}")
-        elif name in categorical:
-            if not isinstance(value, str) or not value.strip():
-                raise ValueError(f"Invalid observed categorical feature: {name}")
-        else:
-            raise ValueError(f"Feature is outside the model input allowlist: {name}")
-    if "questions" in document and document["questions"] != {QUESTION_ID: QUESTION}:
-        raise ValueError("Questions must match the frozen training template")
-    # Training serializes only state; labels and audit identifiers never enter the prompt.
-    return json.dumps(state, separators=(",", ":"), allow_nan=False)
-
-
 def calibrated(probabilities: list[float], temperature: float) -> list[float]:
     if not math.isfinite(temperature) or temperature <= 0:
         raise ValueError("Calibration temperature must be finite and positive")
@@ -84,24 +53,44 @@ def predict(args: argparse.Namespace) -> dict:
     os.environ["HF_HUB_DISABLE_TELEMETRY"] = "1"
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
     torch.set_num_threads(args.threads)
-    state = input_state(read_input(args.input, args.line))
-    base, adapter = args.base.resolve(), args.adapter.resolve()
-    for path in (base / "config.json", base / "model.safetensors",
-                 adapter / "adapter_config.json", adapter / "adapter_model.safetensors",
-                 adapter / "decision_runtime.json"):
+    calibration_path = args.calibration
+    revision = REVISION
+    if args.model_dir:
+        root = args.model_dir.resolve()
+        base = args.base.resolve() if args.base else root / "base"
+        release = Release.model_validate_json(args.release.read_bytes())
+        manifest, contract = verify_bundle(root, release, base=base)
+        revision = manifest.model.base.revision
+        adapter = root / "adapter"
+        calibration_path = (
+            root / "calibration.json" if "calibration.json" in manifest.files else None
+        )
+    else:
+        contract = load_contract()
+        base, adapter = args.base.resolve(), args.adapter.resolve()
+    state = input_state(read_input(args.input, args.line), contract)
+    for path in (
+        base / "config.json",
+        base / "model.safetensors",
+        adapter / "adapter_config.json",
+        adapter / "adapter_model.safetensors",
+        adapter / "decision_runtime.json",
+    ):
         if not path.is_file():
             raise ValueError(f"Required local model file is missing: {path}")
-    device = ("cuda" if torch.cuda.is_available() else "cpu") if args.device == "auto" \
-        else args.device
+    device = (
+        ("cuda" if torch.cuda.is_available() else "cpu") if args.device == "auto" else args.device
+    )
     if device == "cuda" and not torch.cuda.is_available():
         raise ValueError("CUDA was requested but is unavailable in this Python environment")
     dtype = args.dtype or ("bfloat16" if device == "cuda" else "float32")
     started = time.perf_counter()
     raw, tokenizer = load_decision_model(str(base), adapter, device=device, dtype=dtype)
     model = Jev(raw, tokenizer, mode="tree")
-    encoded = model.encode(state, list(QUESTION["criteria"].values()), QUESTION["instructions"])
+    question = contract.question
+    encoded = model.encode(state, list(question.criteria.values()), question.instructions)
     tokens = len(encoded.prompt_ids) + len(encoded.trie.nodes)
-    if tokens > 2048:
+    if tokens > contract.max_tokens:
         raise ValueError("Input exceeds the trained 2048-token budget; truncation is disabled")
     if device == "cuda":
         torch.cuda.synchronize()
@@ -110,28 +99,39 @@ def predict(args: argparse.Namespace) -> dict:
     started = time.perf_counter()
     with torch.inference_mode():
         probabilities = model.decide(
-            state, list(QUESTION["criteria"].values()), QUESTION["instructions"],
+            state,
+            list(question.criteria.values()),
+            question.instructions,
         )
     if device == "cuda":
         torch.cuda.synchronize()
     inference_seconds = time.perf_counter() - started
-    if (len(probabilities) != 2 or not all(math.isfinite(p) and 0 <= p <= 1
-                                         for p in probabilities)
-            or not math.isclose(sum(probabilities), 1, abs_tol=1e-5)):
+    if (
+        len(probabilities) != 2
+        or not all(math.isfinite(p) and 0 <= p <= 1 for p in probabilities)
+        or not math.isclose(sum(probabilities), 1, abs_tol=1e-5)
+    ):
         raise ValueError("Model returned invalid candidate probabilities")
-    labels = list(QUESTION["criteria"])
+    labels = list(question.criteria)
     temperature = None
     adjusted = None
-    if args.calibration:
-        temperature = float(json.loads(args.calibration.read_text())["temperature"])
+    if calibration_path:
+        temperature = float(json.loads(calibration_path.read_text())["temperature"])
         adjusted = dict(zip(labels, calibrated(probabilities, temperature), strict=True))
     return {
-        "model": "Qwen3-0.6B UK financial LoRA", "expectedBaseRevision": REVISION,
+        "model": "Qwen3-0.6B UK financial LoRA",
+        "expectedBaseRevision": revision,
+        "modelVersion": contract.model_version,
+        "bundleVerified": args.model_dir is not None,
         "baseConfigSha256": digest(base / "config.json"),
-        "device": device, "dtype": dtype, "scoringMode": "tree",
-        "questionId": QUESTION_ID, "target": QUESTION["instructions"],
+        "device": device,
+        "dtype": dtype,
+        "scoringMode": "tree",
+        "questionId": contract.question_id,
+        "target": question.instructions,
         "rawProbabilities": dict(zip(labels, probabilities, strict=True)),
-        "calibratedProbabilities": adjusted, "temperature": temperature,
+        "calibratedProbabilities": adjusted,
+        "temperature": temperature,
         "inputTokensIncludingCandidates": tokens,
         "stateSha256": hashlib.sha256(state.encode()).hexdigest(),
         "adapterSha256": digest(adapter / "adapter_model.safetensors"),
@@ -139,21 +139,30 @@ def predict(args: argparse.Namespace) -> dict:
         "loadSeconds": round(load_seconds, 4),
         "inferenceSeconds": round(inference_seconds, 4),
         "peakAllocatedMiB": round(torch.cuda.max_memory_allocated() / 1024**2, 2)
-        if device == "cuda" else None,
+        if device == "cuda"
+        else None,
         "limitations": [
             "Matched research-cohort scores are not population default probabilities.",
             "CPU/dtype/batch changes require separate numerical validation.",
-            "No calibration is applied unless --calibration is supplied.",
+            "Calibration requires an explicit file or a versioned calibration artifact.",
         ],
     }
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--base", type=Path, required=True)
-    parser.add_argument("--adapter", type=Path, required=True)
-    parser.add_argument("--input", type=Path, required=True,
-                        help="JSON object or original financial JSONL; expected is ignored")
+    parser.add_argument(
+        "--model-dir", type=Path, help="Verify and load a complete versioned bundle"
+    )
+    parser.add_argument("--release", type=Path, default=DEFINITION / "release.json")
+    parser.add_argument("--base", type=Path, help="Defaults to MODEL_DIR/base in bundle mode")
+    parser.add_argument("--adapter", type=Path, help="Legacy local debugging, without a bundle")
+    parser.add_argument(
+        "--input",
+        type=Path,
+        required=True,
+        help="JSON object or original financial JSONL; expected is ignored",
+    )
     parser.add_argument("--line", type=int, default=1)
     parser.add_argument("--device", choices=("auto", "cpu", "cuda"), default="auto")
     parser.add_argument("--dtype", choices=("float32", "bfloat16", "float16"))
@@ -162,6 +171,13 @@ def main() -> int:
     args = parser.parse_args()
     if args.threads < 1:
         parser.error("--threads must be positive")
+    if args.model_dir:
+        if args.adapter or args.calibration:
+            parser.error(
+                "--model-dir uses its own adapter and calibration; overrides are not allowed"
+            )
+    elif not args.base or not args.adapter:
+        parser.error("Use --model-dir or provide both --base and --adapter")
     try:
         print(json.dumps(predict(args), ensure_ascii=False, allow_nan=False, indent=2))
     except (OSError, ValueError, RuntimeError) as error:

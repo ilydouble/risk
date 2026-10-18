@@ -1,0 +1,27 @@
+{
+  "kind": "engineering-only",
+  "server_reference": false,
+  "purpose": "Missing-financial-data loading probe; not a model quality evaluation",
+  "cases": [
+    {
+      "device": "cpu",
+      "dtype": "float32",
+      "probabilities": {
+        "no_event": 0.5537702441215515,
+        "event": 0.4462297558784485
+      },
+      "absolute_tolerance": 0.0001,
+      "input_tokens": 118
+    },
+    {
+      "device": "cuda",
+      "dtype": "bfloat16",
+      "probabilities": {
+        "no_event": 0.5621552467346191,
+        "event": 0.43784475326538086
+      },
+      "absolute_tolerance": 0.01,
+      "input_tokens": 118
+    }
+  ]
+}

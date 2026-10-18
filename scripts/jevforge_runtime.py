@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 import torch
+from jevforge.jev import load_model_and_tokenizer
 
 RUNTIME_FILE = "decision_runtime.json"
 
@@ -25,7 +26,8 @@ def save_runtime_buffers(model, adapter):
             raise ValueError("Unsupported runtime buffer: " + name)
         buffers[name] = {
             "dtype": str(value.dtype).removeprefix("torch."),
-            "shape": list(value.shape), "values": value.detach().cpu().tolist(),
+            "shape": list(value.shape),
+            "values": value.detach().cpu().tolist(),
         }
     path = Path(adapter) / RUNTIME_FILE
     path.write_text(json.dumps({"version": 1, "buffers": buffers}, indent=2, allow_nan=False))
@@ -48,10 +50,11 @@ def restore_runtime_buffers(model, adapter):
 
 
 def load_decision_model(model_id, adapter, device="cuda", dtype="bfloat16"):
-    from jevforge.jev import load_model_and_tokenizer
-
     model, tokenizer = load_model_and_tokenizer(
-        model_id, adapter=str(adapter), device=device, dtype=dtype,
+        model_id,
+        adapter=str(adapter),
+        device=device,
+        dtype=dtype,
     )
     restore_runtime_buffers(model, adapter)
     return model, tokenizer
