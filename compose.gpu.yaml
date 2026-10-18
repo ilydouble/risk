@@ -1,0 +1,17 @@
+# The HTTP service owns the GPU; the existing training worker keeps its CPU image.
+services:
+  riskgnn:
+    image: risk-riskgnn:cuda-local
+    build:
+      args:
+        MODEL_TORCH_GROUP: cuda
+    environment:
+      DECISION_DEVICE: cuda
+      DECISION_DTYPE: bfloat16
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

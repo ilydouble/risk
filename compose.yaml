@@ -124,8 +124,15 @@ services:
       AWS_ACCESS_KEY_ID: ${MODELING_STORAGE_ACCESS_KEY:-RISKMODELINGAPP2026}
       AWS_SECRET_ACCESS_KEY: ${MODELING_STORAGE_SECRET_KEY:-local-modeling-change-me}
       RISK_LOG_FORMAT: ${RISK_LOG_FORMAT:-pretty}
+      DECISION_ENABLED: ${DECISION_ENABLED:-true}
+      DECISION_MODEL_DIR: /app/models/weights/${DECISION_MODEL_DIRECTORY:-uk-financial-0.6b-v1}
+      DECISION_DEVICE: ${DECISION_DEVICE:-cpu}
+      DECISION_DTYPE: ${DECISION_DTYPE:-float32}
+      DECISION_CPU_THREADS: ${DECISION_CPU_THREADS:-4}
+      DECISION_TIMEOUT_SECONDS: ${DECISION_TIMEOUT_SECONDS:-60}
     volumes:
       - model-workspace:/workspace
+      - ./models/weights:/app/models/weights:ro
     depends_on:
       model-db-init:
         condition: service_completed_successfully
@@ -143,7 +150,9 @@ services:
       context: ./models
       dockerfile: service/Dockerfile
     command: ["python", "-m", "model_service.execution.worker"]
-    environment: *model-environment
+    environment:
+      <<: *model-environment
+      DECISION_ENABLED: "false"
     volumes:
       - model-workspace:/workspace
     depends_on:

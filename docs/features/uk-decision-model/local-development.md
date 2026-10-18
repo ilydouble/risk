@@ -3,11 +3,11 @@
 ## 范围
 
 本入口验证已训练财务版模型的加载与候选评分，不训练、不接数据库、不发布模型。
-正式推理 API 与助手接入尚需单独实现。原始结果口径见[全量训练记录](../../architecture/uk-financial-full-training.md)。
+正式 HTTP 与助手入口见[服务接入](integration.md)。原始结果口径见[全量训练记录](../../architecture/uk-financial-full-training.md)。
 
 JevForge 来自仓库内 [vendor/jevforge](../../../models/vendor/jevforge/UPSTREAM.md)，
 通过模型服务 uv 路径依赖安装；开发者不再复制外部源码或手工配置 PYTHONPATH。
-默认模型服务及 Docker 仍使用 CPU Torch，GPU 调试使用独立环境。
+默认模型服务及 Docker 使用 CPU Torch，GPU 使用单独的锁定依赖组和部署覆盖。
 
 ## 准备模型
 
@@ -65,20 +65,15 @@ expectedBaseRevision 是此入口约定的底座版本，下载时仍须使用�
 ## 独立 CUDA 调试环境
 
 本机 NVIDIA 驱动可用即可运行 Python CUDA；本步骤不安装或重启宿主驱动及 Docker。
-从模型服务锁文件导出通用依赖，仅将 Torch 替换为同版本 CUDA 12.8 构建：
+从同一锁文件选择 cuda 组，CPU 默认组与其互斥：
 
 ```bash
-cd models/service
-uv venv --python 3.12 ../runs/uk-decision-cuda/.venv
-uv export --frozen --no-dev --no-hashes --no-emit-project --no-emit-package torch \
-  --output-file ../runs/uk-decision-cuda/requirements.txt > /dev/null
-uv pip install --python ../runs/uk-decision-cuda/.venv/bin/python --torch-backend cu128 \
-  -r ../runs/uk-decision-cuda/requirements.txt 'torch==2.7.1'
-cd ../..
+UV_PROJECT_ENVIRONMENT="$PWD/models/runs/uk-decision-cuda/.venv" \
+  uv sync --project models/service --locked --no-default-groups --group cuda
 ```
 
-requirements 中本地路径以 models/service 为基准，所以安装时保持上述工作目录。
-CUDA 库在该环境单独解析，属于本地调试环境；正式 GPU 镜像仍需单独锁定及验收。
+该环境安装同一份正式服务包与共享底层运行时，CUDA 12.8 库来自已提交的锁文件。
+不会修改默认 CPU 虚拟环境，也不影响研究者自己的 requirements 环境。
 
 ```bash
 models/runs/uk-decision-cuda/.venv/bin/python -m scripts.predict_uk_decision \
@@ -93,9 +88,10 @@ CUDA 默认 bfloat16，CPU 默认 float32；两者都恢复训练保存的运行
 
 ## Docker 验证边界
 
-服务 Dockerfile 已在依赖安装层复制 vendor，并使用同一锁文件安装。
-CPU 镜像可在 network=none 的临时容器中只读挂载模型和 scripts 执行同一命令；
-此测试只证明离线加载和评分，不代表已上线决策 HTTP、GPU 容器或助手工具。
+服务 Dockerfile 在依赖安装层复制 vendor 和共享 uk_decision 小包，再安装正式服务。
+镜像已包含 CLI，不再需要挂载根目录 scripts。
+CPU 镜像可在 network=none 的临时容器中只读挂载完整模型目录，
+以 `python -m model_service.cli predict --model-dir ... --input ... --device cpu` 验证离线评分。
 GPU 容器还需宿主 NVIDIA Container Toolkit；现场需提前准备镜像及模型文件。
 
 ## 本轮验证
@@ -104,4 +100,5 @@ GPU 容器还需宿主 NVIDIA Container Toolkit；现场需提前准备镜像及
 最小缺失财务工程探针在 CPU/float32 与 RTX4060 Laptop/CUDA12.8/bfloat16 均完成评分。
 该短输入 CUDA 首次推理约 0.45 秒，峰值 allocated 约 1191 MiB；不作为完整输入吞吐承诺。
 CPU 禁网容器的原始两类概率与本机 CPU 完全一致。GPU 与 CPU 概率存在 dtype 数值差异。
-当前缺少服务器固定验收样本及 calibration.json，尚未验收服务器数值复现和校准结果。
+已取得同事提供的完整 financial JSONL，并用真实 test 观测完成常驻服务推理。
+仍缺少服务器固定参考输出及 calibration.json，尚未验收服务器数值复现和校准结果。

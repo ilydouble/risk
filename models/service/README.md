@@ -2,7 +2,8 @@
 
 服务负责 HTTP、任务队列、租约、取消、事件与产物管理。
 当前默认部署 RiskGNN+，通过 `python -m riskgnn.workbench_cli` 启动模型侧进程。
-数据适配、load/split、训练、测试和预测均位于 `../riskgnn/`，服务不导入模型代码。
+图模型的数据适配、load/split、训练、测试和预测位于 `../riskgnn/`，由子进程执行。
+部署的 UK 财务模型由 decision 模块常驻加载，使用独立的有界推理线程，不复用训练进程。
 
 ## 目录
 
@@ -14,6 +15,7 @@ src/model_service/
     jobs/                   任务 API、执行记录及页面流程组合
     artifacts/              产物记录查询
     models/                 当前运行时声明与预测 API
+    decision/               财务模型契约、加载、评分、HTTP 和 CLI
   execution/
     contracts/              执行请求、结果、事件与错误，按职责分文件
     runtime.py              固定模型 CLI 的根目录与声明文件
@@ -30,8 +32,10 @@ src/model_service/
 服务使用 Python 3.12、uv 和 CPU Torch，原研究 requirements 与 Python/CUDA 环境独立。
 JevForge 以本地路径依赖安装，源码及固定版本见 [第三方来源](../vendor/jevforge/UPSTREAM.md)。
 底座与 LoRA 不提交 Git；交付、下载校验及本地调试见 [UK 决策模型](../../docs/features/uk-decision-model/README.md)。
-镜像同时 COPY 服务和全部模型源码；HTTP 与 Worker 共用镜像、数据库和持久工作目录。
-HTTP 进程不导入 Torch，模型运算仅在子进程中执行。
+镜像同时 COPY 服务和全部模型源码；CPU 部署的 HTTP 与 Worker 共用镜像，
+GPU 部署仅 HTTP 使用 CUDA 镜像。两者共用执行数据库和持久工作目录。
+HTTP 进程会导入 Torch 并加载财务模型；业务 API 后端仍不安装 Torch。
+GPU 构建通过根目录 compose.gpu.yaml 选择互斥的 cuda 依赖组；默认 cpu 组不安装 CUDA 库。
 
 以下命令在 models/ 下执行：
 
@@ -92,5 +96,7 @@ uv run --project service python -m model_service.export_openapi
 [smesd](../riskgnn/dataset_adapters/smesd/README.md)、
 [uk_dataset_v1](../riskgnn/dataset_adapters/uk_dataset_v1/README.md)。
 服务不导入数据适配器。旧 Bundle 与合成演示包已停止支持。
+财务观测适配器 [uk_financial](../riskgnn/dataset_adapters/uk_financial/README.md)
+用于已部署模型推理；上传、校验和企业导入沿用工作台，但不创建图模型训练任务。
 本地数据默认在仓库 datasets/，可用 RISK_DATASETS_ROOT 覆盖；
 完整验收运行 `uv run pytest --require-datasets`，缺少真实数据直接失败。

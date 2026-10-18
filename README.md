@@ -21,6 +21,10 @@ Compose 默认启动 `riskgnn` HTTP 服务和 `riskgnn-worker`；模型服务不
 PostgreSQL 内独立创建 `riskgnn` 数据库与用户，RustFS 内创建 `risk-modeling` Bucket 和专用应用凭据。
 业务 API 不安装 Torch，不导入模型代码。原业务数据与对象不迁移、不删除。
 
+已部署的 UK Qwen3-0.6B 财务 LoRA 通过同一模型服务常驻推理，
+使用完整模型目录的只读挂载；缺少权重时只影响财务推理，其他业务继续启动。
+数据上传、CPU/GPU 部署、助手预测及保存记录见 [UK 财务模型接入](docs/features/uk-decision-model/integration.md)。
+
 ## 第一条模型链路
 
 安装 `uv` 后，从仓库根目录打包已解压的数据，无需安装模型服务环境：
@@ -103,5 +107,7 @@ PostgreSQL 契约测试需设置 `RISK_TEST_DATABASE_URL`，在随机临时 sche
 `RISK_LLM_CONNECTION_TYPE` 选择 `qwen_self_hosted`（默认）或 `minimax`，两者均显式关闭思考。
 推理消息协议和 UI 仍保留。配置示例及重建命令见[Agent 模型连接配置](docs/architecture/agent-model-config.md)。
 Agent 提供 `current_time`、`search_companies` 和 `show_company_graph`；图谱结果在工具卡片中直接展示交互预览，数据明确标为演示。详见[图谱工具](docs/architecture/agent-graph.md)。工作台问数仍是独立功能。
-更新后重建后端和前端，后端启动自动迁移到 V0009；旧数据保留。
+部署财务模型后，助手可通过 `financial_risk_catalog`、`financial_risk_companies`、
+`predict_company_financial_risk` 完成授权观测检索、预测和结果卡片展示；不向对话模型发送原始财务输入。
+更新后重建后端和前端，后端启动自动迁移到 V0015；旧数据保留。
 详见[Agent 架构](docs/architecture/agent-conversation.md)和[消息协议](docs/architecture/agent-protocol.md)。
