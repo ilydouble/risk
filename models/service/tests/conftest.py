@@ -18,6 +18,11 @@ def pytest_sessionstart(session):
 
 def pytest_addoption(parser):
     parser.addoption(
+        "--require-decision-model",
+        action="store_true",
+        help="Require and exercise the installed financial model",
+    )
+    parser.addoption(
         "--require-datasets",
         action="store_true",
         help="Fail instead of skipping when the real dataset inputs are absent",
@@ -66,3 +71,9 @@ def export_zip(acra_source, tmp_path):
         for path in root.iterdir():
             zipped.write(path, "comrisk_export/" + path.name)
     return archive
+
+
+@pytest.fixture(autouse=True)
+def decision_disabled_by_default(monkeypatch):
+    # Ordinary API tests must not implicitly allocate a GPU or load private weights.
+    monkeypatch.setenv("DECISION_ENABLED", "false")

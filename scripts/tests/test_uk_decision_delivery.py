@@ -9,9 +9,14 @@ from copy import deepcopy
 import pytest
 from pydantic import ValidationError
 
-from scripts.uk_decision.archive import extract, install, package, write_json
-from scripts.uk_decision.input_contract import DEFINITION, input_state, load_contract
-from scripts.uk_decision.manifest import Release, describe, digest, verify_bundle
+from model_service.modules.decision.artifacts.archive import extract, install, package, write_json
+from model_service.modules.decision.artifacts.manifest import (
+    Release,
+    describe,
+    digest,
+    verify_bundle,
+)
+from model_service.modules.decision.contracts.input import DEFINITION, input_state, load_contract
 
 
 @pytest.fixture

@@ -11,12 +11,12 @@ from pathlib import Path
 
 from huggingface_hub import snapshot_download
 
-from scripts.uk_decision.archive import install, package
-from scripts.uk_decision.input_contract import DEFINITION, ROOT
-from scripts.uk_decision.manifest import Release, verify_bundle
+from model_service.modules.decision.artifacts.archive import install, package
+from model_service.modules.decision.artifacts.manifest import Release, verify_bundle
+from model_service.modules.decision.contracts.input import DEFINITION, ROOT
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     build = commands.add_parser("package", help="Create a local Release asset; never upload")
@@ -34,7 +34,7 @@ def main() -> int:
     check.add_argument("--model-dir", type=Path, required=True)
     check.add_argument("--release", type=Path, default=DEFINITION / "release.json")
     check.add_argument("--base", type=Path)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     try:
         if args.command == "package":
             release = package(

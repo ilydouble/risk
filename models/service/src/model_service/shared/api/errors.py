@@ -5,9 +5,14 @@ from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException
 
 from model_service.execution.contracts import ExecutionError
+from model_service.modules.decision.errors import DecisionError
 from model_service.shared.api.response import error_response
 
 logger = logging.getLogger("riskgnn.http")
+
+
+async def decision_error(request: Request, exc: DecisionError):
+    return error_response(request, exc.status, exc.code, exc.message, field=exc.field)
 
 
 async def http_error(request: Request, exc: HTTPException):
@@ -55,6 +60,7 @@ async def execution_error(request: Request, exc: ExecutionError):
 
 
 def register_error_handlers(app: FastAPI) -> None:
+    app.exception_handler(DecisionError)(decision_error)
     app.exception_handler(ExecutionError)(execution_error)
     app.exception_handler(HTTPException)(http_error)
     app.exception_handler(RequestValidationError)(invalid)

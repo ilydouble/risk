@@ -4,6 +4,8 @@ from dishka import Provider, Scope, provide
 from sqlalchemy.ext.asyncio import AsyncEngine
 from stellarmesh_objectstorage import AsyncClient, ClientConfig
 
+from model_service.modules.decision.service import DecisionService
+from model_service.modules.decision.settings import DecisionSettings
 from model_service.modules.jobs.repository import Store
 from model_service.modules.models.service import Runtime
 from model_service.shared.config import Settings
@@ -14,6 +16,14 @@ class Infrastructure(Provider):
     def __init__(self, settings: Settings):
         super().__init__()
         self.settings = settings
+
+    @provide(scope=Scope.APP)
+    async def decision(self) -> AsyncGenerator[DecisionService, None]:
+        service = DecisionService(DecisionSettings())
+        try:
+            yield service
+        finally:
+            await service.close()
 
     @provide(scope=Scope.APP)
     async def database(self) -> AsyncGenerator[AsyncEngine, None]:

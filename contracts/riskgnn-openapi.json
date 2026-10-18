@@ -120,6 +120,262 @@
         "title": "CapabilityDTO",
         "type": "object"
       },
+      "DecisionModelInfo": {
+        "properties": {
+          "baseRevision": {
+            "title": "Baserevision",
+            "type": "string"
+          },
+          "calibrationAvailable": {
+            "title": "Calibrationavailable",
+            "type": "boolean"
+          },
+          "device": {
+            "title": "Device",
+            "type": "string"
+          },
+          "dtype": {
+            "title": "Dtype",
+            "type": "string"
+          },
+          "inputContractSha256": {
+            "title": "Inputcontractsha256",
+            "type": "string"
+          },
+          "inputContractVersion": {
+            "title": "Inputcontractversion",
+            "type": "integer"
+          },
+          "labels": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Labels",
+            "type": "array"
+          },
+          "manifestSha256": {
+            "title": "Manifestsha256",
+            "type": "string"
+          },
+          "maxTokens": {
+            "title": "Maxtokens",
+            "type": "integer"
+          },
+          "modelVersion": {
+            "title": "Modelversion",
+            "type": "string"
+          },
+          "supportedAdapters": {
+            "default": [
+              {
+                "id": "uk-dataset-v1",
+                "version": "2"
+              },
+              {
+                "id": "uk-financial-jsonl",
+                "version": "1"
+              }
+            ],
+            "items": {
+              "$ref": "#/components/schemas/SupportedAdapter"
+            },
+            "title": "Supportedadapters",
+            "type": "array"
+          },
+          "supportedDatasetFormats": {
+            "default": [
+              "uk-research-v2",
+              "uk-financial-jsonl-v1"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "title": "Supporteddatasetformats",
+            "type": "array"
+          },
+          "target": {
+            "title": "Target",
+            "type": "string"
+          }
+        },
+        "required": [
+          "modelVersion",
+          "manifestSha256",
+          "baseRevision",
+          "inputContractVersion",
+          "inputContractSha256",
+          "target",
+          "labels",
+          "calibrationAvailable",
+          "device",
+          "dtype",
+          "maxTokens"
+        ],
+        "title": "DecisionModelInfo",
+        "type": "object"
+      },
+      "DecisionPrediction": {
+        "properties": {
+          "adapterSha256": {
+            "title": "Adaptersha256",
+            "type": "string"
+          },
+          "baseConfigSha256": {
+            "title": "Baseconfigsha256",
+            "type": "string"
+          },
+          "bundleVerified": {
+            "title": "Bundleverified",
+            "type": "boolean"
+          },
+          "calibratedProbabilities": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Probabilities"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "device": {
+            "title": "Device",
+            "type": "string"
+          },
+          "dtype": {
+            "title": "Dtype",
+            "type": "string"
+          },
+          "expectedBaseRevision": {
+            "title": "Expectedbaserevision",
+            "type": "string"
+          },
+          "inferenceSeconds": {
+            "title": "Inferenceseconds",
+            "type": "number"
+          },
+          "inputContractSha256": {
+            "title": "Inputcontractsha256",
+            "type": "string"
+          },
+          "inputSnapshot": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/JsonValue"
+            },
+            "title": "Inputsnapshot",
+            "type": "object"
+          },
+          "inputTokensIncludingCandidates": {
+            "title": "Inputtokensincludingcandidates",
+            "type": "integer"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "loadSeconds": {
+            "title": "Loadseconds",
+            "type": "number"
+          },
+          "manifestSha256": {
+            "title": "Manifestsha256",
+            "type": "string"
+          },
+          "model": {
+            "default": "Qwen3-0.6B UK financial LoRA",
+            "title": "Model",
+            "type": "string"
+          },
+          "modelVersion": {
+            "title": "Modelversion",
+            "type": "string"
+          },
+          "peakAllocatedMiB": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Peakallocatedmib"
+          },
+          "providedFeatures": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Providedfeatures",
+            "type": "array"
+          },
+          "questionId": {
+            "title": "Questionid",
+            "type": "string"
+          },
+          "rawProbabilities": {
+            "$ref": "#/components/schemas/Probabilities"
+          },
+          "runtimeSha256": {
+            "title": "Runtimesha256",
+            "type": "string"
+          },
+          "scoringMode": {
+            "const": "tree",
+            "default": "tree",
+            "title": "Scoringmode",
+            "type": "string"
+          },
+          "stateSha256": {
+            "title": "Statesha256",
+            "type": "string"
+          },
+          "target": {
+            "title": "Target",
+            "type": "string"
+          },
+          "temperature": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Temperature"
+          }
+        },
+        "required": [
+          "modelVersion",
+          "manifestSha256",
+          "expectedBaseRevision",
+          "baseConfigSha256",
+          "inputContractSha256",
+          "bundleVerified",
+          "device",
+          "dtype",
+          "questionId",
+          "target",
+          "rawProbabilities",
+          "calibratedProbabilities",
+          "temperature",
+          "inputTokensIncludingCandidates",
+          "stateSha256",
+          "adapterSha256",
+          "runtimeSha256",
+          "loadSeconds",
+          "inferenceSeconds",
+          "peakAllocatedMiB",
+          "inputSnapshot",
+          "providedFeatures",
+          "limitations"
+        ],
+        "title": "DecisionPrediction",
+        "type": "object"
+      },
       "Envelope_ResponseCapabilities_": {
         "properties": {
           "code": {
@@ -172,6 +428,60 @@
           "data"
         ],
         "title": "Envelope[ResponseConfiguration]",
+        "type": "object"
+      },
+      "Envelope_ResponseDecisionPredict_": {
+        "properties": {
+          "code": {
+            "default": 200,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ResponseDecisionPredict"
+          },
+          "internal_code": {
+            "default": "SUCCESS",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "default": "OK",
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "Envelope[ResponseDecisionPredict]",
+        "type": "object"
+      },
+      "Envelope_ResponseDecisionStatus_": {
+        "properties": {
+          "code": {
+            "default": 200,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ResponseDecisionStatus"
+          },
+          "internal_code": {
+            "default": "SUCCESS",
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "default": "OK",
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "Envelope[ResponseDecisionStatus]",
         "type": "object"
       },
       "Envelope_ResponseEvents_": {
@@ -322,7 +632,15 @@
               "MODEL_STATE_INVALID",
               "MODEL_RESOURCE_NOT_FOUND",
               "MODEL_SERVICE_UNAVAILABLE",
-              "ROUTE_NOT_FOUND"
+              "ROUTE_NOT_FOUND",
+              "DECISION_MODEL_DISABLED",
+              "DECISION_MODEL_UNAVAILABLE",
+              "DECISION_INPUT_INVALID",
+              "DECISION_DATASET_UNSUPPORTED",
+              "DECISION_VERSION_CHANGED",
+              "DECISION_BUSY",
+              "DECISION_TIMEOUT",
+              "DECISION_PREDICTION_FAILED"
             ],
             "title": "Internal Code",
             "type": "string"
@@ -418,6 +736,43 @@
         ],
         "title": "ExecutionEventKind",
         "type": "string"
+      },
+      "FeatureSensitivityDTO": {
+        "properties": {
+          "delta": {
+            "maximum": 1.0,
+            "minimum": -1.0,
+            "title": "Delta",
+            "type": "number"
+          },
+          "feature": {
+            "title": "Feature",
+            "type": "string"
+          },
+          "probabilityAtReference": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Probabilityatreference",
+            "type": "number"
+          },
+          "referenceValue": {
+            "title": "Referencevalue",
+            "type": "number"
+          },
+          "value": {
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "feature",
+          "value",
+          "referenceValue",
+          "probabilityAtReference",
+          "delta"
+        ],
+        "title": "FeatureSensitivityDTO",
+        "type": "object"
       },
       "InputSpec": {
         "additionalProperties": false,
@@ -545,6 +900,16 @@
             ],
             "title": "Conflict"
           },
+          "explanation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PredictionExplanationDTO"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "fusedProbability": {
             "anyOf": [
               {
@@ -614,6 +979,74 @@
         "title": "PredictionDTO",
         "type": "object"
       },
+      "PredictionExplanationDTO": {
+        "properties": {
+          "features": {
+            "items": {
+              "$ref": "#/components/schemas/FeatureSensitivityDTO"
+            },
+            "title": "Features",
+            "type": "array"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "method": {
+            "const": "training-median-intervention-v1",
+            "title": "Method",
+            "type": "string"
+          },
+          "referenceCount": {
+            "title": "Referencecount",
+            "type": "integer"
+          },
+          "referenceSplit": {
+            "const": "train",
+            "title": "Referencesplit",
+            "type": "string"
+          },
+          "sourceSha256": {
+            "title": "Sourcesha256",
+            "type": "string"
+          }
+        },
+        "required": [
+          "method",
+          "referenceSplit",
+          "referenceCount",
+          "features",
+          "sourceSha256",
+          "limitations"
+        ],
+        "title": "PredictionExplanationDTO",
+        "type": "object"
+      },
+      "Probabilities": {
+        "properties": {
+          "event": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Event",
+            "type": "number"
+          },
+          "no_event": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "No Event",
+            "type": "number"
+          }
+        },
+        "required": [
+          "no_event",
+          "event"
+        ],
+        "title": "Probabilities",
+        "type": "object"
+      },
       "RequestCapabilities": {
         "properties": {},
         "title": "RequestCapabilities",
@@ -648,6 +1081,83 @@
           "jobId"
         ],
         "title": "RequestConfiguration",
+        "type": "object"
+      },
+      "RequestDecisionPredict": {
+        "additionalProperties": false,
+        "properties": {
+          "expectedManifestSha256": {
+            "anyOf": [
+              {
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expectedmanifestsha256"
+          },
+          "input": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/JsonValue"
+            },
+            "title": "Input",
+            "type": "object"
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "title": "RequestDecisionPredict",
+        "type": "object"
+      },
+      "RequestDecisionPredictRecord": {
+        "additionalProperties": false,
+        "properties": {
+          "adapterId": {
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Adapterid",
+            "type": "string"
+          },
+          "adapterVersion": {
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Adapterversion",
+            "type": "string"
+          },
+          "attributes": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/JsonValue"
+            },
+            "title": "Attributes",
+            "type": "object"
+          },
+          "expectedManifestSha256": {
+            "anyOf": [
+              {
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expectedmanifestsha256"
+          }
+        },
+        "required": [
+          "adapterId",
+          "adapterVersion",
+          "attributes"
+        ],
+        "title": "RequestDecisionPredictRecord",
+        "type": "object"
+      },
+      "RequestDecisionStatus": {
+        "properties": {},
+        "title": "RequestDecisionStatus",
         "type": "object"
       },
       "RequestEvents": {
@@ -694,6 +1204,11 @@
             "minItems": 1,
             "title": "Companyids",
             "type": "array"
+          },
+          "explain": {
+            "default": false,
+            "title": "Explain",
+            "type": "boolean"
           },
           "jobId": {
             "format": "uuid",
@@ -824,6 +1339,57 @@
         "title": "ResponseConfiguration",
         "type": "object"
       },
+      "ResponseDecisionPredict": {
+        "properties": {
+          "model": {
+            "$ref": "#/components/schemas/DecisionModelInfo"
+          },
+          "prediction": {
+            "$ref": "#/components/schemas/DecisionPrediction"
+          }
+        },
+        "required": [
+          "model",
+          "prediction"
+        ],
+        "title": "ResponseDecisionPredict",
+        "type": "object"
+      },
+      "ResponseDecisionStatus": {
+        "properties": {
+          "errorCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Errorcode"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DecisionModelInfo"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "ready": {
+            "title": "Ready",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "ready",
+          "model"
+        ],
+        "title": "ResponseDecisionStatus",
+        "type": "object"
+      },
       "ResponseEvents": {
         "properties": {
           "items": {
@@ -868,6 +1434,17 @@
             ],
             "title": "Error"
           },
+          "heartbeatExpiresAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Heartbeatexpiresat"
+          },
           "id": {
             "title": "Id",
             "type": "string"
@@ -900,6 +1477,17 @@
             ],
             "title": "Status",
             "type": "string"
+          },
+          "workerAlive": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workeralive"
           }
         },
         "required": [
@@ -1000,6 +1588,24 @@
         "title": "RuntimeSpec",
         "type": "object"
       },
+      "SupportedAdapter": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "version"
+        ],
+        "title": "SupportedAdapter",
+        "type": "object"
+      },
       "TrainInput": {
         "additionalProperties": false,
         "properties": {
@@ -1018,7 +1624,7 @@
           "epochs": {
             "anyOf": [
               {
-                "maximum": 20.0,
+                "maximum": 250.0,
                 "minimum": 1.0,
                 "type": "integer"
               },
@@ -1145,6 +1751,240 @@
           }
         },
         "summary": "Artifact"
+      }
+    },
+    "/internal/v1/decision/predict": {
+      "post": {
+        "operationId": "predict_internal_v1_decision_predict_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestDecisionPredict"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_ResponseDecisionPredict_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Predict"
+      }
+    },
+    "/internal/v1/decision/predict-record": {
+      "post": {
+        "operationId": "predict_record_internal_v1_decision_predict_record_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestDecisionPredictRecord"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_ResponseDecisionPredict_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Predict Record"
+      }
+    },
+    "/internal/v1/decision/status": {
+      "post": {
+        "operationId": "status_internal_v1_decision_status_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestDecisionStatus"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_ResponseDecisionStatus_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Status"
       }
     },
     "/internal/v1/jobs/cancel": {

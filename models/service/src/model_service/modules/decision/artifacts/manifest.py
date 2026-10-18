@@ -6,7 +6,11 @@ from typing import Annotated, Literal
 
 from pydantic import Field, model_validator
 
-from scripts.uk_decision.input_contract import ContractModel, InputContract, load_contract
+from model_service.modules.decision.contracts.input import (
+    ContractModel,
+    InputContract,
+    load_contract,
+)
 
 Sha256 = Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]
 Version = Annotated[str, Field(pattern=r"^[a-z0-9][a-z0-9.-]{0,79}$")]

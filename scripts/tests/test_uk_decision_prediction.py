@@ -5,7 +5,9 @@ from copy import deepcopy
 
 import pytest
 
-from scripts.predict_uk_decision import calibrated, input_state, read_input
+from model_service.modules.decision.calibration import calibrated
+from model_service.modules.decision.contracts.input import input_state
+from model_service.modules.decision.prediction_cli import read_input
 from scripts.prepare_uk_decisions import QUESTION, QUESTION_ID
 
 

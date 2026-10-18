@@ -7,8 +7,7 @@ import tarfile
 import tempfile
 from pathlib import Path
 
-from scripts.uk_decision.input_contract import ROOT, InputContract
-from scripts.uk_decision.manifest import (
+from model_service.modules.decision.artifacts.manifest import (
     Manifest,
     ModelDefinition,
     Release,
@@ -18,6 +17,7 @@ from scripts.uk_decision.manifest import (
     verify_bundle,
     verify_files,
 )
+from model_service.modules.decision.contracts.input import ROOT, InputContract
 
 MAX_FILES = 128
 MAX_FILE_BYTES = 128 * 1024**2
@@ -61,9 +61,15 @@ def package(adapter: Path, definition: Path, output: Path) -> Release:
             compatibility={
                 "jevforge_commit": "8986e521b8220dc41ff4de44fb418dc0da02afea",
                 "service_lock_sha256": digest(ROOT / "models/service/uv.lock"),
-                "loader_sha256": digest(ROOT / "scripts/jevforge_runtime.py"),
-                "predictor_sha256": digest(ROOT / "scripts/predict_uk_decision.py"),
-                "input_validator_sha256": digest(ROOT / "scripts/uk_decision/input_contract.py"),
+                "loader_sha256": digest(
+                    ROOT / "models/uk_decision/src/uk_decision_runtime/runtime.py"
+                ),
+                "predictor_sha256": digest(
+                    ROOT / "models/service/src/model_service/modules/decision/predictor.py"
+                ),
+                "input_validator_sha256": digest(
+                    ROOT / "models/service/src/model_service/modules/decision/contracts/input.py"
+                ),
             },
             files=files,
         )

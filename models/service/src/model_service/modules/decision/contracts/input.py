@@ -7,9 +7,11 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from model_service.shared.paths import model_root
+
 VERSION = "uk-financial-0.6b-v1"
-ROOT = Path(__file__).resolve().parents[2]
-DEFINITION = ROOT / "models/uk_decision/releases" / VERSION
+ROOT = model_root().parent
+DEFINITION = model_root() / "uk_decision/releases" / VERSION
 
 
 class ContractModel(BaseModel):

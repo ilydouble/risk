@@ -32,10 +32,13 @@ dependencies = [
   # Delivery tools import these directly; retain the already validated locked versions.
   "huggingface-hub==2.2.0",
   "pydantic==2.13.5",
+  "uk-decision-runtime==0.1.0",
 ]
 
 [dependency-groups]
 dev = ["ruff>=0.11", "mypy>=1.15", "pytest>=8.3", "httpx>=0.28"]
+cpu = ["torch==2.7.1"]
+cuda = ["torch==2.7.1"]
 
 [build-system]
 requires = ["hatchling"]
@@ -47,15 +50,26 @@ packages = ["src/model_service"]
 [tool.uv]
 # Keep the existing Linux x86_64 CPU deployment scope explicit.
 environments = ["sys_platform == 'linux' and platform_machine == 'x86_64'"]
+default-groups = ["dev", "cpu"]
+conflicts = [[{ group = "cpu" }, { group = "cuda" }]]
 
 [[tool.uv.index]]
 name = "pytorch-cpu"
 url = "https://download.pytorch.org/whl/cpu"
 explicit = true
 
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
 [tool.uv.sources]
-torch = { index = "pytorch-cpu" }
+torch = [
+  { index = "pytorch-cpu", group = "cpu" },
+  { index = "pytorch-cu128", group = "cuda" },
+]
 jevforge = { path = "../vendor/jevforge" }
+uk-decision-runtime = { path = "../uk_decision" }
 
 [tool.ruff]
 target-version = "py312"
