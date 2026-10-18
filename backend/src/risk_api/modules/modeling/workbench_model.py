@@ -101,6 +101,16 @@ class EnterpriseRecord(Base):
         Index("ix_enterprise_source", "dataset_id", "snapshot", "source"),
         Index("ix_enterprise_target", "dataset_id", "snapshot", "target"),
         Index(
+            "ix_enterprise_company_number", "dataset_id",
+            text("(data -> 'properties' ->> 'company_id')"),
+            postgresql_where=text("kind = 'company'"),
+        ),
+        Index(
+            "ix_enterprise_name_prefix", "dataset_id",
+            text("lower(data ->> 'name') text_pattern_ops"),
+            postgresql_where=text("kind = 'company'"),
+        ),
+        Index(
             "uq_enterprise_company",
             "dataset_id",
             "node_id",

@@ -16,6 +16,7 @@ from risk_api.modules.auth.api.route import router as auth_router
 from risk_api.modules.chat.api.route import router as chat_router
 from risk_api.modules.company.api.route import router as company_router
 from risk_api.modules.data_qa.api.route import router as data_qa_router
+from risk_api.modules.decision.api.route import router as decision_router
 from risk_api.modules.document.api.route import router as document_router
 from risk_api.modules.graph.api.route import router as graph_router
 from risk_api.modules.modeling.api.route import router as modeling_router
@@ -81,4 +82,5 @@ def create_app() -> FastAPI:
     app.include_router(document_router, prefix="/api/v1/document", tags=["document"])
     app.include_router(modeling_router, prefix="/api/v1/modeling", tags=["modeling"])
     app.include_router(overview_router, prefix="/api/v1/overview", tags=["overview"])
+    app.include_router(decision_router, prefix="/api/v1/decision", tags=["decision"])
     return app

@@ -18,6 +18,7 @@ from risk_api.modules.assistant.tools.company_tools import CompanyGraphTools
 from risk_api.modules.assistant.tools.data_qa import data_qa_tools
 from risk_api.modules.assistant.tools.enterprise_risk import enterprise_risk_tools
 from risk_api.modules.assistant.tools.example_tools import current_time
+from risk_api.modules.assistant.tools.financial_risk import financial_risk_tools
 from risk_api.modules.chat.service import ChatService
 from risk_api.modules.modeling.client import ModelClient
 from risk_api.modules.modeling.service import ModelingStorage
@@ -97,6 +98,8 @@ class StrandsRuntime:
                     model=model,
                     tools=[
                         current_time,
+                        *(financial_risk_tools(self.sessions, owner, self.model_client)
+                          if self.model_client is not None else []),
                         *(self.company_tools.build(settings.lang, owner)
                           if self.company_tools else []),
                         *(enterprise_risk_tools(
@@ -140,7 +143,16 @@ class StrandsRuntime:
                         "preserve warnings, scope, units and truncation, and distinguish saved "
                         "predictions from calibrated default probabilities. On tool failure, "
                         "explain the failure without fabricating results or broadening scope. "
-                        "For enterprise risk requests use enterprise_risk_catalog to resolve "
+                        "For the deployed UK financial Qwen3-0.6B model, "
+                        "use financial_risk_catalog, "
+                        "then financial_risk_companies to resolve the user's exact observation "
+                        "recordId and period, then predict_company_financial_risk. This model "
+                        "does not require a workbench training run or graph-bound identity. "
+                        "Never invent financial values or treat the old seven UK graph features "
+                        "as financial observations. If compatible data is absent, say so. "
+                        "Preserve raw versus calibrated scores and matched-cohort limitations. "
+                        "For published graph-model enterprise risk requests "
+                        "use enterprise_risk_catalog to resolve "
                         "a published "
                         "model (catalog is newest first), use enterprise_risk_companies to find "
                         "exact "
@@ -154,7 +166,8 @@ class StrandsRuntime:
                         "as a comparison to training medians, not SHAP or causal attribution; "
                         "do not sum deltas. Relations are evidence, not measured contributions. "
                         "Cite model ID, target meaning, evaluation time and companyUrl. "
-                        "New enterprises outside the bound graph are unsupported. "
+                        "For these graph models, new enterprises outside "
+                        "the bound graph are unsupported. "
                         "Training and document retrieval are not connected. "
                         "Use show_company_graph with datasetId from the selected model/asset and "
                         "the exact company ID for uploaded datasets. These are source relations, "

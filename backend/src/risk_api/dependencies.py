@@ -19,6 +19,9 @@ from risk_api.modules.company.repository import CompanyRepository
 from risk_api.modules.company.service import CompanyService
 from risk_api.modules.data_qa.repository import DataQARepository
 from risk_api.modules.data_qa.service import DataQAService
+from risk_api.modules.decision.client import DecisionClient
+from risk_api.modules.decision.repository import DecisionRepository
+from risk_api.modules.decision.service import DecisionService
 from risk_api.modules.document.repository import DocumentRepository
 from risk_api.modules.document.service import DocumentService
 from risk_api.modules.graph.repository import GraphRepository
@@ -34,6 +37,10 @@ from risk_api.shared.db import session_factory
 
 
 class InfrastructureProvider(Provider):
+    @provide(scope=Scope.REQUEST)
+    def decision_service(self, session: AsyncSession, client: ModelClient) -> DecisionService:
+        return DecisionService(DecisionRepository(session), DecisionClient(client))
+
     @provide(scope=Scope.APP)
     async def assistant_service(
         self, storage: ModelingStorage, client: ModelClient, driver: AsyncDriver

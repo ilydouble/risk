@@ -5,6 +5,7 @@ from typing import Any, Literal
 
 from pydantic import ValidationError
 
+from risk_api.modules.assistant.protocol.financial import FinancialPredictionReference
 from risk_api.modules.assistant.protocol.graph import CompanyGraphReference
 from risk_api.modules.assistant.protocol.items import (
     AgentMessageItem,
@@ -79,6 +80,16 @@ class ItemProjector:
                         if isinstance(content, dict) and "json" in content:
                             try:
                                 item.graph = CompanyGraphReference.model_validate(content["json"])
+                            except ValidationError:
+                                pass
+                if (item.status == ItemStatus.COMPLETED
+                        and item.name == "predict_company_financial_risk"):
+                    for content in result.get("content", []):
+                        if isinstance(content, dict) and "json" in content:
+                            try:
+                                item.financialPrediction = (
+                                    FinancialPredictionReference.model_validate(content["json"])
+                                )
                             except ValidationError:
                                 pass
                 updates.append(item.model_copy(deep=True))

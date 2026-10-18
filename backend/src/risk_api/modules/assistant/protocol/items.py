@@ -4,6 +4,7 @@ from uuid import uuid4
 
 from pydantic import BaseModel, ConfigDict, Field, JsonValue
 
+from risk_api.modules.assistant.protocol.financial import FinancialPredictionReference
 from risk_api.modules.assistant.protocol.graph import CompanyGraphReference
 
 
@@ -42,6 +43,7 @@ class ToolItem(ItemBase):
     argumentsText: str = ""
     result: JsonValue = None
     graph: CompanyGraphReference | None = None
+    financialPrediction: FinancialPredictionReference | None = None
 
 
 Item = Annotated[

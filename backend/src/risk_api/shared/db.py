@@ -10,7 +10,8 @@ class Base(DeclarativeBase):
     pass
 
 
-engine = create_async_engine(settings.database_url, pool_pre_ping=True)
+# Financial inputs can appear in bound parameters; do not include them in SQL error logs.
+engine = create_async_engine(settings.database_url, pool_pre_ping=True, hide_parameters=True)
 session_factory = async_sessionmaker(engine, expire_on_commit=False)
 
 

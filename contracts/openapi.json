@@ -783,6 +783,74 @@
         "title": "ApiEnvelope[ResponseEnterpriseSources]",
         "type": "object"
       },
+      "ApiEnvelope_ResponseFinancialCatalog_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseFinancialCatalog"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseFinancialCatalog]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseFinancialCompanies_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseFinancialCompanies"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseFinancialCompanies]",
+        "type": "object"
+      },
       "ApiEnvelope_ResponseGetCompany_": {
         "properties": {
           "code": {
@@ -917,6 +985,40 @@
           "data"
         ],
         "title": "ApiEnvelope[ResponseGetDataset]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponseGetFinancialPrediction_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseGetFinancialPrediction"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseGetFinancialPrediction]",
         "type": "object"
       },
       "ApiEnvelope_ResponseGetGraph_": {
@@ -1293,6 +1395,40 @@
         "title": "ApiEnvelope[ResponseListEnterpriseRecords]",
         "type": "object"
       },
+      "ApiEnvelope_ResponseListFinancialPredictions_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseListFinancialPredictions"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponseListFinancialPredictions]",
+        "type": "object"
+      },
       "ApiEnvelope_ResponseListModels_": {
         "properties": {
           "code": {
@@ -1531,6 +1667,40 @@
         "title": "ApiEnvelope[ResponseModelingCapabilities]",
         "type": "object"
       },
+      "ApiEnvelope_ResponsePredictFinancialCompany_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponsePredictFinancialCompany"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponsePredictFinancialCompany]",
+        "type": "object"
+      },
       "ApiEnvelope_ResponsePredictModel_": {
         "properties": {
           "code": {
@@ -1563,6 +1733,40 @@
           "data"
         ],
         "title": "ApiEnvelope[ResponsePredictModel]",
+        "type": "object"
+      },
+      "ApiEnvelope_ResponsePreviewFinancialInput_": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponsePreviewFinancialInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internal_code": {
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ApiEnvelope[ResponsePreviewFinancialInput]",
         "type": "object"
       },
       "ApiEnvelope_ResponsePublishModel_": {
@@ -3747,6 +3951,39 @@
         "title": "ErrorEnvelope[Literal[404], Literal['DATA_QA_SCOPE_NOT_FOUND']]",
         "type": "object"
       },
+      "ErrorEnvelope_Literal_404__Literal__DECISION_RECORD_NOT_FOUND____DECISION_PREDICTION_NOT_FOUND____MODELING_RESOURCE_NOT_FOUND___": {
+        "properties": {
+          "code": {
+            "const": 404,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "enum": [
+              "DECISION_RECORD_NOT_FOUND",
+              "DECISION_PREDICTION_NOT_FOUND",
+              "MODELING_RESOURCE_NOT_FOUND"
+            ],
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[404], Literal['DECISION_RECORD_NOT_FOUND', 'DECISION_PREDICTION_NOT_FOUND', 'MODELING_RESOURCE_NOT_FOUND']]",
+        "type": "object"
+      },
       "ErrorEnvelope_Literal_404__Literal__DOCUMENT_NOT_FOUND___": {
         "properties": {
           "code": {
@@ -3960,6 +4197,40 @@
           "data"
         ],
         "title": "ErrorEnvelope[Literal[409], Literal['AUTH_USERNAME_TAKEN']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_409__Literal__DECISION_DATA_NOT_READY____DECISION_REQUEST_CONFLICT____DECISION_VERSION_CONFLICT____DECISION_VERSION_CHANGED___": {
+        "properties": {
+          "code": {
+            "const": 409,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "enum": [
+              "DECISION_DATA_NOT_READY",
+              "DECISION_REQUEST_CONFLICT",
+              "DECISION_VERSION_CONFLICT",
+              "DECISION_VERSION_CHANGED"
+            ],
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[409], Literal['DECISION_DATA_NOT_READY', 'DECISION_REQUEST_CONFLICT', 'DECISION_VERSION_CONFLICT', 'DECISION_VERSION_CHANGED']]",
         "type": "object"
       },
       "ErrorEnvelope_Literal_409__Literal__DOCUMENT_SIZE_MISMATCH___": {
@@ -4179,6 +4450,39 @@
           "data"
         ],
         "title": "ErrorEnvelope[Literal[422], Literal['REQUEST_INVALID', 'DATA_QA_UNSUPPORTED']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____DECISION_INPUT_INVALID____DECISION_DATASET_UNSUPPORTED___": {
+        "properties": {
+          "code": {
+            "const": 422,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "enum": [
+              "REQUEST_INVALID",
+              "DECISION_INPUT_INVALID",
+              "DECISION_DATASET_UNSUPPORTED"
+            ],
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[422], Literal['REQUEST_INVALID', 'DECISION_INPUT_INVALID', 'DECISION_DATASET_UNSUPPORTED']]",
         "type": "object"
       },
       "ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____MODELING_FILE_INVALID____MODELING_ENTERPRISE_INVALID____MODELING_MODEL_INCOMPATIBLE____EXECUTION_PARAMETERS_INVALID____MODEL_INPUT_INVALID___": {
@@ -4522,6 +4826,45 @@
           "data"
         ],
         "title": "ErrorEnvelope[Literal[503], Literal['GRAPH_QUERY_TIMEOUT']]",
+        "type": "object"
+      },
+      "ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____DECISION_MODEL_DISABLED____DECISION_MODEL_UNAVAILABLE____DECISION_BUSY____DECISION_TIMEOUT____DECISION_PROTOCOL_INVALID____DECISION_PREDICTION_FAILED____AUTH_STORE_UNAVAILABLE____AUTH_STORE_INVALID___": {
+        "properties": {
+          "code": {
+            "const": 503,
+            "title": "Code",
+            "type": "integer"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "internal_code": {
+            "enum": [
+              "MODEL_SERVICE_UNAVAILABLE",
+              "DECISION_MODEL_DISABLED",
+              "DECISION_MODEL_UNAVAILABLE",
+              "DECISION_BUSY",
+              "DECISION_TIMEOUT",
+              "DECISION_PROTOCOL_INVALID",
+              "DECISION_PREDICTION_FAILED",
+              "AUTH_STORE_UNAVAILABLE",
+              "AUTH_STORE_INVALID"
+            ],
+            "title": "Internal Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "internal_code",
+          "message",
+          "data"
+        ],
+        "title": "ErrorEnvelope[Literal[503], Literal['MODEL_SERVICE_UNAVAILABLE', 'DECISION_MODEL_DISABLED', 'DECISION_MODEL_UNAVAILABLE', 'DECISION_BUSY', 'DECISION_TIMEOUT', 'DECISION_PROTOCOL_INVALID', 'DECISION_PREDICTION_FAILED', 'AUTH_STORE_UNAVAILABLE', 'AUTH_STORE_INVALID']]",
         "type": "object"
       },
       "ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____MODELING_STORAGE_UNAVAILABLE___": {
@@ -5023,6 +5366,464 @@
           "sha256"
         ],
         "title": "FileDTO",
+        "type": "object"
+      },
+      "FinancialAdapter": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "version"
+        ],
+        "title": "FinancialAdapter",
+        "type": "object"
+      },
+      "FinancialCompany": {
+        "properties": {
+          "companyId": {
+            "title": "Companyid",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "observationMonth": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Observationmonth"
+          },
+          "recordId": {
+            "title": "Recordid",
+            "type": "string"
+          },
+          "snapshot": {
+            "title": "Snapshot",
+            "type": "string"
+          }
+        },
+        "required": [
+          "recordId",
+          "companyId",
+          "name",
+          "observationMonth",
+          "snapshot"
+        ],
+        "title": "FinancialCompany",
+        "type": "object"
+      },
+      "FinancialDataset": {
+        "properties": {
+          "adapterId": {
+            "title": "Adapterid",
+            "type": "string"
+          },
+          "adapterVersion": {
+            "title": "Adapterversion",
+            "type": "string"
+          },
+          "datasetId": {
+            "title": "Datasetid",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "recordCount": {
+            "title": "Recordcount",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "datasetId",
+          "name",
+          "adapterId",
+          "adapterVersion",
+          "recordCount"
+        ],
+        "title": "FinancialDataset",
+        "type": "object"
+      },
+      "FinancialPredictionReference": {
+        "properties": {
+          "calibratedEventScore": {
+            "anyOf": [
+              {
+                "maximum": 1.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Calibratedeventscore"
+          },
+          "companyId": {
+            "title": "Companyid",
+            "type": "string"
+          },
+          "companyName": {
+            "title": "Companyname",
+            "type": "string"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "datasetId": {
+            "title": "Datasetid",
+            "type": "string"
+          },
+          "eventScore": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Eventscore",
+            "type": "number"
+          },
+          "featureCount": {
+            "minimum": 0.0,
+            "title": "Featurecount",
+            "type": "integer"
+          },
+          "inputSha256": {
+            "title": "Inputsha256",
+            "type": "string"
+          },
+          "kind": {
+            "const": "financial_prediction",
+            "default": "financial_prediction",
+            "title": "Kind",
+            "type": "string"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "manifestSha256": {
+            "title": "Manifestsha256",
+            "type": "string"
+          },
+          "modelId": {
+            "title": "Modelid",
+            "type": "string"
+          },
+          "modelVersion": {
+            "title": "Modelversion",
+            "type": "string"
+          },
+          "noEventScore": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Noeventscore",
+            "type": "number"
+          },
+          "observationMonth": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Observationmonth"
+          },
+          "predictionId": {
+            "title": "Predictionid",
+            "type": "string"
+          },
+          "recordId": {
+            "title": "Recordid",
+            "type": "string"
+          },
+          "target": {
+            "title": "Target",
+            "type": "string"
+          }
+        },
+        "required": [
+          "predictionId",
+          "modelId",
+          "modelVersion",
+          "manifestSha256",
+          "datasetId",
+          "recordId",
+          "companyId",
+          "companyName",
+          "observationMonth",
+          "eventScore",
+          "noEventScore",
+          "target",
+          "createdAt",
+          "featureCount",
+          "inputSha256",
+          "limitations"
+        ],
+        "title": "FinancialPredictionReference",
+        "type": "object"
+      },
+      "FinancialProbabilities": {
+        "properties": {
+          "event": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Event",
+            "type": "number"
+          },
+          "no_event": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "No Event",
+            "type": "number"
+          }
+        },
+        "required": [
+          "no_event",
+          "event"
+        ],
+        "title": "FinancialProbabilities",
+        "type": "object"
+      },
+      "FinancialScore": {
+        "properties": {
+          "bundleVerified": {
+            "const": true,
+            "title": "Bundleverified",
+            "type": "boolean"
+          },
+          "calibratedProbabilities": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FinancialProbabilities"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "device": {
+            "title": "Device",
+            "type": "string"
+          },
+          "dtype": {
+            "title": "Dtype",
+            "type": "string"
+          },
+          "expectedBaseRevision": {
+            "title": "Expectedbaserevision",
+            "type": "string"
+          },
+          "inferenceSeconds": {
+            "minimum": 0.0,
+            "title": "Inferenceseconds",
+            "type": "number"
+          },
+          "inputContractSha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Inputcontractsha256",
+            "type": "string"
+          },
+          "inputTokensIncludingCandidates": {
+            "exclusiveMinimum": 0.0,
+            "maximum": 2048.0,
+            "title": "Inputtokensincludingcandidates",
+            "type": "integer"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "manifestSha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Manifestsha256",
+            "type": "string"
+          },
+          "modelVersion": {
+            "title": "Modelversion",
+            "type": "string"
+          },
+          "providedFeatures": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Providedfeatures",
+            "type": "array"
+          },
+          "questionId": {
+            "title": "Questionid",
+            "type": "string"
+          },
+          "rawProbabilities": {
+            "$ref": "#/components/schemas/FinancialProbabilities"
+          },
+          "stateSha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Statesha256",
+            "type": "string"
+          },
+          "target": {
+            "title": "Target",
+            "type": "string"
+          },
+          "temperature": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Temperature"
+          }
+        },
+        "required": [
+          "modelVersion",
+          "manifestSha256",
+          "expectedBaseRevision",
+          "inputContractSha256",
+          "bundleVerified",
+          "questionId",
+          "target",
+          "rawProbabilities",
+          "calibratedProbabilities",
+          "temperature",
+          "device",
+          "dtype",
+          "inputTokensIncludingCandidates",
+          "stateSha256",
+          "inferenceSeconds",
+          "providedFeatures",
+          "limitations"
+        ],
+        "title": "FinancialScore",
+        "type": "object"
+      },
+      "FinancialSource": {
+        "properties": {
+          "companyId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Companyid"
+          },
+          "companyName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Companyname"
+          },
+          "datasetId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Datasetid"
+          },
+          "kind": {
+            "enum": [
+              "company",
+              "input"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label"
+          },
+          "observationMonth": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Observationmonth"
+          },
+          "recordId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recordid"
+          },
+          "snapshot": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Snapshot"
+          },
+          "sourceSha256": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sourcesha256"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "title": "FinancialSource",
         "type": "object"
       },
       "FiveCDimension": {
@@ -6269,6 +7070,99 @@
         "title": "PredictionExplanationDTO",
         "type": "object"
       },
+      "RegisteredFinancialModel": {
+        "properties": {
+          "baseRevision": {
+            "title": "Baserevision",
+            "type": "string"
+          },
+          "calibrationAvailable": {
+            "title": "Calibrationavailable",
+            "type": "boolean"
+          },
+          "device": {
+            "title": "Device",
+            "type": "string"
+          },
+          "dtype": {
+            "title": "Dtype",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "inputContractSha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Inputcontractsha256",
+            "type": "string"
+          },
+          "inputContractVersion": {
+            "title": "Inputcontractversion",
+            "type": "integer"
+          },
+          "labels": {
+            "items": {
+              "enum": [
+                "no_event",
+                "event"
+              ],
+              "type": "string"
+            },
+            "title": "Labels",
+            "type": "array"
+          },
+          "manifestSha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Manifestsha256",
+            "type": "string"
+          },
+          "maxTokens": {
+            "title": "Maxtokens",
+            "type": "integer"
+          },
+          "modelVersion": {
+            "title": "Modelversion",
+            "type": "string"
+          },
+          "supportedAdapters": {
+            "items": {
+              "$ref": "#/components/schemas/FinancialAdapter"
+            },
+            "title": "Supportedadapters",
+            "type": "array"
+          },
+          "supportedDatasetFormats": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Supporteddatasetformats",
+            "type": "array"
+          },
+          "target": {
+            "title": "Target",
+            "type": "string"
+          }
+        },
+        "required": [
+          "modelVersion",
+          "manifestSha256",
+          "baseRevision",
+          "inputContractVersion",
+          "inputContractSha256",
+          "target",
+          "labels",
+          "calibrationAvailable",
+          "device",
+          "dtype",
+          "maxTokens",
+          "supportedDatasetFormats",
+          "supportedAdapters",
+          "id"
+        ],
+        "title": "RegisteredFinancialModel",
+        "type": "object"
+      },
       "RelatedParty": {
         "properties": {
           "exposure": {
@@ -6775,6 +7669,34 @@
         "title": "RequestEnterpriseSources",
         "type": "object"
       },
+      "RequestFinancialCatalog": {
+        "properties": {},
+        "title": "RequestFinancialCatalog",
+        "type": "object"
+      },
+      "RequestFinancialCompanies": {
+        "properties": {
+          "datasetId": {
+            "format": "uuid",
+            "title": "Datasetid",
+            "type": "string"
+          },
+          "keyword": {
+            "default": "",
+            "maxLength": 128,
+            "title": "Keyword",
+            "type": "string"
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PageRequest"
+          }
+        },
+        "required": [
+          "datasetId"
+        ],
+        "title": "RequestFinancialCompanies",
+        "type": "object"
+      },
       "RequestGetCompany": {
         "properties": {
           "id": {
@@ -6852,6 +7774,20 @@
           "companyId"
         ],
         "title": "RequestGetDatasetGraph",
+        "type": "object"
+      },
+      "RequestGetFinancialPrediction": {
+        "properties": {
+          "predictionId": {
+            "format": "uuid",
+            "title": "Predictionid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "predictionId"
+        ],
+        "title": "RequestGetFinancialPrediction",
         "type": "object"
       },
       "RequestGetGraph": {
@@ -7075,6 +8011,15 @@
         "title": "RequestListEnterpriseRecords",
         "type": "object"
       },
+      "RequestListFinancialPredictions": {
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/PageRequest"
+          }
+        },
+        "title": "RequestListFinancialPredictions",
+        "type": "object"
+      },
       "RequestListModels": {
         "properties": {
           "pagination": {
@@ -7132,6 +8077,34 @@
         "title": "RequestModelingCapabilities",
         "type": "object"
       },
+      "RequestPredictFinancialCompany": {
+        "additionalProperties": false,
+        "properties": {
+          "datasetId": {
+            "format": "uuid",
+            "title": "Datasetid",
+            "type": "string"
+          },
+          "recordId": {
+            "maxLength": 512,
+            "minLength": 1,
+            "title": "Recordid",
+            "type": "string"
+          },
+          "requestKey": {
+            "format": "uuid",
+            "title": "Requestkey",
+            "type": "string"
+          }
+        },
+        "required": [
+          "requestKey",
+          "datasetId",
+          "recordId"
+        ],
+        "title": "RequestPredictFinancialCompany",
+        "type": "object"
+      },
       "RequestPredictModel": {
         "properties": {
           "companyIds": {
@@ -7159,6 +8132,36 @@
           "companyIds"
         ],
         "title": "RequestPredictModel",
+        "type": "object"
+      },
+      "RequestPreviewFinancialInput": {
+        "additionalProperties": false,
+        "properties": {
+          "input": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/JsonValue"
+            },
+            "title": "Input",
+            "type": "object"
+          },
+          "requestKey": {
+            "format": "uuid",
+            "title": "Requestkey",
+            "type": "string"
+          },
+          "sourceLabel": {
+            "default": "Explicit financial input",
+            "maxLength": 240,
+            "minLength": 1,
+            "title": "Sourcelabel",
+            "type": "string"
+          }
+        },
+        "required": [
+          "requestKey",
+          "input"
+        ],
+        "title": "RequestPreviewFinancialInput",
         "type": "object"
       },
       "RequestPublishModel": {
@@ -8072,6 +9075,84 @@
         "title": "ResponseEnterpriseSources",
         "type": "object"
       },
+      "ResponseFinancialCatalog": {
+        "properties": {
+          "datasets": {
+            "items": {
+              "$ref": "#/components/schemas/FinancialDataset"
+            },
+            "title": "Datasets",
+            "type": "array"
+          },
+          "errorCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Errorcode"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RegisteredFinancialModel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "ready": {
+            "title": "Ready",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "ready",
+          "model",
+          "datasets"
+        ],
+        "title": "ResponseFinancialCatalog",
+        "type": "object"
+      },
+      "ResponseFinancialCompanies": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/FinancialCompany"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "page": {
+            "minimum": 1.0,
+            "title": "Page",
+            "type": "integer"
+          },
+          "pageSize": {
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Pagesize",
+            "type": "integer"
+          },
+          "total": {
+            "minimum": 0.0,
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "page",
+          "pageSize"
+        ],
+        "title": "ResponseFinancialCompanies",
+        "type": "object"
+      },
       "ResponseGetCompany": {
         "properties": {
           "company": {
@@ -8205,6 +9286,18 @@
           "limits"
         ],
         "title": "ResponseGetDatasetGraph",
+        "type": "object"
+      },
+      "ResponseGetFinancialPrediction": {
+        "properties": {
+          "prediction": {
+            "$ref": "#/components/schemas/SavedFinancialPrediction"
+          }
+        },
+        "required": [
+          "prediction"
+        ],
+        "title": "ResponseGetFinancialPrediction",
         "type": "object"
       },
       "ResponseGetGraph": {
@@ -8576,6 +9669,41 @@
         "title": "ResponseListEnterpriseRecords",
         "type": "object"
       },
+      "ResponseListFinancialPredictions": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/SavedFinancialPrediction"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "page": {
+            "minimum": 1.0,
+            "title": "Page",
+            "type": "integer"
+          },
+          "pageSize": {
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Pagesize",
+            "type": "integer"
+          },
+          "total": {
+            "minimum": 0.0,
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "page",
+          "pageSize"
+        ],
+        "title": "ResponseListFinancialPredictions",
+        "type": "object"
+      },
       "ResponseListModels": {
         "properties": {
           "items": {
@@ -8749,6 +9877,18 @@
         "title": "ResponseModelingCapabilities",
         "type": "object"
       },
+      "ResponsePredictFinancialCompany": {
+        "properties": {
+          "prediction": {
+            "$ref": "#/components/schemas/SavedFinancialPrediction"
+          }
+        },
+        "required": [
+          "prediction"
+        ],
+        "title": "ResponsePredictFinancialCompany",
+        "type": "object"
+      },
       "ResponsePredictModel": {
         "properties": {
           "items": {
@@ -8763,6 +9903,18 @@
           "items"
         ],
         "title": "ResponsePredictModel",
+        "type": "object"
+      },
+      "ResponsePreviewFinancialInput": {
+        "properties": {
+          "prediction": {
+            "$ref": "#/components/schemas/SavedFinancialPrediction"
+          }
+        },
+        "required": [
+          "prediction"
+        ],
+        "title": "ResponsePreviewFinancialInput",
         "type": "object"
       },
       "ResponsePublishModel": {
@@ -9296,6 +10448,37 @@
         "title": "RunDTO",
         "type": "object"
       },
+      "SavedFinancialPrediction": {
+        "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "title": "Createdat",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "model": {
+            "$ref": "#/components/schemas/RegisteredFinancialModel"
+          },
+          "result": {
+            "$ref": "#/components/schemas/FinancialScore"
+          },
+          "source": {
+            "$ref": "#/components/schemas/FinancialSource"
+          }
+        },
+        "required": [
+          "id",
+          "model",
+          "source",
+          "result",
+          "createdAt"
+        ],
+        "title": "SavedFinancialPrediction",
+        "type": "object"
+      },
       "ScoreDetail": {
         "properties": {
           "baseValue": {
@@ -9550,6 +10733,16 @@
             "default": "",
             "title": "Argumentstext",
             "type": "string"
+          },
+          "financialPrediction": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FinancialPredictionReference"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "graph": {
             "anyOf": [
@@ -11404,6 +12597,492 @@
         "summary": "Catalog",
         "tags": [
           "data-qa"
+        ]
+      }
+    },
+    "/api/v1/decision/catalog": {
+      "post": {
+        "operationId": "catalog_api_v1_decision_catalog_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestFinancialCatalog"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseFinancialCatalog_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__DECISION_RECORD_NOT_FOUND____DECISION_PREDICTION_NOT_FOUND____MODELING_RESOURCE_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DECISION_DATA_NOT_READY____DECISION_REQUEST_CONFLICT____DECISION_VERSION_CONFLICT____DECISION_VERSION_CHANGED___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____DECISION_INPUT_INVALID____DECISION_DATASET_UNSUPPORTED___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____DECISION_MODEL_DISABLED____DECISION_MODEL_UNAVAILABLE____DECISION_BUSY____DECISION_TIMEOUT____DECISION_PROTOCOL_INVALID____DECISION_PREDICTION_FAILED____AUTH_STORE_UNAVAILABLE____AUTH_STORE_INVALID___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Catalog",
+        "tags": [
+          "decision"
+        ]
+      }
+    },
+    "/api/v1/decision/companies": {
+      "post": {
+        "operationId": "companies_api_v1_decision_companies_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestFinancialCompanies"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseFinancialCompanies_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__DECISION_RECORD_NOT_FOUND____DECISION_PREDICTION_NOT_FOUND____MODELING_RESOURCE_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DECISION_DATA_NOT_READY____DECISION_REQUEST_CONFLICT____DECISION_VERSION_CONFLICT____DECISION_VERSION_CHANGED___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____DECISION_INPUT_INVALID____DECISION_DATASET_UNSUPPORTED___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____DECISION_MODEL_DISABLED____DECISION_MODEL_UNAVAILABLE____DECISION_BUSY____DECISION_TIMEOUT____DECISION_PROTOCOL_INVALID____DECISION_PREDICTION_FAILED____AUTH_STORE_UNAVAILABLE____AUTH_STORE_INVALID___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Companies",
+        "tags": [
+          "decision"
+        ]
+      }
+    },
+    "/api/v1/decision/get-prediction": {
+      "post": {
+        "operationId": "get_api_v1_decision_get_prediction_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestGetFinancialPrediction"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseGetFinancialPrediction_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__DECISION_RECORD_NOT_FOUND____DECISION_PREDICTION_NOT_FOUND____MODELING_RESOURCE_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DECISION_DATA_NOT_READY____DECISION_REQUEST_CONFLICT____DECISION_VERSION_CONFLICT____DECISION_VERSION_CHANGED___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____DECISION_INPUT_INVALID____DECISION_DATASET_UNSUPPORTED___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____DECISION_MODEL_DISABLED____DECISION_MODEL_UNAVAILABLE____DECISION_BUSY____DECISION_TIMEOUT____DECISION_PROTOCOL_INVALID____DECISION_PREDICTION_FAILED____AUTH_STORE_UNAVAILABLE____AUTH_STORE_INVALID___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Get",
+        "tags": [
+          "decision"
+        ]
+      }
+    },
+    "/api/v1/decision/list-predictions": {
+      "post": {
+        "operationId": "history_api_v1_decision_list_predictions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestListFinancialPredictions"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponseListFinancialPredictions_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__DECISION_RECORD_NOT_FOUND____DECISION_PREDICTION_NOT_FOUND____MODELING_RESOURCE_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DECISION_DATA_NOT_READY____DECISION_REQUEST_CONFLICT____DECISION_VERSION_CONFLICT____DECISION_VERSION_CHANGED___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____DECISION_INPUT_INVALID____DECISION_DATASET_UNSUPPORTED___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____DECISION_MODEL_DISABLED____DECISION_MODEL_UNAVAILABLE____DECISION_BUSY____DECISION_TIMEOUT____DECISION_PROTOCOL_INVALID____DECISION_PREDICTION_FAILED____AUTH_STORE_UNAVAILABLE____AUTH_STORE_INVALID___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "History",
+        "tags": [
+          "decision"
+        ]
+      }
+    },
+    "/api/v1/decision/predict": {
+      "post": {
+        "operationId": "predict_api_v1_decision_predict_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestPredictFinancialCompany"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponsePredictFinancialCompany_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__DECISION_RECORD_NOT_FOUND____DECISION_PREDICTION_NOT_FOUND____MODELING_RESOURCE_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DECISION_DATA_NOT_READY____DECISION_REQUEST_CONFLICT____DECISION_VERSION_CONFLICT____DECISION_VERSION_CHANGED___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____DECISION_INPUT_INVALID____DECISION_DATASET_UNSUPPORTED___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____DECISION_MODEL_DISABLED____DECISION_MODEL_UNAVAILABLE____DECISION_BUSY____DECISION_TIMEOUT____DECISION_PROTOCOL_INVALID____DECISION_PREDICTION_FAILED____AUTH_STORE_UNAVAILABLE____AUTH_STORE_INVALID___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Predict",
+        "tags": [
+          "decision"
+        ]
+      }
+    },
+    "/api/v1/decision/preview-input": {
+      "post": {
+        "operationId": "preview_api_v1_decision_preview_input_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestPreviewFinancialInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelope_ResponsePreviewFinancialInput_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_401__Literal__AUTH_SESSION_EXPIRED___"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_404__Literal__DECISION_RECORD_NOT_FOUND____DECISION_PREDICTION_NOT_FOUND____MODELING_RESOURCE_NOT_FOUND___"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_409__Literal__DECISION_DATA_NOT_READY____DECISION_REQUEST_CONFLICT____DECISION_VERSION_CONFLICT____DECISION_VERSION_CHANGED___"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_422__Literal__REQUEST_INVALID____DECISION_INPUT_INVALID____DECISION_DATASET_UNSUPPORTED___"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope_Literal_503__Literal__MODEL_SERVICE_UNAVAILABLE____DECISION_MODEL_DISABLED____DECISION_MODEL_UNAVAILABLE____DECISION_BUSY____DECISION_TIMEOUT____DECISION_PROTOCOL_INVALID____DECISION_PREDICTION_FAILED____AUTH_STORE_UNAVAILABLE____AUTH_STORE_INVALID___"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Preview",
+        "tags": [
+          "decision"
         ]
       }
     },

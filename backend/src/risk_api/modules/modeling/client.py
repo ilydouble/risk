@@ -19,9 +19,22 @@ class ModelClient:
                 "/internal/v1/" + action,
                 json=body,
                 headers={"X-Request-ID": request_id} if request_id else {},
-                timeout=70 if action in {"models/predict", "models/configuration"} else 10,
+                timeout=70 if action in {"models/predict", "models/configuration",
+                                         "decision/predict", "decision/predict-record"} else 10,
             )
             data = response.json()
+            if not isinstance(data, dict):
+                raise ValueError("Invalid model-service response")
+            # Internal service credentials are a deployment failure, not a user-session error.
+            if action.startswith("decision/") and response.status_code in {401, 403}:
+                raise AppError(503, "MODEL_SERVICE_UNAVAILABLE", "Model service unavailable")
+            if (action.startswith("decision/") and response.status_code >= 400
+                    and data.get("code") == response.status_code
+                    and str(data.get("internal_code", "")).startswith("DECISION_")):
+                detail = data.get("data", {})
+                raise AppError(response.status_code, data["internal_code"],
+                               data.get("message", "Financial model request failed"),
+                               field=detail.get("field") if isinstance(detail, dict) else None)
             if response.status_code >= 500:
                 raise AppError(503, "MODEL_SERVICE_UNAVAILABLE", "Model service unavailable")
             if response.status_code >= 400:
