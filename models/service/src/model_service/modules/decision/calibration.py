@@ -1,6 +1,19 @@
 """Apply a supplied binary logit temperature without changing candidate order."""
 
+import json
 import math
+from pathlib import Path
+
+
+def load_temperature(path: Path) -> float:
+    # Sample IDs, labels and original scores stay in the artifact for audit only.
+    document = json.loads(path.read_bytes())
+    value = document.get("temperature") if isinstance(document, dict) else None
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValueError("Calibration temperature must be a number")
+    temperature = float(value)
+    calibrated([0.5, 0.5], temperature)
+    return temperature
 
 
 def calibrated(probabilities: list[float], temperature: float) -> list[float]:

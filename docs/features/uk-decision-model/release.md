@@ -12,7 +12,10 @@
 ```
 
 默认定义位于 `models/uk_decision/releases/uk-financial-0.6b-v1/`，可通过 `--definition` 选择新版本。
-adapter 必须与该版本记录的七个文件逐字节一致；不修改训练机路径或重新保存权重。
+adapter 必须包含该版本记录的原始七文件，逐字节一致；不修改训练机路径或重新保存权重。
+默认同时读取交付目录中的 `calibration.json`，校验后放在包根目录，不混入包内 adapter。
+校准文件也可用 `--calibration /path/to/calibration.json` 显式指定；未知附加文件仍会被拒绝。
+原始校准文件随附件保存，Git 只记录其大小、SHA-256 和说明，不提交逐样本校准数据。
 命令生成附件和同目录的 `uk-financial-0.6b-v1.tar.release.json`，已有输出不覆盖。
 同一环境、输入与加载代码重复打包的字节摘要一致；归档头不记录打包机绝对路径和文件时间。
 adapter 配置中的原训练机路径仍按原始字节保留，不用于定位当前底座。
@@ -24,7 +27,7 @@ adapter 配置中的原训练机路径仍按原始字节保留，不用于定位
 - `manifest.json`：格式版本、底座 revision、文件大小/SHA-256、JevForge 版本及加载代码摘要。
 - `README.md`：本仓库整理的模型说明，不替换 adapter 内的原始 README。
 - `acceptance/input.json`、`acceptance/reference.json`：工程探针及分设备参考结果。
-- `calibration.json`：仅在确实取得正式文件、版本定义标记 available 时加入；本版没有。
+- `calibration.json`：v1 必需，温度为 0.8826538438450512；完整样本记录用于审计，推理只读温度。
 
 底座不重复包含在 LoRA 附件中。manifest 列出固定底座的十个文件及摘要，安装时单独准备。
 清单格式与 runtime API 版本均为 1；原始权重和运行缓冲区始终绑定同一版本。
@@ -37,8 +40,8 @@ adapter 配置中的原训练机路径仍按原始字节保留，不用于定位
 ./scripts/uk-decision install \
   --release models/uk_decision/releases/uk-financial-0.6b-v1/release.json \
   --archive models/runs/releases/uk-financial-0.6b-v1.tar.gz \
-  --destination models/weights/uk-financial-0.6b-v1-verified \
-  --base-from models/weights/uk-financial-0.6b-v1/base
+  --destination models/weights/uk-financial-0.6b-v1 \
+  --with-base
 ```
 
 `--base-from` 核验并复制已有底座；或使用 `--with-base` 联网下载固定 revision。
@@ -48,12 +51,12 @@ adapter 配置中的原训练机路径仍按原始字节保留，不用于定位
 
 ```bash
 ./scripts/uk-decision verify \
-  --model-dir models/weights/uk-financial-0.6b-v1-verified \
-  --base models/weights/uk-financial-0.6b-v1-verified/base
+  --model-dir models/weights/uk-financial-0.6b-v1 \
+  --base models/weights/uk-financial-0.6b-v1/base
 
 uv run --project models/service --locked python -m scripts.predict_uk_decision \
-  --model-dir models/weights/uk-financial-0.6b-v1-verified \
-  --input models/weights/uk-financial-0.6b-v1-verified/acceptance/input.json --device cpu
+  --model-dir models/weights/uk-financial-0.6b-v1 \
+  --input models/weights/uk-financial-0.6b-v1/acceptance/input.json --device cpu
 ```
 
 完整包模式先核对 Git 中的 manifest 摘要、包内文件和底座，再加载模型。
@@ -72,6 +75,7 @@ uv run --project models/service --locked python -m scripts.predict_uk_decision \
    工具按受信清单从固定仓库、tag 和附件名下载；认证交给 gh，不传递明文 token 参数。
 
 当前清单标记 prepared，省略 `--archive` 会明确报错，不假装已有可下载的 Release。
+首次发布前已将校准补入 v1 并清理本地不完整包，正式基线只有带校准的完整包。
 GitHub Release 不自动提供输入语义或校准能力，这些仍以版本内协议和实际文件为准。
 
 ## 离线现场

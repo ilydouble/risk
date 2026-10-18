@@ -12,7 +12,8 @@ JevForge 来自仓库内 [vendor/jevforge](../../../models/vendor/jevforge/UPSTR
 ## 准备模型
 
 协作者日常安装推荐使用[发布包流程](release.md)，可同时校验 LoRA、冻结协议及底座。
-以下手工方式保留作初次收取模型时的调试入口，输出 bundleVerified=false。
+以下手工方式保留作收取原始模型时的调试入口，输出 bundleVerified=false，
+临时文件统一放 `models/runs/`；`models/weights/` 只保存经过安装校验的完整包。
 
 所有命令从仓库根目录执行。先安装锁定依赖：
 
@@ -25,12 +26,12 @@ uv sync --project models/service --locked
 ```bash
 uv run --project models/service --locked hf download Qwen/Qwen3-0.6B \
   --revision c1899de289a04d12100db370d81485cdf75e47ca \
-  --local-dir models/weights/uk-financial-0.6b-v1/base
+  --local-dir models/runs/uk-decision-local/base
 ```
 
-将协作者提供的完整 adapter 目录复制到 `models/weights/uk-financial-0.6b-v1/adapter/`。
+将协作者提供的完整 adapter 目录复制到 `models/runs/uk-decision-local/adapter/`。
 必须保留 adapter_config.json、adapter_model.safetensors、decision_runtime.json；
-tokenizer 等附属文件一并保留。模型按训练加载方式使用固定底座的 tokenizer。
+tokenizer 等附属文件和原始 calibration.json 一并保留。模型按训练加载方式使用固定底座的 tokenizer。
 本地权重、下载缓存及运行结果均被 Git 忽略，不提交模型文件。
 
 ## 输入与执行
@@ -48,17 +49,19 @@ tokenizer 等附属文件一并保留。模型按训练加载方式使用固定�
 {"state":{"features":{"financial_missing":true}}}
 ```
 
-保存为本地 `models/weights/uk-financial-0.6b-v1/smoke-input.json` 后执行：
+保存为本地 `models/runs/uk-decision-local/smoke-input.json` 后执行：
 
 ```bash
 uv run --project models/service --locked python -m scripts.predict_uk_decision \
-  --base models/weights/uk-financial-0.6b-v1/base \
-  --adapter models/weights/uk-financial-0.6b-v1/adapter \
-  --input models/weights/uk-financial-0.6b-v1/smoke-input.json --device cpu
+  --base models/runs/uk-decision-local/base \
+  --adapter models/runs/uk-decision-local/adapter \
+  --calibration models/runs/uk-decision-local/adapter/calibration.json \
+  --input models/runs/uk-decision-local/smoke-input.json --device cpu
 ```
 
-原始两类分数位于 rawProbabilities；未提供校准文件时 calibratedProbabilities 为 null。
-有正式 calibration.json 后加 `--calibration /path/to/calibration.json`，不从文档数字补造文件。
+原始两类分数位于 rawProbabilities；校准分数位于 calibratedProbabilities。
+完整包模式使用 `--model-dir models/weights/uk-financial-0.6b-v1`，自动读取包内校准文件；
+此时不再单独传 `--adapter` 或 `--calibration`。不从文档数字补造校准文件。
 输出记录输入及 adapter/runtime 摘要、设备、dtype、token 数、加载与推理时间。
 expectedBaseRevision 是此入口约定的底座版本，下载时仍须使用上述固定 revision。
 
@@ -77,9 +80,8 @@ UV_PROJECT_ENVIRONMENT="$PWD/models/runs/uk-decision-cuda/.venv" \
 
 ```bash
 models/runs/uk-decision-cuda/.venv/bin/python -m scripts.predict_uk_decision \
-  --base models/weights/uk-financial-0.6b-v1/base \
-  --adapter models/weights/uk-financial-0.6b-v1/adapter \
-  --input models/weights/uk-financial-0.6b-v1/smoke-input.json --device cuda
+  --model-dir models/weights/uk-financial-0.6b-v1 \
+  --input models/weights/uk-financial-0.6b-v1/acceptance/input.json --device cuda
 ```
 
 CUDA 默认 bfloat16，CPU 默认 float32；两者都恢复训练保存的运行缓冲区。
@@ -101,4 +103,5 @@ GPU 容器还需宿主 NVIDIA Container Toolkit；现场需提前准备镜像及
 该短输入 CUDA 首次推理约 0.45 秒，峰值 allocated 约 1191 MiB；不作为完整输入吞吐承诺。
 CPU 禁网容器的原始两类概率与本机 CPU 完全一致。GPU 与 CPU 概率存在 dtype 数值差异。
 已取得同事提供的完整 financial JSONL，并用真实 test 观测完成常驻服务推理。
-仍缺少服务器固定参考输出及 calibration.json，尚未验收服务器数值复现和校准结果。
+正式 calibration.json 已纳入完整 v1；已核对校准样本、温度及研究/服务两份校准计算。
+仍缺少服务器固定参考输出，尚未验收服务器数值复现或重算全量校准指标。

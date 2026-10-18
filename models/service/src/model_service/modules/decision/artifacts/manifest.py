@@ -6,6 +6,7 @@ from typing import Annotated, Literal
 
 from pydantic import Field, model_validator
 
+from model_service.modules.decision.calibration import load_temperature
 from model_service.modules.decision.contracts.input import (
     ContractModel,
     InputContract,
@@ -34,8 +35,15 @@ class ModelDefinition(ContractModel):
     base: BaseModelSpec
     adapter_files: dict[str, FileRecord]
     calibration_status: Literal["unavailable", "available"]
+    calibration_file: FileRecord | None = None
     server_reference_status: Literal["unavailable", "available"]
     evaluation: dict
+
+    @model_validator(mode="after")
+    def validate_calibration(self) -> "ModelDefinition":
+        if (self.calibration_status == "available") != (self.calibration_file is not None):
+            raise ValueError("Calibration availability requires its versioned file record")
+        return self
 
 
 class Manifest(ContractModel):
@@ -130,6 +138,10 @@ def verify_bundle(
     has_calibration = "calibration.json" in manifest.files
     if has_calibration != (manifest.model.calibration_status == "available"):
         raise ValueError("Calibration availability does not match manifest")
+    if has_calibration:
+        if manifest.files["calibration.json"] != manifest.model.calibration_file:
+            raise ValueError("Calibration file must match model metadata")
+        load_temperature(root / "calibration.json")
     if base is not None:
         verify_files(base, manifest.model.base.files)
     return manifest, contract

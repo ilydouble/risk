@@ -11,7 +11,7 @@ from jevforge import Jev
 from uk_decision_runtime.runtime import load_decision_model
 
 from model_service.modules.decision.artifacts.manifest import Release, digest, verify_bundle
-from model_service.modules.decision.calibration import calibrated
+from model_service.modules.decision.calibration import calibrated, load_temperature
 from model_service.modules.decision.contracts.input import (
     DEFINITION,
     InputContract,
@@ -48,8 +48,7 @@ class Predictor:
         self.manifest_sha256, self.bundle_verified = manifest_sha256, bundle_verified
         self.temperature = None
         if calibration:
-            self.temperature = float(json.loads(calibration.read_text())["temperature"])
-            calibrated([0.5, 0.5], self.temperature)
+            self.temperature = load_temperature(calibration)
         self.base_sha256 = digest(base / "config.json")
         self.adapter_sha256 = digest(adapter / "adapter_model.safetensors")
         self.runtime_sha256 = digest(adapter / "decision_runtime.json")

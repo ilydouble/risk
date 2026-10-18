@@ -30,6 +30,9 @@ def delivery(tmp_path):
         path = adapter / name
         path.write_bytes(f"test-only artifact: {name}".encode())
         model["adapter_files"][name] = describe(path).model_dump()
+    calibration = adapter / "calibration.json"
+    write_json(calibration, {"temperature": 0.8826538438450512})
+    model["calibration_file"] = describe(calibration).model_dump()
     base = tmp_path / "base"
     base.mkdir()
     (base / "config.json").write_text("test-only base")
@@ -50,11 +53,51 @@ def test_packaging_is_deterministic_and_installation_is_idempotent(delivery, tmp
     install(archive, destination, release, base_from=base)
     manifest, contract = verify_bundle(destination, release, base=destination / "base")
     assert contract.model_version == release.model_version
-    assert manifest.model.calibration_status == "unavailable"
-    assert not (destination / "calibration.json").exists()
+    assert manifest.model.calibration_status == "available"
+    assert (destination / "calibration.json").read_bytes() == (
+        adapter / "calibration.json"
+    ).read_bytes()
+    assert "calibration.json" not in manifest.model.adapter_files
+    assert manifest.files["calibration.json"] == manifest.model.calibration_file
     assert {p.name for p in (destination / "adapter").iterdir()} == set(
         manifest.model.adapter_files
     )
+
+
+def test_calibration_can_be_supplied_separately_and_must_match_the_definition(delivery, tmp_path):
+    archive, _, _, adapter, definition = delivery
+    calibration = tmp_path / "calibration.json"
+    (adapter / "calibration.json").rename(calibration)
+    target = tmp_path / "separate" / archive.name
+    release = package(adapter, definition, target, calibration=calibration)
+    destination = tmp_path / "separate-install"
+    install(target, destination, release)
+    assert (destination / "calibration.json").read_bytes() == calibration.read_bytes()
+    write_json(calibration, {"temperature": 1.2})
+    with pytest.raises(ValueError, match="checksum"):
+        package(adapter, definition, tmp_path / "modified" / archive.name, calibration=calibration)
+
+
+def test_missing_corrupt_and_invalid_calibration_are_rejected(delivery, tmp_path):
+    archive, release, _, adapter, definition = delivery
+    source = adapter / "calibration.json"
+    original = source.read_bytes()
+    source.unlink()
+    with pytest.raises(ValueError, match="Missing"):
+        package(adapter, definition, tmp_path / "missing" / archive.name)
+    source.write_bytes(original)
+    destination = tmp_path / "corrupt-calibration"
+    install(archive, destination, release)
+    write_json(destination / "calibration.json", {"temperature": 1.2})
+    with pytest.raises(ValueError, match="checksum"):
+        verify_bundle(destination, release)
+    # A matching checksum still must not make an invalid temperature executable.
+    write_json(source, {"temperature": -1})
+    model = json.loads((definition / "model.json").read_text())
+    model["calibration_file"] = describe(source).model_dump()
+    write_json(definition / "model.json", model)
+    with pytest.raises(ValueError, match="temperature"):
+        package(adapter, definition, tmp_path / "invalid" / archive.name)
 
 
 def test_base_can_be_added_after_a_lora_only_install(delivery, tmp_path):

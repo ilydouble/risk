@@ -21,6 +21,7 @@ def main(argv: list[str] | None = None) -> int:
     commands = parser.add_subparsers(dest="command", required=True)
     build = commands.add_parser("package", help="Create a local Release asset; never upload")
     build.add_argument("--adapter", type=Path, required=True)
+    build.add_argument("--calibration", type=Path, help="Defaults to adapter/calibration.json")
     build.add_argument("--definition", type=Path, default=DEFINITION)
     build.add_argument("--output", type=Path, required=True)
     fetch = commands.add_parser("install", help="Download a published asset or install a local one")
@@ -38,7 +39,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "package":
             release = package(
-                args.adapter.resolve(), args.definition.resolve(), args.output.resolve()
+                args.adapter.resolve(), args.definition.resolve(), args.output.resolve(),
+                calibration=args.calibration.resolve() if args.calibration else None,
             )
             print(json.dumps(release.model_dump(), indent=2))
         elif args.command == "verify":

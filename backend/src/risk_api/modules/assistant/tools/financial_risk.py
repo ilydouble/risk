@@ -154,8 +154,9 @@ def financial_risk_tools(
         First use financial_risk_catalog and financial_risk_companies. Copy datasetId and
         recordId exactly; recordId identifies a dated observation, not just a company number.
         The server reads features; never invent or supply missing financial values. Report
-        model version, observation month, source and warnings. Raw event score is not a UK
-        population default probability. No graph explanation, training or model switching.
+        model version, observation month, source and warnings. Neither raw nor calibrated
+        scores are UK population default probabilities. No graph explanation, training or
+        model switching.
         """
         try:
             if not record_id.strip() or len(record_id) > 512:

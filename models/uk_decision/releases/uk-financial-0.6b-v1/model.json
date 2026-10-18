@@ -78,7 +78,11 @@
       "sha256": "1cc816812993bff176eb4f7495433b736f06fba9b6e7b05cac7b4a1780650c95"
     }
   },
-  "calibration_status": "unavailable",
+  "calibration_status": "available",
+  "calibration_file": {
+    "size": 417378,
+    "sha256": "7375b2c107882a519f9abdcbbb78a86a14aea3318bcd712ce033c34622f7dfc8"
+  },
   "server_reference_status": "unavailable",
   "evaluation": {
     "source": "docs/architecture/uk-financial-full-training.md",

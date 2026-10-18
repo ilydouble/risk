@@ -19,6 +19,7 @@
 | 训练/推理共享加载与运行缓冲区 | Git：`models/uk_decision/src/uk_decision_runtime/` |
 | 兼容命令入口 | Git：`scripts/uk-decision`、`scripts/predict_uk_decision.py`、`scripts/jevforge_runtime.py` |
 | LoRA、配置、运行状态、tokenizer、模板和原始 README | 同一 Release 附件，不零散提交 Git |
+| 正式校准文件及校准样本审计记录 | 同一 Release 附件；Git 中的 `calibration_file` 记录大小和摘要 |
 | 底座与安装后的模型 | 本地忽略目录 `models/weights/` |
 
 输入协议从本次模型使用的 UK 特征规则冻结，推理不再读取会持续修改的数据适配器规则。
@@ -28,7 +29,9 @@
 
 `uk-financial-0.6b-v1` 已准备本地发布资产，尚未上传 GitHub Release。
 已取得带索引和来源清单的完整财务 JSONL，可用于真实观测推理验收。
-正式校准文件和训练服务器固定参考输出仍缺失，模型包保留原始验证范围说明。
-不提供伪造的 calibration.json；当前运行返回原始候选分数，校准结果为空。
+已取得正式校准文件，温度为 0.8826538438450512，来自训练期独立留出的 4,046 条观测。
+v1 在首次发布前补齐校准，作为完整基线；本地只保留 `models/weights/uk-financial-0.6b-v1/`。
+运行同时返回原始和校准分数；校准适用范围仍为正负各半的匹配研究样本。
+训练服务器固定验收输入和参考输出仍缺失，不宣称已经复现服务器数值或全量指标。
 
 常驻推理、独立预测历史和助手结果卡片已接入；与原 RiskGNN+ 训练/发布流程并存。

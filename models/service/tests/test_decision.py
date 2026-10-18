@@ -9,6 +9,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from model_service.app import create_app
+from model_service.modules.decision.calibration import calibrated, load_temperature
 from model_service.modules.decision.contracts.input import input_state, load_contract
 from model_service.modules.decision.errors import DecisionError
 from model_service.modules.decision.mapping import record_input
@@ -118,7 +119,7 @@ def test_real_decision_http_model(monkeypatch, request):
     if not request.config.getoption("--require-decision-model"):
         pytest.skip("Pass --require-decision-model to exercise real weights")
     root = Path(os.environ.get(
-        "RISK_DECISION_TEST_MODEL_DIR", str(model_root() / "weights/uk-financial-0.6b-v1-verified")
+        "RISK_DECISION_TEST_MODEL_DIR", str(model_root() / "weights/uk-financial-0.6b-v1")
     )).resolve()
     if not (root / "manifest.json").is_file():
         pytest.fail(f"Required model is missing: {root}")
@@ -131,7 +132,9 @@ def test_real_decision_http_model(monkeypatch, request):
         headers = {"Authorization": "Bearer test-decision", "X-Request-ID": "real-decision"}
         model = client.post("/internal/v1/decision/status", json={}, headers=headers).json()["data"]
         assert model["ready"], model
+        assert model["model"]["calibrationAvailable"]
         digest = model["model"]["manifestSha256"]
+        temperature = load_temperature(root / "calibration.json")
         document = json.loads((root / "acceptance/input.json").read_text())
         for _ in range(2):
             response = client.post(
@@ -147,7 +150,14 @@ def test_real_decision_http_model(monkeypatch, request):
             assert prediction["rawProbabilities"] == pytest.approx(
                 reference["probabilities"], abs=reference["absolute_tolerance"]
             )
-            assert prediction["calibratedProbabilities"] is None
+            assert prediction["temperature"] == temperature
+            expected = calibrated([
+                prediction["rawProbabilities"]["no_event"],
+                prediction["rawProbabilities"]["event"],
+            ], temperature)
+            assert prediction["calibratedProbabilities"] == pytest.approx(
+                dict(zip(["no_event", "event"], expected, strict=True))
+            )
         invalid = client.post(
             "/internal/v1/decision/predict",
             headers=headers,

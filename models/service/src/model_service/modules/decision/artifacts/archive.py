@@ -28,7 +28,9 @@ def write_json(path: Path, value: dict) -> None:
     path.write_text(json.dumps(value, ensure_ascii=False, allow_nan=False, indent=2) + "\n")
 
 
-def package(adapter: Path, definition: Path, output: Path) -> Release:
+def package(
+    adapter: Path, definition: Path, output: Path, *, calibration: Path | None = None
+) -> Release:
     model = ModelDefinition.model_validate_json((definition / "model.json").read_bytes())
     if output.name != f"{model.model_version}.tar.gz":
         raise ValueError("Output must use the versioned asset filename")
@@ -38,20 +40,33 @@ def package(adapter: Path, definition: Path, output: Path) -> Release:
     contract = InputContract.model_validate_json((definition / "input-contract.json").read_bytes())
     if contract.model_version != model.model_version:
         raise ValueError("Input contract and model definition must have the same version")
-    # A version includes every original adapter file, including its README and tokenizer snapshot.
+    # Keep the original adapter intact; the calibrated model owns a separate root artifact.
+    calibration_source = None
+    allowed = set(model.adapter_files)
+    if model.calibration_status == "available":
+        calibration_source = calibration or adapter / "calibration.json"
+        assert model.calibration_file is not None
+        verify_files(calibration_source.parent, {calibration_source.name: model.calibration_file})
+        if calibration_source == adapter / "calibration.json":
+            allowed.add("calibration.json")
+    elif calibration is not None:
+        raise ValueError("This model definition does not allow calibration")
     actual = {p.relative_to(adapter).as_posix() for p in adapter.rglob("*") if p.is_file()}
-    if actual != model.adapter_files.keys():
+    if actual != allowed:
         raise ValueError("Adapter directory must contain exactly the versioned file set")
     output.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="uk-model-package-") as temporary:
         root = Path(temporary) / model.model_version
         root.mkdir()
-        shutil.copytree(adapter, root / "adapter")
+        for name in model.adapter_files:
+            target = root / "adapter" / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(adapter / name, target)
         shutil.copyfile(definition / "input-contract.json", root / "input-contract.json")
         shutil.copytree(definition / "acceptance", root / "acceptance")
         shutil.copyfile(ROOT.joinpath(*safe_path(model.model_card).parts), root / "README.md")
-        if model.calibration_status == "available":
-            shutil.copyfile(definition / "calibration.json", root / "calibration.json")
+        if calibration_source is not None:
+            shutil.copyfile(calibration_source, root / "calibration.json")
         paths = sorted(p for p in root.rglob("*") if p.is_file())
         files = {p.relative_to(root).as_posix(): describe(p) for p in paths}
         manifest = Manifest(
@@ -69,6 +84,9 @@ def package(adapter: Path, definition: Path, output: Path) -> Release:
                 ),
                 "input_validator_sha256": digest(
                     ROOT / "models/service/src/model_service/modules/decision/contracts/input.py"
+                ),
+                "calibration_sha256": digest(
+                    ROOT / "models/service/src/model_service/modules/decision/calibration.py"
                 ),
             },
             files=files,

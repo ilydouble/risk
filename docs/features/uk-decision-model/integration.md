@@ -38,7 +38,8 @@ Dishka 管理生命周期；专用单线程执行器串行评分，不阻塞 HTT
 旧七维 UK 数据必须明确返回数据不兼容，不能替换为“财务缺失”探针。
 
 每次结果区分原始候选分数与校准分数，包含模型/输入摘要、版本、设备、精度和限制。
-缺少正式校准文件时校准分数为空。分类目标仍是匹配研究队列中的未来 12 月正式破产观察标签。
+完整 v1 已包含正式校准，同时返回原始和校准分数；校准仅适用于匹配研究样本。
+分类目标仍是匹配研究队列中的未来 12 月正式破产观察标签。
 
 ## 版本与持久化
 
@@ -91,11 +92,11 @@ CPU 为默认开发构建；CUDA 使用互斥 uv 依赖组及 Compose 覆盖，T
 权重目录只读挂载，服务启动不下载模型。配置要求 CUDA 时不自动回退到 CPU。
 GPU 容器需要宿主 NVIDIA 驱动和 Container Toolkit；构建镜像与下载权重在联网环境提前完成。
 
-`.env` 选择已经完整安装的目录；默认 `uk-financial-0.6b-v1`，本机保留旧调试目录时可选新目录：
+`.env` 选择已经完整安装的目录；v1 的规范目录为 `models/weights/uk-financial-0.6b-v1/`：
 
 ```dotenv
 DECISION_ENABLED=true
-DECISION_MODEL_DIRECTORY=uk-financial-0.6b-v1-verified
+DECISION_MODEL_DIRECTORY=uk-financial-0.6b-v1
 DECISION_CPU_THREADS=4
 DECISION_TIMEOUT_SECONDS=60
 ```
@@ -114,10 +115,13 @@ docker compose -f compose.yaml -f compose.gpu.yaml up --build -d
 
 验收覆盖真实权重工程探针、HTTP 鉴权/错误、输入映射、记录与请求幂等、助手工具和卡片。
 本机已用同事提供的真实 test financial JSONL 完成 CPU 与 CUDA 推理。
-正式 calibration.json 和服务器固定参考输出仍未取得，尚不能验收服务器数值复现或校准指标。
+正式 calibration.json 已核对训练期校准样本和拟合温度；服务器固定参考输出仍未取得，
+尚不能验收服务器数值复现，协作者报告的全量校准指标未在本机重算。
 
 2026-10-18：完整财务包 127,646 条观测已实际完成直传、全量校验、企业导入、CPU 评分和持久化；
 直接 JSONL 与导入记录的输入摘要和 CPU 分数一致。浏览器验证历史卡片及中英文。
 助手端到端使用本地 SSE 测试上游驱动真实 Strands、工具和财务模型，不代表已验收外部对话模型。
-CPU/CUDA 镜像均已构建；本机 Python CUDA 验收通过，但 Docker 缺少 NVIDIA runtime，
-GPU 容器未验收。目标机须先配置 Container Toolkit，不能仅据镜像构建成功判断 GPU 可用。
+完整 v1 已在 CPU HTTP、禁网 CPU 容器及实际 CUDA HTTP 服务验证正式校准输出。
+本机已配置 Container Toolkit；CUDA 服务明确使用 cuda/bfloat16，校准结果通过公式核对。
+实际财务工具链验证了企业检索、GPU 推理、校准引用和数据库持久化；验收预测随测试清理。
+首次发布前清理了不完整 v1 的本地模型登记及关联预测，账号、上传数据和其他模型保持原状。
