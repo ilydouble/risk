@@ -66,3 +66,4 @@ flowchart LR
 - [数据集适配器输出契约](adapter-outputs.md)：必需接口、类型校验与企业产物边界。
 
 - [模型版本与助手](assistant-models.md)：模型目录、企业检索、预测联动和版本删除。
+- [UK 决策模型本地加载](uk-decision-local.md)：固定底座、LoRA、CPU/CUDA 与离线验证。
