@@ -1,10 +1,14 @@
 {
+  "size": 39676540,
+  "sha256": "be5a9be73470ed18557a128d8c7f32226bf4d020d54d1e7117fc7d1dd43cacc0",
+  "asset": "uk-financial-0.6b-v1.tar.gz",
   "model_version": "uk-financial-0.6b-v1",
   "repository": "ilydouble/risk",
   "tag": "model-uk-financial-0.6b-v1",
-  "asset": "uk-financial-0.6b-v1.tar.gz",
-  "size": 39676545,
-  "sha256": "03701d58afdd66eb2047dac6512b2caee8b2f1d50d86683bd4210a040f98ddd4",
-  "manifest_sha256": "84edff325c2099c84cbc0af1c15c6ccba5f1dd36128da4bfb14c80ff2b079fb7",
-  "publication_status": "prepared"
+  "manifest_sha256": "415bcf6030015af13c92fe73f5f173496a44d1e3f3f1d54421e06b95dde1c068",
+  "dataset": {
+    "size": 37317712,
+    "sha256": "d0e4ac0ce7de6bef75b1339fd8d7c2651de66c834f75808c35a09c1c4080ddde",
+    "asset": "uk-financial-20261018.zip"
+  }
 }

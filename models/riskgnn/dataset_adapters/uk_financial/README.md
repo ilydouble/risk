@@ -30,4 +30,4 @@ manifest 中可能列出 graph JSONL；本协议只消费上述财务文件，�
 该包没有关系数据，图谱仅能显示企业节点，不能作为模型图解释。
 
 模型服务负责输入转换和评分；业务后端负责账号与来源范围、版本和预测历史。
-部署与模型数值范围见 [功能文档](../../../../docs/features/uk-decision-model/README.md)。
+部署与模型数值范围见 [功能文档](../../../../docs/models/uk-decision-model/README.md)。

@@ -3,7 +3,7 @@
 ## 范围
 
 本入口验证已训练财务版模型的加载与候选评分，不训练、不接数据库、不发布模型。
-正式 HTTP 与助手入口见[服务接入](integration.md)。原始结果口径见[全量训练记录](../../architecture/uk-financial-full-training.md)。
+正式 HTTP 与助手入口见[服务接入](integration.md)。原始结果口径见[全量训练记录](uk-financial-full-training.md)。
 
 JevForge 来自仓库内 [vendor/jevforge](../../../models/vendor/jevforge/UPSTREAM.md)，
 通过模型服务 uv 路径依赖安装；开发者不再复制外部源码或手工配置 PYTHONPATH。

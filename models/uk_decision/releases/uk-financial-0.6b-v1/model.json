@@ -1,6 +1,6 @@
 {
   "model_version": "uk-financial-0.6b-v1",
-  "model_card": "docs/features/uk-decision-model/model-card.md",
+  "model_card": "docs/models/uk-decision-model/model-card.md",
   "base": {
     "repo_id": "Qwen/Qwen3-0.6B",
     "revision": "c1899de289a04d12100db370d81485cdf75e47ca",
@@ -85,7 +85,7 @@
   },
   "server_reference_status": "unavailable",
   "evaluation": {
-    "source": "docs/architecture/uk-financial-full-training.md",
+    "source": "docs/models/uk-decision-model/uk-financial-full-training.md",
     "verification": "reported-server-training-results-not-recomputed-locally",
     "target": "First observed primary formal insolvency within 12 months in the matched research cohort",
     "valid": {

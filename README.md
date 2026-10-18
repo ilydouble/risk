@@ -1,11 +1,12 @@
 # 风控工作台
 
-React 工作台、Go Session 网关、FastAPI 业务 API 与独立 RiskGNN+ 模型服务组成的 Monorepo。
+React 工作台、Go Session 网关、FastAPI 业务 API 与独立模型服务组成的 Monorepo。
 保留注册登录、企业检索、画像、图谱及文件直传。八家企业的评分、解释、报告和授信决策仍是演示内容。
 `/overview` 是新加坡数据的静态统计；`/modeling` 执行真实数据校验、子集训练、独立测试与模型发布。
 
-本地英国研究数据统一使用 [datasets/uk_research](datasets/uk_research/README.md)，
-已合并财务趋势、观察标签和最新地区图谱；目录约定见 [数据集说明](datasets/README.md)。
+本次交付使用已微调的 Qwen3-0.6B 财务模型，操作入口为智能助手，现场无需训练。
+首次使用请按 [UK 财务模型启动指南](docs/models/uk-decision-model/bootstrap.md) 下载模型和配套数据。
+本地研究数据与下载数据的目录约定见 [数据集说明](datasets/README.md)。
 
 ## 启动
 
@@ -23,9 +24,21 @@ PostgreSQL 内独立创建 `riskgnn` 数据库与用户，RustFS 内创建 `risk
 
 已部署的 UK Qwen3-0.6B 财务 LoRA 通过同一模型服务常驻推理，
 使用完整模型目录的只读挂载；缺少权重时只影响财务推理，其他业务继续启动。
-数据上传、CPU/GPU 部署、助手预测及保存记录见 [UK 财务模型接入](docs/features/uk-decision-model/integration.md)。
+数据上传、CPU/GPU 部署、助手预测及保存记录见 [UK 财务模型接入](docs/models/uk-decision-model/integration.md)。
 
-## 第一条模型链路
+## 财务模型与助手
+
+```bash
+./scripts/uk-decision install --with-base
+```
+
+从同一 GitHub Release 安装完整 LoRA 包与财务数据集；底座从公开 Hugging Face 固定 revision 下载。
+完整模型位于 `models/weights/uk-financial-0.6b-v1/`，可上传 ZIP 为 `datasets/uk-financial-20261018.zip`。
+配置助手的 `RISK_LLM_*` 后启动服务，注册登录，在模型工作台上传 ZIP 并完成校验、企业导入，
+即可让助手检索财务观测并预测，结果按账号持久化。详细步骤见[启动指南](docs/models/uk-decision-model/bootstrap.md)。
+Release 上传前下载会正常报错，本地附件可通过 `--assets-dir` 安装；不维护额外发布状态。
+
+## 研究训练链路
 
 安装 `uv` 后，从仓库根目录打包已解压的数据，无需安装模型服务环境：
 
@@ -67,7 +80,8 @@ ACRA / UK 默认最多 2,000 个目标，SMEsD 默认最多 4,000 个，保留�
 | `infra/` | 数据库、Bucket、CORS、图谱约束初始化 |
 | `contracts/` | 业务和模型服务各自导出的 OpenAPI |
 | `docs/architecture/` | 服务边界、数据协议、运行状态与本地开发 |
-| `docs/features/` | 具体功能的协作与使用说明，含 [UK 决策模型交付](docs/features/uk-decision-model/README.md) |
+| `docs/features/` | 具体功能的协作与使用说明 |
+| `docs/models/` | 模型交付、启动、训练与审计记录，含 [UK 财务模型基线](docs/models/uk-decision-model/README.md) |
 
 ## 检查
 

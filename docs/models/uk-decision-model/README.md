@@ -1,12 +1,15 @@
-# UK 决策模型协作与交付
+# UK 财务模型交付基线
 
 ## 入口
 
+- [首次启动](bootstrap.md)：下载完整交付物、启动服务、上传数据和助手预测。
 - [发布包与下载流程](release.md)：打包、摘要、安装及离线交付。
 - [本地加载与 CPU/CUDA 调试](local-development.md)。
 - [模型服务、数据上传与助手联动](integration.md)。
 - [模型说明](model-card.md)：标签、输入输出、指标来源及当前验证范围；同时随包分发。
 - [版本定义](../../../models/uk_decision/releases/uk-financial-0.6b-v1/)：冻结协议、文件摘要及验收输入。
+- [全量训练记录](uk-financial-full-training.md)、[早期微调实验](uk-decision-finetuning.md)、
+  [训练数据审计](uk-jev-data-audit.md)：保留同事的训练过程和证据范围。
 
 ## Git 与 Release 的边界
 
@@ -20,18 +23,24 @@
 | 兼容命令入口 | Git：`scripts/uk-decision`、`scripts/predict_uk_decision.py`、`scripts/jevforge_runtime.py` |
 | LoRA、配置、运行状态、tokenizer、模板和原始 README | 同一 Release 附件，不零散提交 Git |
 | 正式校准文件及校准样本审计记录 | 同一 Release 附件；Git 中的 `calibration_file` 记录大小和摘要 |
-| 底座与安装后的模型 | 本地忽略目录 `models/weights/` |
+| 兼容财务数据集 ZIP | 与模型同一个 Release；安装时保留 ZIP 并解压到 `datasets/` |
+| Qwen3-0.6B 底座 | 从公开 Hugging Face 固定 revision 下载，不上传本仓库 Release |
+| 安装后的完整模型 | 本地忽略目录 `models/weights/`，容器只读挂载 |
 
 输入协议从本次模型使用的 UK 特征规则冻结，推理不再读取会持续修改的数据适配器规则。
 数据适配器更新不应改变旧模型的输入。新增训练版本应建立新版本目录，重新核验并打包。
 
-## 当前交付状态
+## 本次基线
 
-`uk-financial-0.6b-v1` 已准备本地发布资产，尚未上传 GitHub Release。
-已取得带索引和来源清单的完整财务 JSONL，可用于真实观测推理验收。
+本次交付人为约定为 `uk-financial-0.6b-v1`，不增加基线状态或发布状态检查。
+统一命令为 `./scripts/uk-decision install --with-base`；Release 尚未上传时由 GitHub 返回下载错误。
+模型服务、数据适配、业务后端、助手工具、Turn/Item 与结果卡片构成本次完整交付。
+配套财务 JSONL 共 127,646 条观测，包含索引和来源清单；安装完成后仍须上传到自己的账号。
 已取得正式校准文件，温度为 0.8826538438450512，来自训练期独立留出的 4,046 条观测。
-v1 在首次发布前补齐校准，作为完整基线；本地只保留 `models/weights/uk-financial-0.6b-v1/`。
+完整模型安装在 `models/weights/uk-financial-0.6b-v1/`。
 运行同时返回原始和校准分数；校准适用范围仍为正负各半的匹配研究样本。
 训练服务器固定验收输入和参考输出仍缺失，不宣称已经复现服务器数值或全量指标。
 
 常驻推理、独立预测历史和助手结果卡片已接入；与原 RiskGNN+ 训练/发布流程并存。
+本次使用预训练财务模型，现场无需训练。研究代码和原训练入口继续独立维护。
+当前已验证 Linux x86_64 的 CPU/float32 与 NVIDIA CUDA/bfloat16；Apple Silicon 原生部署未纳入本基线。

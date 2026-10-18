@@ -8,5 +8,7 @@ fi
 
 repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 export PYTHONPATH="${repo_root}${PYTHONPATH:+:${PYTHONPATH}}"
-# Keep the caller's cwd so --adapter/--archive and output paths retain their usual meaning.
+# --with-base uses this public HF snapshot; Release contains only the LoRA bundle and data.
+# https://huggingface.co/Qwen/Qwen3-0.6B/tree/c1899de289a04d12100db370d81485cdf75e47ca
+# Keep the caller's cwd so input/output paths retain their usual meaning.
 exec uv run --project "${repo_root}/models/service" --locked python -m model_service.cli delivery "$@"

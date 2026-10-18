@@ -110,9 +110,8 @@ def package(
             size=output.stat().st_size,
             sha256=digest(output),
             manifest_sha256=digest(root / "manifest.json"),
-            publication_status="prepared",
         )
-        write_json(output.with_suffix(".release.json"), release.model_dump())
+        write_json(output.with_suffix(".release.json"), release.model_dump(exclude_none=True))
     return release
 
 

@@ -31,7 +31,7 @@ src/model_service/
 
 服务使用 Python 3.12、uv 和 CPU Torch，原研究 requirements 与 Python/CUDA 环境独立。
 JevForge 以本地路径依赖安装，源码及固定版本见 [第三方来源](../vendor/jevforge/UPSTREAM.md)。
-底座与 LoRA 不提交 Git；交付、下载校验及本地调试见 [UK 决策模型](../../docs/features/uk-decision-model/README.md)。
+底座与 LoRA 不提交 Git；交付、下载校验及本地调试见 [UK 决策模型](../../docs/models/uk-decision-model/README.md)。
 镜像同时 COPY 服务和全部模型源码；CPU 部署的 HTTP 与 Worker 共用镜像，
 GPU 部署仅 HTTP 使用 CUDA 镜像。两者共用执行数据库和持久工作目录。
 HTTP 进程会导入 Torch 并加载财务模型；业务 API 后端仍不安装 Torch。

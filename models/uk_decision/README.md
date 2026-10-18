@@ -8,4 +8,4 @@
 可使用 `pip install --no-deps -e models/uk_decision` 安装共享小包，继续使用原训练命令。
 原 `scripts/jevforge_runtime.py` 保留导入兼容入口，不再维护另一份实现。
 
-正式预测与交付说明见 [功能文档](../../docs/features/uk-decision-model/README.md)。
+正式预测与交付说明见 [模型文档](../../docs/models/uk-decision-model/README.md)。

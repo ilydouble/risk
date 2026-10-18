@@ -54,20 +54,25 @@ class Manifest(ContractModel):
     files: dict[str, FileRecord]
 
 
-class Release(ContractModel):
+class DownloadAsset(FileRecord):
+    asset: str = Field(pattern=r"^[a-zA-Z0-9][a-zA-Z0-9._-]*$")
+    size: int = Field(gt=0)
+
+
+class Release(DownloadAsset):
     model_version: Version
     repository: Literal["ilydouble/risk"] = "ilydouble/risk"
     tag: str = Field(pattern=r"^[a-zA-Z0-9][a-zA-Z0-9._/-]*$")
-    asset: str
-    size: int = Field(gt=0)
-    sha256: Sha256
     manifest_sha256: Sha256
-    publication_status: Literal["prepared", "published"]
+    dataset: DownloadAsset | None = None
 
     @model_validator(mode="after")
     def validate_asset(self) -> "Release":
         if self.asset != f"{self.model_version}.tar.gz":
             raise ValueError("Asset name must match model version")
+        names = [self.asset] + ([self.dataset.asset] if self.dataset else [])
+        if len(names) != len(set(names)):
+            raise ValueError("Release assets must have distinct filenames")
         return self
 
 

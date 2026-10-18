@@ -21,7 +21,7 @@ ORM 放模块内 `model.py`；工作台新增记录位于 `modules/modeling/work
 
 `modules/decision/` 管理已部署财务模型的账号权限、观测检索和幂等预测历史，
 使用同一内部 HTTP 客户端，不依赖训练 Run。权重加载和评分留在模型服务。
-接口、财务数据打包与助手工具见[UK 财务模型接入](../docs/features/uk-decision-model/integration.md)。
+接口、财务数据打包与助手工具见[UK 财务模型接入](../docs/models/uk-decision-model/integration.md)。
 
 本地命令与环境变量见[本地开发](../docs/architecture/local-development.md)，
 模型架构见[工作台](../docs/architecture/modeling-workbench.md)。
