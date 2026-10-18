@@ -30,6 +30,11 @@ class NormalizedRecord(BaseModel):
             attrs = self.data.get("attributes")
             if not isinstance(attrs, dict):
                 raise ValueError("Node attributes must be a mapping")
+            if any(value is not None and (
+                type(value) not in {str, int, float, bool}
+                or (isinstance(value, float) and not math.isfinite(value))
+            ) for value in attrs.values()):
+                raise ValueError("Node attributes must contain finite scalar values")
         elif self.nodeId:
             raise ValueError("Only nodes have nodeId")
         if self.kind in {"edge", "event"} and self.members:

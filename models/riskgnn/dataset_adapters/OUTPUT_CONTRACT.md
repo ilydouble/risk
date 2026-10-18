@@ -58,8 +58,9 @@ enterprise_records(validated) 返回 Iterable[EnterpriseRecord]，不返回裸�
 | hyperedge | snapshot、非空且不重复的 members | 群组类型及证据 |
 | event | snapshot、source | 事件字段及证据 |
 
-节点 attributes 是特征名到有限数值或 null 的映射；企业记录须包含摘要声明的特征。
-人物不强制使用企业特征集合。额外的业务原文和分类信息放 properties，避免混入数值特征。
+节点 attributes 是声明特征到有限数值、布尔值、字符串或 null 的映射；不接受嵌套对象/数组。
+企业须包含摘要声明的特征，人物不强制使用企业特征集合。保留类别和布尔原值，不强制数值化；
+具体模型负责检查能消费的特征类型。额外业务原文及审计信息放 properties，不混入模型输入。
 label 只能是整数 0/1 或 null，业务含义由 datasetProfile.target 说明。
 不同记录类型不能混用 nodeId、source/target 和 members；缺失身份及非法 JSON 数值立即拒绝。
 同快照 ID 唯一性、端点与成员引用、语义保真须由 Adapter 校验；后端导入仍独立检查引用。

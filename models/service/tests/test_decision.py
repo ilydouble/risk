@@ -45,6 +45,10 @@ def test_financial_record_mapping_preserves_observed_values_and_excludes_labels(
     ):
         with pytest.raises(DecisionError):
             record_input("uk-dataset-v1", "2", features, load_contract())
+    native, _ = record_input(
+        "uk-financial-jsonl", "1", {"financial_missing": False, "cash": 1.0}, load_contract()
+    )
+    assert '"cash":1.0' in input_state(native)
 
 
 def test_cancellation_and_timeout_keep_the_real_compute_slot_occupied():

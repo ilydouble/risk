@@ -20,9 +20,11 @@
 | acra-companies | acra | sg-comrisk / 1 | 2000 |
 | smesd | smesd | smesd / 1 | 4000 |
 | uk-companies | uk-companies | uk-dataset-v1 / 1 | 2000 |
+| uk-financial | uk-financial-observations | uk-financial-jsonl / 1 | 不训练，用于部署模型推理 |
 
 这些值分别保存在 [ACRA](acra/delivery.json)、[SMEsD](smesd/delivery.json)、
-[UK](uk_dataset_v1/delivery.json) 的 `delivery.json`，与各自代码和 README 一起维护。
+[UK](uk_dataset_v1/delivery.json)、[UK 财务观测](uk_financial/delivery.json) 的 `delivery.json`，
+与各自代码和 README 一起维护。
 数据负责人要交付另一个企业群体时新增预设，不需要复制适配器代码。
 
 ## 2. 固定入口与轻量环境

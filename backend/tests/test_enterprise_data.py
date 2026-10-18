@@ -15,7 +15,7 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from risk_api.errors import AppError
 from risk_api.modules.assistant.tools.enterprise_risk import enterprise_risk_tools
 from risk_api.modules.auth.model import User
-from risk_api.modules.modeling.enterprise_data import FORMAT, records
+from risk_api.modules.modeling.enterprise_data import FORMAT, NormalizedRecord, records
 from risk_api.modules.modeling.enterprise_service import EnterpriseService
 from risk_api.modules.modeling.repository import ModelingRepository
 from risk_api.modules.modeling.service import ModelingService, ModelingStorage
@@ -42,6 +42,18 @@ class Storage:
     async def iter_chunks(self):
         for offset in range(0, len(self.content), 71):
             yield self.content[offset : offset + 71]
+
+
+def test_enterprise_attributes_preserve_scalar_types_and_reject_nested_values():
+    source = {
+        "kind": "company", "snapshot": "test", "nodeId": "financial-observation",
+        "data": {"attributes": {"financial_missing": False, "cash": 1.0,
+                                "currency": "GBP", "equity": None}},
+    }
+    assert NormalizedRecord.model_validate(source).data == source["data"]
+    for invalid in ({"nested": 1}, [1], float("nan")):
+        with pytest.raises(ValueError):
+            NormalizedRecord.model_validate({**source, "data": {"attributes": {"cash": invalid}}})
 
 
 class Remote:

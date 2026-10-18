@@ -12,7 +12,7 @@ RecordKind = Literal["company", "person", "edge", "hyperedge", "event"]
 
 
 class EnterpriseNodeData(OutputModel):
-    attributes: dict[Name, int | float | None]
+    attributes: dict[Name, int | float | str | bool | None]
     name: str | None = None
     label: Literal[0, 1] | None = None
     community: str | None = None

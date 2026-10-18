@@ -88,5 +88,25 @@
       "feature-policy.json",
       "split-audit.csv"
     ]
+  },
+  {
+    "id": "uk-financial",
+    "description": "Fixed financial JSONL, observation index and source manifest; inference and browsing only, no GNN training.",
+    "dataset": {
+      "id": "uk-financial-observations",
+      "name": "UK financial observations for the deployed decision model"
+    },
+    "adapter": {
+      "id": "uk-financial-jsonl",
+      "version": "1"
+    },
+    "config": {},
+    "requiredFiles": [
+      "manifest.json",
+      "sample-index.jsonl",
+      "train.financial.jsonl",
+      "valid.financial.jsonl",
+      "test.financial.jsonl"
+    ]
   }
 ]

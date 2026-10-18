@@ -25,6 +25,15 @@ def record_input(
         )
     features: dict = {}
     warnings: list[str] = []
+    if adapter_id == "uk-financial-jsonl":
+        # JSONL already uses the frozen prompt's scalar types. Do not turn 1.0 into 1:
+        # they produce different token sequences even though they are numerically equal.
+        features = {
+            name: attributes[name]
+            for name in contract.numeric_features + contract.categorical_features
+            if attributes.get(name) is not None
+        }
+        return {"state": {"features": features}}, warnings
     for name in contract.numeric_features:
         value = attributes.get(name)
         if value is None:

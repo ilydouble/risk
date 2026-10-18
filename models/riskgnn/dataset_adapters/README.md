@@ -21,6 +21,8 @@
 
 先参照最接近的实现：[ACRA](acra/README.md)、[SMEsD](smesd/README.md)、[UK](uk_dataset_v1/README.md)。
 SMEsD 原始 Pickle 不直接上传；工作台使用处理后的 JSON。旧 Bundle 协议已删除。
+[UK 财务观测](uk_financial/README.md) 示例只做校验、企业导出和已部署模型推理，trainable=False；
+它不要求对现有预训练模型重新训练，也不与 UK 图特征适配器混用。
 
 ## 2. 新建目录并实现三个必需方法
 

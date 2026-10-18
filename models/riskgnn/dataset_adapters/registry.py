@@ -7,11 +7,18 @@ from riskgnn.dataset_adapters.contracts.inspection import InspectionResult, Vali
 from riskgnn.dataset_adapters.smesd.adapter import SMEsDAdapter
 from riskgnn.dataset_adapters.uk_dataset_v1.adapter import UKAdapter
 from riskgnn.dataset_adapters.uk_dataset_v1.legacy import LegacyUKAdapter
+from riskgnn.dataset_adapters.uk_financial.adapter import FinancialAdapter
 from riskgnn.workbench.artifacts import digest, write_json
 
 _ADAPTERS: dict[tuple[str, str], DatasetAdapter] = {
     (adapter.id, adapter.version): adapter
-    for adapter in (SingaporeAdapter(), SMEsDAdapter(), UKAdapter(), LegacyUKAdapter())
+    for adapter in (
+        SingaporeAdapter(),
+        SMEsDAdapter(),
+        UKAdapter(),
+        LegacyUKAdapter(),
+        FinancialAdapter(),
+    )
 }
 
 

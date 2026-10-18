@@ -18,6 +18,11 @@ def pytest_sessionstart(session):
 
 def pytest_addoption(parser):
     parser.addoption(
+        "--require-financial-data",
+        action="store_true",
+        help="Require the supplied UK financial JSONL source",
+    )
+    parser.addoption(
         "--require-decision-model",
         action="store_true",
         help="Require and exercise the installed financial model",

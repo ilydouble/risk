@@ -1,0 +1,12 @@
+{
+  "adapter": {"id": "uk-financial-jsonl", "version": "1"},
+  "required_files": ["manifest.json", "sample-index.jsonl", "train.financial.jsonl", "valid.financial.jsonl", "test.financial.jsonl"],
+  "config_schema": {"type": "object", "additionalProperties": false, "properties": {}},
+  "default_config": {},
+  "presets": {
+    "uk-financial": {
+      "dataset": {"id": "uk-financial-observations", "name": "UK financial observations for the deployed decision model"},
+      "description": "Fixed financial JSONL, observation index and source manifest; inference and browsing only, no GNN training."
+    }
+  }
+}
