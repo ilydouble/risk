@@ -5,6 +5,7 @@ React 工作台、Go Session 网关、FastAPI 业务 API 与独立模型服务�
 `/overview` 是新加坡数据的静态统计；`/modeling` 执行真实数据校验、子集训练、独立测试与模型发布。
 
 本次交付使用已微调的 Qwen3-0.6B 财务模型，操作入口为智能助手，现场无需训练。
+比赛交付按[离线部署手册](docs/offline-bootstrap/README.md)准备镜像、权重与独立数据 ZIP，并在 A100 比赛机上验收。
 首次使用请按 [UK 财务模型启动指南](docs/models/uk-decision-model/bootstrap.md) 下载模型和配套数据。
 本地研究数据与下载数据的目录约定见 [数据集说明](datasets/README.md)。
 

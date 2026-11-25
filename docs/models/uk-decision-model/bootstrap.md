@@ -110,6 +110,8 @@ GPU 覆盖文件选择 CUDA 镜像、设备与 bfloat16；CPU Worker 继续负�
 
 ## 7. 现场离线准备
 
+比赛管理员和演示操作员按[比赛离线部署手册](../../offline-bootstrap/README.md)分开准备部署 TAR 与上传用 ZIP，现场按 GPU 流程启动和验收。
+
 在联网环境准备：相同代码、Compose、已构建镜像、完整权重目录、财务数据 ZIP 和配置。
 镜像用 `docker image save` 导出、现场 `docker image load` 导入。
 CPU 使用 `docker compose up -d --no-build --pull never`；GPU 同时带上两个 `-f` 参数。
