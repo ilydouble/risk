@@ -14,6 +14,12 @@ shared    HTTP、OpenAPI 生成类型、基础 UI、i18n、工具
 
 高层可引用低层，同层需要清楚的所有权；`pages` 之间不互相引用，低层不回引 `app` 或 `pages`。当前没有 `widgets` 层。跨页面遗留演示逻辑归 `features/demo-scenarios`，路由专属显示留在各 `pages`。
 
+## 离线展示
+
+比赛镜像由 Caddy 从同一站点提供页面、字体、图标和品牌图片。字体和 Remix Icon 随 npm 锁文件安装，由 Vite 打入产物。侧栏和浏览器标签页共用 `src/shared/assets/brand-seal.jpg`。
+
+离线验收使用全新浏览器配置，只允许访问站点、内网 API 和对象存储。切换中英文，检查导航图标、侧栏图片及网络请求，确认页面能在无缓存时完整显示。
+
 ## API 调用
 
 `contracts/openapi.json` 是服务端导出的权威契约。`npm run api:generate` 通过 `openapi-typescript` 生成 `shared/api/generated/schema.ts`，并在同一文件导出具名 `RequestXxx`、`ResponseXxx` 类型。使用方直接从该文件导入，不手改生成文件或再建 DTO 转发层。

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import brandSeal from "@/shared/assets/brand-seal.jpg";
 import { NAV_GROUPS } from "@/app/config/nav";
 
 interface SidebarProps {
@@ -29,7 +30,7 @@ export default function Sidebar({ activeKey, isOpen, onClose }: SidebarProps) {
         <div className="flex h-16 items-center gap-2.5 border-b border-background-200 px-5">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-md border border-primary-300/60 bg-primary-500">
             <img
-              src="https://readdy.ai/api/search-image?query=Minimal%20flat%20vector%20porcelain%20cobalt%20blue%20square%20seal%20emblem%20featuring%20an%20abstract%20Chinese%20intertwining%20vine%20scroll%20motif%20in%20white%2C%20symmetrical%20ornamental%20tracery%20curling%20around%20a%20central%20axis%2C%20clean%20crisp%20edges%2C%20plain%20solid%20deep%20cobalt%20background%2C%20no%20text%2C%20no%20letters%2C%20high%20contrast%2C%20centered%20composition%2C%20square%20aspect%2C%20high%20detail&width=256&height=256&seq=brand-seal-porcelain-vine-01&orientation=squarish"
+              src={brandSeal}
               alt={t("brand.alt")}
               title={t("brand.title")}
               className="h-full w-full object-cover"

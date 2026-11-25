@@ -85,6 +85,7 @@ export default defineConfig(({ mode }) => ({
   ],
   base,
   build: {
+    license: true,
     sourcemap: true,
     outDir: 'out',
   },

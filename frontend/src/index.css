@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 :root {
-  --font-heading: "Space Grotesk", "Noto Sans SC", "Inter", system-ui, sans-serif;
-  --font-body: "Inter", "Noto Sans SC", system-ui, -apple-system, sans-serif;
-  --font-label: "Inter", "Noto Sans SC", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-heading: "Space Grotesk Variable", "Noto Sans SC Variable", "Inter Variable", system-ui, sans-serif;
+  --font-body: "Inter Variable", "Noto Sans SC Variable", system-ui, -apple-system, sans-serif;
+  --font-label: var(--font-body);
+  --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, monospace;
 
   /* background scale — porcelain white canvas with a whisper of blue (50 = page base/lightest, higher = deeper layer) */
   --background-50: 0.985 0.003 250;
