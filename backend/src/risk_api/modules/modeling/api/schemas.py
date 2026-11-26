@@ -306,6 +306,7 @@ class ResponseRunEvents(BaseModel):
 
 class RequestPublishModel(RequestGetRun):
     name: str = Field(min_length=1, max_length=128, pattern=r"\S")
+    voters: list[str] | None = Field(default=None, min_length=3, max_length=3)
 
 
 class RequestGetModel(BaseModel):
@@ -376,7 +377,46 @@ class PredictionExplanationDTO(BaseModel):
     warnings: list[str]
 
 
+class MemberVoteDTO(BaseModel):
+    algorithm: str
+    score: float = Field(ge=0, le=1)
+    threshold: float = Field(ge=0, le=1)
+    vote: Literal[0, 1]
+
+
+class VotingDetailsDTO(BaseModel):
+    positiveVotes: int = Field(ge=0, le=3)
+    requiredVotes: Literal[2]
+    members: list[MemberVoteDTO] = Field(min_length=3, max_length=3)
+
+
+class VotingMemberSensitivityDTO(BaseModel):
+    algorithm: str
+    scoreAtReference: float = Field(ge=0, le=1)
+    delta: float = Field(ge=-1, le=1)
+    voteAtReference: Literal[0, 1]
+
+
+class VotingFeatureSensitivityDTO(BaseModel):
+    feature: str
+    value: float
+    referenceValue: float
+    positiveVotesAtReference: int = Field(ge=0, le=3)
+    predictedLabelAtReference: Literal[0, 1]
+    members: list[VotingMemberSensitivityDTO] = Field(min_length=3, max_length=3)
+
+
+class VotingExplanationDTO(BaseModel):
+    method: Literal["voting-training-median-intervention-v1"]
+    referenceCount: int = Field(gt=0)
+    sourceSha256: str
+    features: list[VotingFeatureSensitivityDTO]
+
+
 class PredictionDTO(BaseModel):
+    votingExplanation: VotingExplanationDTO | None = None
+    voting: VotingDetailsDTO | None = None
+    scoreKind: Literal["vote_share"] | None = None
     explanation: PredictionExplanationDTO | None = None
     fusedProbability: float | None = Field(default=None, ge=0, le=1)
     uncertainty: float | None = Field(default=None, ge=0, le=1)
@@ -471,6 +511,7 @@ class EnterpriseLabelCountsDTO(BaseModel):
 
 
 class EnterpriseModelSummaryDTO(BaseModel):
+    scoreKind: Literal["vote_share"] | None = None
     id: str
     name: str
     predictionCount: int

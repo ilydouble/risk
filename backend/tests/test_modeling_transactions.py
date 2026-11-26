@@ -17,7 +17,13 @@ from risk_api.modules.auth.model import User
 from risk_api.modules.modeling.dispatch import deliver_one
 from risk_api.modules.modeling.repository import ModelingRepository
 from risk_api.modules.modeling.service import ModelingService, ModelingStorage
-from risk_api.modules.modeling.workbench_model import Dataset, Dispatch, ModelVersion, Run
+from risk_api.modules.modeling.workbench_model import (
+    Dataset,
+    Dispatch,
+    EnterprisePrediction,
+    ModelVersion,
+    Run,
+)
 
 
 class Remote:
@@ -25,6 +31,7 @@ class Remote:
         self.calls = []
         self.available = False
         self.target_count = 4000
+        self.prediction = None
 
     async def call(self, action, body, request_id=""):
         self.calls.append((action, body, request_id))
@@ -52,6 +59,8 @@ class Remote:
                     "dataset": {"target_count": count},
                 },
             }
+        if action == "models/predict" and self.prediction is not None:
+            return {"items": [deepcopy(self.prediction)]}
         if not self.available:
             raise AppError(503, "MODEL_SERVICE_UNAVAILABLE", "offline")
         return {"status": "queued"}
@@ -77,7 +86,7 @@ def test_business_outbox_idempotency_ownership_and_publication():
         remote = Remote()
         try:
             async with engine.begin() as connection:
-                for model in (User, Dataset, Run, ModelVersion, Dispatch):
+                for model in (User, Dataset, Run, ModelVersion, Dispatch, EnterprisePrediction):
                     await connection.run_sync(model.__table__.create)
             async with sessions() as session:
                 owner, other, dataset_id = [str(uuid4()) for _ in range(3)]
@@ -222,6 +231,87 @@ def test_business_outbox_idempotency_ownership_and_publication():
                 assert (
                     sum(call[0] == "models/configuration" for call in remote.calls) == config_calls
                 )
+            async with sessions() as session:
+                service = ModelingService(
+                    ModelingRepository(session), ModelingStorage(Storage()), remote
+                )
+                recommended = ["riskgnn-plus", "gcn", "rgcn"]
+                manual = ["riskgnn-plus", "gcn", "hgt"]
+                comparison = Run(
+                    id=str(uuid4()), owner_id=owner, dataset_id=dataset_id, name="comparison",
+                    request_key=str(uuid4()), configuration={},
+                    execution={
+                        "status": "completed",
+                        "result": {
+                            "sha256": "comparison-digest", "format": "riskgnn-comparison-v1",
+                            "profile": {"algorithm": "Majority vote"},
+                            "report": {
+                                "independentReload": True, "recommended": recommended,
+                                "votingOptions": [
+                                    {"members": recommended, "test": {"f1": 0.7}},
+                                    {"members": manual, "test": {"f1": 0.6}},
+                                ],
+                            },
+                        },
+                    },
+                )
+                comparison_id = comparison.id
+                session.add(comparison)
+                await session.commit()
+                with pytest.raises(AppError) as invalid:
+                    await service.publish(owner, comparison_id, "vote", voters=["gcn"] * 3)
+                assert invalid.value.status == 422
+                await session.rollback()
+                vote = await service.publish(owner, comparison_id, "vote", voters=manual[::-1])
+                assert vote.artifact["voters"] == manual
+                assert vote.artifact["report"]["metrics"] == {"f1": 0.6}
+                replay = await service.publish(owner, comparison_id, "vote", voters=manual)
+                assert replay.id == vote.id
+                with pytest.raises(AppError) as changed:
+                    await service.publish(owner, comparison_id, "vote", voters=recommended)
+                assert changed.value.status == 409
+
+                company_id = "test-company"
+                previous_result = {
+                    "companyId": company_id, "probability": 2 / 3, "predictedLabel": 1,
+                    "scoreKind": "vote_share",
+                }
+                session.add(EnterprisePrediction(
+                    model_id=vote.id, company_id=company_id, dataset_id=dataset_id,
+                    result=previous_result,
+                ))
+                await session.commit()
+                remote.prediction = {
+                    **previous_result,
+                    "voting": {
+                        "positiveVotes": 2, "requiredVotes": 2,
+                        "members": [
+                            {"algorithm": name, "score": 0.7 if i < 2 else 0.2,
+                             "threshold": 0.5, "vote": int(i < 2)}
+                            for i, name in enumerate(manual)
+                        ],
+                    },
+                }
+                result = await service.predict(owner, vote.id, [company_id], "vote-request")
+                assert remote.calls[-1][1]["voters"] == manual
+                saved = await session.get(EnterprisePrediction, (vote.id, company_id))
+                assert saved.result == result["items"][0] == remote.prediction
+                voting_explanation = {
+                    "method": "voting-training-median-intervention-v1",
+                    "referenceCount": 10, "sourceSha256": "d" * 64, "features": [],
+                }
+                remote.prediction = {**remote.prediction, "votingExplanation": voting_explanation}
+                await service.predict(
+                    owner, vote.id, [company_id], "vote-explanation", explain=True,
+                )
+                assert remote.calls[-1][1]["explain"] is True
+                remote.prediction = {
+                    key: val for key, val in remote.prediction.items() if key != "votingExplanation"
+                }
+                await service.predict(owner, vote.id, [company_id], "vote-replay")
+                await session.refresh(saved)
+                assert saved.result["votingExplanation"] == voting_explanation
+
             assert await deliver_one(sessions, remote)
             async with sessions.begin() as session:
                 pending = list(await session.scalars(select(Dispatch)))

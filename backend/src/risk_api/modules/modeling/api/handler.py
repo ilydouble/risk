@@ -48,11 +48,11 @@ def dataset_dto(item: Dataset) -> dto.DatasetDTO:
 def run_dto(item: Run) -> dto.RunDTO:
     execution = item.execution
     configuration = item.configuration if "configVersion" in item.configuration else None
+    parameters = item.configuration.get("resolvedParameters", {})
     return dto.RunDTO(
         algorithm=(
-            "RiskGNN+"
-            if item.configuration.get("resolvedParameters", {}).get("algorithm") == "riskgnn-plus"
-            else "RiskGNN"
+            "Algorithm comparison" if parameters.get("comparison")
+            else "RiskGNN+" if parameters.get("algorithm") == "riskgnn-plus" else "RiskGNN"
         ),
         configuration=(
             dto.ExperimentConfigurationDTO.model_validate(configuration) if configuration else None
@@ -226,7 +226,7 @@ async def publish_model(
     service: FromDishka[ModelingService],
 ) -> ApiEnvelope[dto.ResponsePublishModel]:
     user = await owner(request, auth)
-    item = await service.publish(user, str(body.runId), body.name)
+    item = await service.publish(user, str(body.runId), body.name, voters=body.voters)
     return success_response(dto.ResponsePublishModel(model=model_dto(item)))
 
 

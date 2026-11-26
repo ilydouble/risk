@@ -3519,6 +3519,18 @@
           "predictionCount": {
             "title": "Predictioncount",
             "type": "integer"
+          },
+          "scoreKind": {
+            "anyOf": [
+              {
+                "const": "vote_share",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scorekind"
           }
         },
         "required": [
@@ -6149,6 +6161,42 @@
         "type": "string"
       },
       "JsonValue": {},
+      "MemberVoteDTO": {
+        "properties": {
+          "algorithm": {
+            "title": "Algorithm",
+            "type": "string"
+          },
+          "score": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Score",
+            "type": "number"
+          },
+          "threshold": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Threshold",
+            "type": "number"
+          },
+          "vote": {
+            "enum": [
+              0,
+              1
+            ],
+            "title": "Vote",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "algorithm",
+          "score",
+          "threshold",
+          "vote"
+        ],
+        "title": "MemberVoteDTO",
+        "type": "object"
+      },
       "ModelCapabilityDTO": {
         "properties": {
           "datasetFormats": {
@@ -6963,6 +7011,18 @@
             "title": "Probability",
             "type": "number"
           },
+          "scoreKind": {
+            "anyOf": [
+              {
+                "const": "vote_share",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scorekind"
+          },
           "uncertainty": {
             "anyOf": [
               {
@@ -6975,6 +7035,26 @@
               }
             ],
             "title": "Uncertainty"
+          },
+          "voting": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VotingDetailsDTO"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "votingExplanation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VotingExplanationDTO"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "required": [
@@ -8177,6 +8257,22 @@
             "format": "uuid",
             "title": "Runid",
             "type": "string"
+          },
+          "voters": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 3,
+                "minItems": 3,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Voters"
           }
         },
         "required": [
@@ -10958,6 +11054,155 @@
           }
         },
         "title": "UserMessageItem",
+        "type": "object"
+      },
+      "VotingDetailsDTO": {
+        "properties": {
+          "members": {
+            "items": {
+              "$ref": "#/components/schemas/MemberVoteDTO"
+            },
+            "maxItems": 3,
+            "minItems": 3,
+            "title": "Members",
+            "type": "array"
+          },
+          "positiveVotes": {
+            "maximum": 3.0,
+            "minimum": 0.0,
+            "title": "Positivevotes",
+            "type": "integer"
+          },
+          "requiredVotes": {
+            "const": 2,
+            "title": "Requiredvotes",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "positiveVotes",
+          "requiredVotes",
+          "members"
+        ],
+        "title": "VotingDetailsDTO",
+        "type": "object"
+      },
+      "VotingExplanationDTO": {
+        "properties": {
+          "features": {
+            "items": {
+              "$ref": "#/components/schemas/VotingFeatureSensitivityDTO"
+            },
+            "title": "Features",
+            "type": "array"
+          },
+          "method": {
+            "const": "voting-training-median-intervention-v1",
+            "title": "Method",
+            "type": "string"
+          },
+          "referenceCount": {
+            "exclusiveMinimum": 0.0,
+            "title": "Referencecount",
+            "type": "integer"
+          },
+          "sourceSha256": {
+            "title": "Sourcesha256",
+            "type": "string"
+          }
+        },
+        "required": [
+          "method",
+          "referenceCount",
+          "sourceSha256",
+          "features"
+        ],
+        "title": "VotingExplanationDTO",
+        "type": "object"
+      },
+      "VotingFeatureSensitivityDTO": {
+        "properties": {
+          "feature": {
+            "title": "Feature",
+            "type": "string"
+          },
+          "members": {
+            "items": {
+              "$ref": "#/components/schemas/VotingMemberSensitivityDTO"
+            },
+            "maxItems": 3,
+            "minItems": 3,
+            "title": "Members",
+            "type": "array"
+          },
+          "positiveVotesAtReference": {
+            "maximum": 3.0,
+            "minimum": 0.0,
+            "title": "Positivevotesatreference",
+            "type": "integer"
+          },
+          "predictedLabelAtReference": {
+            "enum": [
+              0,
+              1
+            ],
+            "title": "Predictedlabelatreference",
+            "type": "integer"
+          },
+          "referenceValue": {
+            "title": "Referencevalue",
+            "type": "number"
+          },
+          "value": {
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "feature",
+          "value",
+          "referenceValue",
+          "positiveVotesAtReference",
+          "predictedLabelAtReference",
+          "members"
+        ],
+        "title": "VotingFeatureSensitivityDTO",
+        "type": "object"
+      },
+      "VotingMemberSensitivityDTO": {
+        "properties": {
+          "algorithm": {
+            "title": "Algorithm",
+            "type": "string"
+          },
+          "delta": {
+            "maximum": 1.0,
+            "minimum": -1.0,
+            "title": "Delta",
+            "type": "number"
+          },
+          "scoreAtReference": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Scoreatreference",
+            "type": "number"
+          },
+          "voteAtReference": {
+            "enum": [
+              0,
+              1
+            ],
+            "title": "Voteatreference",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "algorithm",
+          "scoreAtReference",
+          "delta",
+          "voteAtReference"
+        ],
+        "title": "VotingMemberSensitivityDTO",
         "type": "object"
       }
     }

@@ -51,11 +51,11 @@ export default function UploadedOverview({ datasetId, onImported }: { datasetId:
           <p>目标定义：<span className="break-words">{displayEnterpriseValue(data.target)}</span></p>
           <p>企业、人物、关系和事件均来自所选数据集，节点及引用保留各自快照范围。</p>
           <p>已登记模型 {data.models.length} 个。模型预测需训练并登记后运行；主分类概率未经校准。</p>
-          <Link to={`/modeling?dataset=${encodeURIComponent(datasetId)}&tab=dataset`} className="text-primary-400">打开该数据集工作台 →</Link>
+          <Link to={`/modeling/datasets?dataset=${encodeURIComponent(datasetId)}`} className="text-primary-400">打开该数据集工作台 →</Link>
         </Card>
       </div>
       <Card title="已登记模型与已有预测" subtitle="每行对应一个模型；同一企业在不同模型中的预测分别统计。" icon="ri-cpu-line" bodyClassName="overflow-x-auto p-4">
-        <table className="w-full text-left text-xs"><thead><tr>{["模型", "已预测企业数", "预测类别 1", "平均主分类概率", "平均不确定性"].map((name) => <th key={name} className="border-b border-background-200 p-3">{name}</th>)}</tr></thead><tbody>{data.models.map((model) => <tr key={model.id}><td className="p-3"><Link className="text-primary-400" to={`/modeling?tab=model&model=${encodeURIComponent(model.id)}`}>{model.name}</Link><p className="mt-1 font-mono text-[10px] text-foreground-500">{model.id}</p></td><td className="p-3">{model.predictionCount}</td><td className="p-3">{model.positiveCount}</td><td className="p-3">{model.averageProbability == null ? "—" : `${(model.averageProbability * 100).toFixed(2)}%`}</td><td className="p-3">{model.averageUncertainty == null ? "—" : `${(model.averageUncertainty * 100).toFixed(2)}%`}</td></tr>)}</tbody></table>
+        <table className="w-full text-left text-xs"><thead><tr>{["模型", "已预测企业数", "预测类别 1", "平均风险分数", "平均不确定性"].map((name) => <th key={name} className="border-b border-background-200 p-3">{name}</th>)}</tr></thead><tbody>{data.models.map((model) => <tr key={model.id}><td className="p-3"><Link className="text-primary-400" to={`/modeling/models?model=${encodeURIComponent(model.id)}`}>{model.name}</Link><p className="mt-1 font-mono text-[10px] text-foreground-500">{model.id}</p></td><td className="p-3">{model.predictionCount}</td><td className="p-3">{model.positiveCount}</td><td className="p-3">{model.averageProbability == null ? "—" : `${(model.averageProbability * 100).toFixed(2)}%${model.scoreKind === "vote_share" ? "（票数占比）" : ""}`}</td><td className="p-3">{model.averageUncertainty == null ? "—" : `${(model.averageUncertainty * 100).toFixed(2)}%`}</td></tr>)}</tbody></table>
         {data.models.length === 0 && <p className="py-6 text-center text-sm text-foreground-500">尚未登记模型；可先浏览和检索企业数据。</p>}
       </Card>
       <Card title="企业预览" subtitle="按原始记录顺序显示前8家；可在企业检索中浏览全量。" icon="ri-table-line" bodyClassName="p-4">

@@ -4,6 +4,17 @@ import numpy as np
 import torch
 
 
+def original_value(meta, value, column):
+    name = meta["features"][column]
+    preprocessing = meta["preprocessing"]
+    means = preprocessing.get("mean", [0.0] * len(meta["features"]))
+    scales = preprocessing.get("scale", [1.0] * len(meta["features"]))
+    raw = float(value) * scales[column] + means[column]
+    if name in preprocessing.get("signedLog1p", []):
+        return float(np.sign(raw) * np.expm1(abs(raw)))
+    return float(np.expm1(raw)) if name in preprocessing.get("log1p", []) else raw
+
+
 def explain(predictor, company_id: str) -> dict:
     node = predictor.index[company_id]
     context, meta = predictor.context, predictor.meta
@@ -12,17 +23,6 @@ def explain(predictor, company_id: str) -> dict:
         raise ValueError("Training reference population is unavailable")
     features = context["features"]
     references = np.median(features[train], axis=0)
-    preprocessing = meta["preprocessing"]
-    means = preprocessing.get("mean", [0.0] * len(meta["features"]))
-    scales = preprocessing.get("scale", [1.0] * len(meta["features"]))
-    logs = preprocessing.get("log1p", [])
-
-    def original(value, column, name):
-        raw = float(value) * scales[column] + means[column]
-        if name in preprocessing.get("signedLog1p", []):
-            return float(np.sign(raw) * np.expm1(abs(raw)))
-        return float(np.expm1(raw)) if name in logs else raw
-
     original_row = features[node].copy()
     impacts = []
     with torch.inference_mode():
@@ -37,8 +37,8 @@ def explain(predictor, company_id: str) -> dict:
                     features[node, column] = original_row[column]
                 impacts.append({
                     "feature": name,
-                    "value": original(original_row[column], column, name),
-                    "referenceValue": original(references[column], column, name),
+                    "value": original_value(meta, original_row[column], column),
+                    "referenceValue": original_value(meta, references[column], column),
                     "probabilityAtReference": score,
                     "delta": baseline - score,
                 })

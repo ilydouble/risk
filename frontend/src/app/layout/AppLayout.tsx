@@ -9,9 +9,10 @@ const MODEL_SCOPED_KEYS = new Set(["model", "model-card"]);
 
 function activeKey(pathname: string): string {
   if (pathname === "/") return "overview";
-  const segment = pathname.split("/").filter(Boolean)[0] ?? "";
+  const [segment = "", section] = pathname.split("/").filter(Boolean);
+  if (segment === "modeling") return `modeling-${section ?? "datasets"}`;
   if (COMPANY_SCOPED_KEYS.has(segment)) return "company";
-  if (MODEL_SCOPED_KEYS.has(segment)) return "model";
+  if (MODEL_SCOPED_KEYS.has(segment)) return "modeling-models";
   return segment;
 }
 
@@ -40,7 +41,7 @@ export default function AppLayout() {
 
   return (
     <AiModelConfigProvider><div className="min-h-screen bg-background-50 text-foreground-900">
-      <Sidebar activeKey={location.pathname === "/modeling" && new URLSearchParams(location.search).get("tab") === "model" ? "model" : activeKey(location.pathname)} isOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
+      <Sidebar activeKey={activeKey(location.pathname)} isOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
       <div className="lg:pl-64">
         <TopBar onMenuClick={() => setMobileOpen(true)} />
         <main className="px-4 py-5 md:px-6 md:py-6"><Outlet /></main>

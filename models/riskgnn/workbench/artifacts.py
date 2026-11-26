@@ -30,7 +30,7 @@ def seal(directory: Path, *, kind: str, metadata: dict[str, Any]) -> dict[str, A
             "sha256": digest(p),
         }
         for p in sorted(directory.rglob("*"))
-        if p.is_file() and p.name != "manifest.json"
+        if p.is_file() and p != directory / "manifest.json"
     }
     manifest = {"formatVersion": 1, "kind": kind, **metadata, "files": files}
     write_json(directory / "manifest.json", manifest)
@@ -67,7 +67,7 @@ def verify(directory: Path, kind: str) -> dict[str, Any]:
 
 def export_zip(directory: Path, target: Path) -> None:
     kind = read_json(directory / "manifest.json").get("kind")
-    if kind not in {"riskgnn-model-v2", "riskgnn-plus-model-v1"}:
+    if kind not in {"riskgnn-model-v2", "riskgnn-plus-model-v1", "riskgnn-comparison-v1"}:
         raise ValueError("Unsupported model format")
     verify(directory, kind)
     target.parent.mkdir(parents=True, exist_ok=True)

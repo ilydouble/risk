@@ -466,6 +466,25 @@
               "legacy",
               "adaptive"
             ]
+          },
+          "comparison": {
+            "type": "array",
+            "uniqueItems": true,
+            "minItems": 3,
+            "maxItems": 5,
+            "items": {
+              "type": "string",
+              "enum": [
+                "riskgnn-plus",
+                "gcn",
+                "rgcn",
+                "hgt",
+                "gbdt",
+                "lr",
+                "mlp",
+                "g2s-gbdt"
+              ]
+            }
           }
         },
         "title": "TrainParameters",
@@ -510,7 +529,10 @@
         "model": {
           "format": "riskgnn-plus-model-v1",
           "kind": "directory",
-          "required": true
+          "required": true,
+          "alternative_formats": [
+            "riskgnn-comparison-v1"
+          ]
         }
       },
       "ui_schema": {
@@ -546,7 +568,8 @@
           "kind": "directory",
           "formats": [
             "riskgnn-plus-model-v1",
-            "riskgnn-model-v2"
+            "riskgnn-model-v2",
+            "riskgnn-comparison-v1"
           ],
           "required": true
         }
@@ -595,7 +618,8 @@
           "kind": "directory",
           "formats": [
             "riskgnn-plus-model-v1",
-            "riskgnn-model-v2"
+            "riskgnn-model-v2",
+            "riskgnn-comparison-v1"
           ],
           "required": true
         }
@@ -615,6 +639,25 @@
           "explain": {
             "type": "boolean",
             "default": false
+          },
+          "voters": {
+            "type": "array",
+            "uniqueItems": true,
+            "minItems": 3,
+            "maxItems": 3,
+            "items": {
+              "type": "string",
+              "enum": [
+                "riskgnn-plus",
+                "gcn",
+                "rgcn",
+                "hgt",
+                "gbdt",
+                "lr",
+                "mlp",
+                "g2s-gbdt"
+              ]
+            }
           }
         },
         "required": [
@@ -629,6 +672,34 @@
           "Prediction": {
             "additionalProperties": false,
             "properties": {
+              "voting": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["positiveVotes", "requiredVotes", "members"],
+                "properties": {
+                  "positiveVotes": {"type": "integer", "minimum": 0, "maximum": 3},
+                  "requiredVotes": {"const": 2},
+                  "members": {
+                    "type": "array",
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": ["algorithm", "score", "threshold", "vote"],
+                      "properties": {
+                        "algorithm": {"type": "string"},
+                        "score": {"type": "number", "minimum": 0, "maximum": 1},
+                        "threshold": {"type": "number", "minimum": 0, "maximum": 1},
+                        "vote": {"enum": [0, 1]}
+                      }
+                    }
+                  }
+                }
+              },
+              "scoreKind": {
+                "const": "vote_share"
+              },
               "companyId": {
                 "title": "Companyid",
                 "type": "string"
@@ -756,6 +827,9 @@
     "sg-comrisk-v1",
     "smesd-json-v5",
     "uk-dataset-v1",
-    "uk-research-v2"
+    "uk-research-v2",
+    "hat-datapackage-v1",
+    "figraph-datapackage-v1",
+    "msgraphfin-datapackage-v1"
   ]
 }

@@ -15,7 +15,7 @@ export default function EnterpriseSourcePicker({ source, sampleTerm = "样例" }
         </optgroup>
       </select>
       <button type="button" onClick={source.retry} className="text-xs text-primary-400">刷新数据源</button>
-      <Link className="text-xs text-primary-400" to="/modeling">上传训练包</Link>
+      <Link className="text-xs text-primary-400" to="/modeling/import">上传训练包</Link>
       {source.sources.length < source.total && <button type="button" onClick={source.loadMore} className="text-xs text-primary-400">加载更多数据集</button>}
     </div>
     <div className="mt-3 rounded-md bg-background-50 p-3 text-xs leading-6" role="status">

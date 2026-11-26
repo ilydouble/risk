@@ -49,7 +49,7 @@ const routes: RouteObject[] = [
         { path: "/model", element: load(<ModelPage />) },
         { path: "/batch", element: load(<BatchPage />) },
         { path: "/benchmark/*", element: load(<BenchmarkRetiredPage />) },
-        { path: "/modeling", element: load(<ModelingWorkbenchPage />) },
+        { path: "/modeling/:section?", element: load(<ModelingWorkbenchPage />) },
         { path: "*", element: <NotFound /> },
       ],
     }],

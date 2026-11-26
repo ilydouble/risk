@@ -74,6 +74,16 @@ def describe(contract: dict) -> dict:
         defaults["fusion"] = "adaptive"
     else:
         schema["properties"].pop("fusion", None)
+    if identity["id"] == "uk-dataset-v1":
+        algorithms = ["riskgnn-plus", "gbdt", "lr", "mlp", "g2s-gbdt"]
+    elif identity["id"] in {"smesd", "sg-comrisk", "research-parquet"}:
+        algorithms = ["riskgnn-plus", "gcn", "rgcn", "hgt", "g2s-gbdt"]
+    else:
+        algorithms = []
+    if algorithms:
+        schema["properties"]["comparison"]["items"]["enum"] = algorithms
+    else:
+        schema["properties"].pop("comparison", None)
     dataset_schema["required"] = sorted(defaults["dataset"])
     schema["properties"]["dataset"] = dataset_schema
     schema["required"] = sorted(defaults)

@@ -1,0 +1,14 @@
+{
+  "adapter": {"id": "research-parquet", "version": "1"},
+  "required_files": [
+    "datapackage.json", "task.json", "entities.parquet", "observations.parquet",
+    "labels.parquet", "splits.parquet", "edges.parquet"
+  ],
+  "config_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {"target_count": {"type": "integer", "minimum": 6, "maximum": 20000}}
+  },
+  "default_config": {"target_count": 2000},
+  "presets": {}
+}

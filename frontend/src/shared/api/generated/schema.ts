@@ -2113,6 +2113,8 @@ export interface components {
             positiveCount: number;
             /** Predictioncount */
             predictionCount: number;
+            /** Scorekind */
+            scoreKind?: "vote_share" | null;
         };
         /** EnterpriseRecordDTO */
         EnterpriseRecordDTO: {
@@ -3258,6 +3260,20 @@ export interface components {
          */
         ItemStatus: "running" | "completed" | "failed" | "cancelled";
         JsonValue: unknown;
+        /** MemberVoteDTO */
+        MemberVoteDTO: {
+            /** Algorithm */
+            algorithm: string;
+            /** Score */
+            score: number;
+            /** Threshold */
+            threshold: number;
+            /**
+             * Vote
+             * @enum {integer}
+             */
+            vote: 0 | 1;
+        };
         /** ModelCapabilityDTO */
         ModelCapabilityDTO: {
             /** Datasetformats */
@@ -3555,8 +3571,12 @@ export interface components {
             predictedLabel: number;
             /** Probability */
             probability: number;
+            /** Scorekind */
+            scoreKind?: "vote_share" | null;
             /** Uncertainty */
             uncertainty?: number | null;
+            voting?: components["schemas"]["VotingDetailsDTO"] | null;
+            votingExplanation?: components["schemas"]["VotingExplanationDTO"] | null;
         };
         /** PredictionExplanationDTO */
         PredictionExplanationDTO: {
@@ -4077,6 +4097,8 @@ export interface components {
              * Format: uuid
              */
             runId: string;
+            /** Voters */
+            voters?: string[] | null;
         };
         /** RequestRegister */
         RequestRegister: {
@@ -5047,6 +5069,64 @@ export interface components {
              * @default
              */
             text: string;
+        };
+        /** VotingDetailsDTO */
+        VotingDetailsDTO: {
+            /** Members */
+            members: components["schemas"]["MemberVoteDTO"][];
+            /** Positivevotes */
+            positiveVotes: number;
+            /**
+             * Requiredvotes
+             * @constant
+             */
+            requiredVotes: 2;
+        };
+        /** VotingExplanationDTO */
+        VotingExplanationDTO: {
+            /** Features */
+            features: components["schemas"]["VotingFeatureSensitivityDTO"][];
+            /**
+             * Method
+             * @constant
+             */
+            method: "voting-training-median-intervention-v1";
+            /** Referencecount */
+            referenceCount: number;
+            /** Sourcesha256 */
+            sourceSha256: string;
+        };
+        /** VotingFeatureSensitivityDTO */
+        VotingFeatureSensitivityDTO: {
+            /** Feature */
+            feature: string;
+            /** Members */
+            members: components["schemas"]["VotingMemberSensitivityDTO"][];
+            /** Positivevotesatreference */
+            positiveVotesAtReference: number;
+            /**
+             * Predictedlabelatreference
+             * @enum {integer}
+             */
+            predictedLabelAtReference: 0 | 1;
+            /** Referencevalue */
+            referenceValue: number;
+            /** Value */
+            value: number;
+        };
+        /** VotingMemberSensitivityDTO */
+        VotingMemberSensitivityDTO: {
+            /** Algorithm */
+            algorithm: string;
+            /** Delta */
+            delta: number;
+            /** Scoreatreference */
+            scoreAtReference: number;
+            /**
+             * Voteatreference
+             * @enum {integer}
+             */
+            voteAtReference: 0 | 1;
         };
     };
     responses: never;

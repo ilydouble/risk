@@ -18,6 +18,14 @@ from riskgnn.dataset_adapters.contracts.operation import InspectionOutput
 from riskgnn.dataset_adapters.enterprise import export
 from riskgnn.dataset_adapters.registry import inspect, resolve
 from riskgnn.workbench.artifacts import asset_digest, read_json, write_json
+from riskgnn.workbench.comparison import (
+    FORMAT as COMPARISON_FORMAT,
+)
+from riskgnn.workbench.comparison import (
+    Comparison,
+    evaluate_comparison,
+    train_comparison,
+)
 from riskgnn.workbench.configuration import ConfigurationError, merge, validate_frozen
 from riskgnn.workbench.configuration import resolve as resolve_configuration
 from riskgnn.workbench.predictor import Predictor
@@ -54,9 +62,7 @@ def execute(request: dict, directory: Path, emit) -> dict:
         return {
             "data": result.model_dump(mode="json", exclude_unset=True),
             "effective_config": parameters,
-            "artifacts": {
-                "enterprises": {"path": "enterprises.jsonl", "format": FORMAT}
-            },
+            "artifacts": {"enterprises": {"path": "enterprises.jsonl", "format": FORMAT}},
         }
     if operation == "train":
         source = Path(inputs["dataset"]["path"])
@@ -77,6 +83,19 @@ def execute(request: dict, directory: Path, emit) -> dict:
         emit({"kind": "stage", "stage": "preparing", "message": ""})
         prepare_plus(adapter, work / "validated", work / "prepared", parameters["dataset"])
         emit({"kind": "stage", "stage": "training", "message": ""})
+
+        if parameters.get("comparison"):
+            profile = train_comparison(work / "prepared", output / "model", configuration, emit)
+            return {
+                "data": {
+                    "profile": profile,
+                    "companies": read_json(output / "model/ids.json")[
+                        : min(100, profile["companyCount"])
+                    ],
+                },
+                "artifacts": {"model": {"path": "model", "format": COMPARISON_FORMAT}},
+                "effective_config": parameters,
+            }
 
         def metric(row):
             for name, group in (
@@ -112,21 +131,36 @@ def execute(request: dict, directory: Path, emit) -> dict:
         }
     if operation == "evaluate":
         emit({"kind": "stage", "stage": "testing", "message": ""})
-        report = evaluate(Path(inputs["model"]["path"]), output=output / "report")
+        model = Path(inputs["model"]["path"])
+        report = (
+            evaluate_comparison(model, output / "report")
+            if inputs["model"]["format"] == COMPARISON_FORMAT
+            else evaluate(model, output=output / "report")
+        )
         report["modelSha256"] = inputs["model"]["sha256"]
         write_json(output / "report/metrics.json", report)
         return {
             "data": {"report": report},
-            "artifacts": {
-                "report": {"path": "report", "format": "riskgnn-evaluation-v2"}
-            },
+            "artifacts": {"report": {"path": "report", "format": "riskgnn-evaluation-v2"}},
         }
     if operation == "predict":
         emit({"kind": "stage", "stage": "predicting", "message": ""})
         try:
-            predictor = Predictor(Path(inputs["model"]["path"]))
-            items = predictor.predict(parameters["company_ids"])
-            if parameters.get("explain", False):
+            model = Path(inputs["model"]["path"])
+            should_explain = parameters.get("explain", False)
+            if inputs["model"]["format"] == COMPARISON_FORMAT:
+                predictor = Comparison(model)
+                items = predictor.predict(
+                    parameters["company_ids"], parameters.get("voters"), explain=should_explain,
+                )
+            else:
+                if "voters" in parameters:
+                    raise OperationFailure(
+                        "MODEL_INPUT_INVALID", "Voting requires a comparison model"
+                    )
+                predictor = Predictor(model)
+                items = predictor.predict(parameters["company_ids"])
+            if should_explain and not isinstance(predictor, Comparison):
                 from riskgnn_plus.workbench.explanation import explain
                 from riskgnn_plus.workbench.predictor import PlusPredictor
 
@@ -176,9 +210,7 @@ def main() -> None:
                 )
             for asset in command["request"]["inputs"].values():
                 if asset_digest(Path(asset["path"])) != asset["sha256"]:
-                    raise OperationFailure(
-                        "MODEL_INPUT_INVALID", "Input asset checksum mismatch"
-                    )
+                    raise OperationFailure("MODEL_INPUT_INVALID", "Input asset checksum mismatch")
             descriptor = read_json(Path(__file__).with_name("runtime.json"))
             operation = descriptor["operations"][command["request"]["operation"]]
             if not command["request"].get("configuration"):
@@ -198,11 +230,7 @@ def main() -> None:
             if isinstance(error, OperationFailure):
                 code = error.code
             elif isinstance(error, ConfigurationError):
-                code = (
-                    "MODELING_CONFIG_STALE"
-                    if error.stale
-                    else "EXECUTION_PARAMETERS_INVALID"
-                )
+                code = "MODELING_CONFIG_STALE" if error.stale else "EXECUTION_PARAMETERS_INVALID"
             elif isinstance(
                 error, (ValueError, KeyError, FileNotFoundError, SchemaValidationError)
             ):

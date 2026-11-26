@@ -314,16 +314,17 @@ class ModelingService:
                 return {"items": []}
             raise
 
-    async def publish(self, owner: str, identity: str, name: str) -> ModelVersion:
+    async def publish(
+        self, owner: str, identity: str, name: str, *, voters: list[str] | None = None,
+    ) -> ModelVersion:
         run = await self.get_run(owner, identity)
         # The locked run makes concurrent publication a single immutable model version.
         run = await self.repository.run(owner, identity, lock=True)
         previous = await self.session.scalar(
             select(ModelVersion).where(ModelVersion.run_id == identity)
         )
-        if previous:
-            return previous
         result = run.execution.get("result", {})
+        report = result.get("report", {})
         if (
             run.execution.get("status") != "completed"
             or not result.get("report", {}).get("independentReload")
@@ -332,8 +333,39 @@ class ModelingService:
             raise AppError(
                 409, "MODELING_STATE_INVALID", "Independent test must complete before publication"
             )
+        selected = None
+        if result.get("format") == "riskgnn-comparison-v1":
+            members = voters if voters is not None else report.get("recommended", [])
+            selected = next((
+                option for option in report.get("votingOptions", [])
+                if len(members) == 3 and set(option["members"]) == set(members)
+            ), None)
+            if selected is None:
+                raise AppError(
+                    422, "MODELING_MODEL_INCOMPATIBLE", "Choose three successful comparison models"
+                )
+        elif voters is not None:
+            raise AppError(422, "MODELING_MODEL_INCOMPATIBLE", "Voting requires a comparison run")
+        if previous:
+            if selected is not None and previous.artifact.get("voters") != selected["members"]:
+                raise AppError(
+                    409, "MODELING_STATE_INVALID", "This run already published another vote"
+                )
+            return previous
+        artifact = result
+        if selected is not None:
+            artifact = {
+                **result,
+                "voters": selected["members"],
+                "profile": {**result["profile"], "algorithm": "Majority vote"},
+                "report": {
+                    **report,
+                    "metrics": selected["test"],
+                    "publishedVoters": selected["members"],
+                },
+            }
         version = ModelVersion(
-            id=str(uuid4()), owner_id=owner, run_id=identity, name=name, artifact=result
+            id=str(uuid4()), owner_id=owner, run_id=identity, name=name, artifact=artifact
         )
         self.session.add(version)
         await self.session.commit()
@@ -401,20 +433,27 @@ class ModelingService:
         version = await self.repository.version(owner, identity, lock=True)
         result = await self.client.call(
             "models/predict",
-            {"jobId": version.run_id, "companyIds": ids, **({"explain": True} if explain else {})},
+            {
+                "jobId": version.run_id,
+                "companyIds": ids,
+                **({"explain": True} if explain else {}),
+                **({"voters": version.artifact["voters"]} if "voters" in version.artifact else {}),
+            },
             request_id,
         )
         run = await self.repository.run(owner, version.run_id)
+        is_vote = "voters" in version.artifact
         if explain and [row.get("companyId") for row in result.get("items", [])] != ids:
             raise AppError(503, "MODEL_SERVICE_UNAVAILABLE", "Prediction identity mismatch")
         for prediction in result["items"]:
             if explain:
-                explanation = prediction.get("explanation")
+                explanation = prediction.get("votingExplanation" if is_vote else "explanation")
                 if not explanation:
                     raise AppError(409, "MODEL_EXPLANATION_UNAVAILABLE", "Model has no explanation")
                 expected_source = version.artifact.get("profile", {}).get("sourceSha256")
                 if expected_source and explanation.get("sourceSha256") != expected_source:
                     raise AppError(409, "MODELING_STATE_INVALID", "Explanation source mismatch")
+            if explain and not is_vote:
                 metrics = version.artifact.get("report", {}).get("metrics", {})
                 warnings = ["分类分数未经校准，不是未来违约概率；解释不代表因果关系。"]
                 if metrics.get("rocAuc", 1) <= 0.5:
@@ -439,6 +478,13 @@ class ModelingService:
                 statement = statement.on_conflict_do_update(
                     index_elements=[EnterprisePrediction.model_id, EnterprisePrediction.company_id],
                     set_={"result": prediction},
+                )
+            elif prediction.get("voting") is not None:
+                # Fill previously saved majority results that predate member details.
+                statement = statement.on_conflict_do_update(
+                    index_elements=[EnterprisePrediction.model_id, EnterprisePrediction.company_id],
+                    set_={"result": prediction},
+                    where=EnterprisePrediction.result["voting"].astext.is_(None),
                 )
             else:
                 statement = statement.on_conflict_do_nothing()

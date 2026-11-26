@@ -87,6 +87,7 @@ class EnterpriseBrowseService:
             select(
                 ModelVersion.id,
                 ModelVersion.name,
+                ModelVersion.artifact["format"].astext,
                 func.count(prediction.company_id),
                 func.count(prediction.company_id).filter(
                     prediction.result["predictedLabel"].astext == "1"
@@ -120,12 +121,13 @@ class EnterpriseBrowseService:
                 {
                     "id": mid,
                     "name": name,
+                    "scoreKind": "vote_share" if format_ == "riskgnn-comparison-v1" else None,
                     "predictionCount": count,
                     "positiveCount": positive,
                     "averageProbability": probability,
                     "averageUncertainty": uncertainty,
                 }
-                for mid, name, count, positive, probability, uncertainty in models
+                for mid, name, format_, count, positive, probability, uncertainty in models
             ],
             "companies": samples["items"],
         }

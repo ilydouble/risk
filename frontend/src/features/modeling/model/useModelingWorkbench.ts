@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuthUser } from "@/features/auth/model/AuthContext";
 import * as ModelingApi from "@/entities/modeling/api/modelingApi";
@@ -15,10 +15,19 @@ import type {
 import { handleApiError } from "@/shared/api/http";
 import { uploadDatasetPackage } from "@/features/dataset-delivery/lib/upload";
 
+import { workbenchPath, type WorkbenchSection } from "./workbenchSections";
+
+const selectionSections = {
+  dataset: "datasets",
+  run: "experiments",
+  model: "models",
+} as const;
+
 export function useModelingWorkbench() {
   const { t } = useTranslation();
   const user = useAuthUser();
-  const [params, setParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [params] = useSearchParams();
   const datasetId = params.get("dataset") ?? "";
   const runId = params.get("run") ?? "";
   const modelId = params.get("model") ?? "";
@@ -66,15 +75,12 @@ export function useModelingWorkbench() {
     [t],
   );
   const select = useCallback(
-    (kind: string, id: string) => {
-      setParams((previous) => {
-        const next = new URLSearchParams(previous);
-        next.set(kind, id);
-        next.set("tab", kind);
-        return next;
-      });
+    (kind: keyof typeof selectionSections, id: string, section: WorkbenchSection = selectionSections[kind]) => {
+      const next = new URLSearchParams(params);
+      next.set(kind, id);
+      navigate({ pathname: workbenchPath(section), search: next.toString() });
     },
-    [setParams],
+    [navigate, params],
   );
 
   const refresh = useCallback(async () => {
@@ -237,7 +243,7 @@ export function useModelingWorkbench() {
     const previous = runs.find((item) => item.id === runId);
     if (!previous?.configuration) return;
     setCopiedRun(previous);
-    select("dataset", previous.datasetId);
+    select("dataset", previous.datasetId, "new-experiment");
   };
   const rerun = () =>
     act(async () => {
@@ -250,9 +256,9 @@ export function useModelingWorkbench() {
       setRuns(previous => [response.run, ...previous.filter(item => item.id !== response.run.id)]);
       select("run", response.run.id);
     });
-  const publish = (name: string) =>
+  const publish = (name: string, voters?: string[]) =>
     act(async () => {
-      const response = await ModelingApi.requestPublishModel({ runId, name });
+      const response = await ModelingApi.requestPublishModel({ runId, name, voters });
       select("model", response.model.id);
     });
   const download = () =>
@@ -294,12 +300,9 @@ export function useModelingWorkbench() {
       } catch { /* Selection cleanup must work when browser storage is unavailable. */ }
       setDatasets(previous => previous.filter(item => item.id !== datasetId));
       setCopiedRun(null);
-      setParams(previous => {
-        const next = new URLSearchParams(previous);
-        for (const key of ["dataset", "run", "model"]) next.delete(key);
-        next.set("tab", "dataset");
-        return next;
-      });
+      const next = new URLSearchParams(params);
+      for (const key of ["dataset", "run", "model"]) next.delete(key);
+      navigate({ pathname: workbenchPath("datasets"), search: next.toString() });
       void act(async () => {});
     },
     upload,

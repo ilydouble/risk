@@ -1,12 +1,16 @@
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { box, button, secondary } from "./presentation";
 import { ModelDeleteButton } from "@/features/modeling/ui/ModelDeleteButton";
 import type { useModelingWorkbench } from "@/features/modeling/model/useModelingWorkbench";
+import { workbenchPath } from "@/features/modeling/model/workbenchSections";
 
 type Workbench = ReturnType<typeof useModelingWorkbench>;
 export function ModelPanel({ work }: { work: Workbench }) {
   const { t } = useTranslation();
+  const [params] = useSearchParams();
+  const runParams = new URLSearchParams(params);
+  if (work.model) runParams.set("run", work.model.runId);
   return <section className={`${box} space-y-5`}>
     <div className="flex flex-wrap items-start justify-between gap-3">
       <div><h2 className="font-semibold">{t("modeling.tabs.model")}</h2>
@@ -31,7 +35,7 @@ export function ModelPanel({ work }: { work: Workbench }) {
     {work.model && <div className="space-y-4 border-t border-background-200 pt-5">
       <h3 className="font-semibold">{work.model.name}</h3>
       <dl className="grid gap-3 text-sm sm:grid-cols-2">
-        <div><dt className="text-foreground-500">{t("modeling.versions.run")}</dt><dd><Link className="break-all text-primary-500 underline" to={`/modeling?tab=run&run=${work.model.runId}`}>{work.model.runId}</Link></dd></div>
+        <div><dt className="text-foreground-500">{t("modeling.versions.run")}</dt><dd><Link className="break-all text-primary-500 underline" to={{ pathname: workbenchPath("experiments"), search: runParams.toString() }}>{work.model.runId}</Link></dd></div>
         <div><dt className="text-foreground-500">{t("modeling.versions.size")}</dt><dd>{(work.model.size / 1024 / 1024).toFixed(2)} MiB</dd></div>
       </dl>
       <p className="text-sm text-foreground-500">{t("modeling.modelNote")}</p>

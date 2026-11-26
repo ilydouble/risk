@@ -16,7 +16,7 @@ from model_service.execution.contracts import (
 from model_service.execution.invocation import Invocation, Receipt, finalize, validate_inputs
 from model_service.execution.runtime import model_root, runtime_spec
 from model_service.files import read_json, write_json
-from model_service.shared.dataset_contract import read_dataset_contract
+from model_service.shared.dataset_contract import check_workbench_contract
 
 
 class ComputationFailed(ExecutionError):
@@ -29,7 +29,7 @@ async def run_model(
     spec = runtime_spec()
     await asyncio.to_thread(validate_inputs, invocation, spec)
     if "dataset" in invocation.request.inputs:
-        await asyncio.to_thread(read_dataset_contract, invocation.request.inputs["dataset"].path)
+        await asyncio.to_thread(check_workbench_contract, invocation.request.inputs["dataset"].path)
     directory = invocation.directory
     directory.mkdir(parents=True, exist_ok=True)
     for name in ("error.json", "result.json", "operation-result.json", "events.jsonl"):

@@ -4,6 +4,13 @@
       "ArtifactSpec": {
         "additionalProperties": false,
         "properties": {
+          "alternative_formats": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Alternative Formats",
+            "type": "array"
+          },
           "format": {
             "minLength": 1,
             "title": "Format",
@@ -811,6 +818,42 @@
         "type": "object"
       },
       "JsonValue": {},
+      "MemberVoteDTO": {
+        "properties": {
+          "algorithm": {
+            "title": "Algorithm",
+            "type": "string"
+          },
+          "score": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Score",
+            "type": "number"
+          },
+          "threshold": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Threshold",
+            "type": "number"
+          },
+          "vote": {
+            "enum": [
+              0,
+              1
+            ],
+            "title": "Vote",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "algorithm",
+          "score",
+          "threshold",
+          "vote"
+        ],
+        "title": "MemberVoteDTO",
+        "type": "object"
+      },
       "ObjectInput": {
         "additionalProperties": false,
         "properties": {
@@ -957,6 +1000,18 @@
             "title": "Probability",
             "type": "number"
           },
+          "scoreKind": {
+            "anyOf": [
+              {
+                "const": "vote_share",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scorekind"
+          },
           "uncertainty": {
             "anyOf": [
               {
@@ -969,6 +1024,16 @@
               }
             ],
             "title": "Uncertainty"
+          },
+          "voting": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VotingDetailsDTO"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "required": [
@@ -1214,6 +1279,22 @@
             "format": "uuid",
             "title": "Jobid",
             "type": "string"
+          },
+          "voters": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 3,
+                "minItems": 3,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Voters"
           }
         },
         "required": [
@@ -1665,6 +1746,37 @@
           "objectKey"
         ],
         "title": "ValidateInput",
+        "type": "object"
+      },
+      "VotingDetailsDTO": {
+        "properties": {
+          "members": {
+            "items": {
+              "$ref": "#/components/schemas/MemberVoteDTO"
+            },
+            "maxItems": 3,
+            "minItems": 3,
+            "title": "Members",
+            "type": "array"
+          },
+          "positiveVotes": {
+            "maximum": 3.0,
+            "minimum": 0.0,
+            "title": "Positivevotes",
+            "type": "integer"
+          },
+          "requiredVotes": {
+            "const": 2,
+            "title": "Requiredvotes",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "positiveVotes",
+          "requiredVotes",
+          "members"
+        ],
+        "title": "VotingDetailsDTO",
         "type": "object"
       }
     }

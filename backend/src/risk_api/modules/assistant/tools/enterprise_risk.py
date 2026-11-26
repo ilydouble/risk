@@ -73,7 +73,7 @@ def enterprise_risk_tools(
 
     @tool
     async def enterprise_risk_predict(model_id: str, company_id: str) -> dict:
-        """Compute and save one enterprise's prediction with a reproducible sensitivity explanation.
+        """Compute and save one enterprise's prediction, including available voting or sensitivity.
 
         Copy models[].modelId UUID from enterprise_risk_catalog into model_id (not name/runId).
         Use an exact enterprise ID from
@@ -81,6 +81,10 @@ def enterprise_risk_tools(
         Report model warnings and label meaning, never call the score a future default probability.
         Delta is score minus score with one feature replaced by the training median. It is not
         SHAP, not causal, and deltas cannot be summed. Relations are factual evidence only.
+        For majority voting, report voting.positiveVotes, requiredVotes and each member's
+        score, threshold and vote. Use predictedLabel for the final decision. When
+        votingExplanation is available, compare each member's score and vote with
+        the reference scenario, then report whether the final class changes.
         """
         try:
             identity = uuid_parameter(model_id, "model_id")
@@ -91,15 +95,20 @@ def enterprise_risk_tools(
                 modeling = ModelingService(ModelingRepository(session), storage, client)
                 version = await modeling.repository.version(owner, identity)
                 run = await modeling.repository.run(owner, version.run_id)
-                explain = version.artifact.get("profile", {}).get("algorithm") == "RiskGNN+"
+                explain = bool(version.artifact.get("voters")) or (
+                    version.artifact.get("profile", {}).get("algorithm") == "RiskGNN+"
+                )
                 result = await modeling.predict(owner, identity, [company_id], "", explain=explain)
+                warning = "分类分数未经校准，不是未来违约概率；无解释时不得编造特征贡献。"
+                if version.artifact.get("voters"):
+                    warning = "总分表示高风险票数占比。请按返回的投票明细和最终类别解释。"
                 result.update({
                     "datasetId": run.dataset_id,
                     "modelId": identity, "modelName": version.name,
                     "target": version.artifact.get("profile", {}).get("target"),
                     "testMetrics": version.artifact.get("report", {}).get("metrics", {}),
                     "explanationAvailable": explain,
-                    "warning": "分类分数未经校准，不是未来违约概率；无解释时不得编造特征贡献。",
+                    "warning": warning,
                     "companyUrl": (f"/company/{run.dataset_id}/{quote(company_id, safe='')}"
                                    f"?model={identity}"),
                     "evidence": None,

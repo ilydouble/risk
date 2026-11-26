@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import brandSeal from "@/shared/assets/brand-seal.jpg";
 import { NAV_GROUPS } from "@/app/config/nav";
@@ -11,6 +11,8 @@ interface SidebarProps {
 
 export default function Sidebar({ activeKey, isOpen, onClose }: SidebarProps) {
   const { t } = useTranslation();
+  const { pathname, search } = useLocation();
+  const inWorkbench = pathname.startsWith("/modeling/");
 
   return (
     <>
@@ -66,7 +68,8 @@ export default function Sidebar({ activeKey, isOpen, onClose }: SidebarProps) {
                   return (
                     <li key={item.key}>
                       <Link
-                        to={item.path}
+                        to={inWorkbench && group.key === "modeling" ? { pathname: item.path, search } : item.path}
+                        aria-current={active ? "page" : undefined}
                         onClick={onClose}
                         className={`flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-colors duration-200 ${
                           active

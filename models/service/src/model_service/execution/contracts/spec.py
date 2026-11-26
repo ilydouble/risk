@@ -22,6 +22,7 @@ class InputSpec(Contract):
 
 class ArtifactSpec(Contract):
     format: str = Field(min_length=1)
+    alternative_formats: list[str] = Field(default_factory=list)
     kind: Literal["file", "directory"]
     required: bool = True
 

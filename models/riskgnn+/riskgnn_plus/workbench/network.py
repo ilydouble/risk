@@ -26,7 +26,7 @@ def create_core(meta: dict, companies: np.ndarray, persons: np.ndarray, *, has_e
         com_initial_emb=companies,
         person_initial_emb=persons,
         n_company_attr_dims=len(meta["features"]),
-        use_hypergraph=True,
+        use_hypergraph=bool(meta.get("hyperedgeTypes", [0, 1, 2])),
         use_edgegraph=has_edges,
         hyper_impl="vectorized",
         hete_scalar_weights=True,
@@ -34,7 +34,7 @@ def create_core(meta: dict, companies: np.ndarray, persons: np.ndarray, *, has_e
     )
 
     count = len(meta.get("hyperedgeTypes", [0, 1, 2]))
-    if count != 3 and not adaptive:
+    if count and count != 3 and not adaptive:
         weights = nn.Parameter(torch.empty(count, 1))
         nn.init.xavier_uniform_(weights)
         network.hypergnn.alpha = weights

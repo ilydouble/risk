@@ -16,6 +16,8 @@ from riskgnn.dataset_adapters.snapshot_io import load
 from riskgnn.dataset_adapters.uk_dataset_v1.convert import convert, digest, select, write
 from riskgnn.dataset_adapters.uk_dataset_v1.research_schema import HYPEREDGES, POLICY, check
 from riskgnn.workbench.artifacts import read_json
+from riskgnn.workbench.comparison import Comparison, evaluate_comparison, train_comparison
+from riskgnn.workbench.configuration import resolve as configure
 from riskgnn.workbench.network import create_model
 
 
@@ -204,3 +206,42 @@ def test_new_uk_preset_prepares_fifteen_channels_and_trains_empty_edge_graph(
     assert reloaded.predict(ids[::-1]) == expected[::-1]
     report = evaluate(tmp_path / "model", output=tmp_path / "report")
     assert report["independentReload"] and report["metrics"]["count"] == 2
+
+
+def test_uk_comparison_reloads_attribute_models_and_returns_votes(research_input, tmp_path):
+    archive = tmp_path / "uk.zip"
+    package(
+        research_input, archive, "uk-companies", "comparison-test", overrides={"target_count": 6}
+    )
+    validated, prepared, artifact = (tmp_path / name for name in ("validated", "prepared", "model"))
+    inspect(archive, validated)
+    adapter, contract = resolve(archive)
+    algorithms = ["riskgnn-plus", "gbdt", "lr", "mlp", "g2s-gbdt"]
+    config = configure(contract, {"epochs": 3, "comparison": algorithms})
+    plus_prepare(adapter, validated, prepared, config["resolvedParameters"]["dataset"])
+    train_comparison(prepared, artifact, config, lambda _: None)
+    report = evaluate_comparison(artifact, tmp_path / "report")
+    assert len(report["votingOptions"]) == 10, report["members"]
+    assert {m["algorithm"] for m in report["members"]} == set(algorithms)
+    state = next(
+        member["featureView"] for member in report["members"] if member["algorithm"] == "g2s-gbdt"
+    )
+    assert state["referenceSplit"] == "train" and state["structuralFeatureCount"] == 30
+    model = Comparison(artifact)
+    ids, _ = model.split("test")
+    result = model.predict(ids, ["g2s-gbdt", "lr", "mlp"])
+    assert [row["companyId"] for row in result] == ids
+    for row in result:
+        voting = row["voting"]
+        assert [m["algorithm"] for m in voting["members"]] == ["g2s-gbdt", "lr", "mlp"]
+        assert row["predictedLabel"] == int(voting["positiveVotes"] >= voting["requiredVotes"])
+
+    members = ["gbdt", "lr", "mlp"]
+    baseline = model.predict(ids[:1], members)[0]
+    intervention = model.predict(ids[:1], members, explain=True)[0]["votingExplanation"]
+    assert model.predict(ids[:1], members)[0] == baseline
+    assert intervention["referenceCount"] == model.meta["actualCounts"]["train"]
+    assert all(
+        any(abs(feature["members"][index]["delta"]) > 1e-8 for feature in intervention["features"])
+        for index in (1, 2)
+    )

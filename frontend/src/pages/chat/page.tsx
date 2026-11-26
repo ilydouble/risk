@@ -21,8 +21,8 @@ export default function ChatPage() {
   const [input, setInput] = useState(() => {
     const dataset = params.get("riskDataset"), model = params.get("riskModel"), company = params.get("riskCompany");
     if (dataset && model && company) return pick(
-      `请使用已发布模型 ${model}，预测数据集 ${dataset} 中企业 ${company} 的目标标签。请核对模型测试质量，保留警告，有解释时说明特征敏感性，并给出企业详情链接。`,
-      `Use published model ${model} to predict company ${company} in dataset ${dataset}. Check test quality, preserve warnings and available sensitivity explanations, and link to the company.`,
+      `请使用已发布模型 ${model}，预测数据集 ${dataset} 中企业 ${company} 的目标标签。如果是投票模型，请列出各成员的分数、阈值和投票。若返回特征替换结果，请说明哪些因素改变了成员投票或最终类别。请说明可用的特征敏感性结果，核对测试质量，保留警告，并给出企业详情链接。`,
+      `Use published model ${model} to predict company ${company} in dataset ${dataset}. For a voting model, list each member's score, threshold and vote. If reference scenarios are available, identify which feature changes affected member votes or the final class. Explain available feature sensitivity, preserve test-quality warnings, and link to the company.`,
     );
     if (model) return pick(
       `请查询已发布模型 ${model} 的信息，再列出其数据集中的企业供我选择，确认企业后再执行预测。`,

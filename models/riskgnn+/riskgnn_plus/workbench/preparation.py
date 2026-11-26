@@ -34,9 +34,11 @@ def prepare(adapter, validated: Path, output: Path, config: dict) -> dict:
     events: dict[str, list] = {}
     if (output / "evidence.json").is_file():
         evidence = read_json(output / "evidence.json")
-        _, root = verified(validated, meta["datasetFormat"])
-        # Type ordering belongs to the validated snapshot schema, not alphabetical guesses.
-        names = read_json(root / "train.json")["hyperedge_types"]
+        if "hyperedgeTypes" in meta:
+            names = meta["hyperedgeTypes"]
+        else:
+            _, root = verified(validated, meta["datasetFormat"])
+            names = read_json(root / "train.json")["hyperedge_types"]
         groups = [[] for _ in names]
         for snapshot in evidence.values():
             for group in snapshot["hyperedges"]:

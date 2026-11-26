@@ -17,7 +17,7 @@ from model_service.execution.executor import Executor
 from model_service.execution.invocation import Invocation
 from model_service.execution.runtime import runtime_spec
 from model_service.files import digest
-from model_service.shared.dataset_contract import read_dataset_contract
+from model_service.shared.dataset_contract import check_workbench_contract
 
 
 async def execute_workflow(job, settings, store, storage) -> dict:
@@ -97,7 +97,7 @@ async def execute_workflow(job, settings, store, storage) -> dict:
         else {"epochs": job["payload"].get("epochs") or 2},
         configuration,
     )
-    await asyncio.to_thread(read_dataset_contract, archive)
+    await asyncio.to_thread(check_workbench_contract, archive)
     trained = await execute(train_call)
     model = artifact_paths(train_call.directory / "output", trained)["model"]
     model_sha = await asyncio.to_thread(fingerprint, model)

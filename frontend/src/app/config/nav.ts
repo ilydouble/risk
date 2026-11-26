@@ -1,3 +1,5 @@
+import { WORKBENCH_SECTIONS, workbenchPath } from "@/features/modeling/model/workbenchSections";
+
 export interface NavItem {
   key: string;
   /** i18n key，渲染时用 t() 取本地化文案。 */
@@ -35,21 +37,13 @@ export const NAV_GROUPS: NavGroup[] = [
   },
   {
     key: "modeling",
-    labelKey: "nav.modeling",
-    items: [
-      {
-        key: "modeling",
-        labelKey: "nav.modelingWorkbench",
-        path: "/modeling",
-        icon: "ri-function-line",
-      },
-      {
-        key: "model",
-        labelKey: "nav.model",
-        path: "/modeling?tab=model",
-        icon: "ri-file-info-line",
-      },
-    ],
+    labelKey: "nav.modelingWorkbench",
+    items: WORKBENCH_SECTIONS.map(({ id, icon }) => ({
+      key: `modeling-${id}`,
+      labelKey: `modeling.sections.${id}`,
+      path: workbenchPath(id),
+      icon,
+    })),
   },
   {
     key: "settings",

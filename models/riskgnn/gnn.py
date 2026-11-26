@@ -259,6 +259,8 @@ class RiskInfo(nn.Module):
 
 
 class RiskGNN(nn.Module):
+    _version = 2
+
     def __init__(self,input_dim,output_dim,
     company_num,person_num,rel_num,cause_type_num,
      device,com_initial_emb,person_initial_emb,
@@ -322,7 +324,17 @@ class RiskGNN(nn.Module):
         self.info_proj=nn.Linear(output_dim,output_dim,bias=False)
 
         self.final_proj=nn.Sequential(nn.Linear(input_dim,output_dim,bias=False),nn.ReLU(),nn.Linear(output_dim,output_dim,bias=False))
-        self.alpha=torch.ones((1),device=device)
+        self.alpha=nn.Parameter(torch.ones(1,device=device))
+
+    def _load_from_state_dict(self, state_dict, prefix, local_metadata, strict,
+                              missing_keys, unexpected_keys, error_msgs):
+        # Legacy checkpoints omitted this fixed tensor; preserve their sigmoid(1) gate.
+        if local_metadata.get("version", 1) < 2 and prefix + "alpha" not in state_dict:
+            state_dict[prefix + "alpha"] = torch.ones_like(self.alpha)
+        super()._load_from_state_dict(
+            state_dict, prefix, local_metadata, strict,
+            missing_keys, unexpected_keys, error_msgs,
+        )
 
 
     def forward_batch(self, company_attr_all, edge_index_local, edge_type_local, edge_weight_local,

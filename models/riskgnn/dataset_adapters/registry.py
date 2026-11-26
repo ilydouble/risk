@@ -5,6 +5,9 @@ from riskgnn.dataset_adapters.base import DatasetAdapter
 from riskgnn.dataset_adapters.contract import read_contract
 from riskgnn.dataset_adapters.contracts.inspection import InspectionResult, ValidatedDataset
 from riskgnn.dataset_adapters.smesd.adapter import SMEsDAdapter
+from riskgnn.dataset_adapters.standard.contract import identify
+from riskgnn.dataset_adapters.standard.native import NativePackageAdapter
+from riskgnn.dataset_adapters.standard.research import ResearchPackageAdapter
 from riskgnn.dataset_adapters.uk_dataset_v1.adapter import UKAdapter
 from riskgnn.dataset_adapters.uk_dataset_v1.legacy import LegacyUKAdapter
 from riskgnn.dataset_adapters.uk_financial.adapter import FinancialAdapter
@@ -23,6 +26,14 @@ _ADAPTERS: dict[tuple[str, str], DatasetAdapter] = {
 
 
 def resolve(source: Path) -> tuple[DatasetAdapter, dict]:
+    package = identify(source)
+    if package is not None:
+        contract, descriptor = package
+        identity = contract["adapter"]
+        if identity["id"] == ResearchPackageAdapter.id:
+            return ResearchPackageAdapter(contract["dataset"]["id"], descriptor), contract
+        native = _ADAPTERS[(identity["id"], identity["version"])]
+        return NativePackageAdapter(native, contract, descriptor), contract
     contract, _ = read_contract(source)
     identity = contract["adapter"]
     try:

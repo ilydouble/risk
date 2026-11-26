@@ -1,3 +1,4 @@
+import { ComparisonReport } from "./ComparisonReport";
 import { ExperimentProfilePanel } from "./ExperimentProfilePanel";
 import { ExperimentConfigurationPanel } from "./ExperimentConfigurationPanel";
 import { ExperimentActivity } from "./ExperimentActivity";
@@ -26,6 +27,7 @@ export function ExperimentPanel({ work }: { work: Workbench }) {
     t(`modeling.status.${value}`, { defaultValue: value });
   const report = object(work.run?.result.report);
   const metrics = object(report.metrics);
+  const comparison = Array.isArray(report.members);
   const confusion = Array.isArray(metrics.confusionMatrix)
     ? metrics.confusionMatrix
     : [];
@@ -39,6 +41,7 @@ export function ExperimentPanel({ work }: { work: Workbench }) {
   >();
   for (const event of work.events) {
     if (event.kind !== "metric" || event.attempt !== metricAttempt) continue;
+    if (typeof event.data.group === "string" && event.data.group.includes(":")) continue;
     const data = event.data;
     // Older persisted runs have one epoch row; adapter events carry one named metric.
     const step = typeof data.step === "number" ? data.step : data.epoch;
@@ -140,7 +143,8 @@ export function ExperimentPanel({ work }: { work: Workbench }) {
       {work.run.profile && (
         <ExperimentProfilePanel profile={work.run.profile} />
       )}
-      {report.independentReload === true && (
+      {comparison && <ComparisonReport key={work.run.id} report={report} work={work} />}
+      {!comparison && report.independentReload === true && (
         <section className={`${box} space-y-4`}>
           <h2 className="font-semibold">{t("modeling.report")}</h2>
           <p className="text-xs text-foreground-500">

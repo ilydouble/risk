@@ -5,6 +5,7 @@ import type { useModelingWorkbench } from "@/features/modeling/model/useModeling
 import type { ResponseRunConfiguration } from "@/shared/api/generated/schema";
 import { handleApiError } from "@/shared/api/http";
 import { button, input, secondary } from "./presentation";
+import { algorithmName } from "./comparisonAlgorithms";
 
 const paths = ["dataset.target_count", "epochs"] as const;
 
@@ -22,6 +23,7 @@ export function CreateExperimentForm({ work }: { work: ReturnType<typeof useMode
   const [values, setValues] = useState<Record<string, string>>({});
   const [name, setName] = useState("");
   const [fusion, setFusion] = useState("");
+  const [comparison, setComparison] = useState<string[]>([]);
   const [error, setError] = useState("");
   const [reload, setReload] = useState(0);
   const datasetId = work.dataset!.id;
@@ -42,6 +44,8 @@ export function CreateExperimentForm({ work }: { work: ReturnType<typeof useMode
         path, String(valueAt(copiedParameters ?? definition.defaultParameters, path) ?? ""),
       ])));
       setName(copiedName ?? datasetName);
+      const saved = valueAt(copiedParameters, "comparison");
+      setComparison(Array.isArray(saved) ? saved.filter((item): item is string => typeof item === "string") : []);
       setFusion(String(copiedParameters
         ? (valueAt(copiedParameters, "fusion") ?? "legacy")
         : (valueAt(definition.defaultParameters, "fusion") ?? "")));
@@ -53,7 +57,11 @@ export function CreateExperimentForm({ work }: { work: ReturnType<typeof useMode
 
   const language = i18n.language.startsWith("zh") ? "zh" : "en";
   const ui = configuration?.uiSchema.fields;
-  const fusionRule = object(object(configuration?.parameterSchema.properties).fusion);
+  const properties = object(configuration?.parameterSchema.properties);
+  const fusionRule = object(properties.fusion);
+  const available = object(object(properties.comparison).items).enum;
+  const algorithms = Array.isArray(available)
+    ? available.filter((item): item is string => typeof item === "string") : [];
   const fusionOptions = Array.isArray(fusionRule.enum)
     ? fusionRule.enum.filter((value): value is string => typeof value === "string") : [];
   const fields = paths.map((path) => {
@@ -121,12 +129,33 @@ export function CreateExperimentForm({ work }: { work: ReturnType<typeof useMode
             </span>
           </label>}
         </div>
+        {algorithms.length > 0 && <fieldset className="space-y-2 text-sm">
+          <legend className="font-medium">{t("modeling.comparison.algorithms")}</legend>
+          <label className="flex items-center gap-2">
+            <input type="checkbox" checked={comparison.length > 0}
+              onChange={(event) => setComparison(event.target.checked ? algorithms : [])} />
+            {t("modeling.comparison.enable")}
+          </label>
+          {comparison.length > 0 && <>
+            <div className="flex flex-wrap gap-4">
+              {algorithms.map((algorithm) => <label key={algorithm} className="flex items-center gap-2">
+                <input type="checkbox" checked={comparison.includes(algorithm)}
+                  disabled={comparison.length === 1 && comparison.includes(algorithm)}
+                  onChange={(event) => setComparison(comparison.filter((item) => item !== algorithm)
+                    .concat(event.target.checked ? [algorithm] : []))} />
+                {algorithmName(algorithm)}
+              </label>)}
+            </div>
+            <p className="text-xs text-foreground-500">{t("modeling.comparison.requirement")}</p>
+          </>}
+        </fieldset>}
         <button className={button}
-          disabled={work.busy || !name.trim() || fields.some((field) => !field.valid) ||
+          disabled={work.busy || (comparison.length > 0 && comparison.length < 3) || !name.trim() || fields.some((field) => !field.valid) ||
             (fusionOptions.length > 0 && !fusionOptions.includes(fusion))}
           onClick={() => void work.create(datasetId, name.trim(), {
             epochs: Number(values.epochs), dataset: { target_count: Number(values["dataset.target_count"]) },
             ...(fusionOptions.length > 0 ? { fusion } : {}),
+            ...(algorithms.length > 0 && comparison.length > 0 ? { comparison } : {}),
           }, configuration.schemaDigest)}>
           {t(work.submitting ? "modeling.activity.submitting" : "modeling.train")}
         </button>

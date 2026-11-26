@@ -1,5 +1,37 @@
 export default {
   "modeling": {
+    "sections": {
+      "datasets": "Datasets",
+      "import": "Import Training Package",
+      "enterprise-data": "Enterprise Data",
+      "new-experiment": "New Experiment",
+      "experiments": "Experiments",
+      "models": "Model Versions",
+    },
+    "emptyDatasets": "No datasets yet. Import a training package to get started.",
+    "selectDataset": "Select a dataset to continue.",
+    "comparison": {
+      "threshold": "Alert threshold",
+      "algorithms": "Training algorithms",
+      "enable": "Compare multiple algorithms",
+      "capabilityNote": "Algorithms such as GCN, RGCN, HGT, and GBDT depend on the dataset format. Select a dataset and open New experiment to see the available options. You can publish a voting model after at least three models train successfully.",
+      "requirement": "Select at least three algorithms. They train in sequence on the same splits.",
+      "report": "Training comparison report",
+      "protocol": "Models are ranked by validation AP. Their alert thresholds are set by validation F1. Test metrics are for evaluation.",
+      "algorithm": "Algorithm",
+      "status": "Status",
+      "time": "Time (s)",
+      "validationAp": "Validation AP",
+      "f1": "Test F1",
+      "recall": "Test recall",
+      "falsePositiveRate": "Test false positive rate",
+      "voters": "Voting members",
+      "recommended": "Validation recommendation",
+      "deltaNote": "First value: top model by validation AP. Second: the selected combination, which alerts with at least two votes.",
+      "publish": "Publish voting model",
+      "insufficient": "At least three successful models are required to publish a voting model.",
+      "voteShare": "High-risk vote share"
+    },
     "activity": {
       "submitting": "Submitting experiment…",
       "submissionNote": "Obtaining the task ID. Please do not submit again. Experiment details open as soon as the task is accepted.",
@@ -141,7 +173,7 @@ export default {
     "upload": {
       "title": "Upload a training dataset",
       "pick": "Choose a ZIP dataset",
-      "note": "Supports ACRA, SMEsD V5 JSON and UK v1, up to 512 MiB; risk_dataset_contract.json is required. The server validates all data; uploaded scripts are never executed.",
+      "note": "Upload a standard ZIP for UK, SMEsD, ACRA, HAT, FiGraph, or MSGraphFin, or an existing workbench ZIP. Maximum size is 512 MiB.",
       "progress": "Uploading",
       "action": "Upload and validate",
       "verifiedFiles": "Server-verified file index"

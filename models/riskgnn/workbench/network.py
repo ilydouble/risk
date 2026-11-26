@@ -27,7 +27,7 @@ class EdgeRiskGNN(RiskGNN):
             hete_scalar_weights=False,
         )
         # Research callers keep their existing attributes; the workbench CLI persists them.
-        for name in ("company_emb", "alpha"):
+        for name in ("company_emb",):
             value = getattr(self, name)
             delattr(self, name)
             self.register_buffer(name, value)
@@ -46,13 +46,19 @@ class EdgeRiskGNN(RiskGNN):
     def state_dict(self, *args, **kwargs):
         state = super().state_dict(*args, **kwargs)
         # The portable model format contains only the node_edge path and classifier.
-        return {name: value for name, value in state.items() if not self._inactive(name)}
+        for name in list(state):
+            if self._inactive(name):
+                del state[name]
+        return state
 
     def load_state_dict(self, state_dict, strict=True, assign=False):
-        state = {
-            name: value for name, value in super().state_dict().items() if self._inactive(name)
-        }
+        state = super().state_dict()
+        for name in list(state):
+            if not self._inactive(name):
+                del state[name]
         state.update(state_dict)
+        # Retain the loaded checkpoint version so legacy fallback does not mask missing new gates.
+        state._metadata = getattr(state_dict, "_metadata", {})
         return super().load_state_dict(state, strict=strict, assign=assign)
 
 
@@ -77,7 +83,7 @@ class DatasetRiskGNN(EdgeRiskGNN):
             hyper_impl="vectorized",
             hete_scalar_weights=True,
         )
-        for name in ("company_emb", "person_emb", "alpha"):
+        for name in ("company_emb", "person_emb"):
             value = getattr(self, name)
             delattr(self, name)
             self.register_buffer(name, value)

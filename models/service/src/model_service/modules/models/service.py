@@ -7,7 +7,7 @@ from uuid import uuid4
 from stellarmesh_objectstorage import AsyncClient
 
 from model_service.execution.artifacts import fingerprint
-from model_service.execution.contracts import AssetInput, Operation, OperationRequest
+from model_service.execution.contracts import AssetInput, JsonObject, Operation, OperationRequest
 from model_service.execution.invocation import Invocation
 from model_service.execution.process import ComputationFailed, run_model
 from model_service.execution.runtime import runtime_spec
@@ -65,7 +65,8 @@ class Runtime:
                 shutil.rmtree(directory, ignore_errors=True)
 
     async def predict(
-        self, job_id: str, ids: list[str], request_id: str = "", *, explain: bool = False
+        self, job_id: str, ids: list[str], request_id: str = "", *,
+        explain: bool = False, voters: list[str] | None = None,
     ) -> list[dict]:
         if explain and len(ids) != 1:
             raise ValueError("Explanation requires exactly one company")
@@ -93,6 +94,9 @@ class Runtime:
                 await asyncio.to_thread(unpack, archive, temporary)
                 temporary.rename(directory)
             call_directory = self.settings.workspace / "inference" / uuid4().hex
+            parameters: JsonObject = {"company_ids": [item for item in ids], "explain": explain}
+            if voters is not None:
+                parameters["voters"] = [item for item in voters]
             invocation = Invocation(
                 runtime_id="riskgnn",
                 runtime_version=runtime_spec().runtime_version,
@@ -105,7 +109,7 @@ class Runtime:
                             format=result.get("format", "riskgnn-model-v2"),
                         )
                     },
-                    parameters={"company_ids": [item for item in ids], "explain": explain},
+                    parameters=parameters,
                 ),
                 run_id=job_id,
                 attempt_id=uuid4().hex,

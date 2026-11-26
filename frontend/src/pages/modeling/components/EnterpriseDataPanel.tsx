@@ -171,7 +171,7 @@ export function EnterpriseDataPanel({ work }: { work: Workbench }) {
                       )}>{t("modeling.enterprise.predict")}</button>
                     )}
                     <span>{row.prediction
-                      ? `${t("modeling.enterprise.probability")}: ${(row.prediction.probability * 100).toFixed(3)}% · ${t("modeling.enterprise.label")}: ${row.prediction.predictedLabel}`
+                      ? `${t(row.prediction.scoreKind === "vote_share" ? "modeling.comparison.voteShare" : "modeling.enterprise.probability")}: ${(row.prediction.probability * 100).toFixed(3)}% · ${t("modeling.enterprise.label")}: ${row.prediction.predictedLabel}`
                       : t("modeling.enterprise.unassessed")}</span>
                     {row.prediction?.uncertainty != null && (
                       <span>{t("modeling.plus.uncertainty")}: {(row.prediction.uncertainty * 100).toFixed(3)}%

@@ -11,6 +11,18 @@ from model_service.execution.contracts import ExecutionError
 from model_service.execution.runtime import dataset_schema
 
 
+def check_workbench_contract(source: Path) -> None:
+    """Standard ZIP semantics belong to the model runner, like native dataset contents."""
+    try:
+        with ZipFile(source) as archive:
+            names = set(archive.namelist())
+            if {"datapackage.json", "task.json"}.issubset(names):
+                return
+    except BadZipFile as error:
+        raise ExecutionError("DATASET_CONTRACT_INVALID", str(error)) from error
+    read_dataset_contract(source)
+
+
 def read_dataset_contract(source: Path) -> dict:
     try:
         with ZipFile(source) as archive:

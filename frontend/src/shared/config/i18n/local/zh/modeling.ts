@@ -1,5 +1,37 @@
 export default {
   "modeling": {
+    "sections": {
+      "datasets": "数据集",
+      "import": "导入训练包",
+      "enterprise-data": "企业数据",
+      "new-experiment": "新建实验",
+      "experiments": "实验记录",
+      "models": "模型版本",
+    },
+    "emptyDatasets": "暂无数据集，请先导入训练包。",
+    "selectDataset": "选一个数据集继续。",
+    "comparison": {
+      "threshold": "报警阈值",
+      "algorithms": "训练算法",
+      "enable": "多算法对比训练",
+      "capabilityNote": "按数据协议提供 GCN、RGCN、HGT、GBDT 等算法。选定数据集后，在新建实验里查看可选算法。至少三个模型训练成功后可发布投票模型。",
+      "requirement": "选择至少三个算法。各算法使用同一划分，后台依次训练。",
+      "report": "对比训练报告",
+      "protocol": "按验证集 AP 排名，各模型用验证集 F1 选择报警阈值。测试集指标用于评估。",
+      "algorithm": "算法",
+      "status": "状态",
+      "time": "耗时（秒）",
+      "validationAp": "验证 AP",
+      "f1": "测试 F1",
+      "recall": "测试召回率",
+      "falsePositiveRate": "测试误报率",
+      "voters": "投票组合",
+      "recommended": "验证集推荐",
+      "deltaNote": "数值依次为验证集 AP 第一名单模型和当前组合。三票中至少两票报警。",
+      "publish": "发布投票模型",
+      "insufficient": "至少三个模型训练成功后才能发布投票模型。",
+      "voteShare": "高风险票数占比"
+    },
     "activity": {
       "submitting": "正在提交实验…",
       "submissionNote": "正在获取任务编号，请勿重复点击。任务受理后会立即打开实验详情。",
@@ -141,7 +173,7 @@ export default {
     "upload": {
       "title": "上传训练数据包",
       "pick": "选择 ZIP 数据包",
-      "note": "支持 ACRA、SMEsD V5 JSON 和 UK v1，最大 512 MiB，需包含 risk_dataset_contract.json。服务端全量校验，包内脚本不会执行。",
+      "note": "可直接上传 UK、SMEsD、ACRA、HAT、FiGraph 或 MSGraphFin 的标准 ZIP，也支持原有工作台 ZIP。文件最大 512 MiB。",
       "progress": "上传处理中",
       "action": "上传并校验",
       "verifiedFiles": "服务端校验文件索引"

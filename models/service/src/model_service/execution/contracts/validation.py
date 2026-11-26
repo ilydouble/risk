@@ -97,5 +97,6 @@ def validate_result(spec: RuntimeSpec, request: OperationRequest, result: Operat
         artifact = result.artifacts.get(role)
         if artifact is None and expected.required:
             raise ExecutionError("EXECUTION_RESULT_INVALID", f"Missing artifact: {role}")
-        if artifact is not None and artifact.format != expected.format:
+        supported = {expected.format, *expected.alternative_formats}
+        if artifact is not None and artifact.format not in supported:
             raise ExecutionError("EXECUTION_RESULT_INVALID", f"Wrong artifact format: {role}")

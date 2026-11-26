@@ -38,6 +38,7 @@ from .fusion import (
     opinion_from_evidence,
     opinion_to_alpha,
 )
+from .person_attributes import PersonAttributeMeanEncoder
 
 
 class RiskGNNPlusPlusOutput(NamedTuple):
@@ -79,6 +80,8 @@ class RiskGNNPlusPlus(RiskGNNPlus):
         degree_likelihood_lambda: float = 0.5,
         use_topology_discount: bool = True,
         use_degree_likelihood: bool = True,
+        person_attribute_dims: int = 0,
+        person_attribute_branch: str = "graph",
         **kwargs: object,
     ) -> None:
         super().__init__(*args, **kwargs)
@@ -96,6 +99,33 @@ class RiskGNNPlusPlus(RiskGNNPlus):
         self.relation_evidence_heads = nn.ModuleList(
             [nn.Linear(self.output_dim, 2) for _ in range(self.rel_num)]
         )
+        if person_attribute_dims < 0:
+            raise ValueError("person_attribute_dims must be non-negative")
+        # Disabled by default so old configurations retain their parameters and RNG order.
+        self.person_attribute_encoder = (
+            PersonAttributeMeanEncoder(person_attribute_dims, self.output_dim)
+            if person_attribute_dims
+            else None
+        )
+        self.set_person_attribute_branch(person_attribute_branch)
+
+    def set_person_attribute_branch(self, branch: str) -> None:
+        if branch not in ("graph", "node", "both"):
+            raise ValueError("person_attribute_branch must be graph, node or both")
+        if branch in ("node", "both") and self.person_attribute_encoder is None:
+            raise ValueError("Node person context requires a person attribute encoder")
+        first = self.final_proj[0]
+        width = self.input_dim + (self.output_dim if branch in ("node", "both") else 0)
+        if first.in_features != width:
+            # Preserve shared initialization and RNG; new person columns start at zero.
+            with torch.random.fork_rng(devices=[]):
+                replacement = nn.Linear(width, self.output_dim, bias=False)
+            replacement = replacement.to(device=first.weight.device, dtype=first.weight.dtype)
+            with torch.no_grad():
+                replacement.weight.zero_()
+                replacement.weight[:, : self.input_dim].copy_(first.weight[:, : self.input_dim])
+            self.final_proj[0] = replacement
+        self.person_attribute_branch = branch
 
     def _unpack_graph(self, hete_graph: object) -> tuple[torch.Tensor, torch.Tensor]:
         if len(hete_graph) == 4:
@@ -141,6 +171,16 @@ class RiskGNNPlusPlus(RiskGNNPlus):
             opinions.append(opinion_from_evidence(evidence))
         return opinions, degrees
 
+    def _intrinsic_latent(self, company_info, person_context, idx, company_attr):
+        node_input = company_info[idx]
+        if self.person_attribute_branch in ("node", "both"):
+            node_input = torch.cat((node_input, person_context[idx]), dim=-1)
+        return self.final_proj(node_input)
+
+    def _primary_logits(self, node_latent, graph_latent):
+        alpha = torch.sigmoid(self.alpha)
+        return self.primary_classifier(alpha * graph_latent + (1.0 - alpha) * node_latent)
+
     def forward(
         self,
         risk_data: object,
@@ -149,6 +189,9 @@ class RiskGNNPlusPlus(RiskGNNPlus):
         hyp_graph: object,
         idx: object,
         community_prior: object = None,
+        *,
+        person_attributes: object = None,
+        person_company_edges: object = None,
     ) -> RiskGNNPlusPlusOutput:
         idx_tensor = torch.as_tensor(idx, dtype=torch.long, device=self.device)
 
@@ -156,7 +199,16 @@ class RiskGNNPlusPlus(RiskGNNPlus):
         company_emb_info = self.extract_node_representation(
             risk_data, company_attr, idx, community_prior
         )
-        node_latent = self.final_proj(company_emb_info[idx_tensor])
+        person_context = None
+        if self.person_attribute_encoder is not None:
+            person_context = self.person_attribute_encoder(
+                person_attributes, person_company_edges, self.company_num
+            )
+        elif person_attributes is not None or person_company_edges is not None:
+            raise ValueError("Model was not configured to consume person attributes")
+        node_latent = self._intrinsic_latent(
+            company_emb_info, person_context, idx_tensor, company_attr
+        )
 
         person_emb = self.person_proj(self.person_emb)
         if self.use_hypergraph:
@@ -171,8 +223,8 @@ class RiskGNNPlusPlus(RiskGNNPlus):
             else:
                 edge_weight, edge_confidence = hete_graph[2], None
             company_emb_hete = company_emb_info
-            for layer in range(5):
-                company_emb_hete, person_emb = self.hetegnn[layer](
+            for layer in self.hetegnn:
+                company_emb_hete, person_emb = layer(
                     company_emb_hete,
                     person_emb,
                     edge_index,
@@ -185,13 +237,14 @@ class RiskGNNPlusPlus(RiskGNNPlus):
         else:
             company_emb_hete = torch.zeros((self.company_num, self.output_dim), device=self.device)
 
-        graph_aggregated = self.info_proj(company_emb_hyper + company_emb_hete)
+        graph_input = company_emb_hyper + company_emb_hete
+        if person_context is not None and self.person_attribute_branch in ("graph", "both"):
+            graph_input = graph_input + person_context
+        graph_aggregated = self.info_proj(graph_input)
         graph_latent_full = F.gelu(graph_aggregated)
         graph_latent = graph_latent_full[idx_tensor]
 
-        alpha = torch.sigmoid(self.alpha)
-        backbone_emb = alpha * graph_latent + (1.0 - alpha) * node_latent
-        primary_logits = self.primary_classifier(backbone_emb)
+        primary_logits = self._primary_logits(node_latent, graph_latent)
         primary_probs = F.softmax(primary_logits, dim=-1)
 
         # --- A. relation-decomposed opinions ---
